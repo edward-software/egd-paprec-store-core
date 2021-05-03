@@ -1,0 +1,406 @@
+@import "variables.scss";
+@import "reset.scss";
+@import "header.scss";
+@import "footer.scss";
+@import "catalog.scss";
+@import "type.scss";
+@import "medias-queries.scss";
+
+/******** Spacing margin and padding ********/
+// ex: .m-t-5, .p-l-10
+$spaceamounts: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 24, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100); // Adjust this to include the pixel amounts you need.
+$sides: (top, bottom, left, right); // Leave this variable alone
+@each $space in $spaceamounts {
+  @each $side in $sides {
+    .m-#{str-slice($side, 0, 1)}-#{$space} {
+      margin-#{$side}: #{$space}px !important;
+    }
+    .p-#{str-slice($side, 0, 1)}-#{$space} {
+      padding-#{$side}: #{$space}px !important;
+    }
+  }
+  .m-#{$space} {
+    margin: #{$space}px !important;
+  }
+  .m-x-#{$space} {
+    margin-left: #{$space}px !important;
+    margin-right: #{$space}px !important;
+  }
+  .m-y-#{$space} {
+    margin-top: #{$space}px !important;
+    margin-bottom: #{$space}px !important;
+  }
+  .p-#{$space} {
+    padding: #{$space}px !important;
+  }
+  .p-x-#{$space} {
+    padding-left: #{$space}px !important;
+    padding-right: #{$space}px !important;
+  }
+  .p-y-#{$space} {
+    padding-top: #{$space}px !important;
+    padding-bottom: #{$space}px !important;
+  }
+}
+
+
+body {
+  font-family: $font-family-2 !important;
+  color: $primary !important;
+  font-size: $font-text !important;
+  line-height: 22px !important;
+}
+
+h1 {
+  font-size: $font-title;
+  font-family: $font-family-1;
+  color: $secondary;
+  text-transform: uppercase;
+  line-height: 40px;
+}
+
+h2 {
+  font-family: $font-family-1;
+  font-size: $font-sub-title;
+  text-transform: uppercase;
+}
+
+a {
+  color: $secondary;
+
+  &:hover {
+    text-decoration: none !important;
+    color: $secondary;
+  }
+}
+
+/*COLOR*/
+
+.color-white {
+  color: $white;
+}
+
+.color-primary {
+  color: $primary;
+}
+
+.color-secondary {
+  color: $secondary;
+}
+
+
+/*BREADCRUMB*/
+
+.breadcrumb {
+  background-color: $white;
+  margin-bottom: 40px;
+
+  &__title {
+    font-family: $font-family-1;
+    font-size: 32px;
+    font-weight: $font-medium;
+    color: #313131;
+    line-height: 47px;
+  }
+
+  &__content {
+    font-size: $font-text;
+    font-family: $font-family-2;
+    line-height: 12px;
+    color: #B3B3B3;
+
+    &__link {
+      font-weight: $font-regular !important;
+      color: #B3B3B3 !important;
+    }
+
+    &__last {
+      color: #71b24e !important;
+    }
+  }
+}
+
+/*BUTTON*/
+
+.btn {
+  border-radius: 0;
+  font-size: 14px;
+  height: auto;
+  padding: 5px 15px;
+  transition: all .2s ease-in-out;
+
+  &__large {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+  }
+
+  &__blue {
+    background-color: $secondary;
+    border: 1.5px solid $secondary;
+    color: $white;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-family: $font-family-1;
+
+    &:hover {
+      background-color: $white !important;
+      border: 1.5px solid $secondary !important;
+      color: $primary !important;
+      //background-color: rgba(255, 196, 0, 0.8) !important;
+    }
+  }
+}
+
+.divider {
+  width: 40px;
+  height: 2px;
+  display: inline-block;
+  margin: 30px 0;
+  background-color: $primary;
+}
+
+/***** Page Contact ******/
+
+form {
+  color: $primary;
+
+  .form-container {
+    margin-right: -40px;
+    margin-left: -40px;
+
+    .col-md-6 {
+      padding-right: 40px;
+      padding-left: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+  }
+
+  label {
+    font-weight: $font-bold;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  button {
+    background-color: $mdgray !important;
+    color: $white !important;
+    float: right;
+
+    &.valid {
+      background-color: $secondary !important;
+    }
+  }
+
+  .form-control {
+    border: 1px solid #999999;
+    color: $darkgray !important;
+    -webkit-appearance:  none !important;
+    -moz-appearance:  none !important;
+    appearance:  none !important;
+    font-size: 14px;
+
+    &:focus {
+      box-shadow: none !important;
+      border-color: #999999 !important;
+    }
+  }
+
+  .invalid-feedback {
+    margin-top: 0 !important;
+    float: left;
+    line-height: initial;
+  }
+
+  // input radio
+  .radio-form {
+    height: calc(1.5em + .75rem + 2px);
+    margin-bottom: 10px;
+
+    label {
+      font-weight: $font-regular;
+      margin: 0 20px 0 8px;
+    }
+
+    input[type='radio'] {
+      display: none;
+    }
+
+    label:before {
+      content: " ";
+      display: inline-block;
+      position: relative;
+      top: 3px;
+      margin: 0 5px 0 0;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 11px;
+      border: 3px solid #d8d8d8;
+      background-color: $white;
+    }
+
+    input[type='radio']:checked + label:before {
+      position: relative;
+      border-radius: 50%;
+      width: 1rem;
+      height: 1rem;
+      top: 3px;
+      content: " ";
+      display: inline-block;
+      background-color: $white;
+      border: 5px solid $secondary;
+    }
+  }
+
+  .form-check-inline .form-check-input {
+    margin-top: -3px;
+  }
+
+  //select
+
+  select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    //color: $mdgray !important;
+
+    background: url('/build/static/arrow-down-icon.svg') 98%/4% no-repeat;
+  }
+
+  .contact_access_input, .contact_staff_input, .contact_destruction_type_input {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+  }
+}
+
+/***** Page Confirmation ******/
+
+.confirmation {
+  img {
+    width: 60%;
+  }
+}
+
+
+/******** Flexbox ********/
+.paprec-flex {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+
+  &.column {
+    -ms-flex-direction: column;
+    -webkit-direction: column;
+    flex-direction: column;
+  }
+
+  &.row-reverse {
+    -ms-flex-direction: row-reverse;
+    -webkit-direction: row-reverse;
+    flex-direction: row-reverse;
+  }
+
+  &.flex-start {
+    -ms-flex-pack: start;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+  }
+
+  &.flex-end {
+    -ms-flex-pack: end;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+  }
+
+  &.center {
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+
+  &.space-between {
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+
+  &.space-around {
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+  }
+
+  &.flex-wrap {
+    -ms-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+
+  &.align-items_flex-start {
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+  }
+
+  &.align-items_flex-end {
+    -webkit-align-items: flex-end;
+    align-items: flex-end;
+  }
+
+  &.align-items_center {
+    -webkit-align-items: center;
+    align-items: center;
+  }
+}
+
+
+/*************************
+HIDE CAPTCHA
+ */
+
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/****************
+* OVERLAY CHARGEMENT
+*/
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  display: none;
+
+  .active {
+    display: block;
+  }
+}
+
+/**
+Contact
+ */
+
+#phone-number-info, #multisite-info {
+  display: none;
+  font-style: italic;
+}
+
+#floorNumber {
+  display: none;
+}
+
+.contact-other-need {
+  color: $primary !important;
+}

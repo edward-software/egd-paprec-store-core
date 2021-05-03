@@ -1,0 +1,318 @@
+/***** Page catalogue de service ******/
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background: url('/build/static/arrow-down-icon.svg') 125%/65% no-repeat;
+  padding: 0 20px 0 8px;
+  border-radius: $border-radius-xs;
+  background-color: $white;
+  opacity: 1;
+  &:focus {
+    outline: 0 !important;
+  }
+}
+input:focus {
+  outline: 0px !important;
+}
+
+.page-section {
+  h2 {
+    span {
+      display: block;
+    }
+  }
+}
+
+.product-container {
+
+  margin-bottom: 40px;
+
+  .round-btn {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    font-size: 14px;
+    border-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .3s ease-in-out;
+    flex-direction: column;
+
+    &:focus {
+      outline: 0 !important;
+    }
+
+    i {
+      //padding-top: 2px;
+    }
+
+    &:hover:not(.round-btn--disable) {
+      //color: #fff !important;
+      //background-color: rgba(255, 196, 0, 0.8) !important;
+      //background-color: $primary;
+    }
+
+    &--blue {
+      color: #FFFFFF;
+      background-color: $secondary;
+    }
+
+    &--disable {
+      background-color: #dedede;
+      cursor: default;
+      i {
+        color: $white !important;
+      }
+    }
+  }
+
+
+  .product {
+    margin-bottom: 30px;
+    padding-right: 30px;
+    padding-left: 30px;
+
+    &__block {
+      background-color: $lightgray;
+      padding: 20px;
+      min-height: 250px;
+
+      & select {
+        background: none !important;
+        background-color: white !important;
+        border-radius: $border-radius-xs;
+        border: 1px solid #979797 !important;
+        padding: 0 0 0 10px;
+        width: 32px;
+
+        &:disabled {
+          color: $darkgray;
+        }
+      }
+
+      & select::-ms-expand {
+        display: none;
+      }
+    }
+
+    &__label {
+      font-weight: $font-bold;
+      line-height: 22px;
+    }
+
+    &__ value {
+      font-size: 16px;
+      font-weight: normal;
+      line-height: 27px;
+    }
+
+    &__image {
+      //height: 100%;
+      margin: auto;
+      width: 200px;
+      text-align: center;
+
+      img {
+        max-height: 200px;
+        max-width: 100%;
+      }
+    }
+
+    &__description {
+      max-height: 135px;
+      overflow: hidden;
+    }
+
+    &__quantity {
+      text-align: left;
+      margin-top: 20px;
+
+      button {
+        margin-right: 10px;
+      }
+      .round-btn:first-child {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .devis {
+    background-color: #004A8E;
+    color: $white;
+    min-height: 250px;
+
+    h3 {
+      text-transform: initial;
+      margin-bottom: 15px;
+    }
+
+
+    &__recap {
+      margin-bottom: 15px;
+      padding-left: 10px;
+
+
+      &__item {
+        display: flex;
+        margin-bottom: 5px;
+      }
+    }
+
+    &__frequency-container {
+      display: flex;
+      flex-direction: column;
+
+      button {
+        align-self: flex-start;
+        margin-top: auto;
+        text-transform: uppercase;
+        font-family: $font-family-1;
+        font-size: 16px;
+        &:hover {
+          background-color: $secondary;
+          color: $white;
+        }
+      }
+
+      &__content {
+        padding-left: 0px;
+      }
+    }
+
+    &__frequence {
+      //display: flex;
+      //flex-wrap: wrap;
+      //justify-content: space-between;
+      //align-items: center;
+      margin-top: 15px;
+      margin-bottom: 20px;
+
+      select {
+        background-size: 26%;
+        background-position: 95%;
+        width: 90px;
+        margin-left: 10px;
+        height: 25px;
+        border: 1px solid #979797 !important;
+        &:disabled {
+          color: $darkgray;
+        }
+      }
+
+       &__button {
+          i {
+            //color: $primary;
+          }
+       }
+      .round-btn--blue {
+        i {
+          color: $primary;
+        }
+      }
+
+      .catalog-frequency-input {
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background: none !important;
+        background-color: white !important;
+        border: 1px solid #979797 !important;
+        border-radius: $border-radius-xs;
+        padding: 0 ;
+        margin: 0 10px;
+        width: 32px;
+        &:disabled {
+          color: $darkgray;
+        }
+      }
+
+      &__times {
+        padding-top: 2px;
+      }
+    }
+
+    & .custom-control-input:checked ~ .custom-control-label::before {
+      color: #fff;
+      border-color: $secondary;
+      background-color: $secondary;
+      box-shadow: none !important;
+    }
+
+    .border-right {
+      border: 1px solid #1A5C99 !important;
+    }
+  }
+}
+
+
+.form-group {
+  ul {
+    padding: 0;
+
+    li {
+      list-style: none;
+      color: red;
+    }
+  }
+}
+
+
+/**
+* Bouton Flottant en bas de step0
+*/
+.floating-bottom-button {
+  position: fixed;
+  bottom: 1em;
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-decoration: none;
+  color: $white;
+  background-color: rgba(44, 68, 145, 0.9);
+  cursor: pointer;
+  padding: 10px 50px;
+  display: none;
+}
+
+/**
+* Other needs
+ */
+.other-needs-image {
+  margin: 5px;
+  text-align: center;
+  background-color: $lightgray;
+  padding: 30px;
+  cursor: pointer;
+  min-width: 32%;
+  max-width: 32%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .fa-check {
+    display: none;
+  }
+
+  &.active {
+    -webkit-box-shadow: 0 0 5px 2px rgba(44, 68, 145, 0.37);
+    -moz-box-shadow: 0 0 5px 2px rgba(44, 68, 145, 0.37);
+    box-shadow: 0 0 5px 2px rgba(44, 68, 145, 0.37);
+
+    .fa-check {
+      display: block;
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 28px;
+      color: green;
+    }
+  }
+
+  img {
+    max-height: 300px;
+    width: 100%;
+  }
+
+
+}

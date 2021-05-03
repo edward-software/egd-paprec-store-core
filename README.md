@@ -1,0 +1,1 @@
+# egd-paprec-store-core
