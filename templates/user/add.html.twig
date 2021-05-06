@@ -1,0 +1,220 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'User.User.Add'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content_title %}
+    {{ 'User.User.Users'|trans }}
+{% endblock %}
+
+{% block main_content %}
+
+    <form id="userUserForm" action="" method="post">
+
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-user-plus"></i> {{ 'User.User.Add'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success user-user-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger user-user-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Company-name'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.companyName, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.companyName) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Username'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.username) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.First-name'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.firstName) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Last-name'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.lastName) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Email'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.email) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Lang'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.lang, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.lang) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group form-content col-md-6">
+                                        {{ form_label(form.password.first) }}
+                                        {{ form_widget(form.password.first, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                                        {{ form_errors(form.password.first) }}
+                                    </div>
+                                    <div class="form-group form-content col-md-6">
+                                        {{ form_label(form.password.second) }}
+                                        {{ form_widget(form.password.second, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                                        {{ form_errors(form.password.second) }}
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'User.User.PhoneNumber'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.phoneNumber) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'User.User.MobileNumber'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.mobileNumber, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.mobileNumber) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'User.User.JobTitle'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.jobTitle, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.jobTitle) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-label">{{ 'User.User.Enabled'|trans }}</div>
+                                    <div class="form-content">
+                                        {% for radio in form.enabled.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label form-check-label">{{ 'User.User.Roles'|trans }}</div>
+                                    <div class="form-content">
+                                        {% for checkbox in form.roles.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(checkbox) }}
+                                                {{ form_label(checkbox)|nl2br }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form.roles) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Manager'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.manager, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.manager) }}
+                                    </div>
+                                </div>
+
+                                {#<div class="form-group">#}
+                                    {#<div class="form-label">{{ 'User.User.Postal-codes'|trans }}</div>#}
+                                    {#<div class="form-content">#}
+                                        {#<div class="form__check ml-4">#}
+                                            {#{{ form_widget(form.postalCodes, {'attr': {'class': 'form-control'}}) }}#}
+                                            {#{{ form_errors(form.postalCodes) }}#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                {#</div>#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success user-user-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger user-user-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {{ form_rest(form) }}
+
+    </form>
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('.user-user-save-button').on('click', function () {
+
+                $('#userUserForm').submit();
+
+            });
+
+
+            $('.user-user-cancel-button').on('click', function () {
+
+                var url = "{{ path("paprec_user_index") }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-cancel'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function(result){
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+        });
+    </script>
+{% endblock %}

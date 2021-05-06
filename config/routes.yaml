@@ -1,3 +1,19 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+paprec_home:
+    resource: 'routes/home.yaml'
+    prefix: 'admin'
+
+paprec_user:
+    resource: 'routes/user.yaml'
+    prefix: 'admin/user'
+
+paprec_catalog:
+    resource: 'routes/catalog.yaml'
+    prefix: 'admin/catalog'
+
+paprec_commercial:
+    resource: 'routes/commercial.yaml'
+    prefix: 'admin/commercial'
+
+paprec_public:
+    resource: 'routes/public.yaml'
+    prefix: '/'

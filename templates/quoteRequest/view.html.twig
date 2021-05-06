@@ -1,0 +1,522 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Commercial.QuoteRequest.View'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Commercial.QuoteRequest.QuoteRequests'|trans(null, null, 'DE') }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="col-md-12">
+        <div class="col-md-12">
+            <!-- FLASH MESSAGE -->
+            <div class="view-box">
+
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <div class="alert alert-danger">{{ ('Commercial.QuoteRequest.Error.' ~ flashMessage)|trans }}</div>
+                {% endfor %}
+
+                {% for flashMessage in app.session.flashbag.get('success') %}
+                    <div class="alert alert-success">{{ ('Commercial.QuoteRequest.Success.' ~ flashMessage)|trans }}</div>
+                {% endfor %}
+            </div>
+            <!-- CARD -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-quoteRequest"></i> {{ 'Commercial.QuoteRequest.View'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        {% if quoteRequest.postalCode %}
+                            <a id="downloadGeneratedQuoteButton"
+                               href="{{ path("paprec_quote_request_download", {id: quoteRequest.id}) }}"
+                               class="btn btn-sm btn-secondary"><i
+                                        class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
+                            </a>
+                        {% endif %}
+                        <a id="sendGeneratedContractButton" href="javascript:void(0);"
+                           class="btn btn-sm btn-success mr-1 {% if not quoteRequest.hasValidSignatories %}btn-disabled{% endif %}"><i
+                                    class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}</a>
+                            <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
+                               class="btn btn-sm btn-warning"><i
+                                        class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a>
+                            <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
+                               class="btn btn-sm btn-danger"><i
+                                        class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
+                    </div>
+                    <div class="float-left">
+                        <a href="{{ path('paprec_quoteRequest_index') }}" class="btn btn-sm btn-default"><i
+                                    class="fa fa-xs fa-chevron-left"></i> {{ 'Commercial.QuoteRequest.List'|trans }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'Commercial.QuoteRequest.Informations-FO'|trans }}</h5>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-md-6">
+
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Type.Type'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.type %} {{ ('Commercial.QuoteRequest.Type.'~ quoteRequest.type|capitalize)|trans }}{% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Number'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.number }}
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Locale'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.locale }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.BusinessName'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.businessName }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Civility'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ ('General.' ~ quoteRequest.civility)|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.LastName'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.lastName }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.FirstName'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.firstName }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Email'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.email }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Phone'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.phone }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Public.Contact.Access'| trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.access %}
+                                                {{ ('Commercial.AccessList.' ~ quoteRequest.access)|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Public.Contact.FloorNumber'| trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.floorNumber }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Public.Contact.Staff'| trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.staff %}
+                                                {{ ('Commercial.StaffList.' ~ quoteRequest.staff)|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Frequency'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.frequency == 'ponctual' %}
+                                                {{ 'Commercial.QuoteRequest.Ponctual'|trans }}
+                                            {% elseif quoteRequest.frequency == 'regular' %}
+                                                {{ quoteRequest.frequencyTimes }} / {{ ('Public.Catalog.' ~ quoteRequest.frequencyInterval|capitalize)|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.IsMultisite'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ ('General.' ~ (quoteRequest.isMultisite ? 'Yes' : 'No'))|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Address'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.address }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PostalCode'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.postalCode %}
+                                                <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
+                                                    {{ quoteRequest.postalCode.code }}
+                                                </a>
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.city }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Comment'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.comment }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Public.Catalog.Other-Needs'| trans }}</label>
+                                        {% if quoteRequest.otherNeeds and quoteRequest.otherNeeds|length > 0 %}
+                                            <ul class="col-form-label">
+                                                {% for otherNeed in quoteRequest.otherNeeds %}
+                                                    <li class="contact-other-need">- {{ otherNeed.name }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <label class="col-form-label">N/A</label>
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Public.Contact.DestructionType'| trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.destructionType %}
+                                                {{ ('Commercial.DestructionType.' ~ quoteRequest.destructionType)|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-4">
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.SignatoryFirstName1'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.signatoryFirstName1 }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.SignatoryLastName1'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.signatoryLastName1 }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.SignatoryTitle1'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.signatoryTitle1 }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'Commercial.QuoteRequest.Informations-BO'|trans }}</h5>
+                            </div>
+                            <div class="card-body row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.CustomerId'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.customerId }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.UserInCharge'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.userInCharge %}
+                                                {% if quoteRequest.userInCharge.deleted is null %}
+                                                    <a href="{{ path('paprec_user_view', {id: quoteRequest.userInCharge.id}) }}">
+                                                        {{ quoteRequest.userInCharge.firstName }} {{ quoteRequest.userInCharge.lastName }}
+                                                    </a>
+                                                {% else %}
+                                                    {{ quoteRequest.userInCharge.firstName }} {{ quoteRequest.userInCharge.lastName }}
+                                                {% endif %}
+                                                {% if quoteRequest.userInCharge.deleted is not null %}
+                                                    {{ 'Catalog.PostalCode.DeletedUser'|trans }}
+                                                {% elseif not quoteRequest.userInCharge.enabled %}
+                                                    {{ 'Catalog.PostalCode.DisabledUser'|trans }}
+                                                {% endif %}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Reference'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.reference }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.QuoteStatus'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ ('Commercial.QuoteStatusList.' ~ quoteRequest.quoteStatus)|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.RegularDuration'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.regularDuration %}
+                                                {{ ('Commercial.RegularDuration.' ~ quoteRequest.regularDuration)|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PonctualDuration'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.ponctualDuration %}
+                                                {{ ('Commercial.PonctualDuration.' ~ quoteRequest.ponctualDuration)|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.TollFees'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.tollFees|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.AnnualBudget'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.annualBudget|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.SalesmanComment'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.salesmanComment }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.TotalAmount'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.minTransportUnitPrice == 0 %}
+                                                0
+                                            {% else %}
+                                                {{ (((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>
+                                    {{ 'Commercial.QuoteRequest.ProductsList'|trans }}
+                                </h5>
+                                <div class="float-right">
+
+                                    <a href="{{ path('paprec_quoteRequest_addLine', {id: quoteRequest.id}) }}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.AddLine'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="quoteRequestLinesDatatable"
+                                       class="table table-striped table-bordered table-hover"
+                                       cellpadding="0" cellspacing="0" border="0">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Traceability'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.TotalAmount'|trans }}</th>
+
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for quoteRequestLine in quoteRequest.quoteRequestLines %}
+                                        <tr>
+                                            <td>{{ quoteRequestLine.id|formatId(6) }}</td>
+                                            <td>
+                                                <a href="{{ path('paprec_product_view', {id: quoteRequestLine.product.id}) }}">
+                                                    {{ quoteRequestLine.product|productLabelTranslation(app.user.lang) }}
+                                                </a>
+                                            </td>
+                                            <td>{{ quoteRequestLine.quantity }}</td>
+                                            <td>
+                                                {% if quoteRequestLine.rentalUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.rentalUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.treatmentUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.treatmentUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.traceabilityUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.traceabilityUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ quoteRequestLine.totalAmount|formatAmount('', app.request.locale) }}</td>
+                                            <td class="text-center">
+                                                <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"
+                                                   class="btn btn-sm btn-warning btn-sm mx-1"
+                                                   data-id="{{ quoteRequestLine.id }}">
+                                                    <i class="fa fa-xs fa-edit"></i>
+                                                </a>
+                                                <a href="#"
+                                                   class="btn btn-sm btn-danger btn-sm commercialQuoteRequestLineRemoveButton"
+                                                   data-id="{{ quoteRequestLine.id }}">
+                                                    <i class="fa fa-xs fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'General.System-information'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans }}</label>
+                                    <label class="col-form-label">
+                                        {{ quoteRequest.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                    </label>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans }}</label>
+                                    <label class="col-form-label">
+                                        {{ quoteRequest.dateUpdate is empty ? "" : quoteRequest.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+
+            $('#commmecialQuoteRequestRemoveButton').on('click', function () {
+
+                {% if is_granted('ROLE_ADMIN') %}
+
+                var url = "{{ path("paprec_quoteRequest_remove", {id: quoteRequest.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-remove'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+                {% else %}
+                Swal.fire({
+                    title: "{{ 'General.CantRemove'|trans }}",
+                    text: "",
+                    showCancelButton: false,
+                    confirmButtonText: "{{ 'General.Cancel'|trans }}"
+                });
+                {% endif %}
+
+
+            });
+            $('.commercialQuoteRequestLineRemoveButton').on('click', function () {
+                quoteLineId = $(this).data('id');
+                var url = "{{ path("paprec_quoteRequest_removeLine", {id: quoteRequest.id, quoteLineId: 'quoteLineIdTmp'}) }}".replace('quoteLineIdTmp', quoteLineId);
+
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-remove'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+            $('#sendGeneratedContractButton').on('click', function () {
+                if (!$(this).hasClass('btn-disabled')) {
+                    var url = "{{ path("paprec_quoteRequest_sendGeneratedContract", {id: quoteRequest.id}) }}";
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'|trans }}",
+                        text: "{{ 'Commercial.QuoteRequest.Confirm-send-contract'|trans }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'|trans }}",
+                        cancelButtonText: "{{ 'General.No'|trans }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+{% endblock %}

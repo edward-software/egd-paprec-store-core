@@ -36,7 +36,7 @@
                       label: "{{ 'Workshop.Workshop.View'|trans }}",
                       className: "btn btn-primary btn-xs",
                       icon: "fa fa-eye",
-                      url: "{{ path('egd_user_user_view', {id: '__rowId__'}) }}",
+                      url: "{{ path('egd_user_view', {id: '__rowId__'}) }}",
                       confirmMessage: "{{ 'General.Confirm-open'|trans }}"
                   }
               ],
@@ -46,14 +46,14 @@
                       label: "{{ 'Workshop.Workshop.View'|trans }}",
                       icon: "fa-search",
                       type: "open",
-                      url: "{{ path('egd_user_user_view', {id: '__rowId__'}) }}"
+                      url: "{{ path('egd_user_view', {id: '__rowId__'}) }}"
                   },
                   {
                       key: "edit",
                       label: "{{ 'Workshop.Workshop.Edit'|trans }}",
                       icon: "edit",
                       type: "open",
-                      url: "{{ path('egd_user_user_view', {id: '__rowId__'}) }}"
+                      url: "{{ path('egd_user_view', {id: '__rowId__'}) }}"
                   },
                   {
                       key: "separator"

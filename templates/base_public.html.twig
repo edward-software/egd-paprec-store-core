@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% if app.environment != 'dev' %}
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-12202631-5"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+
+            gtag('js', new Date());
+
+            gtag('config', 'UA-12202631-5');
+        </script>
+        <!-- Global site tag (gtag.js) - Google Ads: 1046486146 -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-1046486146"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+
+            gtag('js', new Date());
+
+            gtag('config', 'AW-1046486146');
+        </script>
+
+        {% block gtm %}
+        {% endblock %}
+    {% endif %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('build/public.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('build/static/favicon.png') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Raleway:wght@400;700&family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet">
+    {# <link href="https://fonts.googleapis.com/css?family=Arimo:400,700|Oswald:300,400,500&display=swap&subset=latin-ext"
+          rel="stylesheet"> #}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <!--Font awesome-->
+    <script src="https://kit.fontawesome.com/6247656702.js"></script>
+
+
+    {% block stylesheets %}{% endblock %}
+
+</head>
+<body>
+<header>
+    <div class="top-bar">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Top Contact -->
+                <div class="col-6 col-md-9">
+                    <div class="top-bar__top-contact">
+                        {# <a href="/contact"> #}
+                        {# #}{# <i class="fas fa-phone-alt"></i> #}
+                        {# <img src="{{ asset('/build/static/phone.svg') }}" alt="" class="mr-2"> #}
+                        {# <span>{{ 'Public.HeaderTitle'| trans({}, "messages", locale) }}</span> #}
+                        {# </a> #}
+                        {# <a href=""> #}
+                        {# <img src="{{ asset('/build/static/write-fas.png') }}" alt="" class="mr-2"> #}
+                        {# <span>{{ 'Public.HeaderTitle2'| trans({}, "messages", locale) }}</span> #}
+                        {# </a> #}
+                    </div>
+                </div>
+
+                <!-- Top Social Icon -->
+                {# <div class="col-md-2 col-lg-3 px-0 text-center text-md-right">
+                    <div class="top-bar__top-social-icon">
+                        <ul>
+                            <li>
+                                <a href="https://www.facebook.com/Lottner-AG-124475410963566/?fref=ts"
+                                   target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://plus.google.com/102577579817338404444" target="_blank"
+                                   rel="noopener noreferrer">
+                                    <i class="fab fa-google-plus-g"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/showcase/privacia-aktenvernichtung-schweiz/"
+                                   target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.youtube.com/channel/UCH8kRN0OFEvKsvd55JG-ZAg"
+                                   target="_blank" rel="noopener noreferrer">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div> #}
+
+                <!-- Top Flags -->
+                <div class="col-6 col-md-3 pr-0">
+                    {# <div class="col-md-3 col-lg-2 text-center"> #}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Navigation #}
+    <nav class="navbar navbar-expand-md navbar-light static-top">
+        <div class="container menu">
+            <a class="navbar-brand" href="{{ privacia_public_site_url }}">
+                {# <img src="/build/static/privacia_logo.png" alt=""> #}
+                <img class="img-fluid" width="260" src="{{ asset('/build/static/logo-groupe.png') }}" alt="">
+            </a>
+            <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                <ul class="navbar-nav nav ml-5 mr-xl-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link"
+                           href="{{ privacia_public_site_url }}">{{ 'Public.Navbar.Home'| trans({}, "messages", locale) }}
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    {# <li class="nav-item dropdown"> #}
+                    {# <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" #}
+                    {# aria-haspopup="true" aria-expanded="false"> #}
+                    {# {{ 'Public.Navbar.Menu1.Title'| trans({}, "messages", locale) }} #}
+                    {# </a> #}
+                    {# <ul class="dropdown-menu mt-0" aria-labelledby="navbarDropdown"> #}
+                    {# <li> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu1.SubMenu1'| trans({}, "messages", locale) }}</a> #}
+                    {# </li> #}
+                    {# <li> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu1.SubMenu2'| trans({}, "messages", locale) }}</a> #}
+                    {# </li> #}
+                    {# <li> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu1.SubMenu3'| trans({}, "messages", locale) }}</a> #}
+                    {# </li> #}
+                    {# <li> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu1.SubMenu4'| trans({}, "messages", locale) }}</a> #}
+                    {# </li> #}
+                    {# </ul> #}
+                    {# </li> #}
+                    {# <li class="nav-item dropdown"> #}
+                    {# <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" #}
+                    {# aria-haspopup="true" aria-expanded="false"> #}
+                    {# {{ 'Public.Navbar.Menu2.Title'| trans({}, "messages", locale) }} #}
+                    {# </a> #}
+                    {# <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdown"> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu2.SubMenu1'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu2.SubMenu2'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" #}
+                    {# href="#">{{ 'Public.Navbar.Menu2.SubMenu3'| trans({}, "messages", locale) }}</a> #}
+                    {# </div> #}
+                    {# </li> #}
+                    {# <li class="nav-item dropdown"> #}
+                    {# <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" #}
+                    {# aria-haspopup="true" aria-expanded="false"> #}
+                    {# {{ 'Public.Navbar.Menu3.Title'| trans({}, "messages", locale) }} #}
+                    {# </a> #}
+                    {# <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdown"> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu3.SubMenu1'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu3.SubMenu2'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu3.SubMenu3'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu3.SubMenu4'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu3.SubMenu5'| trans({}, "messages", locale) }}</a> #}
+                    {# </div> #}
+                    {# </li> #}
+                    {# <li class="nav-item dropdown"> #}
+                    {# <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" #}
+                    {# aria-haspopup="true" aria-expanded="false"> #}
+                    {# {{ 'Public.Navbar.Menu4.Title'| trans({}, "messages", locale) }} #}
+                    {# </a> #}
+                    {# <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdown"> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu4.SubMenu1'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu4.SubMenu2'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu4.SubMenu3'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu4.SubMenu4'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu4.SubMenu5'| trans({}, "messages", locale) }}</a> #}
+                    {# </div> #}
+                    {# </li> #}
+                    {# <li class="nav-item dropdown"> #}
+                    {# <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" #}
+                    {# aria-haspopup="true" aria-expanded="false"> #}
+                    {# {{ 'Public.Navbar.Menu5.Title'| trans({}, "messages", locale) }} #}
+                    {# </a> #}
+                    {# <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdown"> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu5.SubMenu1'| trans({}, "messages", locale) }}</a> #}
+                    {# <a class="dropdown-item" href="#">{{ 'Public.Navbar.Menu5.SubMenu2'| trans({}, "messages", locale) }}</a> #}
+                    {# </div> #}
+                    {# </li> #}
+
+
+                    {# <li class="nav-item dropdown">
+                        <a href="#" class="nav-link">
+                            <i class="fa fa-search"></i>
+                        </a>
+                        <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdown"
+                             style=" top: auto; left: -190px; padding: 10px;">
+                            <form class="navbar-form navbar-left" action="" method="post">
+                                <div class="form-group">
+                                    <input class="form-control" name="searchword" id="mod-search-searchword"
+                                           maxlength="200" type="text" value="Recherche...">
+                                </div>
+                            </form>
+                        </div>
+                    </li> #}
+
+
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
+<section class="breadcrumb">
+    <div class="container">
+        {# <div class="breadcrumb__title">
+            {% block breadcrumb_title %}{% endblock %}
+        </div> #}
+        <div class="breadcrumb__content">
+            <a class="breadcrumb__content__link"
+               href="{{ privacia_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>
+            > <a class="breadcrumb__content__link"
+                 href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Quote'| trans({}, "messages", locale) }}</a>
+            > <span class="breadcrumb__content__last">{% block breadcrumb_content %}{% endblock %}</span>
+
+        </div>
+    </div>
+</section>
+
+{% block main_content %}
+    <!-- section -->
+
+    <!-- /section -->
+{% endblock %}
+</main>
+
+{# <footer> #}
+{# <div class="container"> #}
+{# <div class="footer"> #}
+{# #}{# <div class="row"> #}
+{# <div class="col-sm-6 col-md-3"> #}
+{# <h3>Vos avantages en un coup d’oeil</h3> #}
+{# <ul class="footer__list"> #}
+{# <li><i class="fas fa-check"></i>Commande à prix fixe</li> #}
+{# <li><i class="fas fa-check"></i>Devis sans engagement</li> #}
+{# <li><i class="fas fa-check"></i>Service clients personnel</li> #}
+{# <li><i class="fas fa-check"></i>Entreprise de gestion des déchets certifiée</li> #}
+{# </ul> #}
+{# </div> #}
+{# <div class="col-sm-6 col-md-3"> #}
+{# <h3>sites</h3> #}
+{# <p class="font-weight-bold">Zurich</p> #}
+{# <p class="mb-3">Lindenstrasse 3<br> #}
+{# CH-8108 Dällikon<br> #}
+{# +41 44 844 24 04<br></p> #}
+
+{# <p class="font-weight-bold">Bâle</p> #}
+{# <p class="mb-3">Schlachthofstrasse 18<br> #}
+{# CH-4056 Bâle<br> #}
+{# +41 61 386 96 70<br></p> #}
+
+{# <p class="font-weight-bold">Lucerne</p> #}
+{# <p>Kantonsstrasse 5<br> #}
+{# CH-6033 Buchrain<br> #}
+{# +41 41 448 38 62<br></p> #}
+{# </div> #}
+{# <div class="col-sm-6 col-md-3"> #}
+{# <h3>centre de service</h3> #}
+{# <p class="mb-4 text-justify" style="letter-spacing: -0.1px;">Nous nous faisons un plaisir de vous #}
+{# conseiller en matière de destruction de documents et de #}
+{# supports numériques !</p> #}
+{# <button type="button" class="btn btn__blue">Envoyer une demande</button> #}
+{# </div> #}
+{# <div class="col-sm-6 col-md-3"> #}
+{# <h3>centre de service</h3> #}
+{# <img src=" {{ asset('/build/static/zertifikat_qualitaet_9001.png') }}" alt=""> #}
+{# <img src=" {{ asset('/build/static/IQNet_gm_al.png') }}" alt=""> #}
+{# <img src=" {{ asset('/build/static/DIN_66399.png') }}" alt=""> #}
+{# </div> #}
+{# </div> #}
+
+{# <div class="row"> #}
+{# <div class="col-md-5"> #}
+{# <h3>Vos avantages en un coup d’oeil</h3> #}
+{# <ul class="footer__list"> #}
+{# <li><i class="fas fa-check"></i>Commande à prix fixe</li> #}
+{# <li><i class="fas fa-check"></i>Devis sans obligation d'achat</li> #}
+{# <li><i class="fas fa-check"></i>Entreprise de destruction certifiée</li> #}
+{# <li><i class="fas fa-check"></i>Service client personnalisé</li> #}
+{# </ul> #}
+{# <h3>centre de service</h3> #}
+{# <p class="mb-4 text-justify" style="letter-spacing: -0.1px;max-width: 75%;">Nous nous faisons un #}
+{# plaisir de vous conseiller en matière de destruction de documents et de supports numériques!</p> #}
+{# <button type="button" class="btn btn__blue">Envoyer une demande</button> #}
+{# </div> #}
+{# <div class="col-md-6 col-lg-5"> #}
+{# <h3>sites</h3> #}
+{# <div class="row"> #}
+{# <div class="col-md-6"> #}
+{# <p class="font-weight-bold mb-3">Zurich</p> #}
+{# <p class="footer__sites">Lindenstrasse 3<br> #}
+{# CH-8108 Dällikon<br> #}
+{# <a href="tel:+41 44 844 24 04">+41 44 844 24 04</a></p> #}
+
+{# <p class="font-weight-bold mb-3">Bâle</p> #}
+{# <p class="footer__sites">Schlachthofstrasse 18<br> #}
+{# CH-4056 Bâle<br> #}
+{# <a href="tel:+41 61 386 96 70">+41 61 386 96 70</a></p> #}
+{# </div> #}
+
+{# <div class="col-md-6"> #}
+{# <p class="font-weight-bold mb-3">Lucerne</p> #}
+{# <p class="footer__sites">Kantonsstrasse 5<br> #}
+{# CH-6033 Buchrain<br> #}
+{# <a href="tel:+41 41 448 38 62">+41 41 448 38 62</a></p> #}
+
+{# <p class="font-weight-bold mb-3">Genève</p> #}
+{# <p class="footer__sites">Rue de la Bergère 26 5<br> #}
+{# CH-1242 Satigny<br> #}
+{# <a href="tel:+41 22 552 62 62">+41 22 552 62 62</a></p> #}
+{# </div> #}
+{# </div> #}
+{# </div> #}
+{# <div class="col-lg-2 col-md-12"> #}
+{# <h3>Qualité</h3> #}
+{# <img src=" {{ asset('/build/static/DIN_66399.png') }}" alt=""> #}
+{# <img src=" {{ asset('/build/static/IQNet_gm_al.png') }}" alt=""> #}
+{# <img src=" {{ asset('/build/static/zertifikat_qualitaet_9001.png') }}" alt=""> #}
+{# </div> #}
+{# </div> #}
+
+{# <div class="row"> #}
+{# <div class="col-12"> #}
+{# <div class="footer__divider"></div> #}
+{# </div> #}
+{# </div> #}
+
+{# <div class="row"> #}
+{# <div class="col-md-6 mb-4 footer__legal"> #}
+{# <a href="#" target="">Mentions légales</a> #}
+{# <span>|</span> #}
+{# <a href="#" target="">Déclaration de confidentialité</a> #}
+{# </div> #}
+{# </div> #}
+
+{# </div> #}
+{# </div> #}
+
+{# <div class="copyright"> #}
+{# <div class="container"> #}
+{# <div class="row"> #}
+{# <div class="col"> #}
+{# <a href="">Demandez dès maintenant une offre sans engagement</a> #}
+{# </div> #}
+{# </div> #}
+{# </div> #}
+{# </div> #}
+{# </footer> #}
+<!-- /footer -->
+
+<script src="{{ asset('build/public.js') }}"></script>
+{% block javascripts %}
+
+{% endblock %}
+</body>
+</html>

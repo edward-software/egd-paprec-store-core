@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css?family=Arimo:400,700|Oswald:300,400,500&display=swap&subset=latin-ext"
+          rel="stylesheet">
+    <title>Account Activation</title>
+
+    <!-- Web Font / @font-face : BEGIN -->
+    <!--[if mso]>
+    <style>
+        * {
+            font-family: Arial, sans-serif !important;
+        }
+    </style>
+    <![endif]-->
+    <!-- Web Font / @font-face : END -->
+
+
+</head>
+<body>
+
+{{ 'Commercial.NewQuoteEmail.Dear'|trans({}, "messages", locale) }},
+<br><br>
+{{ 'Commercial.NewQuoteEmail.Message1'| trans({}, "messages", locale) }}
+<br>
+<a href="{{ privacia_public_store_url }}/admin/commercial/quoteRequest/view/{{ quoteRequest.id }}">
+    {{ 'Commercial.NewQuoteEmail.QuoteLink'| trans({}, "messages", locale) }}
+</a>
+<br><br>
+{{ 'Commercial.NewQuoteEmail.Message2'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.ConfirmEmail.Partner'| trans({}, "messages", locale) }}
+<br>
+
+</body>
+</html>
+
+

@@ -1,0 +1,195 @@
+Commercial:
+
+
+    Bundle-name: Gestion commerciale
+    QuoteRequests: Demandes de devis
+    Settings: Paramétrage
+
+    QuoteRequest:
+        QuoteRequests: Demandes de devis
+        List: Liste des demandes de devis
+        Add: Ajout d'un devis
+        Export: Export des devis
+        BusinessName: Nom société
+        TotalAmount: Montant total
+        QuoteStatus: Status devis
+        Date-crea: Date créa.
+        Civility: Civilité
+        LastName: Nom
+        FirstName: Prénom
+        Email: Email
+        Phone: Téléphone
+        Address: Adresse
+        PostalCode: Code postal
+        City: Ville
+        Informations-BO: Informations Back-Office
+        Informations-FO: Informations Front-Office
+        Frequency: Fréquence
+        PassingFrequency: Fréquence de passage (si régulier)
+        FrequencyTimes: Nb de passages (si régulier)
+        month: mois
+        bimestre: bimestre
+        quarter: trimestre
+        quadrimestre: quadrimestre
+        year: an
+        week: semaine
+        CoworkerNumber: Effectif
+        UserInCharge: Commercial en charge
+        Reference: Référence de l'offre
+        IsMultisite: Prestation multi-sites
+        Comment: Commentaire
+        OverallDiscount: Ajustement prix (+/- en %)
+        TollFees: Frais de péages
+        CustomerId: Numéro client
+        SalesmanComment: Commentaire commercial
+        AnnualBudget: Budget annuel
+        View: Vue du devis
+        Download-quote: Télécharger PDF
+        DownloadedQuoteName: Contrat Privacia
+        Send-quote: Envoyer devis au client
+        Send-contract: Envoyer contrat au client
+        ProductsList: Liste des produits
+        AddLine: Ajouter un produit
+        Confirm-send-quote: Êtes-vous sûr de vouloir envoyer le devis au client ?
+        Confirm-send-contract: Êtes-vous sûr de vouloir envoyer le contrat au client ?
+        Edit: Edition du devis
+        Ponctual: A la demande
+        Regular: Régulière
+        RegularDuration: Durée contrat
+        PonctualDuration: Durée prestation
+        Error:
+            generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
+            generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
+        Success:
+            generatedQuoteSent: Le devis a bien été généré et envoyé au client.
+            generatedContractSent: Le contrat a bien été généré et envoyé au client.
+            newUserInChargeWarned: Un mail a été envoyé au nouveau commercial en charge
+        Locale: Langue
+        Number: Numéro offre
+        Type:
+            Type: Type
+            Ponctual: Désarchivage unique
+            Regular: Service régulier
+        SignatoryFirstName1: Prénom signataire 1
+        SignatoryLastName1: Nom signataire 1
+        SignatoryTitle1: Titre signataire 1
+
+    QuoteStatusList:
+        CREATED: Créé
+        PENDING: En attente
+        PROCESSING: En traitement
+        CLOSED: Fermé
+
+    StaffList:
+        120: De 1 à 20 employés
+        2150: De 21 à 50 employés
+        51100: De 51 à 100 employés
+        100+: Plus de 100 employés
+
+    PonctualDuration:
+        1: 1 mois
+        2: 2 mois
+        3: 3 mois
+        4: 4 mois
+
+    RegularDuration:
+        24: 24 mois
+        36: 36 mois
+        48: 48 mois
+        60: 60 mois
+
+    DestructionType:
+        DOCUMENT_DESTRUCTION: Destruction confidentielle de documents
+        ARCHIVE_CLEARING: Désarchivage
+        HARD_DRIVE_DESTRUCTION: Destrution de supports numériques
+        RADIOGRAPHIC_FILM_DESTRUCTION: Destruction des radiographies
+
+    AccessList:
+        stairs: Par escalier
+        elevator: Par ascenseur
+        ground: Niveau rue sans marche
+
+    QuoteRequestLine:
+        ProductName: Nom du produit
+        UnitPrice: Prix unitaire
+        Quantity: Quantité
+        RentalPrice: Location
+        Transport: Transport
+        Treatment: Traitement
+        Traceability: Traçabilité
+        Access: Accès
+        TotalAmount: Montant total
+        Add: Ajout d'un produit
+        Product: Produit
+
+    GeneralEmail:
+        Address1: BALE, Schlachthofstrasse 18, CH-4056 Bâle, +41 61 386 96 70
+        Address2: LUCERNE, Kantonsstrasse 5, CH-6033 Buchrain, +41 41 448 38 62
+        Address3: ZURICH, Lindenstrasse 3, CH-8108 Dällikon, +41 44 844 24 04
+        Address4: ROMANDIE, Rue de la Bergère 26, CH-1242 Satigny, +41 22 552 62 62
+
+    NewQuoteEmail:
+        Object: Voici une nouvelle demande client N°%number%
+        Dear: Cher(ère) Collègue Privacia
+        Message1: Tu trouveras ci-joint une demande de vérification de l'offre pour la zone géographique ainsi que du contrat prévu.
+        QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
+        Message2: Nous t’en remercions par avance.
+        Partner: Ton partenaire Privacia
+
+    ConfirmEmail:
+        Object: Nous vous remercions pour votre demande
+        Dear:
+            M: Cher Monsieur
+            Mrs: Chère Madame
+        Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        TechnicalService: service technique
+        Message2: Nous vous enverrons notre offre pour les services PRIVACIA dans les 24 heures.
+        Regards: Bien cordialement
+        Partner: Votre partenaire Privacia
+        NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
+        Disclaimer:
+            Message1: Vous avez reçu cet e-mail pour vous informer des modifications importantes apportées aux services
+            Message2: que vous utilisez
+
+    GeneratedQuoteEmail:
+        FileName: Offre Privacia
+        Object: Offre de services Privacia
+        Dear:
+            M: Cher Monsieur
+            Mrs: Chère Madame
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services PRIVACIA.
+        Message2: Vous trouverez en annexe notre offre pour les services PRIVACIA. Ceux-ci peuvent être adaptés à vos besoins actuels à tout moment, rapidement et simplement. Nous garantissons toujours un service impeccable et la destruction quotidienne de vos fichiers et supports de données.
+        Message3: N'hésitez pas à nous contacter si vous avez d'autres questions. Nous nous réjouissons de travailler bientôt avec vous.
+        Message4: Si vous êtes d'accord,
+        Message5: cliquer ici sur le lien pour renseigner les signataires du contrat de service
+        ReplySubject: Demande contrat / ID Devis N°%id%
+        Regards: Bien cordialement
+        Partner: Votre partenaire Privacia
+
+    GeneratedContractEmail:
+        FileName: Contrat Privacia
+        Object: Contrat de services Privacia
+        Dear:
+            M: Cher Monsieur
+            Mrs: Chère Madame
+        Message1: Nous vous remercions d’avoir choisi les services de PRIVACIA SA.
+        Message2: Vous trouverez en annexe notre contrat pour les services de PRIVACIA SA.
+        Message3: Nous vous prions de bien vouloir imprimer 2 exemplaires, les signer et les envoyer à l’adresse Privacia en haut du contrat.
+        Message4: Dès réception, vous recevrez quelques jours plus tard une version signée par nos soins.
+        Message5: N'hésitez pas à nous contacter si vous avez d'autres questions. Nous nous réjouissons de travailler bientôt avec vous.
+        Regards: Bien cordialement
+        Partner: Votre partenaire Privacia
+
+    NewContractEmail:
+        FileName: Contrat Privacia
+        Object: Contrat Privacia N°%number%
+        Dear: Cher (ère) Collègue Privacia,
+        Message1: Pour information, tu trouveras ci-joint un contrat que le client devrait rapidement nous renvoyer signé.
+        Partner: Ton partenaire Privacia
+User:
+    User:
+        Lang: Langue
+        PhoneNumber: Téléphone
+        MobileNumber: Mobile
+        JobTitle: Titre

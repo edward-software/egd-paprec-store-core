@@ -1,0 +1,441 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.CustomArea.View'|trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.CustomArea.CustomAreas'|trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block main_content %}
+
+
+    <div class="col-md-12">
+        <!-- CARD -->
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <i class="fa fa-xs fa-folder"></i> {{ 'Catalog.CustomArea.View'|trans({}, "messages", app.request.locale) }}
+                </h4>
+                <div class="float-right">
+                    <a href="{{ path("paprec_custom_area_edit", {id: customArea.id}) }}"
+                       class="btn btn-sm btn-warning"><i
+                                class="fa fa-xs fa-edit"></i> {{ 'Catalog.CustomArea.Edit'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                    <a id="catalogCustomAreaRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
+                                class="fa fa-xs fa-trash"></i> {{ 'Catalog.CustomArea.Remove'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+                <div class="float-left">
+                    <a href="{{ path('paprec_custom_area_index') }}" class="btn btn-sm btn-default"><i
+                                class="fa fa-xs fa-chevron-left"></i> {{ 'Catalog.CustomArea.List'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.Information'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.CustomArea.Code'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ customArea.code }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.CustomArea.Language'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ customArea.language }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.CustomArea.IsDisplayed'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {% if customArea.isDisplayed == 1 %}{{ 'General.Yes'|trans({}, "messages", app.request.locale) }}{% else %}{{ 'General.No'|trans({}, "messages", app.request.locale) }}{% endif %}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'Catalog.CustomArea.Content'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body no-gutters row">
+                            <div class="col no-gutters">
+                                <div class="form-group">
+                                    <label class="col-md-12 col-form-label">
+                                        {{ 'Catalog.CustomArea.LeftContent'|trans({}, "messages", app.request.locale) }}
+                                    </label>
+                                    <label class="col-form-label col-md-12">
+                                        {% autoescape false %}
+                                            {{ customArea.leftContent }}
+                                        {% endautoescape %}
+                                    </label>
+                                    <div class="col-md-12 no-gutters">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">{{ 'Catalog.CustomArea.AddPictureLeft'|trans({}, "messages", app.request.locale) }}</h5>
+                                                {% if customArea.leftPictures is empty %}
+                                                    <div class="float-right">
+                                                        <button class="btn btn-sm btn-outline-primary"
+                                                                data-target="#uploadPictureModal" data-toggle="modal"
+                                                                data-type="LEFT" id="openModalUploadPicture">
+                                                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.CustomArea.AddPictureLeft'| trans({}, "messages", app.request.locale) }}
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="card-group">
+                                                    {% if (customArea.leftPictures) %}
+                                                        {% for picture in customArea.leftPictures %}
+                                                            <div class="card card-sec">
+                                                                <div class="card-header">
+                                                                    {#<div class="float-left"> {{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}</div>#}
+                                                                    <div class="dropdown float-right">
+                                                                        <button class="p-0 btn btn-sm btn-light dropdown-toggle btn-sm"
+                                                                                type="button" id="{{ picture.id }}"
+                                                                                data-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
+                                                                            <i class="fa fa-xs fa-cog"></i>
+                                                                        </button>
+                                                                        <div class="dropdown-menu"
+                                                                             aria-labelledby="{{ picture.id }}">
+                                                                            <button id="pictureEditButton"
+                                                                                    class="dropdown-item"
+                                                                                    type="button"
+                                                                                    data-target="#editPictureModal"
+                                                                                    data-toggle="modal"
+                                                                                    data-type="LEFT"
+                                                                                    data-id="{{ picture.id }}">
+                                                                                <i class="fa fa-xs fa-pencil-alt"></i> {{ 'General.Edit'| trans({}, "messages", app.request.locale) }}
+                                                                            </button>
+
+                                                                            <button data-id="{{ picture.id }}"
+                                                                                    class="dropdown-item removePictureButton"
+                                                                                    type="button">
+                                                                                <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'| trans({}, "messages", app.request.locale) }}
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <img class="card-img-top"
+                                                                     src="{{ asset('/uploads/pictos/' ~ picture.path) }}"
+                                                                     alt="{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}">
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col no-gutters">
+                                <div class="form-group">
+                                    <label class="col-md-12 col-form-label">
+                                        {{ 'Catalog.CustomArea.RightContent'|trans({}, "messages", app.request.locale) }}
+                                    </label>
+                                    <label class="col-md-12 col-form-label">
+                                        {% autoescape false %}
+                                            {{ customArea.rightContent }}
+                                        {% endautoescape %}
+                                    </label>
+                                    <div class="col-md-12 no-gutters">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="card-title">{{ 'Catalog.CustomArea.AddPictureRight'|trans({}, "messages", app.request.locale) }}</h5>
+                                                {% if customArea.rightPictures is empty %}
+                                                    <div class="float-right">
+                                                        <button class="btn btn-sm btn-outline-primary"
+                                                                data-target="#uploadPictureModal" data-toggle="modal"
+                                                                data-type="RIGHT" id="openModalUploadPicture">
+                                                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.CustomArea.AddPictureRight'| trans({}, "messages", app.request.locale) }}
+                                                        </button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="card-group">
+                                                    {% if (customArea.rightPictures) %}
+                                                        {% for picture in customArea.rightPictures %}
+                                                            <div class="card card-sec">
+                                                                <div class="card-header">
+                                                                    {#<div class="float-left"> {{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}</div>#}
+                                                                    <div class="dropdown float-right">
+                                                                        <button class="p-0 btn btn-sm btn-light dropdown-toggle btn-sm"
+                                                                                type="button" id="{{ picture.id }}"
+                                                                                data-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
+                                                                            <i class="fa fa-xs fa-cog"></i>
+                                                                        </button>
+                                                                        <div class="dropdown-menu"
+                                                                             aria-labelledby="{{ picture.id }}">
+                                                                            <button id="pictureEditButton"
+                                                                                    class="dropdown-item"
+                                                                                    type="button"
+                                                                                    data-target="#editPictureModal"
+                                                                                    data-toggle="modal"
+                                                                                    data-type="RIGHT"
+                                                                                    data-id="{{ picture.id }}">
+                                                                                <i class="fa fa-xs fa-pencil-alt"></i> {{ 'General.Edit'| trans({}, "messages", app.request.locale) }}
+                                                                            </button>
+                                                                            <button data-id="{{ picture.id }}"
+                                                                                    class="dropdown-item removePictureButton"
+                                                                                    type="button">
+                                                                                <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'| trans({}, "messages", app.request.locale) }}
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <img class="card-img-top"
+                                                                     src="{{ asset('/uploads/pictos/' ~ picture.path) }}"
+                                                                     alt="{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}">
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {#
+                            Modal d'affichage des formulaires
+                        #}
+                        <div class="modal fade" id="uploadPictureModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Upload Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formAddPicture" name="formAddPicture"
+                                            {% set params = {id: customArea.id, type: 'Picture' } %}
+                                          action="{{ path("paprec_custom_area_addPicture", params) }}"
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="uploadPictureModalTitle">
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span id="uploadPictureSizeInfo">
+
+                                                        </span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddPicture.path) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formAddPictureSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formAddPicture) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="editPictureModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Edit Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formEditPicture" name="formEditPicture"
+                                          action=""
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editPictureModalTitle">
+                                                {{ 'Catalog.Product.EditPicture'| trans({}, "messages", app.request.locale) }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span id="editPictureSizeInfo">
+
+                                                        </span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formEditPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formEditPicture.path) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formEditPictureSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formEditPicture) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.System-information'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ customArea.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ customArea.dateUpdate is empty ? "" : customArea.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('#catalogCustomAreaRemoveButton').on('click', function () {
+
+                var url = "{{ path("paprec_custom_area_remove", {id: customArea.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans({}, "messages", app.request.locale) }}",
+                    text: "{{ 'General.Confirm-remove'|trans({}, "messages", app.request.locale) }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans({}, "messages", app.request.locale) }}",
+                    cancelButtonText: "{{ 'General.No'|trans({}, "messages", app.request.locale) }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+        });
+
+        // Au chargement de la modal d'ajout d'une photo
+        // On met à jour le titre de la modal d'ajout de photo en fonction du type que l'on ajoute
+        // On modifie aussi l'url d'action pour passer en paramètre le type de photo à ajouter
+        $('#uploadPictureModal').on('show.bs.modal', function (e) {
+            var type = $(e.relatedTarget).data('type');
+            var actionUrl = "{{ path("paprec_custom_area_addPicture", {id: customArea.id, type: 'typeTmp'}) }}";
+            var sizeInfo = document.getElementById('uploadPictureSizeInfo');
+
+            actionUrl = actionUrl.replace('typeTmp', type);
+            document.formAddPicture.action = actionUrl;
+            switch (type) {
+                case 'LEFT':
+                    type = "{{ 'Catalog.CustomArea.AddPictureLeft'| trans({}, "messages", app.request.locale) }}";
+                    break;
+                case 'RIGHT':
+                    type = "{{ 'Catalog.CustomArea.AddPictureRight'| trans({}, "messages", app.request.locale) }}";
+                    break;
+                default:
+                    type = "{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}";
+                    break;
+            }
+            var title = document.getElementById('uploadPictureModalTitle');
+            title.innerText = type;
+        });
+
+
+        // Au chargement de la modal d'édition d'une photo
+        // On modifie l'URL d'action du formulaire pour passer en paramètre l'ID de la photo modifiée
+        $('#editPictureModal').on('show.bs.modal', function (e) {
+            var pictureID = $(e.relatedTarget).data('id');
+            var type = $(e.relatedTarget).data('type');
+            var actionUrl = "{{ path("paprec_custom_area_editPicture", {id: customArea.id, pictureID: 'pictureTmp'}) }}";
+            var sizeInfo = document.getElementById('editPictureSizeInfo');
+
+            actionUrl = actionUrl.replace('pictureTmp', pictureID);
+            document.formEditPicture.action = actionUrl;
+            switch (type) {
+                case 'LEFT':
+                    type = "{{ 'Catalog.CustomArea.AddPictureLeft'| trans({}, "messages", app.request.locale) }}";
+                    break;
+                case 'RIGHT':
+                    type = "{{ 'Catalog.CustomArea.AddPictureRight'| trans({}, "messages", app.request.locale) }}";
+                    break;
+                default:
+                    type = "{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}";
+                    break;
+            }
+            var title = document.getElementById('editPictureModalTitle');
+            title.innerText = type;
+        });
+
+
+        $('.removePictureButton').on('click', function () {
+            picId = $(this).data('id');
+            Swal.fire({
+                title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
+                text: "{{ 'General.Confirm-remove'| trans({}, "messages", app.request.locale) }}",
+                showCancelButton: true,
+                confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
+                cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+            }).then(function (result) {
+                if (result.value) {
+                    var url = "{{ path("paprec_custom_area_removePicture", {id: customArea.id, pictureID: 'pictureTmp'}) }}";
+                    url = url.replace('pictureTmp', picId);
+                    $(location).attr('href', url);
+                }
+            });
+        });
+
+        $('#formAddPictureSubmitButton').on('click', function () {
+            $('#formAddPicture').submit();
+        });
+
+        $('#formEditPictureSubmitButton').on('click', function () {
+            $('#formEditPicture').submit();
+        });
+    </script>
+{% endblock %}

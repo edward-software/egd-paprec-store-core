@@ -1,0 +1,25 @@
+catalog_product:
+    resource: App\Controller\ProductController
+    type:     annotation
+    prefix:   product
+
+catalog_postal_code:
+    resource: App\Controller\PostalCodeController
+    type:     annotation
+    prefix:   postalCode
+
+
+catalog_agency:
+    resource: App\Controller\AgencyController
+    type:     annotation
+    prefix:   agency
+
+catalog_custom_area:
+    resource: App\Controller\CustomAreaController
+    type:     annotation
+    prefix:   customArea
+
+catalog_other_need:
+    resource: App\Controller\OtherNeedController
+    type:     annotation
+    prefix:   otherNeed

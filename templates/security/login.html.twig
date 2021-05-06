@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ asset('/build/app.css') }}">
+
+    {% block stylesheets %}{% endblock %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="mx-auto col-md-4 mt-4 jumbotron">
+            <div class="login-box-plain">
+                <form action="{{ path('app_login') }}" method="post" class="form-signin" role="form">
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                    {% if error.message is defined %}
+                        <div class="alert alert-danger"
+                             role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    {% else %}
+                        {% if error != '' %}
+                            <div class="alert alert-danger" role="alert">{{ error }}</div>
+                        {% endif %}
+                    {% endif %}
+                    <h2 class="form-signin-heading">Connexion</h2>
+                    <div class="form-group">
+                        <label for="username" class="sr-only">Identifiant</label>
+                        <i class="icon-user"></i>
+                        <input type="text" id="username" name="username" class="form-control" value="{{ last_username }}" required autofocus/>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Mot de passe</label>
+                        <i class="icon-lock"></i>
+                        <input type="password" id="password" name="password" required class="form-control" />
+                    </div>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="form-actions">
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" id="_submit" name="_submit">
+                            Connexion
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ asset('/build/app.js') }}"></script>
+
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

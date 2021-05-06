@@ -1,0 +1,4 @@
+commercial_quote_request:
+    resource: App\Controller\QuoteRequestController
+    type:     annotation
+    prefix:   quoteRequest

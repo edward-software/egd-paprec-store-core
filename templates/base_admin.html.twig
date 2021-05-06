@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('build/static/favicon.png') }}">
+
+    <style>
+        {# TODO AJOUTER DANS CUSTOMCSS CF CYRIL#}
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu > .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            -webkxit-border-radius: 0 6px 6px 6px;
+            -moz-border-radius: 0 6px 6px 6px;
+            border-radius: 0 6px 6px 6px;
+        }
+
+        .dropdown-submenu:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu > .dropdown-item:after {
+            display: block;
+            content: " ";
+            float: right;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #cccccc;
+            margin-top: 5px;
+            margin-right: -10px;
+        }
+
+        .dropdown-submenu:hover > a:after {
+            border-left-color: #ffffff;
+        }
+
+        .dropdown-submenu.pull-left {
+            float: none;
+        }
+
+        .dropdown-submenu.pull-left > .dropdown-menu {
+            left: -100%;
+            margin-left: 10px;
+            -webkit-border-radius: 6px 0 6px 6px;
+            -moz-border-radius: 6px 0 6px 6px;
+            border-radius: 6px 0 6px 6px;
+        }
+    </style>
+
+    {% block stylesheets %}{% endblock %}
+    {# <link rel="icon" type="image/png" href="{{ privacia_public_site_url }}/wp-content/themes/bst-master/images/logo/picto_feuille.png"> #}
+</head>
+<body>
+
+<div class="">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="{{ path('paprec_home_home') }}">Privacia</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                aria-controls="navbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav w-100">
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_catalog'|length) == 'paprec_catalog' %} active{% endif %}">
+                        <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownCatalog" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">{{ 'Catalog.Bundle-name'|trans }}
+                            <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownCatalog">
+                            <div class="dropdown-submenu">
+                                <div tabindex="-1" class="dropdown-item">{{ 'Catalog.Products'|trans }}</div>
+                                <div class="dropdown-menu">
+                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_COMMERCIAL') %}
+                                        <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_product'|length) == 'paprec_product' %} active{% endif %}"
+                                           href="{{ path('paprec_product_index') }}">{{ 'Catalog.Product.List'|trans }}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="dropdown-submenu">
+                                <div tabindex="-1" class="dropdown-item">{{ 'Catalog.Settings'|trans }}</div>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_postalCode'|length) == 'paprec_postalCode' %} active{% endif %}"
+                                       href="{{ path('paprec_postalCode_index') }}">{{ 'Catalog.PostalCode.PostalCodes'|trans }}</a>
+                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_agency'|length) == 'paprec_agency' %} active{% endif %}"
+                                       href="{{ path('paprec_agency_index') }}">{{ 'Catalog.Agency.Agencies'|trans }}</a>
+                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_custom_area'|length) == 'paprec_custom_area' %} active{% endif %}"
+                                       href="{{ path('paprec_custom_area_index') }}">{{ 'Catalog.CustomArea.CustomAreas'|trans }}</a>
+                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_other_need'|length) == 'paprec_other_need' %} active{% endif %}"
+                                       href="{{ path('paprec_other_need_index') }}">{{ 'Catalog.OtherNeed.OtherNeeds'|trans }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_COMMERCIAL') %}
+{#                    <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_commercial'|length) == 'paprec_commercial' %} active{% endif %}">#}
+{#                        <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownCommercial"#}
+{#                           data-toggle="dropdown"#}
+{#                           role="button" aria-haspopup="true" aria-expanded="false">{{ 'Commercial.Bundle-name'|trans }}#}
+{#                            <span class="caret"></span>#}
+{#                        </a>#}
+{#                        <div class="dropdown-menu" aria-labelledby="navbarDropdownCommercial">#}
+{#                            <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_user_quoteRequest'|length) == 'paprec_user_quoteRequest' %} active{% endif %}"#}
+{#                               href="{{ path('paprec_quoteRequest_index') }}">{{ 'Commercial.QuoteRequests'|trans }}</a>#}
+{#                        </div>#}
+{#                    </li>#}
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_user'|length) == 'paprec_user' %} active{% endif %}">
+                        <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownUser" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false">{{ 'User.Bundle-name'|trans }}
+                            <span class="caret"></span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                            <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_user_user'|length) == 'paprec_user_user' %} active{% endif %}"
+                               href="{{ path('paprec_user_index') }}">{{ 'User.User.Users'|trans }}</a>
+                        </div>
+                    </li>
+                {% endif %}
+
+                <li class="nav-item dropdown ml-auto">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {% if app.user.firstname is not empty and app.user.lastname is not empty %}
+                            {{ app.user.firstname }} {{ app.user.lastname }}
+                        {% else %}
+                            {{ app.user.username }}
+                        {% endif %}
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownAdmin">
+                        <a class="dropdown-item" href="{{ path('paprec_user_editMyProfile') }}"><i
+                                    class="fa fa-user"></i> {{ 'General.Menu.My-profile'|trans }}</a>
+                        <a class="dropdown-item" href="{{ path('app_logout') }}"><i
+                                    class="fa fa-power-off"></i> {{ 'General.Menu.Logout'|trans }}</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron container-fluid">
+        {% block main_content %}{% endblock %}
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7.1.0/dist/promise.min.js"></script>
+
+<script src="{{ asset('build/app.js') }}"></script>
+{# <script src="{{ asset('build/manifest.json') }}"></script> #}
+{% block javascripts %}
+
+{% endblock %}
+</body>
+</html>

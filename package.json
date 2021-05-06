@@ -1,5 +1,5 @@
 {
-  "name": "egd-bkf-referential",
+  "name": "egd-paprec-store-core",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:eggers-digital/egd-paprec-store-core.git",

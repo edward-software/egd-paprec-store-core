@@ -1,0 +1,146 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.Agency.Agencies'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.Agency.Agencies'|trans }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-list"></i> {{ 'Catalog.Agency.List'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        <a href="{{ path('paprec_agency_add') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Agency.Add'|trans }}
+                        </a>
+                        <a href="{{ path('paprec_agency_export') }}" class="btn btn-sm btn-primary ">
+                            <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.Agency.Export'|trans }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table id="agenciesListDatatable" class="table table-striped table-bordered table-hover"
+                           cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ 'Catalog.Agency.Name'|trans }}</th>
+                            <th>{{ 'Catalog.Agency.Salesman'|trans }}</th>
+                            <th>{{ 'Catalog.Agency.Assistant'|trans }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <!-- /BOX -->
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+
+            var agencyList = $('#agenciesListDatatable').DataTable({
+                "language": {
+                    "lengthMenu": "{{ 'General.Datatable.Records-per-page'|trans }}",
+                    "zeroRecords": "{{ 'General.Datatable.Nothing-found'|trans }}",
+                    "info": "{{ 'General.Datatable.Showing-page'|trans }}",
+                    "infoEmpty": "{{ 'General.Datatable.No-records-available'|trans }}",
+                    "search": "{{ 'General.Datatable.Search'|trans }}:",
+                    "sProcessing": "{{ 'General.Datatable.Loading'|trans }}",
+                    "paginate": {
+                        "previous": "{{ 'General.Datatable.Previous'|trans }}",
+                        "next": "{{ 'General.Datatable.Next'|trans }}",
+                    },
+                    "select": {
+                        "rows": {
+                            _: "%d {{'General.Datatable.LinesSelected'|trans}}",
+                            0: "{{'General.Datatable.NoLineSelected'|trans}}",
+                            1: "{{'General.Datatable.OneLineSelected'|trans}}"
+                        }
+                    },
+                },
+                dom: '<"row"Bf<"ml-auto">l><"row"rt><"row"i<"ml-auto">sp>',
+                buttons: [
+                    {
+                        text: '{{ 'General.Remove'|trans }}',
+                        className: 'btn-sm',
+                        action: function (e, dt) {
+                            if (dt.rows({selected: true}).count() > 0) {
+                                var rowIds = [];
+                                $.each(dt.rows({selected: true}).data(), function () {
+                                    rowIds.push(this.id);
+                                });
+                                var url = "{{ path("paprec_agency_removeMany", {ids: '0000'}) }}".replace('0000', rowIds.join(','));
+
+                                Swal.fire({
+                                    title: "{{ 'General.Confirm'|trans }}",
+                                    text: "{{ 'General.Confirm-remove'|trans }}",
+                                    showCancelButton: true,
+                                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                                    cancelButtonText: "{{ 'General.No'|trans }}"
+                                }).then(function(result) {
+                                    if (result.value) {
+                                        $(location).attr('href', url);
+                                    }
+                                });
+
+                            }
+                        }
+                    },
+                ],
+                "select": true,
+                "processing": true,
+                "serverSide": true,
+                "lengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]],
+                "iDisplayLength": 20,
+                "ajax": "{{ path('paprec_agency_loadList') }}",
+                "columns": [
+                    {"data": "id"},
+                    {"data": "name"},
+                    {"data": "salesman"},
+                    {"data": "assistant"},
+                    {"data": "id", "width": "10%", "bSortable": false}
+                ],
+                "rowCallback": function (row, data, displayIndex) {
+                },
+                "drawCallback": function () {
+                    $('.dataTables_paginate > .pagination').addClass('pagination-sm');
+                },
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+
+                    viewUrl = "{{ path('paprec_agency_view', {id: '0000'}) }}".replace('0000', aData['id']);
+                    editUrl = "{{ path('paprec_agency_edit', {id: '0000'}) }}".replace('0000', aData['id']);
+
+                    $(nRow).find(':last-child').html('<a href="' + viewUrl + '" data-toggle="tooltip" title="Voir" class="btn btn-sm btn-primary btn-sm"><i class="fa fa-xs fa-eye"></i></a> <a href="' + editUrl + '" data-toggle="tooltip" title="Editer" class="btn btn-sm btn-warning btn-sm"><i class="fa fa-xs fa-edit"></i></a>');
+
+                },
+            });
+
+            $('#agenciesListDatatable tbody').on('dblclick', 'tr', function (event) {
+                url = "{{ path('paprec_agency_view', {id: '0000'}) }}".replace('0000', $(this).attr('id').replace('row_', ''));
+                $(location).attr('href', url);
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -25,7 +25,7 @@ datatableLabels['fr'] = {
     "lengthMenu": "_MENU_ enregistrements par page",
     "zeroRecords": "Aucun enregistrement",
     "info": "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
-    "infoEmpty": "Info empty",
+    "infoEmpty": "",
     "search": "Rechercher",
     "searchPlaceholder": "Rechercher...",
     "sProcessing": "Chargement...",

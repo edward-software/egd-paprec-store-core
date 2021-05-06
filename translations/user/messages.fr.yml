@@ -1,0 +1,53 @@
+User:
+    Bundle-name: Gestion Utilisateurs
+    User:
+        Users: Utilisateurs
+        List: Liste des utilisateurs
+        Company-name: Société
+        Last-name: Nom
+        First-name: Prénom
+        Email: E-mail
+        Date-creation: Date de création
+        Date-crea: Date de créa.
+        Date-update: Date de mise à jour
+        Informations: Informations
+        System-informations: Informations système
+        Add: Ajouter un utilisateur
+        Export: Exporter les utilisateurs
+        View: Visualiser l'utilisateur
+        Edit: Modifier l'utilisateur
+        Remove: Supprimer l'utilisateur
+        Confirm-cancel: Etes-vous sûr de vouloir annuler ?
+        Confirm-remove: Etes-vous sûr de vouloir supprimer cet utilisateur ?
+        Save: Enregistrer
+        Cancel: Annuler
+        Username: Identifiant
+        Enabled: Activé
+        Confirm-send-access: Etes-vous sûr de vouloir envoyer les accès ?
+        Send-access: Envoyer les accès
+        Roles: Rôle de l'utilisateur
+        Manager: Manager
+        Postal-codes: Code postaux
+        Agencies: Agences
+        Salesman: Commercial
+        Assistant: Assistant
+        Password: Mot de passe
+        Lang: Langue
+        PhoneNumber: Téléphone
+        MobileNumber: Mobile
+        JobTitle: Titre
+        Edit-my-profile: Modifier mon profil
+        Success:
+            accessHasBeenSent: Les accès ont été correctement envoyés
+        Error:
+            accessCannotBeSent: Les accès n'ont pu être envoyés
+
+'Password': Mot de passe
+'Repeat Password': Confirmation du mot de passe
+'No': Non
+'Yes': Oui
+'ROLE_ADMIN': Administrateur
+'ROLE_COMMERCIAL': Commercial
+'ROLE_SUPER_ADMIN': Super administrateur
+'ROLE_MANAGER_COMMERCIAL': Manager Commercial
+'ROLE_COMMERCIAL_MULTISITES': Commercial multisites

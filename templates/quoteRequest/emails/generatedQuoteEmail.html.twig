@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css?family=Arimo:400,700|Oswald:300,400,500&display=swap&subset=latin-ext"
+          rel="stylesheet">
+    <title>Account Activation</title>
+
+    <!-- Web Font / @font-face : BEGIN -->
+    <!--[if mso]>
+    <style>
+        * {
+            font-family: Arial, sans-serif !important;
+        }
+    </style>
+    <![endif]-->
+
+
+</head>
+<body>
+
+{% if quoteRequest.civility == 'M' %}
+    {{ 'Commercial.GeneratedQuoteEmail.Dear.M'|trans({}, "messages", locale) }}
+{% elseif quoteRequest.civility == 'Mme' %}
+    {{ 'Commercial.GeneratedQuoteEmail.Dear.Mrs'|trans({}, "messages", locale) }}
+{% endif %} {{ quoteRequest.firstName }} {{ quoteRequest.lastName }},<br><br>
+
+{{ 'Commercial.GeneratedQuoteEmail.Message1'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.GeneratedQuoteEmail.Message2'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.GeneratedQuoteEmail.Message3'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.GeneratedQuoteEmail.Message4'| trans({}, "messages", locale) }}
+<a href="{{ absolute_url(path("paprec_public_signatory_index", {locale: locale, quoteRequestId: quoteRequest.id, token: quoteRequest.token})) }}">
+    {{ 'Commercial.GeneratedQuoteEmail.Message5'| trans({}, "messages", locale) }}
+</a>
+<br><br>
+{{ 'Commercial.GeneratedQuoteEmail.Regards'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.GeneratedQuoteEmail.Partner'| trans({}, "messages", locale) }}
+<br>
+
+</body>
+</html>

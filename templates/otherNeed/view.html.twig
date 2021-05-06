@@ -1,0 +1,347 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.OtherNeed.View'|trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.OtherNeed.OtherNeeds'|trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block main_content %}
+
+    <div class="col-md-12">
+        <!-- CARD -->
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <i class="fa fa-xs fa-folder"></i> {{ 'Catalog.OtherNeed.View'|trans({}, "messages", app.request.locale) }}
+                </h4>
+                <div class="float-right">
+                    <a href="{{ path("paprec_other_need_edit", {id: otherNeed.id}) }}"
+                       class="btn btn-sm btn-warning"><i
+                                class="fa fa-xs fa-edit"></i> {{ 'Catalog.OtherNeed.Edit'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                    <a id="catalogOtherNeedRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
+                                class="fa fa-xs fa-trash"></i> {{ 'Catalog.OtherNeed.Remove'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+                <div class="float-left">
+                    <a href="{{ path('paprec_other_need_index') }}" class="btn btn-sm btn-default"><i
+                                class="fa fa-xs fa-chevron-left"></i> {{ 'Catalog.OtherNeed.List'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.Information'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.OtherNeed.Name'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ otherNeed.name }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.OtherNeed.Language'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ otherNeed.language }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.OtherNeed.IsDisplayed'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {% if otherNeed.isDisplayed == 1 %}{{ 'General.Yes'|trans({}, "messages", app.request.locale) }}{% else %}{{ 'General.No'|trans({}, "messages", app.request.locale) }}{% endif %}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+
+
+                    <div class="card no-gutters">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'Catalog.OtherNeed.AddPicture'|trans({}, "messages", app.request.locale) }}</h5>
+                            {% if otherNeed.pictures is empty %}
+                                <div class="float-right">
+                                    <button class="btn btn-sm btn-outline-primary"
+                                            data-target="#uploadPictureModal" data-toggle="modal"
+                                            data-type="PICTURE" id="openModalUploadPicture">
+                                        <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.OtherNeed.AddPicture'| trans({}, "messages", app.request.locale) }}
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <div class="card-group">
+                                {% if (otherNeed.pictures) %}
+                                    {% for picture in otherNeed.pictures %}
+
+                                    <div class="card card-sec">
+                                        <div class="card-header">
+                                            <div class="float-left"> {{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}</div>
+                                            <div class="dropdown float-right">
+                                                <button class="p-0 btn btn-sm btn-light dropdown-toggle btn-sm"
+                                                        type="button" id="{{ picture.id }}"
+                                                        data-toggle="dropdown"
+                                                        aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                    <i class="fa fa-xs fa-cog"></i>
+                                                </button>
+                                                <div class="dropdown-menu"
+                                                     aria-labelledby="{{ picture.id }}">
+                                                    <button id="pictureEditButton"
+                                                            class="dropdown-item"
+                                                            type="button"
+                                                            data-target="#editPictureModal"
+                                                            data-toggle="modal"
+                                                            data-type="PICTURE"
+                                                            data-id="{{ picture.id }}">
+                                                        <i class="fa fa-xs fa-pencil-alt"></i> {{ 'General.Edit'| trans({}, "messages", app.request.locale) }}
+                                                    </button>
+
+                                                    <button data-id="{{ picture.id }}"
+                                                            class="dropdown-item removePictureButton"
+                                                            type="button">
+                                                        <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'| trans({}, "messages", app.request.locale) }}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img class="card-img-top"
+                                             src="{{ asset('/uploads/pictos/' ~ picture.path) }}"
+                                             alt="{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}">
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {#
+                        Modal d'affichage des formulaires
+                    #}
+                    <div class="modal fade" id="uploadPictureModal" tabindex="-1" role="dialog"
+                         aria-labelledby="Upload Picture" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form id="formAddPicture" name="formAddPicture"
+                                        {% set params = {id: otherNeed.id, type: 'Picture' } %}
+                                      action="{{ path("paprec_other_need_addPicture", params) }}"
+                                      method="post" enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="uploadPictureModalTitle">
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="form-label">
+                                                {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                <span id="uploadPictureSizeInfo">
+
+                                                        </span>
+                                            </div>
+                                            <div class="form-content">
+                                                {{ form_widget(formAddPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(formAddPicture.path) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                                data-dismiss="modal">
+                                            {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-primary"
+                                                id="formAddPictureSubmitButton">
+                                            {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                        </button>
+                                    </div>
+                                    {{ form_rest(formAddPicture) }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="editPictureModal" tabindex="-1" role="dialog"
+                         aria-labelledby="Edit Picture" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form id="formEditPicture" name="formEditPicture"
+                                      action=""
+                                      method="post" enctype="multipart/form-data">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editPictureModalTitle">
+                                            {{ 'Catalog.Product.EditPicture'| trans({}, "messages", app.request.locale) }}
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div class="form-label">
+                                                {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                <span id="editPictureSizeInfo">
+
+                                                        </span>
+                                            </div>
+                                            <div class="form-content">
+                                                {{ form_widget(formEditPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(formEditPicture.path) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-secondary"
+                                                data-dismiss="modal">
+                                            {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-primary"
+                                                id="formEditPictureSubmitButton">
+                                            {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                        </button>
+                                    </div>
+                                    {{ form_rest(formEditPicture) }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.System-information'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ otherNeed.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ otherNeed.dateUpdate is empty ? "" : otherNeed.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('#catalogOtherNeedRemoveButton').on('click', function () {
+
+                var url = "{{ path("paprec_other_need_remove", {id: otherNeed.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans({}, "messages", app.request.locale) }}",
+                    text: "{{ 'General.Confirm-remove'|trans({}, "messages", app.request.locale) }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans({}, "messages", app.request.locale) }}",
+                    cancelButtonText: "{{ 'General.No'|trans({}, "messages", app.request.locale) }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+        });
+
+        // Au chargement de la modal d'ajout d'une photo
+        // On met à jour le titre de la modal d'ajout de photo en fonction du type que l'on ajoute
+        // On modifie aussi l'url d'action pour passer en paramètre le type de photo à ajouter
+        $('#uploadPictureModal').on('show.bs.modal', function (e) {
+            var type = $(e.relatedTarget).data('type');
+            var actionUrl = "{{ path("paprec_other_need_addPicture", {id: otherNeed.id, type: 'typeTmp'}) }}";
+            var sizeInfo = document.getElementById('uploadPictureSizeInfo');
+
+            actionUrl = actionUrl.replace('typeTmp', type);
+            document.formAddPicture.action = actionUrl;
+            switch (type) {
+                case 'PICTURE':
+                    type = "{{ 'Catalog.OtherNeed.AddPicture'| trans({}, "messages", app.request.locale) }}";
+                    break;
+                default:
+                    type = "{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}";
+                    break;
+            }
+            var title = document.getElementById('uploadPictureModalTitle');
+            title.innerText = type;
+        });
+
+
+        // Au chargement de la modal d'édition d'une photo
+        // On modifie l'URL d'action du formulaire pour passer en paramètre l'ID de la photo modifiée
+        $('#editPictureModal').on('show.bs.modal', function (e) {
+            var pictureID = $(e.relatedTarget).data('id');
+            var type = $(e.relatedTarget).data('type');
+            var actionUrl = "{{ path("paprec_other_need_editPicture", {id: otherNeed.id, pictureID: 'pictureTmp'}) }}";
+            var sizeInfo = document.getElementById('editPictureSizeInfo');
+
+            actionUrl = actionUrl.replace('pictureTmp', pictureID);
+            document.formEditPicture.action = actionUrl;
+            switch (type) {
+                case 'PICTURE':
+                    type = "{{ 'Catalog.OtherNeed.AddPicture'| trans({}, "messages", app.request.locale) }}";
+                    break;
+                default:
+                    type = "{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}";
+                    break;
+            }
+            var title = document.getElementById('editPictureModalTitle');
+            title.innerText = type;
+        });
+
+
+        $('.removePictureButton').on('click', function () {
+            picId = $(this).data('id');
+            Swal.fire({
+                title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
+                text: "{{ 'General.Confirm-remove'| trans({}, "messages", app.request.locale) }}",
+                showCancelButton: true,
+                confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
+                cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+            }).then(function (result) {
+                if (result.value) {
+                    var url = "{{ path("paprec_other_need_removePicture", {id: otherNeed.id, pictureID: 'pictureTmp'}) }}";
+                    url = url.replace('pictureTmp', picId);
+                    $(location).attr('href', url);
+                }
+            });
+        });
+
+        $('#formAddPictureSubmitButton').on('click', function () {
+            $('#formAddPicture').submit();
+        });
+
+        $('#formEditPictureSubmitButton').on('click', function () {
+            $('#formEditPicture').submit();
+        });
+    </script>
+{% endblock %}

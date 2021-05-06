@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//FR"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>print contrat</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="stylesheet" href="{{ paprec_public_site_url }}/wp-content/themes/paprec/css/styles.css?te=fesg">
+    <style type="text/css">
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            text-rendering: optimizeLegibility;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+    </style>
+    {% block stylesheet %}{% endblock %}
+</head>
+<body>
+{% block pdf_content %} {% endblock %}
+</body>
+</html>

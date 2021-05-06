@@ -1,0 +1,88 @@
+General:
+    All:                      Tous
+    List:                     Liste
+    Add:                      Ajouter
+    Edit:                     Modifier
+    Remove:                   Supprimer
+    Close:                    Fermer
+    View:                     Visualiser
+    Yes:                      Oui
+    1:                        Oui
+    No:                       Non
+    0:                        Non
+    Name:                     Nom
+    SystemError:              Erreur système
+    Users:                    Utilisateurs
+    Save:                     Enregistrer
+    Send:                     Envoyer
+    Cancel:                   Annuler
+    Confirm:                  Confirmation
+    Confirm-cancel:           Êtes vous sûr de vouloir annuler ?
+    Confirm-remove:           Confirmez-vous la suppression ?
+    Confirm-disable:          Êtes-vous sûr de vouloir tous les désactiver ?
+    Confirm-enable:           Êtes-vous sûr de vouloir tous les activer ?
+    CantRemove:               Suppression non possible
+    In-progress:              En cours
+    Archiving:                Archivé
+    M:                       Monsieur
+    Mr:                       Monsieur
+    Mme:                      Madame
+    Date-update:              Date de mise à jour
+    System-information:       Informations système
+    Information:              Informations
+    Date-creation:            Date de création
+
+
+    Datatable:
+        Records-per-page:      _MENU_ enregistrements par page
+        Nothing-found:         Aucune donnée
+        #    Showing-page :                              Affichage page _PAGE_ sur _PAGES_
+        Showing-page:          Affichage _START_ à _END_ sur un total de _TOTAL_ résultats
+        No-records-available:  Aucun enregistrement trouvé
+        NoLineSelected:        Aucune ligne sélectionnée
+        LinesSelected:         lignes sélectionnées
+        OneLineSelected:       1 ligne sélectionnée
+        Search:                Recherche
+        Loading:               Chargement...
+        Previous:              Précédent
+        Next:                  Suivant
+
+    Presence-error:           Presence d'erreur
+
+    Menu:
+        Administration:         Administration
+        Users:                  Utilisateurs
+        Dashboard:              Tableau de bord
+        Logout:                 Se déconnecter
+        MyProfile:              Mon profil
+        Customers:              Clients
+        My-profile:             Mon profil
+
+    Form:
+        Submit:                 Soumettre
+        CreationDate:           Créé le
+        UpdatedDate:            Mis à jour le
+        Status:                 Status
+        CreationUser:           Créé par
+        UpdatedUser:            Mis à jour par
+        NeverUpdated:           Jamais mis à jour
+        Password:               Mot de passe
+        RepeatPassword:         Répéter le mot de passe
+        Email:                  Email
+        Language:               Langage
+        Timezone:               Fuseau horaire
+        Enable:                 Activé
+        Username:               Identifiant
+        Roles:                  Roles
+        Permissions:            Permissions
+        Unlock:                 Déverouiller
+        Name:                   Nom
+        FirstName:              Prénom
+        LastName:               Nom de famille
+        Birthday:               Date de naissance
+        Nationality:            Nationalité
+        CountryOfResidence:     Pays
+        AddressLine:            Adresse
+        PostalCode:             Code postal
+        City:                   Ville
+        Access-type:            Type d'accès

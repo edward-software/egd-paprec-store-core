@@ -1,0 +1,152 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.PostalCode.View'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.PostalCode.PostalCodes'|trans }}
+{% endblock %}
+
+{% block main_content %}
+
+
+    <div class="col-md-12">
+        <!-- CARD -->
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <i class="fa fa-xs fa-folder"></i> {{ 'Catalog.PostalCode.View'|trans }}
+                </h4>
+                <div class="float-right">
+                    <a href="{{ path("paprec_postalCode_edit", {id: postalCode.id}) }}"
+                       class="btn btn-sm btn-warning"><i
+                                class="fa fa-xs fa-edit"></i> {{ 'Catalog.PostalCode.Edit'|trans }}</a>
+                    <a id="catalogPostalCodeRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
+                                class="fa fa-xs fa-trash"></i> {{ 'Catalog.PostalCode.Remove'|trans }}</a>
+                </div>
+                <div class="float-left">
+                    <a href="{{ path('paprec_postalCode_index') }}" class="btn btn-sm btn-default"><i
+                                class="fa fa-xs fa-chevron-left"></i> {{ 'Catalog.PostalCode.List'|trans }}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.Code'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.code }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.City'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.city }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.Agency'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {% if postalCode.agency %}
+                                        <a href="{{ path('paprec_agency_view', {id: postalCode.agency.id}) }}">
+                                            {{ postalCode.agency.name }}
+                                        </a>
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.Zone'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.zone }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.RentalRate'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.rentalRate|formatAmount(null, app.request.locale, 'FORMAT15')|formatAmount(null, app.request.locale, 'DEC3') }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.TransportRate'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.transportRate|formatAmount(null, app.request.locale, 'FORMAT15')|formatAmount(null, app.request.locale, 'DEC3') }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.TreatmentRate'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.treatmentRate|formatAmount(null, app.request.locale, 'FORMAT15')|formatAmount(null, app.request.locale, 'DEC3') }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.PostalCode.TraceabilityRate'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.traceabilityRate|formatAmount(null, app.request.locale, 'FORMAT15')|formatAmount(null, app.request.locale, 'DEC3') }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.System-information'|trans }}</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ postalCode.dateUpdate is empty ? "" : postalCode.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+        {% block javascripts %}
+
+            <script>
+                $(function () {
+
+                    $('#catalogPostalCodeRemoveButton').on('click', function () {
+
+                        var url = "{{ path("paprec_postalCode_remove", {id: postalCode.id}) }}";
+
+                        Swal.fire({
+                            title: "{{ 'General.Confirm'|trans }}",
+                            text: "{{ 'General.Confirm-remove'|trans }}",
+                            showCancelButton: true,
+                            confirmButtonText: "{{ 'General.Yes'|trans }}",
+                            cancelButtonText: "{{ 'General.No'|trans }}"
+                        }).then(function (result) {
+                            if (result.value) {
+                                $(location).attr('href', url);
+                            }
+                        });
+
+                    });
+                });
+            </script>
+        {% endblock %}

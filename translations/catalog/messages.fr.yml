@@ -1,0 +1,153 @@
+Catalog:
+
+    Bundle-name: Gestion Catalogue
+    Products: Produits
+    Settings: Paramétrage
+
+    Agency:
+        Agencies: Agences
+        Name: Nom de l'agence
+        Date-crea: Date de créa.
+        Date-creation: Date de création
+        Date-update: Date de mise à jour
+        Informations: Informations
+        System-informations: Informations système
+        List: Liste des agences
+        Add: Ajouter une agence
+        Export: Exporter les agences
+        View: Vue de l'agence
+        Edit: Modifier l'agence
+        Remove: Supprimer l'agence
+        Save: Enregistrer
+        Cancel: Annuler
+        Confirm-cancel: Etes-vous sûr de vouloir annuler ?
+        Confirm-remove: Etes-vous sûr de vouloir supprimer cette agence ?
+        Salesman: Commercial
+        Assistant: Assistant
+        DisabledUser: (Compte non actif)
+        DeletedUser: (Compte supprimé)
+        System-information: Informations système
+
+    PostalCode:
+        PostalCodes: Code postaux
+        Name: Code postal
+        Date-crea: Date de créa.
+        Date-creation: Date de création
+        Date-update: Date de mise à jour
+        Informations: Informations
+        System-informations: Informations système
+        List: Liste des codes postaux
+        Add: Ajouter un code postal
+        Export: Exporter les codes postaux
+        Code: Code Postal
+        City: Commune
+        Zone: Zone tarifaire
+        Agency: Agence
+        Division: Division
+        Rate: Coefficient
+        View: Vue du code postal
+        Edit: Modifier le code postal
+        Remove: Supprimer le code postal
+        Save: Enregistrer
+        Cancel: Annuler
+        Confirm-cancel: Etes-vous sûr de vouloir annuler ?
+        Confirm-remove: Etes-vous sûr de vouloir supprimer ce code postal ?
+        RentalRate: Variable Location
+        TransportRate: Variable Transport
+        TreatmentRate: Variable Traitement
+        TraceabilityRate: Variable Traçabilité
+        UserInCharge: Commercial en charge
+        DisabledUser: (Compte non actif)
+        DeletedUser: (Compte supprimé)
+        System-information: Informations système
+
+    Picture:
+        Path: Choisir photo
+        Type: Type de la photo
+        AddPilotPicture: Ajouter une photo principale
+        AddPicto: Ajouter un picto
+        AddPicture: Ajouter une photo secondaire
+
+    Product:
+        View: Vue du produit
+        Products: Liste des produits
+        Add: Ajouter un produit
+        Edit: Editer un produit
+        Remove: Supprimer
+        List: Liste des produits
+        Information: Information du produit
+        Capacity: Volume
+        Dimensions: Dimensions
+        AvailablePostalCodes: Disponibilités géographiques
+        IsEnabled:
+            IsEnabled: Actif
+            Yes: Oui
+            No: Non
+            Disable: Désactiver
+            Enable: Activer
+        Picto: Picto
+        AddPicture: Ajouter image
+        PilotPicture: Image principale
+        SetSecondaryPicture: Définir en image secondaire
+        Pictures: Images
+        EditPicture: Remplacer image
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Export: Exporter les produits
+        Details: Details du produit
+        CapacityUnit: Unité de volume
+        Position: Position
+        FolderNumber: Nombre de dossiers
+        RentalUnitPrice: PU location
+        TransportUnitPrice: PU Transport
+        TreatmentUnitPrice: PU Traitement
+        TraceabilityUnitPrice: PU Traçabilité
+
+    ProductLabel:
+        Add: Ajouter une traduction
+        Edit: Editer traduction
+        Language:
+            Language: Langue
+            EN: Anglais
+            FR: Français
+            IT: Italien
+            DE: Allemand
+        Name: Nom
+        Short-description: Description courte
+        Lock: Verrou
+        Version: Version
+        Information: Informations
+        Remove: Supprimer
+
+    CustomArea:
+        CustomAreas: Zones personnalisables
+        List: Liste des zones personnalisables
+        Code: Code
+        Language: Langue
+        Content: Contenu
+        LeftContent: Bloc de contenu gauche
+        RightContent: Bloc de contenu droite
+        IsDisplayed: Affiché
+        Add: Ajouter une zone
+        View: Vue de la zone
+        Edit: Modifier zone
+        Remove: Supprimer zone
+        AddPictureLeft: Photo gauche
+        AddPictureRight: Photo droite
+        Informations: Informations
+        System-informations: Informations système
+
+    OtherNeed:
+        OtherNeeds: Autres produits possibles
+        List: Liste des autres produits
+        Name: Titre
+        Language: Langue
+        IsDisplayed: Affiché
+        Add: Ajouter un autre produit
+        View: Vue de l’autre produit
+        Edit: Modifier autre produit
+        Remove: Supprimer autre produit
+        AddPicture: Photo
+        Informations: Informations
+        System-informations: Informations système
