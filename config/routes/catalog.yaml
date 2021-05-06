@@ -3,6 +3,11 @@ catalog_product:
     type:     annotation
     prefix:   product
 
+catalog_range:
+    resource: App\Controller\RangeController
+    type:     annotation
+    prefix:   range
+
 catalog_postal_code:
     resource: App\Controller\PostalCodeController
     type:     annotation

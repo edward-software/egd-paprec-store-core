@@ -1,14 +1,14 @@
 {% extends "base_admin.html.twig" %}
 
 {% block title %}
-    {{ 'Catalog.Product.Products'|trans }}
+    {{ 'Catalog.Range.Ranges'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
 {% endblock %}
 
 {% block content_title %}
-    {{ 'Catalog.Product.Products'|trans }}
+    {{ 'Catalog.Range.Ranges'|trans }}
 {% endblock %}
 
 {% block main_content %}
@@ -18,27 +18,26 @@
             <div class="card">
                 <div class="card-header">
                     <h4>
-                        <i class="fa fa-xs fa-list"></i> {{ 'Catalog.Product.List'|trans }}
+                        <i class="fa fa-xs fa-list"></i> {{ 'Catalog.Range.List'|trans }}
                     </h4>
                     <div class="float-right">
-                        <a href="{{ path('paprec_product_add') }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Product.Add'|trans }}
+                        <a href="{{ path('paprec_range_add') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Range.Add'|trans }}
                         </a>
-                        <a href="{{ path('paprec_product_export') }}" class="btn btn-sm btn-primary ">
-                            <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.Product.Export'|trans }}
+                        <a href="{{ path('paprec_range_export') }}" class="btn btn-sm btn-primary ">
+                            <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.Range.Export'|trans }}
                         </a>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    <table id="productListDatatable" class="table table-striped table-bordered table-hover"
+                    <table id="rangeListDatatable" class="table table-striped table-bordered table-hover"
                            cellpadding="0" cellspacing="0" border="0" width="100%">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>{{ 'Catalog.ProductLabel.Name'|trans }}</th>
-                            <th>{{ 'Catalog.Product.Dimensions'|trans }}</th>
-                            <th>{{ 'Catalog.Product.IsEnabled.IsEnabled'|trans }}</th>
+                            <th>{{ 'Catalog.RangeLabel.Name'|trans }}</th>
+                            <th>{{ 'Catalog.Range.IsEnabled.IsEnabled'|trans }}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -58,38 +57,37 @@
 
         $(function () {
 
-            $('#productListDatatable').EgdDatatable({
-                url: "{{ path('paprec_product_loadList') }}",
+            $('#rangeListDatatable').EgdDatatable({
+                url: "{{ path('paprec_range_loadList') }}",
                 columns: [
                     {"data": "id"},
                     {"data": "name"},
-                    {"data": "dimensions"},
                     {"data": "isEnabled"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],
                 rowDblclick: {
                     type: 'open',
-                    url: "{{ path('paprec_product_view', {id: '__rowId__'}) }}"
+                    url: "{{ path('paprec_range_view', {id: '__rowId__'}) }}"
                 },
                 buttons: [
                     {
-                        label: '{{ "Catalog.Product.IsEnabled.Disable"|trans }}',
+                        label: '{{ "Catalog.Range.IsEnabled.Disable"|trans }}',
                         type: 'ajaxMany',
-                        url: "{{ path("paprec_product_disableMany", {ids: '__rowIds__', json: 1}) }}",
+                        url: "{{ path("paprec_range_disableMany", {ids: '__rowIds__', json: 1}) }}",
                         confirmMessage: "{{ 'General.Confirm-disable'|trans|e('js') }}",
                         className: 'btn-sm'
                     },
                     {
-                        label: '{{ "Catalog.Product.IsEnabled.Enable"|trans }}',
+                        label: '{{ "Catalog.Range.IsEnabled.Enable"|trans }}',
                         type: 'ajaxMany',
-                        url: "{{ path("paprec_product_enableMany", {ids: '__rowIds__', json: 1}) }}",
+                        url: "{{ path("paprec_range_enableMany", {ids: '__rowIds__', json: 1}) }}",
                         confirmMessage: "{{ 'General.Confirm-disable'|trans|e('js') }}",
                         className: 'btn-sm'
                     },
                     {
                         label: '{{ "General.Remove"|trans }}',
                         type: 'ajaxMany',
-                        url: "{{ path("paprec_product_removeMany", {ids: '__rowIds__', json: 1}) }}",
+                        url: "{{ path("paprec_range_removeMany", {ids: '__rowIds__', json: 1}) }}",
                         confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
                         className: 'btn-sm'
                     }
@@ -99,18 +97,18 @@
                         label: "{{ 'General.View'|trans }}",
                         className: "btn btn-primary btn-sm",
                         icon: "fa fa-eye",
-                        url: "{{ path('paprec_product_view', {id: '__rowId__'}) }}"
+                        url: "{{ path('paprec_range_view', {id: '__rowId__'}) }}"
                     },
                     {
                         label: "{{ 'General.Edit'|trans }}",
                         className: "btn btn-warning btn-sm",
                         icon: "fa fa-edit",
-                        url: "{{ path('paprec_product_edit', {id: '__rowId__'}) }}"
+                        url: "{{ path('paprec_range_edit', {id: '__rowId__'}) }}"
                     },
                     {
                         label: '{{ "General.Remove"|trans }}',
                         type: 'ajax',
-                        url: "{{ path("paprec_product_remove", {id: '__rowId__', json: 1}) }}",
+                        url: "{{ path("paprec_range_remove", {id: '__rowId__', json: 1}) }}",
                         confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
                         className: 'btn btn-danger btn-sm',
                         icon: "fa fa-times"

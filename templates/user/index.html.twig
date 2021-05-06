@@ -125,11 +125,6 @@
                 ]
             });
 
-            $('#userListDatatable tbody').on('dblclick', 'tr', function (event) {
-                url = "{{ path('paprec_user_view', {id: '0000'}) }}".replace('0000', $(this).attr('id').replace('row_', ''));
-                $(location).attr('href', url);
-            });
-
         });
     </script>
 {% endblock %}

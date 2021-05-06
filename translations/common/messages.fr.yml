@@ -86,3 +86,20 @@ General:
         PostalCode:             Code postal
         City:                   Ville
         Access-type:            Type d'accès
+
+    Frequency:
+        Month: mois
+        Bimestre: bimestre
+        Quarter: trimestre
+        Week: semaine
+        Ponctual: A la demande
+        Regular: Régulière
+        Unkown: Je ne sais pas
+
+    TransportType:
+        C_BROYEUR: C Broyeur
+        FOURGON_PL: Fourgon PL mutualisé
+        FOURGON_VL: Fourgon VL mutualisé
+        AMPLIROLL: Ampliroll (AR)
+        BOM: BOM
+        LIVRAISON: Livraison

@@ -78,6 +78,16 @@ Catalog:
         Information: Information du produit
         Capacity: Volume
         Dimensions: Dimensions
+        Range: Gamme
+        TransportType: Type de transport
+        Catalog:
+            Label: Catalogue
+            Regular: Régulier
+            Ponctual: Ponctuel
+        Frequency: Fréquence
+        PassingFrequency: Fréquence de passage (si régulier)
+        FrequencyInterval: Fréquence
+        FrequencyTimes: Fréquence
         AvailablePostalCodes: Disponibilités géographiques
         IsEnabled:
             IsEnabled: Actif
@@ -117,6 +127,47 @@ Catalog:
         Short-description: Description courte
         Lock: Verrou
         Version: Version
+        Information: Informations
+        Remove: Supprimer
+
+    Range:
+        View: Vue de la gamme
+        Ranges: Liste des gammes
+        Add: Ajouter une gamme
+        Edit: Editer une gamme
+        Remove: Supprimer
+        List: Liste des gammes
+        Information: Information de la gamme
+        IsEnabled:
+            IsEnabled: Actif
+            Yes: Oui
+            No: Non
+            Disable: Désactiver
+            Enable: Activer
+        Picto: Picto
+        AddPicture: Ajouter image
+        PilotPicture: Image principale
+        SetSecondaryPicture: Définir en image secondaire
+        Pictures: Images
+        EditPicture: Remplacer image
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Export: Exporter les gammes
+        Details: Details de la gamme
+        Position: Position
+
+    RangeLabel:
+        Add: Ajouter une traduction
+        Edit: Editer traduction
+        Language:
+            Language: Langue
+            EN: Anglais
+            FR: Français
+            IT: Italien
+            DE: Allemand
+        Name: Nom
+        Short-description: Description courte
         Information: Informations
         Remove: Supprimer
 

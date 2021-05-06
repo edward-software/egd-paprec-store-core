@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +26,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -54,7 +55,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product", name="paprec_product_index")
+     * @Route("", name="paprec_product_index")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
@@ -63,7 +64,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/loadList", name="paprec_product_loadList")
+     * @Route("/loadList", name="paprec_product_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
@@ -79,8 +80,16 @@ class ProductController extends AbstractController
         $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'p.id', 'method' => array('getId'));
-        $cols['name'] = array('label' => 'name', 'id' => 'pL.name', 'method' => array(array('getProductLabels', 0), 'getName'));
-        $cols['dimensions'] = array('label' => 'dimensions', 'id' => 'p.dimensions', 'method' => array('getDimensions'));
+        $cols['name'] = array(
+            'label' => 'name',
+            'id' => 'pL.name',
+            'method' => array(array('getProductLabels', 0), 'getName')
+        );
+        $cols['dimensions'] = array(
+            'label' => 'dimensions',
+            'id' => 'p.dimensions',
+            'method' => array('getDimensions')
+        );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
 
 
@@ -131,7 +140,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/export",  name="paprec_product_export")
+     * @Route("/export",  name="paprec_product_export")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function exportAction(Request $request)
@@ -158,7 +167,7 @@ class ProductController extends AbstractController
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
         $sheet->setTitle('Products');
-        
+
         // Labels
         $sheetLabels = [
             'P. ID',
@@ -184,21 +193,21 @@ class ProductController extends AbstractController
             'Product version',
             'Lock type',
         ];
-        
+
         $xAxe = 'A';
         foreach ($sheetLabels as $label) {
             $sheet->setCellValue($xAxe . 1, $label);
             $xAxe++;
         }
-        
+
         $yAxe = 2;
-        
+
         /** @var Product $product */
         foreach ($products as $product) {
 
             /** @var ProductLabel $productLabel */
             $productLabel = $this->productManager->getProductLabelByProductAndLocale($product, strtoupper($language));
-            
+
             // Getters
             $getters = [
                 $product->getId(),
@@ -224,50 +233,39 @@ class ProductController extends AbstractController
                 $productLabel->getVersion(),
                 $productLabel->getLockType(),
             ];
-            
+
             $xAxe = 'A';
             foreach ($getters as $getter) {
-                $sheet->setCellValue($xAxe . $yAxe, (string) $getter);
+                $sheet->setCellValue($xAxe . $yAxe, (string)$getter);
                 $xAxe++;
             }
             $yAxe++;
         }
-    
-        // Format
-        $sheet->getStyle(
-            "A1:" . $sheet->getHighestDataColumn() . 1)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER
-        );
-        $sheet->getStyle(
-            "A2:" . $sheet->getHighestDataColumn() . $sheet->getHighestDataRow())->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT
-        );
-    
+
+
         // Resize columns
         for ($i = 'A'; $i <= $sheet->getHighestDataColumn(); $i++) {
             $sheet->getColumnDimension($i)->setAutoSize(true);
         }
-    
-        $writer = $this->container->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
 
         $fileName = 'PrivaciaShop-Extraction-Products-' . date('Y-m-d') . '.xlsx';
 
-        // create the response
-        $response = $this->container->get('phpexcel')->createStreamedResponse($writer);
+        $streamedResponse = new StreamedResponse();
+        $streamedResponse->setCallback(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
 
-        // adding headers
-        $dispositionHeader = $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $fileName
-        );
-        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Pragma', 'public');
-        $response->headers->set('Cache-Control', 'maxage=1');
-        $response->headers->set('Content-Disposition', $dispositionHeader);
+        $streamedResponse->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $streamedResponse->headers->set('Pragma', 'public');
+        $streamedResponse->headers->set('Cache-Control', 'maxage=1');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
 
-        return $response;
+        return $streamedResponse->send();
     }
 
     /**
-     * @Route("/product/view/{id}",  name="paprec_product_view")
+     * @Route("/view/{id}",  name="paprec_product_view")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function viewAction(Request $request, Product $product)
@@ -314,7 +312,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/add",  name="paprec_product_add")
+     * @Route("/add",  name="paprec_product_add")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addAction(Request $request)
@@ -326,10 +324,17 @@ class ProductController extends AbstractController
             $languages[$language] = $language;
         }
 
+        $transportTypes = array();
+        foreach ($this->getParameter('paprec_transport_types') as $transportType) {
+            $transportTypes[$transportType] = $transportType;
+        }
+
         $product = new Product();
         $productLabel = new ProductLabel();
 
-        $form1 = $this->createForm(ProductType::class, $product);
+        $form1 = $this->createForm(ProductType::class, $product, array(
+            'transportTypes' => $transportTypes
+        ));
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,
             'language' => 'FR'
@@ -374,7 +379,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/edit/{id}",  name="paprec_product_edit")
+     * @Route("/edit/{id}",  name="paprec_product_edit")
      * @Security("has_role('ROLE_ADMIN')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \Exception
@@ -389,6 +394,10 @@ class ProductController extends AbstractController
         foreach ($this->getParameter('paprec_languages') as $language) {
             $languages[$language] = $language;
         }
+        $transportTypes = array();
+        foreach ($this->getParameter('paprec_transport_types') as $transportType) {
+            $transportTypes[$transportType] = $transportType;
+        }
 
         $language = $request->getLocale();
         $productLabel = $this->productManager->getProductLabelByProductAndLocale($product, strtoupper($language));
@@ -398,7 +407,9 @@ class ProductController extends AbstractController
         $product->setTreatmentUnitPrice($this->numberManager->denormalize($product->getTreatmentUnitPrice()));
         $product->setTraceabilityUnitPrice($this->numberManager->denormalize($product->getTraceabilityUnitPrice()));
 
-        $form1 = $this->createForm(ProductType::class, $product);
+        $form1 = $this->createForm(ProductType::class, $product, array(
+            'transportTypes' => $transportTypes,
+        ));
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,
             'language' => $productLabel->getLanguage()
@@ -441,7 +452,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/remove/{id}", name="paprec_product_remove")
+     * @Route("/remove/{id}", name="paprec_product_remove")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeAction(Request $request, Product $product)
@@ -450,7 +461,7 @@ class ProductController extends AbstractController
          * Suppression des images
          */
         foreach ($product->getPictures() as $picture) {
-            $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $picture->getPath());
+            $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
             $product->removePicture($picture);
         }
 
@@ -462,7 +473,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/removeMany/{ids}", name="paprec_product_removeMany")
+     * @Route("/removeMany/{ids}", name="paprec_product_removeMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeManyAction(Request $request)
@@ -479,7 +490,7 @@ class ProductController extends AbstractController
             $products = $this->em->getRepository('App:Product')->findById($ids);
             foreach ($products as $product) {
                 foreach ($product->getPictures() as $picture) {
-                    $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $picture->getPath());
+                    $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
                     $product->removePicture($picture);
                 }
 
@@ -493,7 +504,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/enableMany/{ids}", name="paprec_product_enableMany")
+     * @Route("/enableMany/{ids}", name="paprec_product_enableMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function enableManyAction(Request $request)
@@ -517,7 +528,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/disableMany/{ids}", name="paprec_product_disableMany")
+     * @Route("/disableMany/{ids}", name="paprec_product_disableMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function disableManyAction(Request $request)
@@ -541,7 +552,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/{id}/addProductLabel",  name="paprec_product_addProductLabel")
+     * @Route("/{id}/addProductLabel",  name="paprec_product_addProductLabel")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addProductLabelAction(Request $request, Product $product)
@@ -579,14 +590,14 @@ class ProductController extends AbstractController
 
         }
 
-        return $this->render('@PaprecCatalog/Product/ProductLabel/add.html.twig', array(
+        return $this->render('product/productLabel/add.html.twig', array(
             'form' => $form->createView(),
             'product' => $product,
         ));
     }
 
     /**
-     * @Route("/product/{id}/editProductLabel/{productLabelId}",  name="paprec_product_editProductLabel")
+     * @Route("/{id}/editProductLabel/{productLabelId}",  name="paprec_product_editProductLabel")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param Product $product
@@ -630,14 +641,14 @@ class ProductController extends AbstractController
 
         }
 
-        return $this->render('@PaprecCatalog/Product/ProductLabel/edit.html.twig', array(
+        return $this->render('product/productLabel/edit.html.twig', array(
             'form' => $form->createView(),
             'product' => $product
         ));
     }
 
     /**
-     * @Route("/product/{id}/removeProductLabel/{productLabelId}",  name="paprec_product_removeProductLabel")
+     * @Route("/{id}/removeProductLabel/{productLabelId}",  name="paprec_product_removeProductLabel")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param Product $product
@@ -675,7 +686,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/addPicture/{id}/{type}", name="paprec_product_addPicture")
+     * @Route("/addPicture/{id}/{type}", name="paprec_product_addPicture")
      * @Method("POST")
      * @Security("has_role('ROLE_ADMIN')")
      */
@@ -699,7 +710,7 @@ class ProductController extends AbstractController
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec_catalog.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
                 $picture->setType($request->get('type'));
@@ -720,7 +731,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/editPicture/{id}/{pictureID}", name="paprec_product_editPicture")
+     * @Route("/editPicture/{id}/{pictureID}", name="paprec_product_editPicture")
      * @Method("POST")
      * @Security("has_role('ROLE_ADMIN')")
      */
@@ -752,10 +763,10 @@ class ProductController extends AbstractController
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec_catalog.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
-                $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $oldPath);
+                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $oldPath);
                 $this->em->flush();
             }
 
@@ -771,7 +782,7 @@ class ProductController extends AbstractController
 
 
     /**
-     * @Route("/product/removePicture/{id}/{pictureID}", name="paprec_product_removePicture")
+     * @Route("/removePicture/{id}/{pictureID}", name="paprec_product_removePicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removePictureAction(Request $request, Product $product)
@@ -783,7 +794,7 @@ class ProductController extends AbstractController
         foreach ($pictures as $picture) {
             if ($picture->getId() == $pictureID) {
                 $product->setDateUpdate(new \DateTime());
-                $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $picture->getPath());
+                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
                 $this->em->remove($picture);
                 continue;
             }
@@ -796,7 +807,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/setPilotPicture/{id}/{pictureID}", name="paprec_product_setPilotPicture")
+     * @Route("/setPilotPicture/{id}/{pictureID}", name="paprec_product_setPilotPicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function setPilotPictureAction(Request $request, Product $product)
@@ -819,7 +830,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/product/setPicture/{id}/{pictureID}", name="paprec_product_setPicture")
+     * @Route("/setPicture/{id}/{pictureID}", name="paprec_product_setPicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function setPictureAction(Request $request, Product $product)

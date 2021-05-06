@@ -1,0 +1,110 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.RangeLabel.Edit'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.RangeLabel.Edit'|trans }}
+{% endblock %}
+
+{% block main_content %}
+    <form id="catalogProductForm" action="" method="post">
+
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.RangeLabel.Edit'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-product-product-label-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-product-product-label-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.RangeLabel.Language.Language'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.language, {'attr': {'class': 'form-control product-label-language-input'}}) }}
+                                        {{ form_errors(form.language) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.RangeLabel.Name'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.name) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.RangeLabel.Short-description'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.shortDescription, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.shortDescription) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-product-product-label-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-product-product-label-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_rest(form) }}
+    </form>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('.catalog-product-product-label-save-button').on('click', function () {
+                $('#catalogProductForm').submit();
+            });
+
+            $('.catalog-product-product-label-cancel-button').on('click', function () {
+
+                var url = "{{ path("paprec_product_view", {id: product.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-cancel'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function(result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+        });
+    </script>
+{% endblock %}

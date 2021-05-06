@@ -1,0 +1,145 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.Range.Add'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.Range.Ranges'|trans }}
+{% endblock %}
+
+{% block main_content %}
+    <form id="catalogRangeForm" action="" method="post" enctype="multipart/form-data">
+
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Range.Add'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-range-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-range-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'Catalog.RangeLabel.Language.Language'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form2.language, {'attr': {'class': 'form-control range-label-language-input'}}) }}
+                                            {{ form_errors(form2.language) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-label">{{ 'Catalog.RangeLabel.Name'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form2.name, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form2.name) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.RangeLabel.Short-description'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form2.shortDescription, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form2.shortDescription) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'Catalog.Range.Details'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Range.Position'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.position, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.position) }}
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                <div class="form-label">{{ 'Catalog.Range.IsEnabled.IsEnabled'|trans }}</div>
+                                <div class="form-content checkbox-list">
+                                    {% for radio in form1.isEnabled.children %}
+                                        <div class="form__check ml-4">
+                                            {{ form_widget(radio) }}
+                                            {{ form_label(radio) }}
+                                        </div>
+                                    {% endfor %}
+                                    {{ form_errors(form1.isEnabled) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="float-right">
+                    <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-range-save-button">
+                        <i class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}
+                    </a>
+                    <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-range-cancel-button">
+                        <i class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{ form_rest(form1) }}
+        {{ form_rest(form2) }}
+    </form>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('.catalog-range-save-button').on('click', function () {
+                $('#catalogRangeForm').submit();
+            });
+
+            $('.catalog-range-cancel-button').on('click', function () {
+
+                var url = "{{ path("paprec_range_index") }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-cancel'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+            $('.range-label-language-input option:not(:selected)').each(function () {
+                $(this).prop('disabled', true);
+            });
+
+        });
+    </script>
+{% endblock %}

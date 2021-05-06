@@ -46,6 +46,12 @@ class Picture
      */
     private $product;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Range", inversedBy="pictures")
+     */
+    private $range;
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\CustomArea", inversedBy="pictures")
      */
@@ -136,6 +142,30 @@ class Picture
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * Set Range.
+     *
+     * @param Range|null $range
+     *
+     * @return Picture
+     */
+    public function setRange(Range $range = null)
+    {
+        $this->range = $range;
+
+        return $this;
+    }
+
+    /**
+     * Get range.
+     *
+     * @return Range|null
+     */
+    public function getRange()
+    {
+        return $this->range;
     }
 
     /**

@@ -4,16 +4,45 @@ namespace App\Controller;
 
 use App\Entity\PostalCode;
 use App\Form\PostalCodeType;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Service\NumberManager;
+use App\Service\PostalCodeManager;
+use App\Service\ProductLabelManager;
+use App\Service\ProductManager;
+use App\Tools\DataTable;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class PostalCodeController extends Controller
+class PostalCodeController extends AbstractController
 {
+
+    private $em;
+    private $numberManager;
+    private $postalCodeManager;
+    private $translator;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        NumberManager $numberManager,
+        PostalCodeManager $postalCodeManager
+    ) {
+        $this->em = $em;
+        $this->numberManager = $numberManager;
+        $this->postalCodeManager = $postalCodeManager;
+        $this->translator = $translator;
+    }
+
 
     /**
      * @Route("/postalCode", name="paprec_postalCode_index")
@@ -28,11 +57,9 @@ class PostalCodeController extends Controller
      * @Route("/postalCode/loadList", name="paprec_postalCode_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function loadListAction(Request $request)
+    public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
-        $numberManager = $this->get('paprec_catalog.number_manager');
-
-        $return = array();
+        $return = [];
 
         $filters = $request->get('filters');
         $pageSize = $request->get('length');
@@ -40,6 +67,7 @@ class PostalCodeController extends Controller
         $orders = $request->get('order');
         $search = $request->get('search');
         $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'pC.id', 'method' => array('getId'));
         $cols['code'] = array('label' => 'code', 'id' => 'pC.code', 'method' => array('getCode'));
@@ -67,12 +95,13 @@ class PostalCodeController extends Controller
             }
         }
 
-        $datatable = $this->get('goondi_tools.datatable')->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters);
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
 
 
-        $return['recordsTotal'] = $datatable['recordsTotal'];
-        $return['recordsFiltered'] = $datatable['recordsTotal'];
-        $return['data'] = $datatable['data'];
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
         $return['resultCode'] = 1;
         $return['resultDescription'] = "success";
 
@@ -86,10 +115,6 @@ class PostalCodeController extends Controller
      */
     public function exportAction(Request $request)
     {
-        $numberManager = $this->get('paprec_catalog.number_manager');
-
-        $phpExcelObject = $this->container->get('phpexcel')->createPHPExcelObject();
-
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(PostalCode::class)->createQueryBuilder('pC');
 
         $queryBuilder->select(array('pC'))
@@ -97,12 +122,19 @@ class PostalCodeController extends Controller
 
         $postalCodes = $queryBuilder->getQuery()->getResult();
 
-        $phpExcelObject->getProperties()->setCreator("Privacia Shop")
+        /** @var Spreadsheet $spreadsheet */
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet
+            ->getProperties()->setCreator("Privacia Shop")
             ->setLastModifiedBy("Privacia Shop")
             ->setTitle("Privacia Shop - Postal codes")
             ->setSubject("Extract");
 
-        $phpExcelObject->setActiveSheetIndex(0)
+        $sheet = $spreadsheet->setActiveSheetIndex(0);
+        $sheet->setTitle('Postal Codes');
+
+        $sheet
             ->setCellValue('A1', 'ID')
             ->setCellValue('B1', 'Code')
             ->setCellValue('C1', 'Commune')
@@ -113,43 +145,39 @@ class PostalCodeController extends Controller
             ->setCellValue('H1', 'Treacability rate')
             ->setCellValue('I1', 'Salesman in charge');
 
-        $phpExcelObject->getActiveSheet()->setTitle('Postal codes');
-        $phpExcelObject->setActiveSheetIndex(0);
-
         $i = 2;
         foreach ($postalCodes as $postalCode) {
 
-            $phpExcelObject->setActiveSheetIndex(0)
+            $sheet->setActiveSheetIndex(0)
                 ->setCellValue('A' . $i, $postalCode->getId())
                 ->setCellValue('B' . $i, $postalCode->getCode())
                 ->setCellValue('C' . $i, $postalCode->getCity())
                 ->setCellValue('D' . $i, $postalCode->getZone())
-                ->setCellValue('E' . $i, $numberManager->denormalize15($postalCode->getRentalRate()))
-                ->setCellValue('F' . $i, $numberManager->denormalize15($postalCode->getTransportRate()))
-                ->setCellValue('G' . $i, $numberManager->denormalize15($postalCode->getTreatmentRate()))
-                ->setCellValue('H' . $i, $numberManager->denormalize15($postalCode->getTraceabilityRate()))
+                ->setCellValue('E' . $i, $this->numberManager->denormalize15($postalCode->getRentalRate()))
+                ->setCellValue('F' . $i, $this->numberManager->denormalize15($postalCode->getTransportRate()))
+                ->setCellValue('G' . $i, $this->numberManager->denormalize15($postalCode->getTreatmentRate()))
+                ->setCellValue('H' . $i, $this->numberManager->denormalize15($postalCode->getTraceabilityRate()))
                 ->setCellValue('I' . $i, ($postalCode->getUserInCharge()) ? $postalCode->getUserInCharge()->getEmail() : '');
             $i++;
         }
 
-        $writer = $this->container->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
 
         $fileName = 'PrivaciaShop-Extract-Postal-Codes-' . date('Y-m-d') . '.xlsx';
 
-        // create the response
-        $response = $this->container->get('phpexcel')->createStreamedResponse($writer);
 
-        // adding headers
-        $dispositionHeader = $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $fileName
-        );
-        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Pragma', 'public');
-        $response->headers->set('Cache-Control', 'maxage=1');
-        $response->headers->set('Content-Disposition', $dispositionHeader);
+        $streamedResponse = new StreamedResponse();
+        $streamedResponse->setCallback(function () use ($spreadsheet) {
+            $writer =  new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
 
-        return $response;
+        $streamedResponse->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $streamedResponse->headers->set('Pragma', 'public');
+        $streamedResponse->headers->set('Cache-Control', 'maxage=1');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
+
+        return $streamedResponse->send();
+
     }
 
     /**
@@ -158,8 +186,7 @@ class PostalCodeController extends Controller
      */
     public function viewAction(Request $request, PostalCode $postalCode)
     {
-        $postalCodeManager = $this->get('paprec_catalog.postal_code_manager');
-        $postalCodeManager->isDeleted($postalCode, true);
+        $this->postalCodeManager->isDeleted($postalCode, true);
 
         return $this->render('postalCode/view.html.twig', array(
             'postalCode' => $postalCode
@@ -174,10 +201,7 @@ class PostalCodeController extends Controller
     {
         $user = $this->getUser();
 
-        $numberManager = $this->get('paprec_catalog.number_manager');
-
         $postalCode = new PostalCode();
-
 
         $form = $this->createForm(PostalCodeType::class, $postalCode);
 
@@ -186,10 +210,10 @@ class PostalCodeController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $postalCode = $form->getData();
-            $postalCode->setRentalRate($numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setTransportRate($numberManager->normalize15($postalCode->getTransportRate()));
-            $postalCode->setTreatmentRate($numberManager->normalize15($postalCode->getTreatmentRate()));
-            $postalCode->setTraceabilityRate($numberManager->normalize15($postalCode->getTraceabilityRate()));
+            $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
+            $postalCode->setTransportRate($this->numberManager->normalize15($postalCode->getTransportRate()));
+            $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
+            $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
             $postalCode->setDateCreation(new \DateTime);
             $postalCode->setUserCreation($user);
@@ -218,14 +242,12 @@ class PostalCodeController extends Controller
     {
         $user = $this->getUser();
 
-        $numberManager = $this->get('paprec_catalog.number_manager');
-        $postalCodeManager = $this->get('paprec_catalog.postal_code_manager');
-        $postalCodeManager->isDeleted($postalCode, true);
+        $this->postalCodeManager->isDeleted($postalCode, true);
 
-        $postalCode->setRentalRate($numberManager->denormalize15($postalCode->getRentalRate()));
-        $postalCode->setTransportRate($numberManager->denormalize15($postalCode->getTransportRate()));
-        $postalCode->setTreatmentRate($numberManager->denormalize15($postalCode->getTreatmentRate()));
-        $postalCode->setTraceabilityRate($numberManager->denormalize15($postalCode->getTraceabilityRate()));
+        $postalCode->setRentalRate($this->numberManager->denormalize15($postalCode->getRentalRate()));
+        $postalCode->setTransportRate($this->numberManager->denormalize15($postalCode->getTransportRate()));
+        $postalCode->setTreatmentRate($this->numberManager->denormalize15($postalCode->getTreatmentRate()));
+        $postalCode->setTraceabilityRate($this->numberManager->denormalize15($postalCode->getTraceabilityRate()));
 
         $form = $this->createForm(PostalCodeType::class, $postalCode);
 
@@ -235,10 +257,10 @@ class PostalCodeController extends Controller
 
             $postalCode = $form->getData();
 
-            $postalCode->setRentalRate($numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setTransportRate($numberManager->normalize15($postalCode->getTransportRate()));
-            $postalCode->setTreatmentRate($numberManager->normalize15($postalCode->getTreatmentRate()));
-            $postalCode->setTraceabilityRate($numberManager->normalize15($postalCode->getTraceabilityRate()));
+            $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
+            $postalCode->setTransportRate($this->numberManager->normalize15($postalCode->getTransportRate()));
+            $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
+            $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
             $postalCode->setDateUpdate(new \DateTime);
             $postalCode->setUserUpdate($user);
@@ -308,9 +330,7 @@ class PostalCodeController extends Controller
         $codes = array();
         $code = trim(strip_tags($request->get('term')));
 
-        $postalCodeManager = $this->get('paprec_catalog.postal_code_manager');
-
-        $entities = $postalCodeManager->getActivesFromCode($code);
+        $entities = $this->postalCodeManager->getActivesFromCode($code);
 
         foreach ($entities as $entity) {
             $codes[] = $entity->getCode() . ' - ' . $entity->getCity();

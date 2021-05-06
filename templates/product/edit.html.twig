@@ -120,6 +120,50 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Range'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.range, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.range) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.TransportType'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.transportType, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.transportType) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Catalog.Label'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.catalog) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Frequency'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.frequency, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.frequency) }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label class="form-label">{{ 'Catalog.Product.PassingFrequency'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.frequencyTimes) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.frequencyInterval) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Product.RentalUnitPrice'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form1.rentalUnitPrice, {'attr': {'class': 'form-control'}}) }}

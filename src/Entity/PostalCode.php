@@ -508,4 +508,22 @@ class PostalCode
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUserInCharge()
+    {
+        return $this->userInCharge;
+    }
+
+    /**
+     * @param mixed $userInCharge
+     * @return PostalCode
+     */
+    public function setUserInCharge($userInCharge): self
+    {
+        $this->userInCharge = $userInCharge;
+        return $this;
+    }
+
 }

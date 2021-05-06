@@ -13,6 +13,22 @@ parameters:
         - PICTURE
         - PILOTPICTURE
 
+    paprec.product.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
+    paprec.range.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
+
+    paprec.product.catalog:
+        - REGULAR
+        - PONCTUAL
+
+    paprec_transport_types:
+        - C_BROYEUR
+        - FOURGON_PL
+        - FOURGON_VL
+        - AMPLIROLL
+        - BOM
+        - LIVRAISON
+
+
 services:
     # default configuration for services in *this* file
     _defaults:

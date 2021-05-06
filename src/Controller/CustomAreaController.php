@@ -273,7 +273,7 @@ class CustomAreaController extends Controller
             $customAreas = $em->getRepository('App:CustomArea')->findById($ids);
             foreach ($customAreas as $customArea) {
                 foreach ($customArea->getPictures() as $picture) {
-                    $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $picture->getPath());
+                    $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
                     $customArea->removePicture($picture);
                 }
 
@@ -313,7 +313,7 @@ class CustomAreaController extends Controller
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid()) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec_catalog.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
                 $picture->setType($request->get('type'));
@@ -368,10 +368,10 @@ class CustomAreaController extends Controller
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid()) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec_catalog.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
-                $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $oldPath);
+                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $oldPath);
                 $em->flush();
             }
 
@@ -400,7 +400,7 @@ class CustomAreaController extends Controller
         foreach ($pictures as $picture) {
             if ($picture->getId() == $pictureID) {
                 $customArea->setDateUpdate(new \DateTime());
-                $this->removeFile($this->getParameter('paprec_catalog.product.picto_path') . '/' . $picture->getPath());
+                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
                 $em->remove($picture);
                 continue;
             }

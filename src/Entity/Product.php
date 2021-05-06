@@ -139,6 +139,46 @@ class Product
     private $traceabilityUnitPrice;
 
     /**
+     * @var string
+     * Le coefficient de transport à utiliser
+     * @ORM\Column(name="transportType", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $transportType;
+
+    /**
+     * @var string
+     * Le catalogue du produit (REGULAR ou PONCTUAL)
+     * @ORM\Column(name="catalog", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $catalog;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="frequency", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $frequency;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="frequencyTimes", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $frequencyTimes;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="frequencyInterval", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $frequencyInterval;
+
+    /**
      * @var int
      * @Assert\NotBlank()
      * @ORM\Column(name="position", type="integer")
@@ -180,6 +220,11 @@ class Product
      */
     private $productLabels;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Range", inversedBy="products")
+     */
+    private $range;
+
 
     /**
      * Constructor
@@ -189,6 +234,8 @@ class Product
         $this->dateCreation = new \DateTime();
         $this->pictures = new ArrayCollection();
         $this->productLabels = new ArrayCollection();
+        $this->transportType = 'LIVRAISON';
+        $this->catalog = 'REGULAR';
     }
 
 
@@ -626,6 +673,96 @@ class Product
     }
 
     /**
+     * @return null|string
+     */
+    public function getTransportType(): ?string
+    {
+        return $this->transportType;
+    }
+
+    /**
+     * @param string $transportType
+     * @return Product
+     */
+    public function setTransportType(string $transportType): self
+    {
+        $this->transportType = $transportType;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCatalog(): ?string
+    {
+        return $this->catalog;
+    }
+
+    /**
+     * @param string $catalog
+     * @return Product
+     */
+    public function setCatalog(string $catalog): self
+    {
+        $this->catalog = $catalog;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFrequency(): ?string
+    {
+        return $this->frequency;
+    }
+
+    /**
+     * @param string $frequency
+     * @return Product
+     */
+    public function setFrequency(string $frequency): self
+    {
+        $this->frequency = $frequency;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFrequencyTimes(): ?string
+    {
+        return $this->frequencyTimes;
+    }
+
+    /**
+     * @param string $frequencyTimes
+     * @return Product
+     */
+    public function setFrequencyTimes(string $frequencyTimes): self
+    {
+        $this->frequencyTimes = $frequencyTimes;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getFrequencyInterval(): ?string
+    {
+        return $this->frequencyInterval;
+    }
+
+    /**
+     * @param string $frequencyInterval
+     * @return Product
+     */
+    public function setFrequencyInterval(string $frequencyInterval): self
+    {
+        $this->frequencyInterval = $frequencyInterval;
+        return $this;
+    }
+
+    /**
      * Set position.
      *
      * @param int $position
@@ -672,5 +809,23 @@ class Product
     public function getFolderNumber()
     {
         return $this->folderNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRange()
+    {
+        return $this->range;
+    }
+
+    /**
+     * @param mixed $range
+     * @return Product
+     */
+    public function setRange($range): self
+    {
+        $this->range = $range;
+        return $this;
     }
 }

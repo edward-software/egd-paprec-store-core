@@ -451,8 +451,8 @@ class UserController extends AbstractController
 
         $this->em->flush();
 
-        $message = (new Swift_Message('BKF : Identifiants'))
-            ->setFrom($_ENV['MAILER_paprec_SENDER'])
+        $message = (new Swift_Message('Paprec : Identifiants'))
+            ->setFrom($_ENV['MAILER_SENDER'])
             ->setTo($user->getEmail())
             ->setBody(
                 $this->render(
