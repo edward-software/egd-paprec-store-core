@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block main_content %}
-    <form id="catalogProductForm" action="" method="post">
+    <form id="catalogRangeForm" action="" method="post">
 
         <div class="col-md-12">
             <!-- BOX -->
@@ -22,9 +22,9 @@
                         <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.RangeLabel.Edit'|trans }}
                     </h4>
                     <div class="float-right">
-                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-product-product-label-save-button"><i
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-range-range-label-save-button"><i
                                     class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-product-product-label-cancel-button"><i
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-range-range-label-cancel-button"><i
                                     class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.RangeLabel.Language.Language'|trans }}</div>
                                     <div class="form-content">
-                                        {{ form_widget(form.language, {'attr': {'class': 'form-control product-label-language-input'}}) }}
+                                        {{ form_widget(form.language, {'attr': {'class': 'form-control range-label-language-input'}}) }}
                                         {{ form_errors(form.language) }}
                                     </div>
                                 </div>
@@ -63,9 +63,9 @@
 
                 <div class="card-footer">
                     <div class="float-right">
-                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-product-product-label-save-button"><i
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-range-range-label-save-button"><i
                                     class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-product-product-label-cancel-button"><i
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-range-range-label-cancel-button"><i
                                     class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
                     </div>
                 </div>
@@ -83,13 +83,13 @@
     <script>
         $(function () {
 
-            $('.catalog-product-product-label-save-button').on('click', function () {
-                $('#catalogProductForm').submit();
+            $('.catalog-range-range-label-save-button').on('click', function () {
+                $('#catalogRangeForm').submit();
             });
 
-            $('.catalog-product-product-label-cancel-button').on('click', function () {
+            $('.catalog-range-range-label-cancel-button').on('click', function () {
 
-                var url = "{{ path("paprec_product_view", {id: product.id}) }}";
+                var url = "{{ path("paprec_range_view", {id: range.id}) }}";
 
                 Swal.fire({
                     title: "{{ 'General.Confirm'|trans }}",

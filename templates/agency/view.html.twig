@@ -40,32 +40,202 @@
                         <div class="card-header">
                             <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
                         </div>
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.Name'|trans }}</label>
-                                <label class="col-form-label col-md-8">
-                                    {{ agency.name }}
-                                </label>
+                        <div class="card-body row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.Name'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ agency.name }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.BusinessName'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ agency.businessName }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.BusinessId'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ agency.businessId }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.Address'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ agency.address }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.City'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ agency.city }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.PostalCode'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ agency.postalCode }}
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.Salesman'|trans }}</label>
-                                <label class="col-form-label col-md-8">
-                                    {% if agency.salesman %}
-                                        <a href="{{ path('paprec_user_view', {id: agency.salesman.id}) }}">
-                                            {{ agency.salesman.firstName }} {{ agency.salesman.lastName }}
-                                        </a>
-                                    {% endif %}
-                                </label>
+                            {#
+                            Affichage des photos
+                            #}
+                            <div class="col-md-6">
+                                {#
+                                Affichage des photos PilotPicture
+                                #}
+                                <div class="col-md-12 mt-2 no-gutters">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            {{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}
+                                            {% if agency.pictures is empty %}
+                                                <div class="float-right">
+                                                    <button class="btn btn-sm btn-outline-primary"
+                                                            data-target="#uploadPictureModal" data-toggle="modal"
+                                                            data-type="PILOTPICTURE" id="openModalUploadPicture">
+                                                        <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Product.AddPicture'| trans({}, "messages", app.request.locale) }}
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-group">
+                                                {% if (agency.pilotPictures) %}
+                                                    {% for picture in agency.pilotPictures %}
+                                                        <div class="card card-sec">
+                                                            <div class="card-header">
+                                                                {# <div class="float-left"> {{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}</div> #}
+                                                                <div class="dropdown float-right">
+                                                                    <button class="p-0 btn btn-sm btn-light dropdown-toggle btn-sm"
+                                                                            type="button" id="{{ picture.id }}"
+                                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                                            aria-expanded="false">
+                                                                        <i class="fa fa-xs fa-cog"></i>
+                                                                    </button>
+                                                                    <div class="dropdown-menu"
+                                                                         aria-labelledby="{{ picture.id }}">
+                                                                        <button id="pictureEditButton"
+                                                                                class="dropdown-item"
+                                                                                type="button"
+                                                                                data-target="#editPictureModal"
+                                                                                data-toggle="modal"
+                                                                                data-type="PILOTPICTURE"
+                                                                                data-id="{{ picture.id }}">
+                                                                            <i class="fa fa-xs fa-pencil-alt"></i> {{ 'General.Edit'| trans({}, "messages", app.request.locale) }}
+                                                                        </button>
+                                                                        <button data-id="{{ picture.id }}"
+                                                                                class="dropdown-item removePictureButton"
+                                                                                type="button">
+                                                                            <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'| trans({}, "messages", app.request.locale) }}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <img class="card-img-top"
+                                                                 src="{{ asset('/uploads/pictos/' ~ picture.path) }}"
+                                                                 alt="{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}">
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.Assistant'|trans }}</label>
-                                <label class="col-form-label col-md-8">
-                                    {% if agency.assistant %}
-                                        <a href="{{ path('paprec_user_view', {id: agency.assistant.id}) }}">
-                                            {{ agency.assistant.firstName }} {{ agency.assistant.lastName }}
-                                        </a>
-                                    {% endif %}
-                                </label>
+                        </div>
+                        {#
+                        Modal d'affichage des formulaires
+                        #}
+                        <div class="modal fade" id="uploadPictureModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Upload Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formAddPicture" name="formAddPicture"
+                                            {% set params = {id: agency.id, type: 'Picture' } %}
+                                          action="{{ path("paprec_agency_addPicture", params) }}"
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="uploadPictureModalTitle">
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span id="uploadPictureSizeInfo">
+
+                                                        </span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddPicture.path) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formAddPictureSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formAddPicture) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="editPictureModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Edit Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formEditPicture" name="formEditPicture"
+                                          action=""
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editPictureModalTitle">
+                                                {{ 'Catalog.Product.EditPicture'| trans({}, "messages", app.request.locale) }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span id="editPictureSizeInfo">
+
+                                                        </span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formEditPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formEditPicture.path) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formEditPictureSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formEditPicture) }}
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -120,6 +290,89 @@
                     }
                 });
 
+            });
+
+            // Au chargement de la modal d'ajout d'une photo
+            // On met à jour le titre de la modal d'ajout de photo en fonction du type que l'on ajoute
+            // On modifie aussi l'url d'action pour passer en paramètre le type de photo à ajouter
+            $('#uploadPictureModal').on('show.bs.modal', function (e) {
+                var type = $(e.relatedTarget).data('type');
+                var actionUrl = "{{ path("paprec_agency_addPicture", {id: agency.id, type: 'typeTmp'}) }}";
+                var sizeInfo = document.getElementById('uploadPictureSizeInfo');
+
+                actionUrl = actionUrl.replace('typeTmp', type);
+                document.formAddPicture.action = actionUrl;
+                switch (type) {
+                    case 'Picto':
+                        type = "{{ 'Catalog.Product.Picto'| trans({}, "messages", app.request.locale) }}";
+                        sizeInfo.innerText = '(125 x 120 pixels)';
+                        break;
+                    case 'PilotPicture':
+                        type = "{{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}";
+                        sizeInfo.innerText = '(277 x 395 pixels)';
+                        break;
+                    default:
+                        type = "{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}";
+                        sizeInfo.innerText = '(60 x 60 pixels)';
+                        break;
+                }
+                var title = document.getElementById('uploadPictureModalTitle');
+                title.innerText = type;
+            });
+
+            // Au chargement de la modal d'édition d'une photo
+            // On modifie l'URL d'action du formulaire pour passer en paramètre l'ID de la photo modifiée
+            $('#editPictureModal').on('show.bs.modal', function (e) {
+                var pictureID = $(e.relatedTarget).data('id');
+                var type = $(e.relatedTarget).data('type');
+                var actionUrl = "{{ path("paprec_agency_editPicture", {id: agency.id, pictureID: 'pictureTmp'}) }}";
+                var sizeInfo = document.getElementById('editPictureSizeInfo');
+
+                actionUrl = actionUrl.replace('pictureTmp', pictureID);
+                document.formEditPicture.action = actionUrl;
+                switch (type) {
+                    case 'Picto':
+                        type = "{{ 'Catalog.Product.Picto'| trans({}, "messages", app.request.locale) }}";
+                        sizeInfo.innerText = '(125 x 120 pixels)';
+                        break;
+                    case 'PilotPicture':
+                        type = "{{ 'Catalog.Product.PilotPicture'| trans({}, "messages", app.request.locale) }}";
+                        sizeInfo.innerText = '(277 x 395 pixels)';
+                        break;
+                    default:
+                        type = "{{ 'Catalog.Product.Pictures'| trans({}, "messages", app.request.locale) }}";
+                        sizeInfo.innerText = '(60 x 60 pixels)';
+                        break;
+                }
+                var title = document.getElementById('editPictureModalTitle');
+                title.innerText = type;
+            });
+
+
+            $('.removePictureButton').on('click', function () {
+                picId = $(this).data('id');
+                Swal.fire({
+                    title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
+                    text: "{{ 'General.Confirm-remove'| trans({}, "messages", app.request.locale) }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
+                    cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        var url = "{{ path("paprec_agency_removePicture", {id: agency.id, pictureID: 'pictureTmp'}) }}";
+                        url = url.replace('pictureTmp', picId);
+                        $(location).attr('href', url);
+                    }
+                });
+            });
+
+
+            $('#formAddPictureSubmitButton').on('click', function () {
+                $('#formAddPicture').submit();
+            });
+
+            $('#formEditPictureSubmitButton').on('click', function () {
+                $('#formEditPicture').submit();
             });
         });
     </script>

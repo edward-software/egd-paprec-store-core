@@ -35,7 +35,22 @@ class PostalCodeType extends AbstractType
             ->add('rentalRate', TextType::class, array(
                 "required" => true
             ))
-            ->add('transportRate', TextType::class, array(
+            ->add('cBroyeurTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('fourgonPLTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('fourgonVLTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('amplirollTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('bomTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('livraisonTransportRate', TextType::class, array(
                 "required" => true
             ))
             ->add('treatmentRate', TextType::class, array(

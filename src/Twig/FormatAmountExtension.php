@@ -37,7 +37,7 @@ class FormatAmountExtension extends AbstractExtension
      *
      * @return string
      */
-    public function formatAmount($amount, $locale, $currency = null, $type = null)
+    public function formatAmount($amount, $currency = null, $locale = 'fr', $type = null)
     {
         
         if ($type === 'PERCENTAGE') {
@@ -52,6 +52,12 @@ class FormatAmountExtension extends AbstractExtension
             $amount = str_replace(',', '.', $amount);
             return  number_format((float)$amount, 2);
         }
+
+        if ($type === 'DEC3') {
+            $amount = str_replace(',', '.', $amount);
+            return  number_format((float)$amount, 3, ',', ' ');
+        }
+
 
         return $this->numberManager->formatAmount($amount, $currency, $locale);
     }

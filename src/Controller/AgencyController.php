@@ -3,20 +3,56 @@
 namespace App\Controller;
 
 use App\Entity\Agency;
+use App\Entity\Picture;
 use App\Form\AgencyType;
+use App\Form\PictureAgencyType;
+use App\Service\AgencyManager;
+use App\Service\NumberManager;
+use App\Service\PictureManager;
+use App\Tools\DataTable;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AgencyController extends Controller
+class AgencyController extends AbstractController
 {
 
+    private $em;
+    private $numberManager;
+    private $pictureManager;
+    private $agencyManager;
+    private $translator;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        NumberManager $numberManager,
+        PictureManager $pictureManager,
+        AgencyManager $agencyManager
+    ) {
+        $this->em = $em;
+        $this->numberManager = $numberManager;
+        $this->pictureManager = $pictureManager;
+        $this->agencyManager = $agencyManager;
+        $this->translator = $translator;
+    }
+
     /**
-     * @Route("/agency", name="paprec_agency_index")
+     * @Route("", name="paprec_agency_index")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
@@ -25,14 +61,12 @@ class AgencyController extends Controller
     }
 
     /**
-     * @Route("/agency/loadList", name="paprec_agency_loadList")
+     * @Route("/loadList", name="paprec_agency_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function loadListAction(Request $request)
+    public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
-        $numberManager = $this->get('paprec_catalog.number_manager');
-
-        $return = array();
+        $return = [];
 
         $filters = $request->get('filters');
         $pageSize = $request->get('length');
@@ -40,11 +74,12 @@ class AgencyController extends Controller
         $orders = $request->get('order');
         $search = $request->get('search');
         $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'a.id', 'method' => array('getId'));
-        $cols['name'] = array('label' => 'name', 'id' => 'a.code', 'method' => array('getName'));
-        $cols['salesman'] = array('label' => 'salesman', 'id' => 'a.name', 'method' => array('getSalesman', 'getFullName'));
-        $cols['assistant'] = array('label' => 'assistant', 'id' => 'a.name', 'method' => array('getAssistant', 'getFullName'));
+        $cols['name'] = array('label' => 'name', 'id' => 'a.name', 'method' => array('getName'));
+        $cols['businessName'] = array('label' => 'businessName', 'id' => 'a.businessName', 'method' => array('getBusinessName'));
+        $cols['businessId'] = array('label' => 'businessId', 'id' => 'a.businessId', 'method' => array('getBusinessId'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Agency::class)->createQueryBuilder('a');
 
@@ -64,13 +99,13 @@ class AgencyController extends Controller
             }
         }
 
-        $datatable = $this->get('goondi_tools.datatable')->generateTable($cols, $queryBuilder, $pageSize, $start,
-            $orders, $columns, $filters);
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
 
 
-        $return['recordsTotal'] = $datatable['recordsTotal'];
-        $return['recordsFiltered'] = $datatable['recordsTotal'];
-        $return['data'] = $datatable['data'];
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
         $return['resultCode'] = 1;
         $return['resultDescription'] = "success";
 
@@ -79,14 +114,11 @@ class AgencyController extends Controller
     }
 
     /**
-     * @Route("/agency/export", name="paprec_agency_export")
+     * @Route("/export", name="paprec_agency_export")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function exportAction(Request $request)
     {
-        $numberManager = $this->get('paprec_catalog.number_manager');
-
-        $phpExcelObject = $this->container->get('phpexcel')->createPHPExcelObject();
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Agency::class)->createQueryBuilder('a');
 
@@ -95,77 +127,90 @@ class AgencyController extends Controller
 
         $agencies = $queryBuilder->getQuery()->getResult();
 
-        $phpExcelObject->getProperties()->setCreator("Privacia Shop")
+        /** @var Spreadsheet $spreadsheet */
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet
+            ->getProperties()->setCreator("Privacia Shop")
             ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Postal codes")
+            ->setTitle("Privacia Shop - Agencies")
             ->setSubject("Extract");
 
-        $phpExcelObject->setActiveSheetIndex(0)
-            ->setCellValue('A1', 'ID')
-            ->setCellValue('B1', 'Code')
-            ->setCellValue('C1', 'Commune')
-            ->setCellValue('D1', 'Tariff zone')
-            ->setCellValue('E1', 'Rental rate')
-            ->setCellValue('F1', 'Transport rate')
-            ->setCellValue('G1', 'Treatment rate')
-            ->setCellValue('H1', 'Treacability rate')
-            ->setCellValue('I1', 'Salesman in charge');
+        $sheet = $spreadsheet->setActiveSheetIndex(0);
+        $sheet->setTitle('Agences');
 
-        $phpExcelObject->getActiveSheet()->setTitle('Postal codes');
-        $phpExcelObject->setActiveSheetIndex(0);
+        $spreadsheet->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'ID')
+            ->setCellValue('B1', 'Nom')
+            ->setCellValue('C1', 'Raison sociale')
+            ->setCellValue('D1', 'Tariff Identification société')
+            ->setCellValue('E1', 'Adresse')
+            ->setCellValue('F1', 'Ville')
+            ->setCellValue('G1', 'Code postal');
+
 
         $i = 2;
         foreach ($agencies as $agency) {
 
-            $phpExcelObject->setActiveSheetIndex(0)
+            $spreadsheet->setActiveSheetIndex(0)
                 ->setCellValue('A' . $i, $agency->getId())
-                ->setCellValue('B' . $i, $agency->getCode())
-                ->setCellValue('C' . $i, $agency->getCity())
-                ->setCellValue('D' . $i, $agency->getZone())
-                ->setCellValue('E' . $i, $numberManager->denormalize15($agency->getRentalRate()))
-                ->setCellValue('F' . $i, $numberManager->denormalize15($agency->getTransportRate()))
-                ->setCellValue('G' . $i, $numberManager->denormalize15($agency->getTreatmentRate()))
-                ->setCellValue('H' . $i, $numberManager->denormalize15($agency->getTraceabilityRate()))
+                ->setCellValue('B' . $i, $agency->getName())
+                ->setCellValue('C' . $i, $agency->getBusinessName())
+                ->setCellValue('D' . $i, $agency->getBusinessId())
+                ->setCellValue('E' . $i, $agency->getBusinessId())
                 ->setCellValue('I' . $i, ($agency->getUserInCharge()) ? $agency->getUserInCharge()->getEmail() : '');
             $i++;
         }
 
-        $writer = $this->container->get('phpexcel')->createWriter($phpExcelObject, 'Excel2007');
 
-        $fileName = 'PrivaciaShop-Extract-Postal-Codes-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'PrivaciaShop-Extract-Agencies-' . date('Y-m-d') . '.xlsx';
 
-        // create the response
-        $response = $this->container->get('phpexcel')->createStreamedResponse($writer);
+        $streamedResponse = new StreamedResponse();
+        $streamedResponse->setCallback(function () use ($spreadsheet) {
+            $writer =  new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
 
-        // adding headers
-        $dispositionHeader = $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $fileName
-        );
-        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-        $response->headers->set('Pragma', 'public');
-        $response->headers->set('Cache-Control', 'maxage=1');
-        $response->headers->set('Content-Disposition', $dispositionHeader);
+        $streamedResponse->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $streamedResponse->headers->set('Pragma', 'public');
+        $streamedResponse->headers->set('Cache-Control', 'maxage=1');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
 
-        return $response;
+        return $streamedResponse->send();
     }
 
     /**
-     * @Route("/agency/view/{id}", name="paprec_agency_view")
+     * @Route("/view/{id}", name="paprec_agency_view")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function viewAction(Request $request, Agency $agency)
     {
-        $agencyManager = $this->get('paprec_catalog.agency_manager');
-        $agencyManager->isDeleted($agency, true);
+        $this->agencyManager->isDeleted($agency, true);
+
+
+        foreach ($this->getParameter('paprec_types_picture') as $type) {
+            $types[$type] = $type;
+        }
+
+        $picture = new Picture();
+
+        $formAddPicture = $this->createForm(PictureAgencyType::class, $picture, array(
+            'types' => $types
+        ));
+
+        $formEditPicture = $this->createForm(PictureAgencyType::class, $picture, array(
+            'types' => $types,
+        ));
 
         return $this->render('agency/view.html.twig', array(
-            'agency' => $agency
+            'agency' => $agency,
+            'formAddPicture' => $formAddPicture->createView(),
+            'formEditPicture' => $formEditPicture->createView(),
         ));
     }
 
     /**
-     * @Route("/agency/add", name="paprec_agency_add")
+     * @Route("/add", name="paprec_agency_add")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addAction(Request $request)
@@ -201,7 +246,7 @@ class AgencyController extends Controller
     }
 
     /**
-     * @Route("/agency/edit/{id}", name="paprec_agency_edit")
+     * @Route("/edit/{id}", name="paprec_agency_edit")
      * @Security("has_role('ROLE_ADMIN')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
@@ -209,8 +254,7 @@ class AgencyController extends Controller
     {
         $user = $this->getUser();
 
-        $agencyManager = $this->get('paprec_catalog.agency_manager');
-        $agencyManager->isDeleted($agency, true);
+        $this->agencyManager->isDeleted($agency, true);
 
         $form = $this->createForm(AgencyType::class, $agency);
 
@@ -239,13 +283,21 @@ class AgencyController extends Controller
     }
 
     /**
-     * @Route("/agency/remove/{id}", name="paprec_agency_remove")
+     * @Route("/remove/{id}", name="paprec_agency_remove")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeAction(Request $request, Agency $agency)
     {
         $em = $this->getDoctrine()->getManager();
 
+        /*
+         * Suppression des images
+         */
+        foreach ($agency->getPictures() as $picture) {
+            $this->removeFile($this->getParameter('paprec.agency.picto_path') . '/' . $picture->getPath());
+            $agency->removePicture($picture);
+        }
+        
         $agency->setDeleted(new \DateTime());
         $em->flush();
 
@@ -253,7 +305,7 @@ class AgencyController extends Controller
     }
 
     /**
-     * @Route("/agency/removeMany/{ids}", name="paprec_agency_removeMany")
+     * @Route("/removeMany/{ids}", name="paprec_agency_removeMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeManyAction(Request $request)
@@ -271,12 +323,195 @@ class AgencyController extends Controller
         if (is_array($ids) && count($ids)) {
             $agencies = $em->getRepository('App:Agency')->findById($ids);
             foreach ($agencies as $agency) {
+                foreach ($agency->getPictures() as $picture) {
+                    $this->removeFile($this->getParameter('paprec.agency.picto_path') . '/' . $picture->getPath());
+                    $agency->removePicture($picture);
+                }
                 $agency->setDeleted(new \DateTime);
             }
             $em->flush();
         }
 
         return $this->redirectToRoute('paprec_agency_index');
+    }
+
+    /**
+     * Supprimme un fichier du sytème de fichiers
+     *
+     * @param $path
+     */
+    public function removeFile($path)
+    {
+        $fs = new Filesystem();
+        try {
+            $fs->remove($path);
+        } catch (IOException $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+
+    /**
+     * @Route("/addPicture/{id}/{type}", name="paprec_agency_addPicture")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addPictureAction(Request $request, Agency $agency)
+    {
+        $picture = new Picture();
+        foreach ($this->getParameter('paprec_types_picture') as $type) {
+            $types[$type] = $type;
+        }
+
+        $form = $this->createForm(PictureAgencyType::class, $picture, array(
+            'types' => $types
+        ));
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $agency->setDateUpdate(new \DateTime());
+            $picture = $form->getData();
+
+            if ($picture->getPath() instanceof UploadedFile) {
+                $pic = $picture->getPath();
+                $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
+
+                $pic->move($this->getParameter('paprec.agency.picto_path'), $pictoFileName);
+
+                $picture->setPath($pictoFileName);
+                $picture->setType($request->get('type'));
+                $picture->setAgency($agency);
+                $agency->addPicture($picture);
+                $this->em->persist($picture);
+                $this->em->flush();
+            }
+
+            return $this->redirectToRoute('paprec_agency_view', array(
+                'id' => $agency->getId()
+            ));
+        }
+        return $this->render('agency/view.html.twig', array(
+            'agency' => $agency,
+            'formAddPicture' => $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/editPicture/{id}/{pictureID}", name="paprec_agency_editPicture")
+     * @Method("POST")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function editPictureAction(Request $request, Agency $agency)
+    {
+        $pictureID = $request->get('pictureID');
+        $picture = $this->pictureManager->get($pictureID);
+        $oldPath = $picture->getPath();
+
+        foreach ($this->getParameter('paprec_types_picture') as $type) {
+            $types[$type] = $type;
+        }
+
+        $form = $this->createForm(PictureAgencyType::class, $picture, array(
+            'types' => $types
+        ));
+
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $agency->setDateUpdate(new \DateTime());
+            $picture = $form->getData();
+
+            if ($picture->getPath() instanceof UploadedFile) {
+                $pic = $picture->getPath();
+                $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
+
+                $pic->move($this->getParameter('paprec.agency.picto_path'), $pictoFileName);
+
+                $picture->setPath($pictoFileName);
+                $this->removeFile($this->getParameter('paprec.agency.picto_path') . '/' . $oldPath);
+                $this->em->flush();
+            }
+
+            return $this->redirectToRoute('paprec_agency_view', array(
+                'id' => $agency->getId()
+            ));
+        }
+        return $this->render('agency/view.html.twig', array(
+            'agency' => $agency,
+            'formEditPicture' => $form->createView()
+        ));
+    }
+
+
+    /**
+     * @Route("/removePicture/{id}/{pictureID}", name="paprec_agency_removePicture")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function removePictureAction(Request $request, Agency $agency)
+    {
+
+        $pictureID = $request->get('pictureID');
+
+        $pictures = $agency->getPictures();
+        foreach ($pictures as $picture) {
+            if ($picture->getId() == $pictureID) {
+                $agency->setDateUpdate(new \DateTime());
+                $this->removeFile($this->getParameter('paprec.agency.picto_path') . '/' . $picture->getPath());
+                $this->em->remove($picture);
+                continue;
+            }
+        }
+        $this->em->flush();
+
+        return $this->redirectToRoute('paprec_agency_view', array(
+            'id' => $agency->getId()
+        ));
+    }
+
+    /**
+     * @Route("/setPilotPicture/{id}/{pictureID}", name="paprec_agency_setPilotPicture")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function setPilotPictureAction(Request $request, Agency $agency)
+    {
+
+        $pictureID = $request->get('pictureID');
+        $pictures = $agency->getPictures();
+        foreach ($pictures as $picture) {
+            if ($picture->getId() == $pictureID) {
+                $agency->setDateUpdate(new \DateTime());
+                $picture->setType('PILOTPICTURE');
+                continue;
+            }
+        }
+        $this->em->flush();
+
+        return $this->redirectToRoute('paprec_agency_view', array(
+            'id' => $agency->getId()
+        ));
+    }
+
+    /**
+     * @Route("/setPicture/{id}/{pictureID}", name="paprec_agency_setPicture")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function setPictureAction(Request $request, Agency $agency)
+    {
+
+        $pictureID = $request->get('pictureID');
+        $pictures = $agency->getPictures();
+        foreach ($pictures as $picture) {
+            if ($picture->getId() == $pictureID) {
+                $agency->setDateUpdate(new \DateTime());
+                $picture->setType('PICTURE');
+                continue;
+            }
+        }
+        $this->em->flush();
+
+        return $this->redirectToRoute('paprec_agency_view', array(
+            'id' => $agency->getId()
+        ));
     }
 
 }

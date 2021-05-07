@@ -39,6 +39,59 @@ class Agency
     private $dateUpdate;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="deleted", type="datetime", nullable=true)
+     */
+    private $deleted;
+
+    /**
+     * @var string
+     * Le nom de l'agence
+     * @ORM\Column(name="name", type="string")
+     * @Assert\NotBlank()
+     */
+    private $name;
+
+    /**
+     * @var string
+     * La raison sociale de l'agence
+     * @ORM\Column(name="businessName", type="string")
+     * @Assert\NotBlank()
+     */
+    private $businessName;
+
+    /**
+     * @var string
+     * L'identification société de l'agence
+     * @ORM\Column(name="businessId", type="string")
+     * @Assert\NotBlank()
+     */
+    private $businessId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address", type="text", nullable=true)
+     */
+    private $address;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city", type="string", length=255, nullable=true, nullable=true)
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="postalCode", type="string", length=255, nullable=true, nullable=true)
+     */
+    private $postalCode;
+
+
+    /**
      * #################################
      *              SYSTEM USER ASSOCIATION
      * #################################
@@ -57,42 +110,20 @@ class Agency
     private $userUpdate;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="deleted", type="datetime", nullable=true)
-     */
-    private $deleted;
-
-    /**
-     * @var string
-     * Le nom de l'agence
-     * @ORM\Column(name="name", type="string")
-     * @Assert\NotBlank()
-     */
-    private $name;
-
-    /**
      * #################################
      *              Relations
      * #################################
      */
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="salesmanAgencies")
-     * @Assert\NotBlank
-     */
-    private $salesman;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="assistantAgencies")
-     * @Assert\NotBlank
-     */
-    private $assistant;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\PostalCode", mappedBy="agency")
      */
     private $postalCodes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="agency", cascade={"all"})
+     */
+    private $pictures;
 
     /**
      * Constructor
@@ -223,38 +254,38 @@ class Agency
     }
 
     /**
-     * @return mixed
+     * @return null|string
      */
-    public function getSalesman()
+    public function getBusinessName(): ?string
     {
-        return $this->salesman;
+        return $this->businessName;
     }
 
     /**
-     * @param mixed $salesman
+     * @param string $businessName
      * @return Agency
      */
-    public function setSalesman($salesman)
+    public function setBusinessName(string $businessName): self
     {
-        $this->salesman = $salesman;
+        $this->businessName = $businessName;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return null|string
      */
-    public function getAssistant()
+    public function getBusinessId(): ?string
     {
-        return $this->assistant;
+        return $this->businessId;
     }
 
     /**
-     * @param mixed $assistant
+     * @param string $businessId
      * @return Agency
      */
-    public function setAssistant($assistant)
+    public function setBusinessId(string $businessId): self
     {
-        $this->assistant = $assistant;
+        $this->businessId = $businessId;
         return $this;
     }
 
@@ -294,5 +325,127 @@ class Agency
         return $this->postalCodes;
     }
 
+    /**
+     * @return null|string
+     */
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param string $address
+     * @return Agency
+     */
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     * @return Agency
+     */
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    /**
+     * @param string $postalCode
+     * @return Agency
+     */
+    public function setPostalCode(string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+        return $this;
+    }
+
+    /**
+     * Add picture.
+     *
+     * @param Picture $picture
+     *
+     * @return Agency
+     */
+    public function addPicture(Picture $picture)
+    {
+        $this->pictures[] = $picture;
+
+        return $this;
+    }
+
+    /**
+     * Remove picture.
+     *
+     * @param Picture $picture
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removePicture(Picture $picture)
+    {
+        return $this->pictures->removeElement($picture);
+    }
+
+    /**
+     * Get pictures.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPictures()
+    {
+        return $this->pictures;
+    }
+
+    public function getPilotPictures()
+    {
+        $pilotPictures = array();
+        foreach ($this->pictures as $picture) {
+            if ($picture->getType() === 'PILOTPICTURE') {
+                $pilotPictures[] = $picture;
+            }
+        }
+        return $pilotPictures;
+    }
+
+    public function getPictos()
+    {
+        $pictos = array();
+        foreach ($this->pictures as $picture) {
+            if ($picture->getType() === 'PICTO') {
+                $pictos[] = $picture;
+            }
+        }
+        return $pictos;
+    }
+
+    public function getPicturesPictures()
+    {
+        $pictures = array();
+        foreach ($this->pictures as $picture) {
+            if ($picture->getType() === 'PICTURE') {
+                $pictures[] = $picture;
+            }
+        }
+        return $pictures;
+    }
 
 }

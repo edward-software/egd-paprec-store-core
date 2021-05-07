@@ -15,6 +15,7 @@ parameters:
 
     paprec.product.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
     paprec.range.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
+    paprec.agency.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
 
     paprec.product.catalog:
         - REGULAR

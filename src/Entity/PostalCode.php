@@ -86,10 +86,50 @@ class PostalCode
     /**
      * @var int
      *
-     * @ORM\Column(name="transportRate", type="bigint")
+     * @ORM\Column(name="cBroyeurTransportRate", type="bigint")
      * @Assert\NotBlank()
      */
-    private $transportRate;
+    private $cBroyeurTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="fourgonPLTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $fourgonPLTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="fourgonVLTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $fourgonVLTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="amplirollTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $amplirollTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="bomTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $bomTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="livraisonTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $livraisonTransportRate;
 
     /**
      * @var int
@@ -263,28 +303,113 @@ class PostalCode
     }
 
     /**
-     * Set transportRate.
-     *
-     * @param int $transportRate
-     *
+     * @return null|int
+     */
+    public function getCBroyeurTransportRate(): ?int
+    {
+        return $this->cBroyeurTransportRate;
+    }
+
+    /**
+     * @param int $cBroyeurTransportRate
      * @return PostalCode
      */
-    public function setTransportRate($transportRate)
+    public function setCBroyeurTransportRate(int $cBroyeurTransportRate): self
     {
-        $this->transportRate = $transportRate;
-
+        $this->cBroyeurTransportRate = $cBroyeurTransportRate;
         return $this;
     }
 
     /**
-     * Get transportRate.
-     *
-     * @return int
+     * @return null|int
      */
-    public function getTransportRate()
+    public function getFourgonPLTransportRate(): ?int
     {
-        return $this->transportRate;
+        return $this->fourgonPLTransportRate;
     }
+
+    /**
+     * @param int $fourgonPLTransportRate
+     * @return PostalCode
+     */
+    public function setFourgonPLTransportRate(int $fourgonPLTransportRate): self
+    {
+        $this->fourgonPLTransportRate = $fourgonPLTransportRate;
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getFourgonVLTransportRate(): ?int
+    {
+        return $this->fourgonVLTransportRate;
+    }
+
+    /**
+     * @param int $fourgonVLTransportRate
+     * @return PostalCode
+     */
+    public function setFourgonVLTransportRate(int $fourgonVLTransportRate): self
+    {
+        $this->fourgonVLTransportRate = $fourgonVLTransportRate;
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getAmplirollTransportRate(): ?int
+    {
+        return $this->amplirollTransportRate;
+    }
+
+    /**
+     * @param int $amplirollTransportRate
+     * @return PostalCode
+     */
+    public function setAmplirollTransportRate(int $amplirollTransportRate): self
+    {
+        $this->amplirollTransportRate = $amplirollTransportRate;
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getBomTransportRate(): ?int
+    {
+        return $this->bomTransportRate;
+    }
+
+    /**
+     * @param int $bomTransportRate
+     * @return PostalCode
+     */
+    public function setBomTransportRate(int $bomTransportRate): self
+    {
+        $this->bomTransportRate = $bomTransportRate;
+        return $this;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getLivraisonTransportRate(): ?int
+    {
+        return $this->livraisonTransportRate;
+    }
+
+    /**
+     * @param int $livraisonTransportRate
+     * @return PostalCode
+     */
+    public function setLivraisonTransportRate(int $livraisonTransportRate): self
+    {
+        $this->livraisonTransportRate = $livraisonTransportRate;
+        return $this;
+    }
+
 
     /**
      * Set treatmentRate.

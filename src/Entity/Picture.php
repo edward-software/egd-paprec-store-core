@@ -53,6 +53,11 @@ class Picture
     private $range;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Agency", inversedBy="pictures")
+     */
+    private $agency;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\CustomArea", inversedBy="pictures")
      */
     private $customArea;
@@ -214,5 +219,23 @@ class Picture
     public function getOtherNeed()
     {
         return $this->otherNeed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAgency()
+    {
+        return $this->agency;
+    }
+
+    /**
+     * @param mixed $agency
+     * @return Picture
+     */
+    public function setAgency($agency): self
+    {
+        $this->agency = $agency;
+        return $this;
     }
 }

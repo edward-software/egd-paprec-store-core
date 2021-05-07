@@ -49,7 +49,7 @@ class AgencyManager
     }
 
     /**
-     * Vérification qu'à ce jour le agency  n'est pas supprimé
+     * Vérification qu'à ce jour le agency n'est pas supprimé
      *
      * @param Agency $agency
      * @param bool $throwException

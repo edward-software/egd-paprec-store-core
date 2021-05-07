@@ -7,6 +7,11 @@ Catalog:
     Agency:
         Agencies: Agences
         Name: Nom de l'agence
+        BusinessName: Raison sociale
+        BusinessId: Identification société
+        Address: Adresse l'agence
+        City: Ville
+        PostalCode: Code postal
         Date-crea: Date de créa.
         Date-creation: Date de création
         Date-update: Date de mise à jour
@@ -52,10 +57,16 @@ Catalog:
         Cancel: Annuler
         Confirm-cancel: Etes-vous sûr de vouloir annuler ?
         Confirm-remove: Etes-vous sûr de vouloir supprimer ce code postal ?
-        RentalRate: Variable Location
+        RentalRate: Coef. location
         TransportRate: Variable Transport
-        TreatmentRate: Variable Traitement
-        TraceabilityRate: Variable Traçabilité
+        CBroyeurTransportRate: Coef. transport C Broyeur
+        FourgonPLTransportRate: Coef. transport fourgon PL mutualisé
+        FourgonVLTransportRate: Coef. transport fourgon VL mutualisé
+        AmplirollTransportRate: Coef. transport Ampliroll (AR)
+        BomTransportRate: Coef. transport BOM
+        LivraisonTransportRate: Coef. transport Livraison
+        TreatmentRate: Coef. traitement
+        TraceabilityRate: Coef. traçabilité
         UserInCharge: Commercial en charge
         DisabledUser: (Compte non actif)
         DeletedUser: (Compte supprimé)

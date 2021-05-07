@@ -24,41 +24,20 @@ class AgencyType extends AbstractType
             ->add('name', TextType::class, array(
                 "required" => true
             ))
-            ->add('salesman', EntityType::class, array(
-                'class' => User::class,
-                'multiple' => false,
-                'expanded' => false,
-                'placeholder' => '',
-                'empty_data' => null,
-                'choice_label' => function (User $user) {
-                    return $user->getFirstName() . ' ' . $user->getLastName();
-                },
-                'required' => false,
-                'query_builder' => function (UserRepository $ur) {
-                    return $ur->createQueryBuilder('u')
-                        ->where('u.deleted IS NULL')
-                        ->andWhere('u.roles LIKE \'%ROLE_COMMERCIAL%\'')
-                        ->andWhere('u.enabled = 1')
-                        ->orderBy('u.firstName');
-                }
+            ->add('businessName', TextType::class, array(
+                "required" => true
             ))
-            ->add('assistant', EntityType::class, array(
-                'class' => User::class,
-                'multiple' => false,
-                'expanded' => false,
-                'placeholder' => '',
-                'empty_data' => null,
-                'choice_label' => function (User $user) {
-                    return $user->getFirstName() . ' ' . $user->getLastName();
-                },
-                'required' => false,
-                'query_builder' => function (UserRepository $ur) {
-                    return $ur->createQueryBuilder('u')
-                        ->where('u.deleted IS NULL')
-                        ->andWhere('u.roles LIKE \'%ROLE_COMMERCIAL%\'')
-                        ->andWhere('u.enabled = 1')
-                        ->orderBy('u.firstName');
-                }
+            ->add('businessId', TextType::class, array(
+                "required" => true
+            ))
+            ->add('address', TextType::class, array(
+                "required" => true
+            ))
+            ->add('city', TextType::class, array(
+                "required" => true
+            ))
+            ->add('postalCode', TextType::class, array(
+                "required" => true
             ));
     }
 

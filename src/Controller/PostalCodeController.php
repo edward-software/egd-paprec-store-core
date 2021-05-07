@@ -45,7 +45,7 @@ class PostalCodeController extends AbstractController
 
 
     /**
-     * @Route("/postalCode", name="paprec_postalCode_index")
+     *@Route("", name="paprec_postalCode_index")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
@@ -54,7 +54,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/loadList", name="paprec_postalCode_loadList")
+     *@Route("/loadList", name="paprec_postalCode_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
@@ -110,7 +110,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/export", name="paprec_postalCode_export")
+     *@Route("/export", name="paprec_postalCode_export")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function exportAction(Request $request)
@@ -140,10 +140,15 @@ class PostalCodeController extends AbstractController
             ->setCellValue('C1', 'Commune')
             ->setCellValue('D1', 'Tariff zone')
             ->setCellValue('E1', 'Rental rate')
-            ->setCellValue('F1', 'Transport rate')
-            ->setCellValue('G1', 'Treatment rate')
-            ->setCellValue('H1', 'Treacability rate')
-            ->setCellValue('I1', 'Salesman in charge');
+            ->setCellValue('F1', 'C broyeur transport rate')
+            ->setCellValue('G1', 'Forugon PL transport rate')
+            ->setCellValue('H1', 'Fourgon VL transport rate')
+            ->setCellValue('I1', 'Ampliroll transport rate')
+            ->setCellValue('J1', 'BOM transport rate')
+            ->setCellValue('K1', 'Livraison transport rate')
+            ->setCellValue('L1', 'Treatment rate')
+            ->setCellValue('M1', 'Treacability rate')
+            ->setCellValue('N1', 'Salesman in charge');
 
         $i = 2;
         foreach ($postalCodes as $postalCode) {
@@ -154,10 +159,15 @@ class PostalCodeController extends AbstractController
                 ->setCellValue('C' . $i, $postalCode->getCity())
                 ->setCellValue('D' . $i, $postalCode->getZone())
                 ->setCellValue('E' . $i, $this->numberManager->denormalize15($postalCode->getRentalRate()))
-                ->setCellValue('F' . $i, $this->numberManager->denormalize15($postalCode->getTransportRate()))
-                ->setCellValue('G' . $i, $this->numberManager->denormalize15($postalCode->getTreatmentRate()))
-                ->setCellValue('H' . $i, $this->numberManager->denormalize15($postalCode->getTraceabilityRate()))
-                ->setCellValue('I' . $i, ($postalCode->getUserInCharge()) ? $postalCode->getUserInCharge()->getEmail() : '');
+                ->setCellValue('F' . $i, $this->numberManager->denormalize15($postalCode->getCBroyeurTransportRate()))
+                ->setCellValue('G' . $i, $this->numberManager->denormalize15($postalCode->getFourgonPLTransportRate()))
+                ->setCellValue('H' . $i, $this->numberManager->denormalize15($postalCode->getFourgonVLTransportRate()))
+                ->setCellValue('I' . $i, $this->numberManager->denormalize15($postalCode->getAmplirollTransportRate()))
+                ->setCellValue('J' . $i, $this->numberManager->denormalize15($postalCode->getBomTransportRate()))
+                ->setCellValue('K' . $i, $this->numberManager->denormalize15($postalCode->getLivraisonTransportRate()))
+                ->setCellValue('L' . $i, $this->numberManager->denormalize15($postalCode->getTreatmentRate()))
+                ->setCellValue('M' . $i, $this->numberManager->denormalize15($postalCode->getTraceabilityRate()))
+                ->setCellValue('N' . $i, ($postalCode->getUserInCharge()) ? $postalCode->getUserInCharge()->getEmail() : '');
             $i++;
         }
 
@@ -165,23 +175,12 @@ class PostalCodeController extends AbstractController
         $fileName = 'PrivaciaShop-Extract-Postal-Codes-' . date('Y-m-d') . '.xlsx';
 
 
-        $streamedResponse = new StreamedResponse();
-        $streamedResponse->setCallback(function () use ($spreadsheet) {
-            $writer =  new Xlsx($spreadsheet);
-            $writer->save('php://output');
-        });
 
-        $streamedResponse->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
-        $streamedResponse->headers->set('Pragma', 'public');
-        $streamedResponse->headers->set('Cache-Control', 'maxage=1');
-        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
-
-        return $streamedResponse->send();
 
     }
 
     /**
-     * @Route("/postalCode/view/{id}", name="paprec_postalCode_view")
+     *@Route("/view/{id}", name="paprec_postalCode_view")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function viewAction(Request $request, PostalCode $postalCode)
@@ -194,7 +193,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/add", name="paprec_postalCode_add")
+     *@Route("/add", name="paprec_postalCode_add")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addAction(Request $request)
@@ -210,8 +209,14 @@ class PostalCodeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $postalCode = $form->getData();
+
             $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setTransportRate($this->numberManager->normalize15($postalCode->getTransportRate()));
+            $postalCode->setCBroyeurTransportRate($this->numberManager->normalize15($postalCode->getCBroyeurTransportRate()));
+            $postalCode->setFourgonPLTransportRate($this->numberManager->normalize15($postalCode->getFourgonPLTransportRate()));
+            $postalCode->setFourgonVLTransportRate($this->numberManager->normalize15($postalCode->getFourgonVLTransportRate()));
+            $postalCode->setAmplirollTransportRate($this->numberManager->normalize15($postalCode->getAmplirollTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
+            $postalCode->setLivraisonTransportRate($this->numberManager->normalize15($postalCode->getLivraisonTransportRate()));
             $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
             $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
@@ -234,7 +239,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/edit/{id}", name="paprec_postalCode_edit")
+     *@Route("/edit/{id}", name="paprec_postalCode_edit")
      * @Security("has_role('ROLE_ADMIN')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
@@ -245,7 +250,12 @@ class PostalCodeController extends AbstractController
         $this->postalCodeManager->isDeleted($postalCode, true);
 
         $postalCode->setRentalRate($this->numberManager->denormalize15($postalCode->getRentalRate()));
-        $postalCode->setTransportRate($this->numberManager->denormalize15($postalCode->getTransportRate()));
+        $postalCode->setCBroyeurTransportRate($this->numberManager->denormalize15($postalCode->getCBroyeurTransportRate()));
+        $postalCode->setFourgonPLTransportRate($this->numberManager->denormalize15($postalCode->getFourgonPLTransportRate()));
+        $postalCode->setFourgonVLTransportRate($this->numberManager->denormalize15($postalCode->getFourgonVLTransportRate()));
+        $postalCode->setAmplirollTransportRate($this->numberManager->denormalize15($postalCode->getAmplirollTransportRate()));
+        $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
+        $postalCode->setLivraisonTransportRate($this->numberManager->denormalize15($postalCode->getLivraisonTransportRate()));
         $postalCode->setTreatmentRate($this->numberManager->denormalize15($postalCode->getTreatmentRate()));
         $postalCode->setTraceabilityRate($this->numberManager->denormalize15($postalCode->getTraceabilityRate()));
 
@@ -258,7 +268,12 @@ class PostalCodeController extends AbstractController
             $postalCode = $form->getData();
 
             $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setTransportRate($this->numberManager->normalize15($postalCode->getTransportRate()));
+            $postalCode->setCBroyeurTransportRate($this->numberManager->normalize15($postalCode->getCBroyeurTransportRate()));
+            $postalCode->setFourgonPLTransportRate($this->numberManager->normalize15($postalCode->getFourgonPLTransportRate()));
+            $postalCode->setFourgonVLTransportRate($this->numberManager->normalize15($postalCode->getFourgonVLTransportRate()));
+            $postalCode->setAmplirollTransportRate($this->numberManager->normalize15($postalCode->getAmplirollTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
+            $postalCode->setLivraisonTransportRate($this->numberManager->normalize15($postalCode->getLivraisonTransportRate()));
             $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
             $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
@@ -281,7 +296,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/remove/{id}", name="paprec_postalCode_remove")
+     *@Route("/remove/{id}", name="paprec_postalCode_remove")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeAction(Request $request, PostalCode $postalCode)
@@ -295,7 +310,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/removeMany/{ids}", name="paprec_postalCode_removeMany")
+     *@Route("/removeMany/{ids}", name="paprec_postalCode_removeMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeManyAction(Request $request)
@@ -322,7 +337,7 @@ class PostalCodeController extends AbstractController
     }
 
     /**
-     * @Route("/postalCode/autocomplete", name="paprec_postalCode_autocomplete")
+     *@Route("/autocomplete", name="paprec_postalCode_autocomplete")
      * @throws \Exception
      */
     public function autocompleteAction(Request $request)
