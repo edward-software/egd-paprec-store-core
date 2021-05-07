@@ -71,6 +71,7 @@ class OtherNeedController extends AbstractController
 
         $cols['id'] = array('label' => 'id', 'id' => 'o.id', 'method' => array('getId'));
         $cols['name'] = array('label' => 'name', 'id' => 'o.name', 'method' => array('getName'));
+        $cols['catalog'] = array('label' => 'catalog', 'id' => 'o.catalog', 'method' => array('getCatalog'));
         $cols['isDisplayed'] = array('label' => 'isDisplayed', 'id' => 'o.isDisplayed', 'method' => array('getIsDisplayed'));
         $cols['language'] = array('label' => 'language', 'id' => 'o.language', 'method' => array('getLanguage'));
 
@@ -88,6 +89,7 @@ class OtherNeedController extends AbstractController
             } else {
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
                     $queryBuilder->expr()->like('o.name', '?1'),
+                    $queryBuilder->expr()->like('o.catalog', '?1'),
                     $queryBuilder->expr()->like('o.isDisplayed', '?1'),
                     $queryBuilder->expr()->like('o.language', '?1')
                 ))->setParameter(1, '%' . $search['value'] . '%');

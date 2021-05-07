@@ -56,6 +56,14 @@
                                 </label>
                             </div>
                             <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.OtherNeed.Catalog.Label'| trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {% if otherNeed.catalog %}
+                                        {{ ('Catalog.OtherNeed.Catalog.' ~ otherNeed.catalog|capitalize) |trans }}
+                                    {% endif %}
+                                </label>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-md-4 col-form-label">{{ 'Catalog.OtherNeed.IsDisplayed'|trans({}, "messages", app.request.locale) }}</label>
                                 <label class="col-form-label col-md-8">
                                     {% if otherNeed.isDisplayed == 1 %}{{ 'General.Yes'|trans({}, "messages", app.request.locale) }}{% else %}{{ 'General.No'|trans({}, "messages", app.request.locale) }}{% endif %}

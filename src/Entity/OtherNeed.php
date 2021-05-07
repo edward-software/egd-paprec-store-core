@@ -90,6 +90,14 @@ class OtherNeed
      */
     private $language;
 
+    /**
+     * @var string
+     * Le catalogue du produit (REGULAR ou PONCTUAL)
+     * @ORM\Column(name="catalog", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $catalog;
+
 
     /**
      * #################################
@@ -455,4 +463,23 @@ class OtherNeed
     {
         return $this->quoteRequests;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getCatalog(): ?string
+    {
+        return $this->catalog;
+    }
+
+    /**
+     * @param string $catalog
+     * @return OtherNeed
+     */
+    public function setCatalog(string $catalog): self
+    {
+        $this->catalog = $catalog;
+        return $this;
+    }
+
 }

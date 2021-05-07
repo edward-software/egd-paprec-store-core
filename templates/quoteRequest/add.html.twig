@@ -47,6 +47,17 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.Type.Type'|trans }}</label>
+                                        <div class="form-content">
+                                            {% for radio in form.type.children %}
+                                                <div class="form__check ml-4">
+                                                    {{ form_widget(radio) }}
+                                                    {{ form_label(radio) }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.BusinessName'|trans }}
                                             *</label>
                                         <div class="form-content">
@@ -188,13 +199,6 @@
                                             {{ form_errors(form.comment) }}
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">{{ 'Public.Contact.DestructionType'|trans }}</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form.destructionType, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form.destructionType) }}
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="col-md-6 mt-4">
                                     <div class="form-group">
@@ -257,29 +261,8 @@
                                             {{ form_errors(form.quoteStatus) }}
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.RegularDuration'|trans }}</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form.regularDuration, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form.regularDuration) }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.PonctualDuration'|trans }}</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form.ponctualDuration, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form.ponctualDuration) }}
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.TollFees'|trans }}</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form.tollFees, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form.tollFees) }}
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>
                                         <div class="form-content">

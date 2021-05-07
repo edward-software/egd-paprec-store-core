@@ -3,6 +3,8 @@
 namespace App\Service;
 
 
+use App\Entity\QuoteRequest;
+use App\Entity\QuoteRequestLine;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\ORMException;
@@ -10,20 +12,31 @@ use Exception;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 use iio\libmergepdf\Merger;
 use Knp\Snappy\Pdf;
-use App\Entity\QuoteRequest;
-use App\Entity\QuoteRequestLine;
+use Swift_Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuoteRequestManager
 {
 
     private $em;
     private $container;
+    private $numberManager;
+    private $productManager;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container,
+        TranslatorInterface $translator,
+        NumberManager $numberManager,
+        ProductManager $productManager
+    ) {
         $this->em = $em;
         $this->container = $container;
+        $this->translator = $translator;
+        $this->numberManager = $numberManager;
+        $this->productManager = $productManager;
     }
 
     public function get($quoteRequest, $throwException = true)
@@ -34,7 +47,7 @@ class QuoteRequestManager
         }
         try {
 
-            $quoteRequest = $this->em->getRepository('PaprecCommercialBundle:QuoteRequest')->find($id);
+            $quoteRequest = $this->em->getRepository('App:QuoteRequest')->find($id);
 
             /**
              * Vérification que le quoteRequest existe ou ne soit pas supprimé
@@ -64,7 +77,6 @@ class QuoteRequestManager
      */
     public function add($doFlush = true)
     {
-
         try {
 
             /**
@@ -112,7 +124,7 @@ class QuoteRequestManager
 
     public function getCountByReference($reference)
     {
-        $qb = $this->em->getRepository('PaprecCommercialBundle:QuoteRequest')->createQueryBuilder('qr')
+        $qb = $this->em->getRepository('App:QuoteRequest')->createQueryBuilder('qr')
             ->select('count(qr)')
             ->where('qr.reference LIKE :ref')
             ->andWhere('qr.deleted IS NULL')
@@ -121,10 +133,10 @@ class QuoteRequestManager
         $count = $qb->getQuery()->getSingleScalarResult();
 
         if ($count != null) {
-            return intval($count) + 1;
-        } else {
-            return 1;
+            return (int)$count + 1;
         }
+
+        return 1;
     }
 
     /**
@@ -143,7 +155,7 @@ class QuoteRequestManager
         }
         try {
 
-            $quoteRequest = $this->em->getRepository('PaprecCommercialBundle:QuoteRequest')->findOneBy(
+            $quoteRequest = $this->em->getRepository('App:QuoteRequest')->findOneBy(
                 array(
                     'id' => $id,
                     'token' => $token
@@ -204,11 +216,9 @@ class QuoteRequestManager
         $user = null,
         $doFlush = true
     ) {
-        $numberManager = $this->container->get('paprec_catalog.number_manager');
-        $productManager = $this->container->get('paprec_catalog.product_manager');
 
         // On check s'il existe déjà une ligne pour ce produit, pour l'incrémenter
-        $currentQuoteLine = $this->em->getRepository('PaprecCommercialBundle:QuoteRequestLine')->findOneBy(
+        $currentQuoteLine = $this->em->getRepository('App:QuoteRequestLine')->findOneBy(
             array(
                 'quoteRequest' => $quoteRequest,
                 'product' => $quoteRequestLine->getProduct()
@@ -247,30 +257,22 @@ class QuoteRequestManager
                 /**
                  * Si pas de code postal, on met tous les coefs à 1 par défaut
                  */
-                $quoteRequestLine->setRentalRate($numberManager->normalize15(1));
-                $quoteRequestLine->setTransportRate($numberManager->normalize15(1));
-                $quoteRequestLine->setTreatmentRate($numberManager->normalize15(1));
-                $quoteRequestLine->setTraceabilityRate($numberManager->normalize15(1));
+                $quoteRequestLine->setRentalRate($this->numberManager->normalize15(1));
+                $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
+                $quoteRequestLine->setTreatmentRate($this->numberManager->normalize15(1));
+                $quoteRequestLine->setTraceabilityRate($this->numberManager->normalize15(1));
             }
 
             /**
              * Si il y a une condition d'accès, on l'affecte au quoteRequestLine
              */
             if ($quoteRequest->getAccess()) {
-                $quoteRequestLine->setAccessPrice($numberManager->normalize($productManager->getAccesPrice($quoteRequest)));
+                $quoteRequestLine->setAccessPrice($this->numberManager->normalize($this->productManager->getAccesPrice($quoteRequest)));
             } else {
                 /**
                  * Sinon on lui met à 0 par défaut
                  */
                 $quoteRequestLine->setAccessPrice(0);
-            }
-
-            /**
-             * si le transportUnitPrice de la quoteRequestLine est inférieur à minTransportUnitPrice de la quoteRequest
-             * alors on met le transportUnitPrice comme minTransportUnitPrice
-             */
-            if ($quoteRequest->getMinTransportUnitPrice() === 0 || $quoteRequestLine->getTransportUnitPrice() > $quoteRequest->getMinTransportUnitPrice()) {
-                $quoteRequest->setMinTransportUnitPrice($quoteRequestLine->getTransportUnitPrice());
             }
 
             $this->em->persist($quoteRequestLine);
@@ -301,10 +303,8 @@ class QuoteRequestManager
      */
     public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $doFlush = true)
     {
-        $productManager = $this->container->get('paprec_catalog.product_manager');
-
         try {
-            $product = $productManager->get($productId);
+            $product = $this->productManager->get($productId);
             $quoteRequestLine = new QuoteRequestLine();
 
             $quoteRequestLine->setProduct($product);
@@ -332,9 +332,6 @@ class QuoteRequestManager
         $doFlush = true,
         $editQuoteRequest = true
     ) {
-        $numberManager = $this->container->get('paprec_catalog.number_manager');
-        $productManager = $this->container->get('paprec_catalog.product_manager');
-
         $now = new \DateTime();
 
         $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
@@ -352,20 +349,12 @@ class QuoteRequestManager
          * Si il y a une condition d'accès, on l'affecte au quoteRequestLine
          */
         if ($quoteRequest->getAccess()) {
-            $quoteRequestLine->setAccessPrice($numberManager->normalize($productManager->getAccesPrice($quoteRequest)));
+            $quoteRequestLine->setAccessPrice($this->numberManager->normalize($this->productManager->getAccesPrice($quoteRequest)));
         } else {
             /**
              * Sinon on lui met à 0 par défaut
              */
             $quoteRequestLine->setAccessPrice(0);
-        }
-
-        /**
-         * si le transportUnitPrice de la quoteRequestLine est inférieur à minTransportUnitPrice de la quoteRequest
-         * alors on met le transportUnitPrice comme minTransportUnitPrice
-         */
-        if ($quoteRequest->getMinTransportUnitPrice() === 0 || $quoteRequestLine->getTransportUnitPrice() > $quoteRequest->getMinTransportUnitPrice()) {
-            $quoteRequest->setMinTransportUnitPrice($quoteRequestLine->getTransportUnitPrice());
         }
 
         if ($doFlush) {
@@ -381,11 +370,8 @@ class QuoteRequestManager
      */
     public function calculateTotalLine(QuoteRequestLine $quoteRequestLine)
     {
-        $numberManager = $this->container->get('paprec_catalog.number_manager');
-        $productManager = $this->container->get('paprec_catalog.product_manager');
-
-        return $numberManager->normalize(
-            $productManager->calculatePrice($quoteRequestLine)
+        return $this->numberManager->normalize(
+            $this->productManager->calculatePrice($quoteRequestLine)
         );
     }
 
@@ -396,8 +382,6 @@ class QuoteRequestManager
      */
     public function calculateTotal(QuoteRequest $quoteRequest)
     {
-        $numberManager = $this->container->get('paprec_catalog.number_manager');
-
         /**
          * A chaque fois que l'on calcule on recheck le transportUnitPrice minimum parmis tous les produits
          */
@@ -409,10 +393,6 @@ class QuoteRequestManager
                 $totalAmount += $quoteRequestLine->getTotalAmount();
             }
         }
-        /**
-         * On ajoute ensuite le prix de transport
-         */
-        $totalAmount += $numberManager->normalize($numberManager->denormalize($quoteRequest->getMinTransportUnitPrice()) * $numberManager->denormalize15($quoteRequest->getTransportRate()) * (1 + $numberManager->denormalize($quoteRequest->getOverallDiscount() / 100)));
 
         return $totalAmount;
     }
@@ -441,16 +421,15 @@ class QuoteRequestManager
 
             $locale = 'FR';
 
-            $translator = $this->container->get('translator');
-
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans('Commercial.ConfirmEmail.Object',
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.ConfirmEmail.Object',
                     array(), 'messages', strtolower($locale)))
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        '@PaprecCommercial/QuoteRequest/emails/confirmQuoteEmail.html.twig',
+                        'quoteRequest/emails/confirmQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($locale),
@@ -510,16 +489,17 @@ class QuoteRequestManager
 
             $locale = 'FR';
 
-            $message = \Swift_Message::newInstance()
+            $message = new Swift_Message();
+            $message
                 ->setSubject(
-                    $translator->trans(
+                    $this->translator->trans(
                         'Commercial.NewQuoteEmail.Object',
                         array('%number%' => $quoteRequest->getId()), 'messages', strtolower($locale)))
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        '@PaprecCommercial/QuoteRequest/emails/newQuoteEmail.html.twig',
+                        'quoteRequest/emails/newQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($locale)
@@ -578,7 +558,6 @@ class QuoteRequestManager
         try {
             $from = $this->container->getParameter('paprec_email_sender');
 
-
             $rcptTo = $quoteRequest->getEmail();
 
             if ($rcptTo == null || $rcptTo == '') {
@@ -587,7 +566,7 @@ class QuoteRequestManager
 
             $localeFilename = 'FR';
 
-            $pdfFilename = $quoteRequest->getReference() . '-' . $this->container->get('translator')->trans('Commercial.GeneratedQuoteEmail.FileName',
+            $pdfFilename = $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.GeneratedQuoteEmail.FileName',
                     array(), 'messages', strtolower($localeFilename)) . '-' . $quoteRequest->getBusinessName() . '.pdf';
 
             $pdfFile = $this->generatePDF($quoteRequest, strtolower($localeFilename), false);
@@ -596,7 +575,7 @@ class QuoteRequestManager
                 return false;
             }
 
-            $attachment = \Swift_Attachment::newInstance(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
+            $attachment = new Swift_Message(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
 
             $translator = $this->container->get('translator');
 
@@ -609,14 +588,15 @@ class QuoteRequestManager
                 $this->em->flush();
             }
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans('Commercial.GeneratedQuoteEmail.Object',
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.GeneratedQuoteEmail.Object',
                     array(), 'messages', strtolower($localeFilename)))
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        '@PaprecCommercial/QuoteRequest/emails/generatedQuoteEmail.html.twig',
+                        'quoteRequest/emails/generatedQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -653,7 +633,6 @@ class QuoteRequestManager
         try {
             $from = $this->container->getParameter('paprec_email_sender');
 
-
             $rcptTo = $quoteRequest->getEmail();
 
             if ($rcptTo == null || $rcptTo == '') {
@@ -662,7 +641,7 @@ class QuoteRequestManager
 
             $localeFilename = 'FR';
 
-            $pdfFilename = $quoteRequest->getReference() . '-' . $this->container->get('translator')->trans('Commercial.GeneratedContractEmail.FileName',
+            $pdfFilename = $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.GeneratedContractEmail.FileName',
                     array(), 'messages', strtolower($localeFilename)) . '-' . $quoteRequest->getBusinessName() . '.pdf';
 
             $pdfFile = $this->generatePDF($quoteRequest, strtolower($localeFilename), true);
@@ -671,18 +650,19 @@ class QuoteRequestManager
                 return false;
             }
 
-            $attachment = \Swift_Attachment::newInstance(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
+            $attachment = new Swift_Message(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
 
             $translator = $this->container->get('translator');
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans('Commercial.GeneratedContractEmail.Object',
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.GeneratedContractEmail.Object',
                     array(), 'messages', strtolower($localeFilename)))
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        '@PaprecCommercial/QuoteRequest/emails/generatedContractEmail.html.twig',
+                        'quoteRequest/emails/generatedContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -719,7 +699,6 @@ class QuoteRequestManager
         try {
             $from = $this->container->getParameter('paprec_email_sender');
 
-
             /**
              * Si la quoteRequest est associé à un commercial, on lui envoie le mail
              * Sinon,
@@ -744,7 +723,7 @@ class QuoteRequestManager
 
             $localeFilename = 'FR';
 
-            $pdfFilename = $quoteRequest->getReference() . '-' . $this->container->get('translator')->trans('Commercial.NewContractEmail.FileName',
+            $pdfFilename = $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.NewContractEmail.FileName',
                     array(), 'messages', strtolower($localeFilename)) . '-' . $quoteRequest->getBusinessName() . '.pdf';
 
             $pdfFile = $this->generatePDF($quoteRequest, strtolower($localeFilename), true);
@@ -753,18 +732,19 @@ class QuoteRequestManager
                 return false;
             }
 
-            $attachment = \Swift_Attachment::newInstance(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
+            $attachment = new Swift_Message(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
 
             $translator = $this->container->get('translator');
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject($translator->trans('Commercial.NewContractEmail.Object',
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.NewContractEmail.Object',
                     array('%number%' => $quoteRequest->getId()), 'messages', strtolower($localeFilename)))
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        '@PaprecCommercial/QuoteRequest/emails/newContractEmail.html.twig',
+                        'quoteRequest/emails/newContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -798,10 +778,9 @@ class QuoteRequestManager
      */
     public function generatePDF(QuoteRequest $quoteRequest, $locale, $addContract = true)
     {
-
         try {
 
-            $pdfTmpFolder = $this->container->getParameter('paprec_commercial.data_tmp_directory');
+            $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
 
             if (!is_dir($pdfTmpFolder)) {
                 if (!mkdir($pdfTmpFolder, 0755, true) && !is_dir($pdfTmpFolder)) {
@@ -830,7 +809,7 @@ class QuoteRequestManager
 
 //            $snappy->setOption('footer-html', $this->container->get('templating')->render('@PaprecCommercial/QuoteRequest/PDF/fr/_footer.html.twig'));
 
-            $templateDir = '@PaprecCommercial/QuoteRequest/PDF/';
+            $templateDir = 'quoteRequest/PDF/';
 
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
@@ -843,8 +822,7 @@ class QuoteRequestManager
                 $templateDir .= 'ponctual/';
             }
 
-            $productManager = $this->container->get('paprec_catalog.product_manager');
-            $products = $productManager->getAvailableProducts();
+            $products = $this->productManager->getAvailableProducts();
 
             /**
              * On génère la page d'offre
@@ -869,9 +847,9 @@ class QuoteRequestManager
              */
             $pdfArray = array();
 
-            $ponctualFileNames = $this->container->getParameter('paprec_commercial.file_names');
-            $ponctualFileCovers = $this->container->getParameter('paprec_commercial.cover_file_names');
-            $ponctualFileDirectory = $this->container->getParameter('paprec_commercial.files_directory');
+            $ponctualFileNames = $this->container->getParameter('paprec.file_names');
+            $ponctualFileCovers = $this->container->getParameter('paprec.cover_file_names');
+            $ponctualFileDirectory = $this->container->getParameter('paprec.files_directory');
 
             /**
              * Ajout de(s) page(s) de garde

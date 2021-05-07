@@ -35,6 +35,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ 'Catalog.OtherNeed.Name'|trans }}</th>
+                            <th>{{ 'Catalog.OtherNeed.Catalog.Label'|trans }}</th>
                             <th>{{ 'Catalog.OtherNeed.IsDisplayed'|trans }}</th>
                             <th>{{ 'Catalog.OtherNeed.Language'|trans }}</th>
                             <th></th>
@@ -61,6 +62,7 @@
                 columns: [
                     {"data": "id"},
                     {"data": "name"},
+                    {"data": "catalog"},
                     {"data": "isDisplayed"},
                     {"data": "language"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}

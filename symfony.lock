@@ -112,6 +112,15 @@
     "gedmo/doctrine-extensions": {
         "version": "v2.4.42"
     },
+    "hackzilla/password-generator": {
+        "version": "1.6.0"
+    },
+    "hackzilla/password-generator-bundle": {
+        "version": "4.1.0"
+    },
+    "iio/libmergepdf": {
+        "version": "4.0.4"
+    },
     "jean85/pretty-package-versions": {
         "version": "1.6.0"
     },
@@ -120,6 +129,18 @@
     },
     "knplabs/knp-paginator-bundle": {
         "version": "v5.4.2"
+    },
+    "knplabs/knp-snappy": {
+        "version": "v1.2.1"
+    },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        }
     },
     "laminas/laminas-code": {
         "version": "4.2.1"
@@ -213,6 +234,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "setasign/fpdi": {
+        "version": "v2.3.6"
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.7"
@@ -440,6 +464,9 @@
             "config/packages/test/web_profiler.yaml",
             "config/routes/dev/web_profiler.yaml"
         ]
+    },
+    "tecnickcom/tcpdf": {
+        "version": "6.4.1"
     },
     "twig/extensions": {
         "version": "1.0",

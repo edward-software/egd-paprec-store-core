@@ -199,14 +199,6 @@
                                             <label class="col-form-label">N/A</label>
                                         {% endif %}
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Public.Contact.DestructionType'| trans }}</label>
-                                        <label class="col-form-label">
-                                            {% if quoteRequest.destructionType %}
-                                                {{ ('Commercial.DestructionType.' ~ quoteRequest.destructionType)|trans }}
-                                            {% endif %}
-                                        </label>
-                                    </div>
                                 </div>
                                 <div class="col-md-6 mt-4">
                                     <div class="form-group row">
@@ -275,30 +267,8 @@
                                             {{ ('Commercial.QuoteStatusList.' ~ quoteRequest.quoteStatus)|trans }}
                                         </label>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.RegularDuration'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {% if quoteRequest.regularDuration %}
-                                                {{ ('Commercial.RegularDuration.' ~ quoteRequest.regularDuration)|trans }}
-                                            {% endif %}
-                                        </label>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PonctualDuration'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {% if quoteRequest.ponctualDuration %}
-                                                {{ ('Commercial.PonctualDuration.' ~ quoteRequest.ponctualDuration)|trans }}
-                                            {% endif %}
-                                        </label>
-                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.TollFees'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.tollFees|formatAmount('EUR', app.request.locale) }}
-                                        </label>
-                                    </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>
                                         <label class="col-form-label">
@@ -321,16 +291,6 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.TotalAmount'|trans }}</label>
                                         <label class="col-form-label">
                                             {{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}
-                                        </label>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {% if quoteRequest.minTransportUnitPrice == 0 %}
-                                                0
-                                            {% else %}
-                                                {{ (((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
-                                            {% endif %}
                                         </label>
                                     </div>
                                 </div>

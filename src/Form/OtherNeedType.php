@@ -32,6 +32,18 @@ class OtherNeedType extends AbstractType
                 "expanded" => true,
             ))
             ->add('name')
+            ->add('catalog', ChoiceType::class, array(
+                'choices' => array(
+                    'Regular' => 'regular',
+                    'Ponctual' => 'ponctual',
+                ),
+                'empty_data' => 'ponctual',
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'Catalog.OtherNeed.Catalog.' . ucfirst($choiceValue);
+                },
+                'required' => true,
+                'expanded' => true
+            ))
             ->add('language', ChoiceType::class, array(
                 'choices' => $options['languages'],
                 'data' => $options['language']

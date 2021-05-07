@@ -69,14 +69,6 @@ class QuoteRequestType extends AbstractType
                     return 'Commercial.StaffList.' . $choiceValue;
                 },
             ))
-            ->add('destructionType', ChoiceType::class, array(
-                "choices" => $options['destructionType'],
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Commercial.DestructionType.' . $choiceValue;
-                },
-                'data' => 'DOCUMENT_DESTRUCTION',
-                'required' => true
-            ))
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('email', TextType::class)
@@ -102,9 +94,20 @@ class QuoteRequestType extends AbstractType
                 }
             ))
             ->add('overallDiscount')
-            ->add('tollFees', NumberType::class)
             ->add('salesmanComment', TextareaType::class)
             ->add('annualBudget')
+            ->add('type', ChoiceType::class, array(
+                'choices' => array(
+                    'Regular' => 'regular',
+                    'Ponctual' => 'ponctual',
+                ),
+                'empty_data' => 'ponctual',
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'Commercial.QuoteRequest.Type.' . ucfirst($choiceValue);
+                },
+                'required' => true,
+                'expanded' => true
+            ))
             ->add('frequency', ChoiceType::class, array(
                 'choices' => array(
                     'Regular' => 'regular',
@@ -169,28 +172,6 @@ class QuoteRequestType extends AbstractType
                         ->orderBy('u.firstName');
                 }
             ))
-            ->add('ponctualDuration', ChoiceType::class, array(
-                'choices' => array(
-                    '' => '0',
-                    '1 mois' => '1',
-                    '2 mois' => '2',
-                    '3 mois' => '3',
-                    '4 mois' => '4'
-                ),
-                'expanded' => false,
-                'multiple' => false
-            ))
-            ->add('regularDuration', ChoiceType::class, array(
-                'choices' => array(
-                    '' => '0',
-                    '24 mois' => '24',
-                    '36 mois' => '36',
-                    '48 mois' => '48',
-                    '60 mois' => '60',
-                ),
-                'expanded' => false,
-                'multiple' => false
-            ))
             ->add('signatoryFirstName1')
             ->add('signatoryLastName1')
             ->add('signatoryTitle1');
@@ -216,8 +197,7 @@ class QuoteRequestType extends AbstractType
             'locales' => null,
             'staff' => null,
             'access' => null,
-            'floorNumber' => null,
-            'destructionType' => null,
+            'floorNumber' => null
         ));
     }
 

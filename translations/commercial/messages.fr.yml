@@ -75,10 +75,11 @@ Commercial:
         SignatoryTitle1: Titre signataire 1
 
     QuoteStatusList:
-        CREATED: Créé
-        PENDING: En attente
-        PROCESSING: En traitement
-        CLOSED: Fermé
+        QUOTE_CREATED: Offre créée
+        QUOTE_SENT: Offre envoyée
+        CONTRACT_SENT: Contrat envoyé
+        CONTRACT_SIGNED: Contrat signé
+        CONTRACT_LOST: Contact non gagné
 
     StaffList:
         120: De 1 à 20 employés

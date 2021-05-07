@@ -82,6 +82,14 @@ class QuoteRequest
     /**
      * @var string
      *
+     * @ORM\Column(name="origin", type="string", length=255)
+     */
+    private $origin;
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="number", type="string", length=255, nullable=true)
      */
     private $number;
@@ -164,14 +172,6 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="destructionType", type="text")
-     * @Assert\NotBlank(groups={"public"})
-     */
-    private $destructionType;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="access", type="text")
      * @Assert\NotBlank(groups={"public"})
      */
@@ -222,12 +222,6 @@ class QuoteRequest
      */
     private $totalAmount;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="tollFees", type="integer", nullable=true)
-     */
-    private $tollFees;
 
     /**
      * @var int
@@ -250,22 +244,6 @@ class QuoteRequest
      * @ORM\Column(name="annualBudget", type="integer", nullable=true)
      */
     private $annualBudget;
-
-    /**
-     * @var int
-     * Durée d'une prestation ponctuelle
-     *
-     * @ORM\Column(name="contractDuration", type="integer", nullable=true)
-     */
-    private $ponctualDuration;
-
-    /**
-     * @var int
-     * Durée d'un contrat régulier
-     *
-     * @ORM\Column(name="regularDuration", type="integer", nullable=true)
-     */
-    private $regularDuration;
 
     /**
      * @var string
@@ -333,19 +311,6 @@ class QuoteRequest
      */
     private $signatoryTitle1;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="minTransportUnitPrice", type="integer", nullable=true)
-     */
-    private $minTransportUnitPrice;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="transportRate", type="bigint", nullable=true)
-     */
-    private $transportRate;
 
     /**
      * #################################
@@ -393,8 +358,6 @@ class QuoteRequest
         $this->quoteRequestLines = new ArrayCollection();
         $this->otherNeeds = new ArrayCollection();
         $this->overallDiscount = 0;
-        $this->minTransportUnitPrice = 0;
-        $this->regularDuration = 36;
         $this->isSameSignatory = false;
     }
 
@@ -801,42 +764,6 @@ class QuoteRequest
     }
 
     /**
-     * @return int
-     */
-    public function getPonctualDuration()
-    {
-        return $this->ponctualDuration;
-    }
-
-    /**
-     * @param int $ponctualDuration
-     * @return QuoteRequest
-     */
-    public function setPonctualDuration($ponctualDuration)
-    {
-        $this->ponctualDuration = $ponctualDuration;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRegularDuration()
-    {
-        return $this->regularDuration;
-    }
-
-    /**
-     * @param int $regularDuration
-     * @return QuoteRequest
-     */
-    public function setRegularDuration($regularDuration)
-    {
-        $this->regularDuration = $regularDuration;
-        return $this;
-    }
-
-    /**
      * Set frequency.
      *
      * @param string|null $frequency
@@ -993,25 +920,6 @@ class QuoteRequest
     }
 
     /**
-     * @return int
-     */
-    public function getTollFees()
-    {
-        return $this->tollFees;
-    }
-
-    /**
-     * @param int $tollFees
-     * @return QuoteRequest
-     */
-    public function setTollFees($tollFees)
-    {
-        $this->tollFees = $tollFees;
-        return $this;
-    }
-
-
-    /**
      * Set frequencyTimes.
      *
      * @param string|null $frequencyTimes
@@ -1102,6 +1010,24 @@ class QuoteRequest
     }
 
     /**
+     * @return null|string
+     */
+    public function getOrigin(): ?string
+    {
+        return $this->origin;
+    }
+
+    /**
+     * @param string $origin
+     * @return QuoteRequest
+     */
+    public function setOrigin(string $origin): self
+    {
+        $this->origin = $origin;
+        return $this;
+    }
+
+    /**
      * Set staff.
      *
      * @param string $staff
@@ -1125,23 +1051,6 @@ class QuoteRequest
         return $this->staff;
     }
 
-    /**
-     * @return string
-     */
-    public function getDestructionType()
-    {
-        return $this->destructionType;
-    }
-
-    /**
-     * @param string $destructionType
-     * @return QuoteRequest
-     */
-    public function setDestructionType($destructionType)
-    {
-        $this->destructionType = $destructionType;
-        return $this;
-    }
 
 
     /**
@@ -1189,7 +1098,7 @@ class QuoteRequest
     /**
      * Set postalCode.
      *
-     * @paramPostalCode|null $postalCode
+     * @param PostalCode|null $postalCode
      *
      * @return QuoteRequest
      */
@@ -1203,7 +1112,7 @@ class QuoteRequest
     /**
      * Get postalCode.
      *
-     * @returnPostalCode|null
+     * @return PostalCode|null
      */
     public function getPostalCode()
     {
@@ -1394,7 +1303,7 @@ class QuoteRequest
     /**
      * Add otherNeed.
      *
-     * @paramOtherNeed $otherNeed
+     * @param OtherNeed $otherNeed
      *
      * @return QuoteRequest
      */
@@ -1408,7 +1317,7 @@ class QuoteRequest
     /**
      * Remove otherNeed.
      *
-     * @paramOtherNeed $otherNeed
+     * @param OtherNeed $otherNeed
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
@@ -1449,42 +1358,6 @@ class QuoteRequest
     public function getToken()
     {
         return $this->token;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMinTransportUnitPrice()
-    {
-        return $this->minTransportUnitPrice;
-    }
-
-    /**
-     * @param int $minTransportUnitPrice
-     * @return QuoteRequest
-     */
-    public function setMinTransportUnitPrice($minTransportUnitPrice)
-    {
-        $this->minTransportUnitPrice = $minTransportUnitPrice;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getTransportRate()
-    {
-        return $this->transportRate;
-    }
-
-    /**
-     * @param int $transportRate
-     * @return QuoteRequest
-     */
-    public function setTransportRate($transportRate)
-    {
-        $this->transportRate = $transportRate;
-        return $this;
     }
 
 }

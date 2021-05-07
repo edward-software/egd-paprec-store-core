@@ -51,6 +51,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.OtherNeed.Catalog.Label'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.catalog, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.catalog) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.OtherNeed.IsDisplayed'|trans }}</div>
                                     <div class="form-content">
                                         {% for radio in form.isDisplayed.children %}

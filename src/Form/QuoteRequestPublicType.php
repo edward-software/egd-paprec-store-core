@@ -67,14 +67,7 @@ class QuoteRequestPublicType extends AbstractType
                 'data' => '120',
                 'required' => true
             ))
-            ->add('destructionType', ChoiceType::class, array(
-                "choices" => $options['destructionType'],
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Commercial.DestructionType.' . $choiceValue;
-                },
-                'data' => 'DOCUMENT_DESTRUCTION',
-                'required' => true
-            ))
+
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('email', TextType::class)

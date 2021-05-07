@@ -204,6 +204,10 @@ Catalog:
         OtherNeeds: Autres produits possibles
         List: Liste des autres produits
         Name: Titre
+        Catalog:
+            Label: Catalogue
+            Regular: Régulier
+            Ponctual: Ponctuel
         Language: Langue
         IsDisplayed: Affiché
         Add: Ajouter un autre produit

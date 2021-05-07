@@ -41,6 +41,54 @@ parameters:
         - BOM
         - LIVRAISON
 
+    paprec.data_tmp_directory: "%kernel.root_dir%/data/tmp"
+    paprec.files_directory: "%kernel.root_dir%/data/pdf"
+    paprec.file_names:
+        - cg
+    paprec.cover_file_names:
+        - cover
+
+    paprec_quote_status:
+        - QUOTE_CREATED
+        - QUOTE_SENT
+        - CONTRACT_SENT
+        - CONTRACT_SIGNED
+        - CONTRACT_LOST
+
+    paprec_quote_access:
+        - stairs
+        - elevator
+        - ground
+
+    paprec_quote_type:
+        - REGULAR
+        - PONCTUAL
+
+    paprec_quote_access_price:
+        stairs: 20
+        elevator: 10
+        ground: 0
+
+    tmp_lock_prog: 20
+
+    paprec_quote_staff:
+        - '120'
+        - '2150'
+        - '51100'
+        - '100+'
+
+    paprec_quote_floor_number:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+
 
 services:
     # default configuration for services in *this* file
