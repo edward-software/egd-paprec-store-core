@@ -5,9 +5,15 @@ namespace App\Controller;
 use App\Entity\OtherNeed;
 use App\Entity\Picture;
 use App\Form\OtherNeedType;
+use App\Form\PictureOtherNeedType;
 use App\Form\PictureProductType;
+use App\Service\OtherNeedManager;
+use App\Service\PictureManager;
+use App\Tools\DataTable;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -16,12 +22,30 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class OtherNeedController extends Controller
+class OtherNeedController extends AbstractController
 {
 
+    private $em;
+    private $pictureManager;
+    private $otherNeedManager;
+    private $translator;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        PictureManager $pictureManager,
+        OtherNeedManager $otherNeedManager
+    ) {
+        $this->em = $em;
+        $this->pictureManager = $pictureManager;
+        $this->otherNeedManager = $otherNeedManager;
+        $this->translator = $translator;
+    }
+
     /**
-     * @Route("/otherNeed", name="paprec_other_need_index")
+     * @Route("", name="paprec_other_need_index")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
@@ -30,13 +54,12 @@ class OtherNeedController extends Controller
     }
 
     /**
-     * @Route("/otherNeed/loadList", name="paprec_other_need_loadList")
+     * @Route("/loadList", name="paprec_other_need_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function loadListAction(Request $request)
+    public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
-
-        $return = array();
+        $return = [];
 
         $filters = $request->get('filters');
         $pageSize = $request->get('length');
@@ -44,6 +67,7 @@ class OtherNeedController extends Controller
         $orders = $request->get('order');
         $search = $request->get('search');
         $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'o.id', 'method' => array('getId'));
         $cols['name'] = array('label' => 'name', 'id' => 'o.name', 'method' => array('getName'));
@@ -69,22 +93,24 @@ class OtherNeedController extends Controller
                 ))->setParameter(1, '%' . $search['value'] . '%');
             }
         }
-
-        $datatable = $this->get('goondi_tools.datatable')->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters);
-
+        
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
+        
         // Reformatage de certaines données
         $tmp = array();
-        foreach ($datatable['data'] as $data) {
+        foreach ($dt['data'] as $data) {
             $line = $data;
-            $line['isDisplayed'] = $data['isDisplayed'] ? $this->get('translator')->trans('General.1') : $this->get('translator')->trans('General.0');
+            $line['isDisplayed'] = $data['isDisplayed'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
             $tmp[] = $line;
         }
 
-        $datatable['data'] = $tmp;
+        $dt['data'] = $tmp;
 
-        $return['recordsTotal'] = $datatable['recordsTotal'];
-        $return['recordsFiltered'] = $datatable['recordsTotal'];
-        $return['data'] = $datatable['data'];
+
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
         $return['resultCode'] = 1;
         $return['resultDescription'] = "success";
 
@@ -93,7 +119,7 @@ class OtherNeedController extends Controller
     }
 
     /**
-     * @Route("/otherNeed/view/{id}", name="paprec_other_need_view")
+     * @Route("/view/{id}", name="paprec_other_need_view")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param OtherNeed $otherNeed
@@ -102,8 +128,7 @@ class OtherNeedController extends Controller
      */
     public function viewAction(Request $request, OtherNeed $otherNeed)
     {
-        $otherNeedManager = $this->get('paprec_catalog.other_need_manager');
-        $otherNeedManager->isDeleted($otherNeed, true);
+        $this->otherNeedManager->isDeleted($otherNeed, true);
 
         foreach ($this->getParameter('paprec_other_need_types_picture') as $type) {
             $types[$type] = $type;
@@ -111,11 +136,11 @@ class OtherNeedController extends Controller
 
         $picture = new Picture();
 
-        $formAddPicture = $this->createForm(PictureProductType::class, $picture, array(
+        $formAddPicture = $this->createForm(PictureOtherNeedType::class, $picture, array(
             'types' => $types
         ));
 
-        $formEditPicture = $this->createForm(PictureProductType::class, $picture, array(
+        $formEditPicture = $this->createForm(PictureOtherNeedType::class, $picture, array(
             'types' => $types
         ));
 
@@ -127,7 +152,7 @@ class OtherNeedController extends Controller
     }
 
     /**
-     * @Route("/otherNeed/add", name="paprec_other_need_add")
+     * @Route("/add", name="paprec_other_need_add")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addAction(Request $request)
@@ -155,9 +180,8 @@ class OtherNeedController extends Controller
             $otherNeed->setDateCreation(new \DateTime);
             $otherNeed->setUserCreation($user);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($otherNeed);
-            $em->flush();
+            $this->em->persist($otherNeed);
+            $this->em->flush();
 
             return $this->redirectToRoute('paprec_other_need_view', array(
                 'id' => $otherNeed->getId()
@@ -171,7 +195,7 @@ class OtherNeedController extends Controller
     }
 
     /**
-     * @Route("/otherNeed/edit/{id}", name="paprec_other_need_edit")
+     * @Route("/edit/{id}", name="paprec_other_need_edit")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param OtherNeed $otherNeed
@@ -182,8 +206,7 @@ class OtherNeedController extends Controller
     {
         $user = $this->getUser();
 
-        $otherNeedManager = $this->get('paprec_catalog.other_need_manager');
-        $otherNeedManager->isDeleted($otherNeed, true);
+        $this->otherNeedManager->isDeleted($otherNeed, true);
 
         $languages = array();
         foreach ($this->getParameter('paprec_languages') as $language) {
@@ -204,8 +227,7 @@ class OtherNeedController extends Controller
             $otherNeed->setDateUpdate(new \DateTime);
             $otherNeed->setUserUpdate($user);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('paprec_other_need_view', array(
                 'id' => $otherNeed->getId()
@@ -220,28 +242,26 @@ class OtherNeedController extends Controller
     }
 
     /**
-     * @Route("/otherNeed/remove/{id}", name="paprec_other_need_remove")
+     * @Route("/remove/{id}", name="paprec_other_need_remove")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeAction(Request $request, OtherNeed $otherNeed)
     {
-        $em = $this->getDoctrine()->getManager();
-
         $otherNeed->setDeleted(new \DateTime());
         /*
         * Suppression des images
          */
         foreach ($otherNeed->getPictures() as $picture) {
-            $this->removeFile($this->getParameter('paprec_catalog.product.di.picto_path') . '/' . $picture->getPath());
+            $this->removeFile($this->getParameter('paprec.other_need.picto_path') . '/' . $picture->getPath());
             $otherNeed->removePicture($picture);
         }
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('paprec_other_need_index');
     }
 
     /**
-     * @Route("/otherNeed/removeMany/{ids}", name="paprec_other_need_removeMany")
+     * @Route("/removeMany/{ids}", name="paprec_other_need_removeMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removeManyAction(Request $request)
@@ -252,29 +272,27 @@ class OtherNeedController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $em = $this->getDoctrine()->getManager();
-
         $ids = explode(',', $ids);
 
         if (is_array($ids) && count($ids)) {
-            $otherNeeds = $em->getRepository('App:OtherNeed')->findById($ids);
+            $otherNeeds = $this->em->getRepository('App:OtherNeed')->findById($ids);
             foreach ($otherNeeds as $otherNeed) {
                 foreach ($otherNeed->getPictures() as $picture) {
-                    $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
+                    $this->removeFile($this->getParameter('paprec.other_need.picto_path') . '/' . $picture->getPath());
                     $otherNeed->removePicture($picture);
                 }
 
                 $otherNeed->setDeleted(new \DateTime());
                 $otherNeed->setIsDisplayed(false);
             }
-            $em->flush();
+            $this->em->flush();
         }
 
         return $this->redirectToRoute('paprec_other_need_index');
     }
 
     /**
-     * @Route("/otherNeed/addPicture/{id}/{type}", name="paprec_other_need_addPicture")
+     * @Route("/addPicture/{id}/{type}", name="paprec_other_need_addPicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addPictureAction(Request $request, OtherNeed $otherNeed)
@@ -289,8 +307,6 @@ class OtherNeedController extends Controller
             'types' => $types
         ));
 
-        $em = $this->getDoctrine()->getManager();
-
         $form->handleRequest($request);
         if ($form->isValid()) {
             $otherNeed->setDateUpdate(new \DateTime());
@@ -300,14 +316,14 @@ class OtherNeedController extends Controller
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.other_need.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
                 $picture->setType($request->get('type'));
                 $picture->setOtherNeed($otherNeed);
                 $otherNeed->addPicture($picture);
-                $em->persist($picture);
-                $em->flush();
+                $this->em->persist($picture);
+                $this->em->flush();
             }
 
             return $this->redirectToRoute('paprec_other_need_view', array(
@@ -322,20 +338,15 @@ class OtherNeedController extends Controller
 
 
     /**
-     * @Route("/otherNeed/editPicture/{id}/{pictureID}", name="paprec_other_need_editPicture")
+     * @Route("/editPicture/{id}/{pictureID}", name="paprec_other_need_editPicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function editPictureAction(Request $request, OtherNeed $otherNeed)
     {
-        $otherNeedManager = $this->get('paprec_catalog.other_need_manager');
-        $pictureManager = $this->get('paprec_catalog.picture_manager');
 
-        $em = $this->getDoctrine()->getManager();
         $pictureID = $request->get('pictureID');
-        $picture = $pictureManager->get($pictureID);
+        $picture = $this->pictureManager->get($pictureID);
         $oldPath = $picture->getPath();
-
-        $em = $this->getDoctrine()->getEntityManager();
 
         foreach ($this->getParameter('paprec_other_need_types_picture') as $type) {
             $types[$type] = $type;
@@ -345,7 +356,6 @@ class OtherNeedController extends Controller
             'types' => $types
         ));
 
-
         $form->handleRequest($request);
         if ($form->isValid()) {
             $otherNeed->setDateUpdate(new \DateTime());
@@ -353,13 +363,13 @@ class OtherNeedController extends Controller
 
             if ($picture->getPath() instanceof UploadedFile) {
                 $pic = $picture->getPath();
-                $pictoFileName = md5(uniqid()) . '.' . $pic->guessExtension();
+                $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.other_need.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
-                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $oldPath);
-                $em->flush();
+                $this->removeFile($this->getParameter('paprec.other_need.picto_path') . '/' . $oldPath);
+                $this->em->flush();
             }
 
             return $this->redirectToRoute('paprec_other_need_view', array(
@@ -373,26 +383,23 @@ class OtherNeedController extends Controller
     }
 
     /**
-     * @Route("/otherNeed/removePicture/{id}/{pictureID}", name="paprec_other_need_removePicture")
+     * @Route("/removePicture/{id}/{pictureID}", name="paprec_other_need_removePicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removePictureAction(Request $request, OtherNeed $otherNeed)
     {
-
-        $em = $this->getDoctrine()->getManager();
-
         $pictureID = $request->get('pictureID');
 
         $pictures = $otherNeed->getPictures();
         foreach ($pictures as $picture) {
             if ($picture->getId() == $pictureID) {
                 $otherNeed->setDateUpdate(new \DateTime());
-                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
-                $em->remove($picture);
+                $this->removeFile($this->getParameter('paprec.other_need.picto_path') . '/' . $picture->getPath());
+                $this->em->remove($picture);
                 continue;
             }
         }
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('paprec_other_need_view', array(
             'id' => $otherNeed->getId()

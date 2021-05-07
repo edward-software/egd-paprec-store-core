@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -230,11 +231,11 @@ class OtherNeed
     /**
      * Set userCreation.
      *
-     * @param \Paprec\UserBundle\Entity\User $userCreation
+     * @param User $userCreation
      *
      * @return OtherNeed
      */
-    public function setUserCreation(\Paprec\UserBundle\Entity\User $userCreation)
+    public function setUserCreation( User $userCreation)
     {
         $this->userCreation = $userCreation;
 
@@ -244,7 +245,7 @@ class OtherNeed
     /**
      * Get userCreation.
      *
-     * @return \Paprec\UserBundle\Entity\User
+     * @return User
      */
     public function getUserCreation()
     {
@@ -254,11 +255,11 @@ class OtherNeed
     /**
      * Set userUpdate.
      *
-     * @param \Paprec\UserBundle\Entity\User|null $userUpdate
+     * @param User|null $userUpdate
      *
      * @return OtherNeed
      */
-    public function setUserUpdate(\Paprec\UserBundle\Entity\User $userUpdate = null)
+    public function setUserUpdate(User $userUpdate = null)
     {
         $this->userUpdate = $userUpdate;
 
@@ -268,7 +269,7 @@ class OtherNeed
     /**
      * Get userUpdate.
      *
-     * @return \Paprec\UserBundle\Entity\User|null
+     * @return User|null
      */
     public function getUserUpdate()
     {
@@ -376,7 +377,7 @@ class OtherNeed
     /**
      * Get pictures.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPictures()
     {
@@ -386,11 +387,11 @@ class OtherNeed
     /**
      * Add cart.
      *
-     * @param \Paprec\PublicBundle\Entity\Cart $cart
+     * @param Cart $cart
      *
      * @return OtherNeed
      */
-    public function addCart(\Paprec\PublicBundle\Entity\Cart $cart)
+    public function addCart(Cart $cart)
     {
         $this->carts[] = $cart;
 
@@ -400,11 +401,11 @@ class OtherNeed
     /**
      * Remove cart.
      *
-     * @param \Paprec\PublicBundle\Entity\Cart $cart
+     * @param Cart $cart
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCart(\Paprec\PublicBundle\Entity\Cart $cart)
+    public function removeCart(Cart $cart)
     {
         return $this->carts->removeElement($cart);
     }
@@ -422,11 +423,11 @@ class OtherNeed
     /**
      * Add quoteRequest.
      *
-     * @param \Paprec\CommercialBundle\Entity\QuoteRequest $quoteRequest
+     * @param QuoteRequest $quoteRequest
      *
      * @return OtherNeed
      */
-    public function addQuoteRequest(\Paprec\CommercialBundle\Entity\QuoteRequest $quoteRequest)
+    public function addQuoteRequest(QuoteRequest $quoteRequest)
     {
         $this->quoteRequests[] = $quoteRequest;
 
@@ -436,11 +437,11 @@ class OtherNeed
     /**
      * Remove quoteRequest.
      *
-     * @param \Paprec\CommercialBundle\Entity\QuoteRequest $quoteRequest
+     * @param QuoteRequest $quoteRequest
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeQuoteRequest(\Paprec\CommercialBundle\Entity\QuoteRequest $quoteRequest)
+    public function removeQuoteRequest(QuoteRequest $quoteRequest)
     {
         return $this->quoteRequests->removeElement($quoteRequest);
     }
@@ -448,7 +449,7 @@ class OtherNeed
     /**
      * Get quoteRequests.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getQuoteRequests()
     {
