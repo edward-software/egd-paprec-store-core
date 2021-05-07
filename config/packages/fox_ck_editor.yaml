@@ -1,0 +1,38 @@
+fos_ck_editor:
+    base_path: "build/ckeditor"
+    js_path: "build/ckeditor/ckeditor.js"
+    configs:
+        full_config:
+            jquery: true
+            height: '900px'
+            language: '%kernel.default_locale%'
+            extraPlugins: 'lineutils,widget,dialog,codesnippet,widgetselection'
+            toolbar: standard
+            allowedContent: true
+        basic_config:
+            jquery: true
+            height: '250px'
+            language: '%kernel.default_locale%'
+            toolbar: basic
+            allowedContent: true
+        custom_config:
+            jquery: true
+            height: '500px'
+            language: '%kernel.default_locale%'
+            toolbar: "custom_toolbar"
+            allowedContent: true
+    toolbars:
+        configs:
+            custom_toolbar: ['@clipboard', '@editing', '@links', '@insert', '@tools', '@document', '/', '@basic_styles', '@advanced_styles', '/', '@paragraph']
+        items:
+            'about': ['Styles', 'Format', 'About']
+            'basic_styles': ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
+            'advanced_styles': ['Styles', 'Format', 'Font', 'FontSize', 'TextColor', 'BGColor']
+            'clipboard': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+            'document': ['Source']
+            'editing': ['Scayt']
+            'links': ['Link', 'Unlink', 'Anchor']
+            'insert': ['Image', 'Table', 'HorizontalRule', 'SpecialChar']
+            'paragraph': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
+            'tools': ['Maximize']
+            'colors': ['TextColor', 'BGColor']

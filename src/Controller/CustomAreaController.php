@@ -5,24 +5,51 @@ namespace App\Controller;
 use App\Entity\CustomArea;
 use App\Entity\Picture;
 use App\Form\CustomAreaType;
+use App\Form\PictureCustomAreaType;
 use App\Form\PictureProductType;
+use App\Service\CustomAreaManager;
+use App\Service\PictureManager;
+use App\Tools\DataTable;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class CustomAreaController extends Controller
+class CustomAreaController extends AbstractController
 {
 
+    private $em;
+    private $customAreaManager;
+    private $pictureManager;
+    private $translator;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        PictureManager $pictureManager,
+        CustomAreaManager $customAreaManager
+    ) {
+        $this->em = $em;
+        $this->translator = $translator;
+        $this->customAreaManager = $customAreaManager;
+        $this->pictureManager = $pictureManager;
+    }
+
     /**
-     * @Route("/customarea", name="paprec_custom_area_index")
+     * @Route("", name="paprec_custom_area_index")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function indexAction()
@@ -31,13 +58,12 @@ class CustomAreaController extends Controller
     }
 
     /**
-     * @Route("/customarea/loadList", name="paprec_custom_area_loadList")
+     * @Route("/loadList", name="paprec_custom_area_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function loadListAction(Request $request)
+    public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
-
-        $return = array();
+        $return = [];
 
         $filters = $request->get('filters');
         $pageSize = $request->get('length');
@@ -45,10 +71,15 @@ class CustomAreaController extends Controller
         $orders = $request->get('order');
         $search = $request->get('search');
         $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'r.id', 'method' => array('getId'));
         $cols['code'] = array('label' => 'code', 'id' => 'r.code', 'method' => array('getCode'));
-        $cols['isDisplayed'] = array('label' => 'isDisplayed', 'id' => 'r.isDisplayed', 'method' => array('getIsDisplayed'));
+        $cols['isDisplayed'] = array(
+            'label' => 'isDisplayed',
+            'id' => 'r.isDisplayed',
+            'method' => array('getIsDisplayed')
+        );
         $cols['language'] = array('label' => 'language', 'id' => 'r.language', 'method' => array('getLanguage'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(CustomArea::class)->createQueryBuilder('r');
@@ -58,7 +89,7 @@ class CustomAreaController extends Controller
             ->where('r.deleted IS NULL');
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
-            if (substr($search['value'], 0, 1) == '#') {
+            if (substr($search['value'], 0, 1) === '#') {
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
                     $queryBuilder->expr()->eq('r.id', '?1')
                 ))->setParameter(1, substr($search['value'], 1));
@@ -71,21 +102,21 @@ class CustomAreaController extends Controller
             }
         }
 
-        $datatable = $this->get('goondi_tools.datatable')->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters);
-
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
         // Reformatage de certaines données
         $tmp = array();
-        foreach ($datatable['data'] as $data) {
+        foreach ($dt['data'] as $data) {
             $line = $data;
-            $line['isDisplayed'] = $data['isDisplayed'] ? $this->get('translator')->trans('General.1') : $this->get('translator')->trans('General.0');
+            $line['isDisplayed'] = $data['isDisplayed'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
             $tmp[] = $line;
         }
 
-        $datatable['data'] = $tmp;
+        $dt['data'] = $tmp;
 
-        $return['recordsTotal'] = $datatable['recordsTotal'];
-        $return['recordsFiltered'] = $datatable['recordsTotal'];
-        $return['data'] = $datatable['data'];
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
         $return['resultCode'] = 1;
         $return['resultDescription'] = "success";
 
@@ -94,17 +125,16 @@ class CustomAreaController extends Controller
     }
 
     /**
-     * @Route("/customarea/view/{id}", name="paprec_custom_area_view")
+     * @Route("/view/{id}", name="paprec_custom_area_view")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param CustomArea $customArea
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @return Response
+     * @throws EntityNotFoundException
      */
-    public function viewAction(Request $request, CustomArea $customArea)
+    public function viewAction(Request $request, CustomArea $customArea): Response
     {
-        $customAreaManager = $this->get('paprec_catalog.custom_area_manager');
-        $customAreaManager->isDeleted($customArea, true);
+        $this->customAreaManager->isDeleted($customArea, true);
 
         foreach ($this->getParameter('paprec_custom_area_types_picture') as $type) {
             $types[$type] = $type;
@@ -112,11 +142,11 @@ class CustomAreaController extends Controller
 
         $picture = new Picture();
 
-        $formAddPicture = $this->createForm(PictureProductType::class, $picture, array(
+        $formAddPicture = $this->createForm(PictureCustomAreaType::class, $picture, array(
             'types' => $types
         ));
 
-        $formEditPicture = $this->createForm(PictureProductType::class, $picture, array(
+        $formEditPicture = $this->createForm(PictureCustomAreaType::class, $picture, array(
             'types' => $types
         ));
 
@@ -128,7 +158,7 @@ class CustomAreaController extends Controller
     }
 
     /**
-     * @Route("/customarea/add", name="paprec_custom_area_add")
+     * @Route("/add", name="paprec_custom_area_add")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addAction(Request $request)
@@ -159,12 +189,11 @@ class CustomAreaController extends Controller
 
             $customArea = $form->getData();
 
-            $customArea->setDateCreation(new \DateTime);
+            $customArea->setDateCreation(new DateTime);
             $customArea->setUserCreation($user);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($customArea);
-            $em->flush();
+            $this->em->persist($customArea);
+            $this->em->flush();
 
             return $this->redirectToRoute('paprec_custom_area_view', array(
                 'id' => $customArea->getId()
@@ -178,19 +207,18 @@ class CustomAreaController extends Controller
     }
 
     /**
-     * @Route("/customarea/edit/{id}", name="paprec_custom_area_edit")
+     * @Route("/edit/{id}", name="paprec_custom_area_edit")
      * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param CustomArea $customArea
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @return RedirectResponse|Response
+     * @throws EntityNotFoundException
      */
     public function editAction(Request $request, CustomArea $customArea)
     {
         $user = $this->getUser();
 
-        $customAreaManager = $this->get('paprec_catalog.custom_area_manager');
-        $customAreaManager->isDeleted($customArea, true);
+        $this->customAreaManager->isDeleted($customArea, true);
 
         $codes = array();
         foreach ($this->getParameter('paprec_custom_area_codes') as $code) {
@@ -214,11 +242,10 @@ class CustomAreaController extends Controller
 
             $customArea = $form->getData();
 
-            $customArea->setDateUpdate(new \DateTime);
+            $customArea->setDateUpdate(new DateTime);
             $customArea->setUserUpdate($user);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('paprec_custom_area_view', array(
                 'id' => $customArea->getId()
@@ -233,14 +260,12 @@ class CustomAreaController extends Controller
     }
 
     /**
-     * @Route("/customarea/remove/{id}", name="paprec_custom_area_remove")
+     * @Route("/remove/{id}", name="paprec_custom_area_remove")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function removeAction(Request $request, CustomArea $customArea)
+    public function removeAction(Request $request, CustomArea $customArea): RedirectResponse
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $customArea->setDeleted(new \DateTime());
+        $customArea->setDeleted(new DateTime());
         /*
         * Suppression des images
          */
@@ -248,16 +273,16 @@ class CustomAreaController extends Controller
             $this->removeFile($this->getParameter('paprec_catalog.product.di.picto_path') . '/' . $picture->getPath());
             $customArea->removePicture($picture);
         }
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('paprec_custom_area_index');
     }
 
     /**
-     * @Route("/customarea/removeMany/{ids}", name="paprec_custom_area_removeMany")
+     * @Route("/removeMany/{ids}", name="paprec_custom_area_removeMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function removeManyAction(Request $request)
+    public function removeManyAction(Request $request): RedirectResponse
     {
         $ids = $request->get('ids');
 
@@ -265,29 +290,27 @@ class CustomAreaController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $em = $this->getDoctrine()->getManager();
-
         $ids = explode(',', $ids);
 
         if (is_array($ids) && count($ids)) {
-            $customAreas = $em->getRepository('App:CustomArea')->findById($ids);
+            $customAreas = $this->em->getRepository('App:CustomArea')->findById($ids);
             foreach ($customAreas as $customArea) {
                 foreach ($customArea->getPictures() as $picture) {
-                    $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
+                    $this->removeFile($this->getParameter('paprec.custom_area.picto_path') . '/' . $picture->getPath());
                     $customArea->removePicture($picture);
                 }
 
                 $customArea->setDeleted(new \DateTime());
                 $customArea->setIsDisplayed(false);
             }
-            $em->flush();
+            $this->em->flush();
         }
 
         return $this->redirectToRoute('paprec_custom_area_index');
     }
 
     /**
-     * @Route("/customarea/addPicture/{id}/{type}", name="paprec_custom_area_addPicture")
+     * @Route("/addPicture/{id}/{type}", name="paprec_custom_area_addPicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addPictureAction(Request $request, CustomArea $customArea)
@@ -302,8 +325,6 @@ class CustomAreaController extends Controller
             'types' => $types
         ));
 
-        $em = $this->getDoctrine()->getManager();
-
         $form->handleRequest($request);
         if ($form->isValid()) {
             $customArea->setDateUpdate(new \DateTime());
@@ -311,16 +332,16 @@ class CustomAreaController extends Controller
 
             if ($picture->getPath() instanceof UploadedFile) {
                 $pic = $picture->getPath();
-                $pictoFileName = md5(uniqid()) . '.' . $pic->guessExtension();
+                $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.custom_area.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
                 $picture->setType($request->get('type'));
                 $picture->setCustomArea($customArea);
                 $customArea->addPicture($picture);
-                $em->persist($picture);
-                $em->flush();
+                $this->em->persist($picture);
+                $this->em->flush();
             }
 
             return $this->redirectToRoute('paprec_custom_area_view', array(
@@ -335,20 +356,15 @@ class CustomAreaController extends Controller
 
 
     /**
-     * @Route("/customarea/editPicture/{id}/{pictureID}", name="paprec_custom_area_editPicture")
+     * @Route("/editPicture/{id}/{pictureID}", name="paprec_custom_area_editPicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function editPictureAction(Request $request, CustomArea $customArea)
     {
-        $customAreaManager = $this->get('paprec_catalog.custom_area_manager');
-        $pictureManager = $this->get('paprec_catalog.picture_manager');
-
-        $em = $this->getDoctrine()->getManager();
         $pictureID = $request->get('pictureID');
-        $picture = $pictureManager->get($pictureID);
+        $picture = $this->pictureManager->get($pictureID);
         $oldPath = $picture->getPath();
 
-        $em = $this->getDoctrine()->getEntityManager();
 
         foreach ($this->getParameter('paprec_custom_area_types_picture') as $type) {
             $types[$type] = $type;
@@ -366,13 +382,13 @@ class CustomAreaController extends Controller
 
             if ($picture->getPath() instanceof UploadedFile) {
                 $pic = $picture->getPath();
-                $pictoFileName = md5(uniqid()) . '.' . $pic->guessExtension();
+                $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.custom_area.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
-                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $oldPath);
-                $em->flush();
+                $this->removeFile($this->getParameter('paprec.custom_area.picto_path') . '/' . $oldPath);
+                $this->em->flush();
             }
 
             return $this->redirectToRoute('paprec_custom_area_view', array(
@@ -386,13 +402,11 @@ class CustomAreaController extends Controller
     }
 
     /**
-     * @Route("/customarea/removePicture/{id}/{pictureID}", name="paprec_custom_area_removePicture")
+     * @Route("/removePicture/{id}/{pictureID}", name="paprec_custom_area_removePicture")
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function removePictureAction(Request $request, CustomArea $customArea)
     {
-
-        $em = $this->getDoctrine()->getManager();
 
         $pictureID = $request->get('pictureID');
 
@@ -400,12 +414,12 @@ class CustomAreaController extends Controller
         foreach ($pictures as $picture) {
             if ($picture->getId() == $pictureID) {
                 $customArea->setDateUpdate(new \DateTime());
-                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
-                $em->remove($picture);
+                $this->removeFile($this->getParameter('paprec.custom_area.picto_path') . '/' . $picture->getPath());
+                $this->em->remove($picture);
                 continue;
             }
         }
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('paprec_custom_area_view', array(
             'id' => $customArea->getId()

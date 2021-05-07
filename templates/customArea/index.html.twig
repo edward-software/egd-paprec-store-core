@@ -56,86 +56,51 @@
     <script>
         $(function () {
 
-            var customAreaList = $('#customAreasListDatatable').DataTable({
-                "language": {
-                    "lengthMenu": "{{ 'General.Datatable.Records-per-page'|trans }}",
-                    "zeroRecords": "{{ 'General.Datatable.Nothing-found'|trans }}",
-                    "info": "{{ 'General.Datatable.Showing-page'|trans }}",
-                    "infoEmpty": "{{ 'General.Datatable.No-records-available'|trans }}",
-                    "search": "{{ 'General.Datatable.Search'|trans }}:",
-                    "sProcessing": "{{ 'General.Datatable.Loading'|trans }}",
-                    "paginate": {
-                        "previous": "{{ 'General.Datatable.Previous'|trans }}",
-                        "next": "{{ 'General.Datatable.Next'|trans }}",
-                    },
-                    "select": {
-                        "rows": {
-                            _: "%d {{'General.Datatable.LinesSelected'|trans}}",
-                            0: "{{'General.Datatable.NoLineSelected'|trans}}",
-                            1: "{{'General.Datatable.OneLineSelected'|trans}}"
-                        }
-                    },
-                },
-                dom: '<"row"Bf<"ml-auto">l><"row"rt><"row"i<"ml-auto">sp>',
-                buttons: [
-                    {
-                        text: '{{ 'General.Remove'|trans }}',
-                        className: 'btn-sm',
-                        action: function (e, dt) {
-                            if (dt.rows({selected: true}).count() > 0) {
-                                var rowIds = [];
-                                $.each(dt.rows({selected: true}).data(), function () {
-                                    rowIds.push(this.id);
-                                });
-                                var url = "{{ path("paprec_custom_area_removeMany", {ids: '0000'}) }}".replace('0000', rowIds.join(','));
-
-                                Swal.fire({
-                                    title: "{{ 'General.Confirm'|trans }}",
-                                    text: "{{ 'General.Confirm-remove'|trans }}",
-                                    showCancelButton: true,
-                                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                                    cancelButtonText: "{{ 'General.No'|trans }}"
-                                }).then(function (result) {
-                                    if (result.value) {
-                                        $(location).attr('href', url);
-                                    }
-                                });
-
-                            }
-                        }
-                    },
-                ],
-                "select": true,
-                "processing": true,
-                "serverSide": true,
-                "lengthMenu": [[5, 10, 20, 50], [5, 10, 20, 50]],
-                "iDisplayLength": 20,
-                "ajax": "{{ path('paprec_custom_area_loadList') }}",
-                "columns": [
+            $('#customAreasListDatatable').EgdDatatable({
+                url: "{{ path('paprec_custom_area_loadList') }}",
+                columns: [
                     {"data": "id"},
                     {"data": "code"},
                     {"data": "isDisplayed"},
                     {"data": "language"},
-                    {"data": "id", "width": "10%", "bSortable": false}
+                    {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],
-                "rowCallback": function (row, data, displayIndex) {
+                rowDblclick: {
+                    type: 'open',
+                    url: "{{ path('paprec_custom_area_view', {id: '__rowId__'}) }}"
                 },
-                "drawCallback": function () {
-                    $('.dataTables_paginate > .pagination').addClass('pagination-sm');
-                },
-                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                buttons: [
+                    {
+                        label: '{{ "General.Remove"|trans }}',
+                        type: 'ajaxMany',
+                        url: "{{ path("paprec_custom_area_removeMany", {ids: '__rowIds__', json: 1}) }}",
+                        confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
+                        className: 'btn-sm'
+                    }
+                ],
+                rowButtons: [
+                    {
+                        label: "{{ 'General.View'|trans }}",
+                        className: "btn btn-primary btn-sm",
+                        icon: "fa fa-eye",
+                        url: "{{ path('paprec_custom_area_view', {id: '__rowId__'}) }}"
+                    },
+                    {
+                        label: "{{ 'General.Edit'|trans }}",
+                        className: "btn btn-warning btn-sm",
+                        icon: "fa fa-edit",
+                        url: "{{ path('paprec_custom_area_edit', {id: '__rowId__'}) }}"
+                    },
+                    {
+                        label: '{{ "General.Remove"|trans }}',
+                        type: 'ajax',
+                        url: "{{ path("paprec_custom_area_remove", {id: '__rowId__', json: 1}) }}",
+                        confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
+                        className: 'btn btn-danger btn-sm',
+                        icon: "fa fa-times"
+                    }
 
-                    viewUrl = "{{ path('paprec_custom_area_view', {id: '0000'}) }}".replace('0000', aData['id']);
-                    editUrl = "{{ path('paprec_custom_area_edit', {id: '0000'}) }}".replace('0000', aData['id']);
-
-                    $(nRow).find(':last-child').html('<a href="' + viewUrl + '" data-toggle="tooltip" title="Voir" class="btn btn-sm btn-primary btn-sm"><i class="fa fa-xs fa-eye"></i></a> <a href="' + editUrl + '" data-toggle="tooltip" title="Editer" class="btn btn-sm btn-warning btn-sm"><i class="fa fa-xs fa-edit"></i></a>');
-
-                },
-            });
-
-            $('#customAreasListDatatable tbody').on('dblclick', 'tr', function (event) {
-                url = "{{ path('paprec_custom_area_view', {id: '0000'}) }}".replace('0000', $(this).attr('id').replace('row_', ''));
-                $(location).attr('href', url);
+                ]
             });
 
         });

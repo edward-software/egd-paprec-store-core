@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -278,11 +279,11 @@ class CustomArea
     /**
      * Set userCreation.
      *
-     * @param \Paprec\UserBundle\Entity\User $userCreation
+     * @param User $userCreation
      *
      * @return CustomArea
      */
-    public function setUserCreation(\Paprec\UserBundle\Entity\User $userCreation)
+    public function setUserCreation(User $userCreation)
     {
         $this->userCreation = $userCreation;
 
@@ -292,7 +293,7 @@ class CustomArea
     /**
      * Get userCreation.
      *
-     * @return \Paprec\UserBundle\Entity\User
+     * @return User
      */
     public function getUserCreation()
     {
@@ -328,7 +329,7 @@ class CustomArea
     /**
      * Get pictures.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getPictures()
     {
@@ -339,7 +340,7 @@ class CustomArea
     {
         $leftPictures = array();
         foreach ($this->pictures as $picture) {
-            if ($picture->getType() == 'LEFT') {
+            if ($picture->getType() === 'LEFT') {
                 $leftPictures[] = $picture;
             }
         }
@@ -350,7 +351,7 @@ class CustomArea
     {
         $rightPictures = array();
         foreach ($this->pictures as $picture) {
-            if ($picture->getType() == 'RIGHT') {
+            if ($picture->getType() === 'RIGHT') {
                 $rightPictures[] = $picture;
             }
         }
@@ -409,11 +410,11 @@ class CustomArea
     /**
      * Set userUpdate.
      *
-     * @param \Paprec\UserBundle\Entity\User|null $userUpdate
+     * @param User|null $userUpdate
      *
      * @return CustomArea
      */
-    public function setUserUpdate(\Paprec\UserBundle\Entity\User $userUpdate = null)
+    public function setUserUpdate(User $userUpdate = null)
     {
         $this->userUpdate = $userUpdate;
 
@@ -423,7 +424,7 @@ class CustomArea
     /**
      * Get userUpdate.
      *
-     * @return \Paprec\UserBundle\Entity\User|null
+     * @return User|null
      */
     public function getUserUpdate()
     {
