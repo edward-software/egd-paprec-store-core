@@ -117,7 +117,7 @@
     {# Navigation #}
     <nav class="navbar navbar-expand-md navbar-light static-top">
         <div class="container menu">
-            <a class="navbar-brand" href="{{ privacia_public_site_url }}">
+            <a class="navbar-brand" href="{{ paprec_public_site_url }}">
                 {# <img src="/build/static/privacia_logo.png" alt=""> #}
                 <img class="img-fluid" width="260" src="{{ asset('/build/static/logo-groupe.png') }}" alt="">
             </a>
@@ -132,7 +132,7 @@
                 <ul class="navbar-nav nav ml-5 mr-xl-auto">
                     <li class="nav-item active">
                         <a class="nav-link"
-                           href="{{ privacia_public_site_url }}">{{ 'Public.Navbar.Home'| trans({}, "messages", locale) }}
+                           href="{{ paprec_public_site_url }}">{{ 'Public.Navbar.Home'| trans({}, "messages", locale) }}
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
@@ -241,7 +241,7 @@
         </div> #}
         <div class="breadcrumb__content">
             <a class="breadcrumb__content__link"
-               href="{{ privacia_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>
+               href="{{ paprec_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>
             > <a class="breadcrumb__content__link"
                  href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Quote'| trans({}, "messages", locale) }}</a>
             > <span class="breadcrumb__content__last">{% block breadcrumb_content %}{% endblock %}</span>

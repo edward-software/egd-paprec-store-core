@@ -5,3 +5,9 @@ twig:
     exception_controller: null
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
+    globals:
+        paprec_public_site_url: "%env(PAPREC_PUBLIC_SITE_URL)%"
+        paprec_public_store_url: "%env(PAPREC_PUBLIC_STORE_URL)%"
+        paprec_public_technical_service: "%env(PAPREC_PUBLIC_TECHNICAL_SERVICE)%"
+        recaptcha_site_key: '%env(RECAPTCHA_SITE_KEY)%'
+        recaptcha_secret_key: '%env(RECAPTCHA_SECRET_KEY)%'

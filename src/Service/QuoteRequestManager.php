@@ -801,7 +801,7 @@ class QuoteRequestManager
             $today = new \DateTime();
 
 
-            $snappy = new Pdf($this->container->getParameter('wkhtmltopdf_path'));
+            $snappy = new Pdf(getenv('wkhtmltopdf_path'));
             $snappy->setOption('javascript-delay', 3000);
             $snappy->setTimeout(600);
             $snappy->setOption('dpi', 72);
@@ -822,7 +822,7 @@ class QuoteRequestManager
                 $templateDir .= 'ponctual/';
             }
 
-            $products = $this->productManager->getAvailableProducts();
+            $products = $this->productManager->getAvailableProducts($quoteRequest->getType());
 
             /**
              * On génère la page d'offre

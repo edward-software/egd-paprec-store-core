@@ -284,14 +284,16 @@ class ProductManager
         return false;
     }
 
-    public function getAvailableProducts()
+    public function getAvailableProducts(string $catalog)
     {
         $queryBuilder = $this->em->getRepository(Product::class)->createQueryBuilder('p');
 
         $queryBuilder->select(array('p'))
             ->where('p.deleted IS NULL')
+            ->andWhere('p.catalog = :catalog')
             ->andWhere('p.isEnabled = 1')
-            ->orderBy('p.position');
+            ->orderBy('p.position')
+            ->setParameter('catalog', $catalog);
 
         return $queryBuilder->getQuery()->getResult();
     }

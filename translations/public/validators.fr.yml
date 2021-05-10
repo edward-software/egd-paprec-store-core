@@ -1,0 +1,4 @@
+Public:
+  Contact:
+    PostalCodeError: Ce n'est pas un code postal valide. Choisissez parmi la liste déroulante.
+    PhoneError: Mauvais format (ex. 0041701020304,+41701020304, 0033701020304)

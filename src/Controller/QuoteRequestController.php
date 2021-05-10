@@ -195,7 +195,7 @@ class QuoteRequestController extends AbstractController
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
         $queryBuilder->select(array('q'))
-            ->from('PaprecCommercialBundle:QuoteRequest', 'q')
+            ->from('App:QuoteRequest', 'q')
             ->where('q.deleted IS NULL');
         if ($status != null && !empty($status)) {
             $queryBuilder->andWhere('q.quoteStatus = :status')
@@ -710,7 +710,7 @@ class QuoteRequestController extends AbstractController
         /**
          * On commence par pdf générés (seulement ceux générés dans le BO  pour éviter de supprimer un PDF en cours d'envoi pour un utilisateur
          */
-        $pdfFolder = $this->container->getParameter('paprec.data_tmp_directory');
+        $pdfFolder = $this->getParameter('paprec.data_tmp_directory');
         $finder = new Finder();
 
         $finder->files()->in($pdfFolder);

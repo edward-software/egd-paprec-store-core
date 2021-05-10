@@ -124,7 +124,6 @@ class QuoteRequestPublicType extends AbstractType
             },
             'access' => null,
             'staff' => null,
-            'destructionType' => null,
             'floorNumber' => null,
             'locale' => null
         ));

@@ -75,21 +75,22 @@ class OtherNeedManager
      * @return object|OtherNeed|null
      * @throws Exception
      */
-    public function getByLocale($locale)
+    public function getByLocaleAndCatalog($locale, $catalog)
     {
         try {
 
-            $customizableArea = $this->em->getRepository('App:OtherNeed')->findBy(array(
+            $otherNeeds = $this->em->getRepository('App:OtherNeed')->findBy(array(
                 'language' => $locale,
                 'isDisplayed' => true,
+                'catalog' => $catalog,
                 'deleted' => null
             ));
 
-            if ($customizableArea === null) {
+            if ($otherNeeds === null) {
                 return null;
             }
 
-            return $customizableArea;
+            return $otherNeeds;
 
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());

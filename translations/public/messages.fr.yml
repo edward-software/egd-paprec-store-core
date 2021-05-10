@@ -1,0 +1,132 @@
+Public:
+
+    Bundle-name:                    Gestion devis
+
+    Navbar:
+        Home: Accueil
+        Menu1:
+            Title: Type de destruction
+            SubMenu1: Destruction confidentielle documents
+            SubMenu2: Désarchivage
+            SubMenu3: Destruction des supports numériques
+            SubMenu4: Recyclage des Radiographies
+        Menu2:
+            Title: Procédés
+            SubMenu1: Destruction standard
+            SubMenu2: Destruction mobile
+            SubMenu3: Destruction par camion broyeur
+        Menu3:
+            Title: Sécurité
+            SubMenu1: Conteneur de transport sécurisés
+            SubMenu2: Verrou de sécurité e.l.s.y
+            SubMenu3: Norme DIN
+            SubMenu4: Destruction de documents - protection des données
+            SubMenu5: Certificats IQ NET et SQS
+        Menu4:
+            Title: La Société
+            SubMenu1: À propos de Privacia
+            SubMenu2: Groupe Paprec
+            SubMenu3: Durabilité
+            SubMenu4: Direction
+            SubMenu5: Téléchargement
+        Menu5:
+            Title: Contact
+            SubMenu1: Interlocuteurs
+            SubMenu2: Demander un devis
+
+    Type:
+        BreadcrumbTitle: Définition des besoins
+        BreadcrumbContent: Définition des besoins
+        Title: Les sociétés Privacia éliminent et détruisent les fichiers et supports de données confidentiels dans toute la France selon des critères de sécurité uniformes.
+        Solution1:
+            Title: 'Solution 1 : SERVICE REGULIER'
+            Message1: 'Notre offre de services comprend entre autres :'
+            Message2: 'Mise à disposition de conteneurs de collecte verrouillables'
+            Message3: 'Remplacement ou vidange sur place à la demande ou de manière régulière'
+            Message4: 'Transport avec des véhicules spéciaux'
+            Message5: 'Destruction des données'
+            Message6: 'Nous offrons un service régulier qui peut être adapté avec souplesse en cours de contrat.'
+        Solution2:
+            Title: 'Solution 2 : Désarchivage unique'
+            Message1: 'Notre offre de services comprend entre autres :'
+            Message2: "Élimination des fichiers et des supports de données conformément à votre politique d'archivage"
+            Message3: 'Transport avec des véhicules spéciaux'
+            Message4: 'Destruction des données'
+            Message5: 'Nous offrons également un service complet allant du déblaiement à la destruction finale (emballage, tri, destruction par broyage).'
+
+    Catalog:
+        BreadcrumbTitle: Offres de services
+        Title: Sélectionnez svp les conteneurs souhaités pour créer votre demande de devis en 3 étapes.
+        Quantity: Quantité
+        AddToQuote: Ajouter au devis
+        NextStep: Étape suivante
+        Quote: Devis
+        Collect-frequency: Fréquence de collecte
+        OnDemand: à la demande
+        Regular: régulière
+        Week: semaine
+        Times: fois par
+        Month: mois
+        Quarter: trimestre
+        Year: an
+        Bimestre: bimestre
+        Quadrimestre: quadrimestre
+        BreadcrumbContent: Offres de services
+        Define-Need: Définir son besoin
+        Other-Needs: Autres besoins
+        Other-Needs-Info: Cliquez sur une produit pour le sélectionner
+
+    Contact:
+        BreadcrumbTitle: Coordonnées du client
+        Title: Entrez vos coordonnées pour être contacté et recevoir votre devis.
+        BusinessName: Nom société
+        Civility: Civilité
+        LastName: Nom
+        FirstName: Prénom
+        Email: E-mail
+        Phone: Téléphone
+        PhoneNumberInfo: "Suivre la mise en forme  : +33 01 02 03 04 05"
+        CoworkerNumber: Effectif
+        IsMultisite: Prestation multi-sites
+        isMultisiteInfo: Votre demande de prestation multisite a bien été pris en compte. Vous serez contacté très prochainement par le service commercial.
+        IsSameSignatory:  Signataire du contrat identique au contact
+        Access: Accès
+        FloorNumber: Nombre d'étages
+        Staff: Effectif
+        DestructionType: Type de destruction
+        Address: Adresse
+        PostalCode: Code postal
+        City: Ville
+        Comment: Message
+        SendRequest: Envoyer la demande
+        BreadcrumbContent: Coordonnées du client
+        Signatory: Signataire
+        SignatoryFirstName1: Prénom signataire
+        SignatoryLastName1: Nom signataire
+        SignatoryTitle1: Titre signataire
+
+    Signatory:
+        BreadcrumbTitle:            Définition des signataires
+        BreadcrumbContent:          Définition des signataires
+        Title: Définissez les signataires du contrat afin de le recevoir automatiquement par email
+        SignatoryFirstName1: Prénom signataire 1
+        SignatoryLastName1: Nom signataire 1
+        SignatoryTitle1: Titre signataire 1
+
+    SignatoryConfirm:
+        Title: Nous avons bien pris en compte ces informations et vous allez prochainement recevoir votre contrat pour signature. Nous vous remercions pour votre confiance
+
+
+    Confirm:
+        Object: Votre demande de devis
+        BreadcrumbTitle: Confirmation de la demande
+        Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région. Il reprendra contact avec vous dans les 24 heures
+        Message: Vous devriez recevoir un e-mail de confirmation, cette opération peut prendre plusieurs minutes. Si vous ne recevez pas la confirmation, vérifiez dans votre dossier à spam, sinon contactez notre
+        TechnicalService: service technique
+        BreadcrumbContent: Confirmation de la demande
+
+
+    Home: Accueil
+    Quote: Devis
+    HeaderTitle: Appelez-nous
+    HeaderTitle2: Demandez dès maintenant une offre sans engagement
