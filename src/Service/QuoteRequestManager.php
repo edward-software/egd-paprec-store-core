@@ -800,8 +800,7 @@ class QuoteRequestManager
 
             $today = new \DateTime();
 
-
-            $snappy = new Pdf(getenv('wkhtmltopdf_path'));
+            $snappy = new Pdf($_ENV['WKHTMLTOPDF_PATH']);
             $snappy->setOption('javascript-delay', 3000);
             $snappy->setTimeout(600);
             $snappy->setOption('dpi', 72);
@@ -816,7 +815,8 @@ class QuoteRequestManager
                 return false;
             }
 
-            if ($quoteRequest->getType() === 'REGULAR') {
+            print_r($quoteRequest->getType());
+            if (strtoupper($quoteRequest->getType()) === 'REGULAR') {
                 $templateDir .= 'regular/';
             } else {
                 $templateDir .= 'ponctual/';

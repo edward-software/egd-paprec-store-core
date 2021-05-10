@@ -213,6 +213,7 @@ class SubscriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
             $quoteRequest = $form->getData();
             $quoteRequest->setQuoteStatus('CREATED');
+            $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
             $quoteRequest->setType($cart->getType());
             $quoteRequest->setFrequency($cart->getFrequency());
@@ -304,7 +305,7 @@ class SubscriptionController extends AbstractController
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-            "secret" => $this->getParameter('recaptcha_secret_key'),
+            "secret" => $_ENV['recaptcha_secret_key'],
             "response" => $recaptchaToken
         ));
         $response = curl_exec($ch);

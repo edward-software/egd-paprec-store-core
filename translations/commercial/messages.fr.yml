@@ -70,6 +70,10 @@ Commercial:
             Type: Type
             Ponctual: Désarchivage unique
             Regular: Service régulier
+        Origin:
+            Origin: Origine
+            Shop: Tunnel de vente
+            Bo: Back-office
         SignatoryFirstName1: Prénom signataire 1
         SignatoryLastName1: Nom signataire 1
         SignatoryTitle1: Titre signataire 1
