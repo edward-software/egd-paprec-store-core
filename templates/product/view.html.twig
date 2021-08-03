@@ -126,8 +126,8 @@
                                             {{ 'General.Frequency.Ponctual'|trans }}
                                         {% elseif product.frequency == 'regular' %}
                                             {{ product.frequencyTimes }} / {{ ('General.Frequency.' ~ product.frequencyInterval|capitalize)|trans }}
-                                        {% elseif product.frequency == 'unkown' %}
-                                            {{ 'General.Frequency.Unkown'|trans }}
+                                        {% elseif product.frequency == 'unknown' %}
+                                            {{ 'General.Frequency.Unknown'|trans }}
                                         {% endif %}
                                     </label>
                                 </div>

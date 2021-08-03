@@ -66,6 +66,14 @@
                                     </label>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Catalog.Label'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if range.catalog %}
+                                            {{ ('Catalog.Product.Catalog.' ~ range.catalog|capitalize) |trans }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Range.IsEnabled.IsEnabled'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
                                         {% if range.IsEnabled == 1 %}{{ 'Catalog.Range.IsEnabled.Yes'| trans({}, "messages", app.request.locale) }}{% else %}{{ 'Catalog.Range.IsEnabled.No'| trans({}, "messages", app.request.locale) }}{% endif %}

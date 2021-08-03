@@ -9,6 +9,7 @@ use App\Form\PictureRangeType;
 use App\Form\RangeLabelType;
 use App\Form\RangeType;
 use App\Service\NumberManager;
+use App\Service\PictureManager;
 use App\Service\RangeLabelManager;
 use App\Service\RangeManager;
 use App\Tools\DataTable;
@@ -37,17 +38,20 @@ class RangeController extends AbstractController
     private $em;
     private $rangeManager;
     private $rangeLabelManager;
+    private $pictureManager;
     private $translator;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         RangeManager $rangeManager,
+        PictureManager $pictureManager,
         RangeLabelManager $rangeLabelManager
     ) {
         $this->em = $em;
         $this->rangeManager = $rangeManager;
         $this->rangeLabelManager = $rangeLabelManager;
+        $this->pictureManager = $pictureManager;
         $this->translator = $translator;
     }
 
@@ -679,13 +683,10 @@ class RangeController extends AbstractController
      */
     public function editPictureAction(Request $request, Range $range)
     {
-        $pictureManager = $this->get('paprec_catalog.picture_manager');
 
         $pictureID = $request->get('pictureID');
-        $picture = $pictureManager->get($pictureID);
+        $picture = $this->pictureManager->get($pictureID);
         $oldPath = $picture->getPath();
-
-        $em = $this->getDoctrine()->getEntityManager();
 
         foreach ($this->getParameter('paprec_types_picture') as $type) {
             $types[$type] = $type;

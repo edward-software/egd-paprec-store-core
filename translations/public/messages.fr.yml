@@ -61,9 +61,11 @@ Public:
         AddToQuote: Ajouter au devis
         NextStep: Étape suivante
         Quote: Devis
+        Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
         OnDemand: à la demande
         Regular: régulière
+        Unknown: je ne sais pas
         Week: semaine
         Times: fois par
         Month: mois

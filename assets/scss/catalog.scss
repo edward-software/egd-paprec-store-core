@@ -8,10 +8,12 @@ select {
   border-radius: $border-radius-xs;
   background-color: $white;
   opacity: 1;
+
   &:focus {
     outline: 0 !important;
   }
 }
+
 input:focus {
   outline: 0px !important;
 }
@@ -62,6 +64,7 @@ input:focus {
     &--disable {
       background-color: #dedede;
       cursor: default;
+
       i {
         color: $white !important;
       }
@@ -84,12 +87,17 @@ input:focus {
         background-color: white !important;
         border-radius: $border-radius-xs;
         border: 1px solid #979797 !important;
-        padding: 0 0 0 10px;
-        width: 32px;
 
         &:disabled {
           color: $darkgray;
+          opacity: 80%;
         }
+      }
+
+      & .quantityProductSelect {
+        width: 32px;
+        padding: 0 0 0 10px;
+
       }
 
       & select::-ms-expand {
@@ -129,12 +137,40 @@ input:focus {
       text-align: left;
       margin-top: 20px;
 
-      button {
-        margin-right: 10px;
+      &__container {
+        margin-left: 10%;
       }
-      .round-btn:first-child {
-        margin-left: 20px;
+    }
+
+    &__frequency {
+      text-align: left;
+      margin-top: 20px;
+
+      &__container {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10%;
+
+        &__input {
+          -webkit-appearance: none !important;
+          -moz-appearance: none !important;
+          appearance: none !important;
+          background: none !important;
+          background-color: white !important;
+          border: 1px solid #979797 !important;
+          border-radius: $border-radius-xs;
+          padding: 0;
+          width: 32px;
+
+          &:disabled {
+            color: $darkgray;
+            opacity: 80%;
+
+          }
+        }
+
       }
+
     }
   }
 
@@ -170,6 +206,7 @@ input:focus {
         text-transform: uppercase;
         font-family: $font-family-1;
         font-size: 16px;
+
         &:hover {
           background-color: $secondary;
           color: $white;
@@ -196,16 +233,19 @@ input:focus {
         margin-left: 10px;
         height: 25px;
         border: 1px solid #979797 !important;
+
         &:disabled {
           color: $darkgray;
+          opacity: 80%;
         }
       }
 
-       &__button {
-          i {
-            //color: $primary;
-          }
-       }
+      &__button {
+        i {
+          //color: $primary;
+        }
+      }
+
       .round-btn--blue {
         i {
           color: $primary;
@@ -220,11 +260,14 @@ input:focus {
         background-color: white !important;
         border: 1px solid #979797 !important;
         border-radius: $border-radius-xs;
-        padding: 0 ;
+        padding: 0;
         margin: 0 10px;
         width: 32px;
+
         &:disabled {
           color: $darkgray;
+          opacity: 80%;
+
         }
       }
 

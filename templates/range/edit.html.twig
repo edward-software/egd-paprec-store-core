@@ -58,6 +58,13 @@
                                         {{ form_errors(form2.shortDescription) }}
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Catalog.Label'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.catalog) }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

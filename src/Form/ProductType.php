@@ -72,7 +72,7 @@ class ProductType extends AbstractType
                 'choices' => array(
                     'Regular' => 'regular',
                     'Ponctual' => 'ponctual',
-                    'Unkown' => 'unkown'
+                    'Unknown' => 'unknown'
                 ),
                 'empty_data' => 'unknown',
                 "choice_label" => function ($choiceValue, $key, $value) {

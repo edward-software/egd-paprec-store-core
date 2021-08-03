@@ -115,7 +115,7 @@ class CartManager
 
 
     /**
-     * Ajoute du content au cart pour un produit et une quantité donnés
+     * Ajoute du content au cart pour un produit et une quantité donnée
      *
      * @param $id
      * @param $productId
@@ -129,7 +129,13 @@ class CartManager
         $cart = $this->get($id);
 
         $content = $cart->getContent();
-        $newContent = ['pId' => $product->getId(), 'qtty' => $quantity];
+        $newContent = [
+            'pId' => $product->getId(),
+            'qtty' => $quantity,
+            'frequency' => $product->getFrequency(),
+            'frequencyTimes' => $product->getFrequencyTimes(),
+            'frequencyInterval' => $product->getFrequencyInterval()
+        ];
         if ($content && count($content)) {
             foreach ($content as $key => $value) {
                 if ($value['pId'] == $product->getId()) {
@@ -200,21 +206,27 @@ class CartManager
      * @return string
      * @throws Exception
      */
-    public function addOneProduct($id, $productId)
+    public function addOneProduct($id, Product $product)
     {
         $cart = $this->get($id);
         $qtty = '1';
         $content = $cart->getContent();
         if ($content && count($content)) {
-            foreach ($content as $key => $product) {
-                if ($product['pId'] == $productId) {
-                    $qtty = strval(intval($product['qtty']) + 1);
+            foreach ($content as $key => $prod) {
+                if ($prod['pId'] == $product->getId()) {
+                    $qtty = (string)((int)$prod['qtty'] + 1);
                     unset($content[$key]);
                 }
             }
         }
-        $product = ['pId' => $productId, 'qtty' => $qtty];
-        $content[] = $product;
+        $newContent = [
+            'pId' => $product->getId(),
+            'qtty' => $qtty,
+            'frequency' => $product->getFrequency(),
+            'frequencyTimes' => $product->getFrequencyTimes(),
+            'frequencyInterval' => $product->getFrequencyInterval()
+        ];
+        $content[] = $newContent;
 
         $cart->setContent($content);
         $this->em->persist($cart);
@@ -231,7 +243,7 @@ class CartManager
      * @return string
      * @throws Exception
      */
-    public function removeOneProduct($id, $productId)
+    public function removeOneProduct($id, Product $product)
     {
         try {
 
@@ -239,17 +251,23 @@ class CartManager
             $qtty = '0';
             $content = $cart->getContent();
             if ($content && count($content)) {
-                foreach ($content as $key => $product) {
-                    if ($product['pId'] == $productId) {
-                        $qtty = strval(intval($product['qtty']) - 1);
+                foreach ($content as $key => $prod) {
+                    if ($prod['pId'] == $product->getId()) {
+                        $qtty = (string)((int)$prod['qtty'] - 1);
                         unset($content[$key]);
                     }
                 }
             }
 
             if ($qtty !== '0') {
-                $product = ['pId' => $productId, 'qtty' => $qtty];
-                $content[] = $product;
+                $newContent = [
+                    'pId' => $product->getId(),
+                    'qtty' => $qtty,
+                    'frequency' => $product->getFrequency(),
+                    'frequencyTimes' => $product->getFrequencyTimes(),
+                    'frequencyInterval' => $product->getFrequencyInterval()
+                ];
+                $content[] = $newContent;
             }
 
             $cart->setContent($content);
@@ -319,5 +337,43 @@ class CartManager
             return $cart;
         } catch (Exception $e) {
         }
+    }
+
+
+    /**
+     * Edit les informations de fréquence d'un produit ajouté au panier
+     *
+     * @param $cartUuid
+     * @param Product $product
+     * @param $frequency
+     * @param $frequencyTimes
+     * @param $frequencyInterval
+     */
+    public function editProductFrequency($cartUuid, Product $product, $frequency, $frequencyTimes, $frequencyInterval) {
+        $cart = $this->get($cartUuid);
+
+        $qtty = 1;
+        $content = $cart->getContent();
+        if ($content && count($content)) {
+            foreach ($content as $key => $prod) {
+                if ($prod['pId'] == $product->getId()) {
+                    $qtty = (string)((int)$prod['qtty']);
+                    unset($content[$key]);
+                }
+            }
+        }
+        $newContent = [
+            'pId' => $product->getId(),
+            'qtty' => $qtty,
+            'frequency' => $frequency,
+            'frequencyTimes' => $frequencyTimes,
+            'frequencyInterval' => $frequencyInterval
+        ];
+        $content[] = $newContent;
+
+        $cart->setContent($content);
+        $this->em->persist($cart);
+        $this->em->flush();
+        return $qtty;
     }
 }

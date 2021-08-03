@@ -9,6 +9,7 @@ use App\Service\OtherNeedManager;
 use App\Service\PostalCodeManager;
 use App\Service\ProductManager;
 use App\Service\QuoteRequestManager;
+use App\Service\RangeManager;
 use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -25,6 +26,7 @@ class SubscriptionController extends AbstractController
     private $em;
     private $cartManager;
     private $productManager;
+    private $rangeManager;
     private $otherNeedManager;
     private $quoteRequestManager;
     private $postalCodeManager;
@@ -34,6 +36,7 @@ class SubscriptionController extends AbstractController
         EntityManagerInterface $em,
         CartManager $cartManager,
         ProductManager $productManager,
+        RangeManager $rangeManager,
         OtherNeedManager $otherNeedManager,
         QuoteRequestManager $quoteRequestManager,
         PostalCodeManager $postalCodeManager,
@@ -42,6 +45,7 @@ class SubscriptionController extends AbstractController
         $this->em = $em;
         $this->cartManager = $cartManager;
         $this->productManager = $productManager;
+        $this->rangeManager = $rangeManager;
         $this->otherNeedManager = $otherNeedManager;
         $this->postalCodeManager = $postalCodeManager;
         $this->quoteRequestManager = $quoteRequestManager;
@@ -158,15 +162,29 @@ class SubscriptionController extends AbstractController
         }
 
         $products = $this->productManager->getAvailableProducts($cart->getType());
+        $rangesQb = $this->rangeManager->getAvailableRanges(false, $cart->getType());
+        $ranges = $this->rangeManager->addAvailableProducts($rangesQb, true);
+
 
         $otherNeeds = $this->otherNeedManager->getByLocaleAndCatalog($locale, $cart->getType());
 
-        return $this->render('public/catalog.html.twig', array(
-            'locale' => $locale,
-            'cart' => $cart,
-            'products' => $products,
-            'otherNeeds' => $otherNeeds
-        ));
+        if ($cart->getType() === 'REGULAR') {
+
+
+            return $this->render('public/catalog-regular.html.twig', array(
+                'locale' => $locale,
+                'cart' => $cart,
+                'ranges' => $ranges,
+                'otherNeeds' => $otherNeeds
+            ));
+        } else {
+            return $this->render('public/catalog-ponctual.html.twig', array(
+                'locale' => $locale,
+                'cart' => $cart,
+                'ranges' => $ranges,
+                'otherNeeds' => $otherNeeds
+            ));
+        }
     }
 
     /**
@@ -414,7 +432,7 @@ class SubscriptionController extends AbstractController
         try {
             $product = $this->productManager->get($productId);
             // On ajoute ou on supprime le produit sélecionné au tableau des displayedCategories du Cart
-            $qtty = $this->cartManager->addOneProduct($cartUuid, $productId);
+            $qtty = $this->cartManager->addOneProduct($cartUuid, $product);
 
 
             return $this->render('public/partials/quoteLine.html.twig', array(
@@ -440,7 +458,7 @@ class SubscriptionController extends AbstractController
         try {
             $product = $this->productManager->get($productId);
             // On ajoute ou on supprime le produit sélecionné au tableau des displayedCategories du Cart
-            $qtty = $this->cartManager->removeOneProduct($cartUuid, $productId);
+            $qtty = $this->cartManager->removeOneProduct($cartUuid, $product);
 
             if ($qtty > 0) {
                 return $this->render('public/partials/quoteLine.html.twig', array(
@@ -452,6 +470,41 @@ class SubscriptionController extends AbstractController
                 return new JsonResponse(null, 200);
             }
 
+
+        } catch (\Exception $e) {
+            return new JsonResponse(null, 400);
+        }
+    }
+
+    /**
+     * Augmente la quantité d'un produit dans le panier de 1
+     * L'ajoute au panier si produit non présent
+     *
+     * @Route("/{locale}/editProductFrequency/{cartUuid}/{productId}", name="paprec_public_catalog_editProductFrequency", condition="request.isXmlHttpRequest()")
+     * @throws \Exception
+     */
+    public function editProductFrequencyAction(Request $request, $locale, $cartUuid, $productId)
+    {
+        try {
+            $product = $this->productManager->get($productId);
+
+            /**
+             * Récupération des infos du body
+             */
+            $frequency = $request->get('frequency');
+            $frequencyTimes = $request->get('frequency_times');
+            $frequencyInterval = $request->get('frequency_interval');
+
+            // On ajoute ou on supprime le produit sélectionné au tableau des displayedCategories du Cart
+            $qtty = $this->cartManager->editProductFrequency($cartUuid, $product, $frequency, $frequencyTimes,
+                $frequencyInterval);
+
+
+            return $this->render('public/partials/quoteLine.html.twig', array(
+                'locale' => $locale,
+                'product' => $product,
+                'quantity' => $qtty
+            ));
 
         } catch (\Exception $e) {
             return new JsonResponse(null, 400);

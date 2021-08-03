@@ -60,6 +60,13 @@ class Range
      */
     private $position;
 
+    /**
+     * @var string
+     * Le catalogue du produit (REGULAR ou PONCTUAL)
+     * @ORM\Column(name="catalog", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $catalog;
 
     /**
      * #################################
@@ -108,7 +115,9 @@ class Range
     {
         $this->dateCreation = new \DateTime();
         $this->pictures = new ArrayCollection();
+        $this->products = new ArrayCollection();
         $this->rangeLabels = new ArrayCollection();
+        $this->catalog = 'REGULAR';
     }
 
     /**
@@ -236,6 +245,25 @@ class Range
         $this->position = $position;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getCatalog(): string
+    {
+        return $this->catalog;
+    }
+
+    /**
+     * @param string $catalog
+     * @return Range
+     */
+    public function setCatalog(string $catalog): self
+    {
+        $this->catalog = $catalog;
+        return $this;
+    }
+
 
     /**
      * @return mixed

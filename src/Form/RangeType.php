@@ -27,6 +27,18 @@ class RangeType extends AbstractType
                 'data' => '1',
                 "expanded" => true,
             ))
+            ->add('catalog', ChoiceType::class, array(
+                'choices' => array(
+                    'Regular' => 'regular',
+                    'Ponctual' => 'ponctual',
+                ),
+                'empty_data' => 'ponctual',
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'Catalog.Product.Catalog.' . ucfirst($choiceValue);
+                },
+                'required' => true,
+                'expanded' => true
+            ))
             ->add('position');
     }
 

@@ -9,15 +9,12 @@
 namespace App\Service;
 
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use Doctrine\ORM\ORMException;
-use Exception;
-use App\Entity\PostalCode;
 use App\Entity\Range;
 use App\Entity\RangeLabel;
-use App\Entity\QuoteRequest;
-use App\Entity\QuoteRequestLine;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class RangeManager
@@ -181,16 +178,47 @@ class RangeManager
         return false;
     }
 
-    public function getAvailableRanges()
+    public function getAvailableRanges($executeQuery = false, string $catalog = null)
     {
-        $queryBuilder = $this->em->getRepository(Range::class)->createQueryBuilder('p');
+        $queryBuilder = $this->em->getRepository(Range::class)->createQueryBuilder('r');
 
-        $queryBuilder->select(array('p'))
-            ->where('p.deleted IS NULL')
+        $queryBuilder->select(array('r'))
+            ->where('r.deleted IS NULL')
+            ->andWhere('r.isEnabled = 1')
+            ->orderBy('r.position');
+
+        if ($catalog) {
+            $queryBuilder
+                ->andWhere('r.catalog = :catalog')
+                ->setParameter('catalog', $catalog);
+        }
+
+        if ($executeQuery) {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        return $queryBuilder;
+    }
+
+
+    /***********************
+     * FONCTION D'AJOUT DE QUERYPARAM
+     */
+
+    public function addAvailableProducts(QueryBuilder $queryBuilder, $executeQuery = false)
+    {
+        $queryBuilder
+            ->addSelect('p')
+            ->leftJoin('r.products', 'p')
+            ->andWhere('p.deleted IS NULL')
             ->andWhere('p.isEnabled = 1')
             ->orderBy('p.position');
 
-        return $queryBuilder->getQuery()->getResult();
+        if ($executeQuery) {
+            return $queryBuilder->getQuery()->getResult();
+        }
+
+        return $queryBuilder;
     }
 
 

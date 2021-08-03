@@ -101,18 +101,19 @@ $(function () {
         })
     });
 
-    $('#frequencyButton2').on('click', function () {
-        $('.catalog-frequency-select').prop("disabled", false);
-        $('#catalog_frequency_times_select').val(1);
-        initClassFrequencyButtons();
+
+    $('[id^=regularFrequencyButton__]').on('click', function () {
+        const productId = (this.id).replace('regularFrequencyButton__', '');
+        $('#productFrequencyIntervalSelect__' + productId).prop("disabled", false);
+        $('#productFrequencyTimesInput__' + productId).prop("disabled", false);
+        $('#productFrequencyTimesInput__' + productId).val(1);
     });
 
-    $('#frequencyButton1').on('click', function () {
-        $('#catalog_frequency_times_select').val(0);
-        $('#catalog_frequency_interval_select').val('year');
-        $('.catalog-frequency-select').prop("disabled", true);
-        $('.devis__frequence__button').prop("disabled", true);
-        $('.devis__frequence__button').addClass("round-btn--disable");
+    $('[id^=ponctualFrequencyButton__], [id^=unknowFrequencyButton__]').on('click', function () {
+        const productId = (this.name).replace('productFrequencyRadios__', '');
+        $('#productFrequencyTimesInput__' + productId).val(0);
+        $('#productFrequencyTimesInput__' + productId).prop("disabled", true);
+        $('#productFrequencyIntervalSelect__' + productId).prop("disabled", true);
 
     });
 
@@ -120,7 +121,6 @@ $(function () {
         $('#catalog_frequency_times_select').val(function (i, oldval) {
             return ++oldval;
         });
-        initClassFrequencyButtons();
     });
 
     $('#removeFrequencyButton').on('click', function () {
@@ -128,39 +128,12 @@ $(function () {
             $('#catalog_frequency_times_select').val(function (i, oldval) {
                 return --oldval;
             });
-            initClassFrequencyButtons();
         }
     });
 
     $('#catalog_next_step_button').on('click', function () {
-        $('.catalog_next_step_button').prop("disabled", true);
-
         const url = $(this).data('url');
-        const ajaxUrl = $(this).data('ajax');
-
-        var frequencyVal = $("input:radio[name ='groupOfDefaultRadios']:checked").val();
-        var data = {frequency: frequencyVal};
-        if (frequencyVal === 'regular') {
-            data = {
-                frequency: frequencyVal,
-                frequency_times: $('#catalog_frequency_times_select').val(),
-                frequency_interval: $('#catalog_frequency_interval_select').val()
-            }
-        }
-
-        $.ajax({
-            url: ajaxUrl,
-            type: "POST",
-            data: data,
-            success: function (response) {
-                $(location).attr('href', url);
-            },
-            error: function (response) {
-            },
-            complete: function () {
-                $('.catalog_next_step_button').prop("disabled", true);
-            }
-        });
+        $(location).attr('href', url);
     });
 
     /**
@@ -207,6 +180,27 @@ $(function () {
                 disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
             }
         })
+    });
+
+    /**
+     * Edition de la fréquence d'un produit
+     */
+    $('input[type=radio][name^="productFrequencyRadios__"]').change(function () {
+        var productId = (this.name).replace('productFrequencyRadios__', '');
+        const url = $(this).data('url');
+        editProductFrequency(url, productId);
+    });
+
+    $('input[id^="productFrequencyTimesInput__"]').change(function () {
+        var productId = (this.id).replace('productFrequencyTimesInput__', '');
+        const url = $(this).data('url');
+        editProductFrequency(url, productId);
+    });
+
+    $('select[id^="productFrequencyIntervalSelect__"]').change(function () {
+        var productId = (this.id).replace('productFrequencyIntervalSelect__', '');
+        const url = $(this).data('url');
+        editProductFrequency(url, productId);
     });
 
     /****************************************
@@ -318,17 +312,26 @@ function disableButtonsFromQuantity(quantity, productId) {
 }
 
 
-function initClassFrequencyButtons() {
-    const freq = $('#catalog_frequency_times_select').val();
-    console.dir(freq);
-    if (freq < 2) {
-        $('#removeFrequencyButton').addClass('round-btn--disable');
-        $('#removeFrequencyButton').prop("disabled", true);
-    } else {
-        $('#removeFrequencyButton').removeClass('round-btn--disable');
-        $('#removeFrequencyButton').prop("disabled", false);
-    }
-    $('#addFrequencyButton').removeClass('round-btn--disable');
-    $('#addFrequencyButton').prop("disabled", false);
+function editProductFrequency(url, productId) {
+    const frequency = $('input[type=radio][name^="productFrequencyRadios__' + productId + '"]:checked').val();
+    const frequencyTimes = $("#productFrequencyTimesInput__" + productId).val();
+    const frequencyInterval = $("#productFrequencyIntervalSelect__" + productId).val();
 
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+            "frequency": frequency,
+            "frequency_times": frequencyTimes,
+            "frequency_interval": frequencyInterval
+        },
+        success: function (response) {
+            // // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
+            // var htmlToDisplay = response.trim();
+            // $("#devis-recap-item-" + productId).remove();
+            // $("#devis-recap").append(htmlToDisplay);
+            // $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));
+            // disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
+        }
+    });
 }

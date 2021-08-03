@@ -94,7 +94,7 @@ General:
         Week: semaine
         Ponctual: A la demande
         Regular: Régulière
-        Unkown: Je ne sais pas
+        Unknown: Je ne sais pas
 
     TransportType:
         C_BROYEUR: C Broyeur
