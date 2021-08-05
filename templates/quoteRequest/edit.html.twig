@@ -207,6 +207,27 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingAddress'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control address-field '}}) }}
+                                            {{ form_errors(form.billingAddress) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete')}}) }}
+                                            {{ form_errors(form.billingPostalCode) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control address-field '}}) }}
+                                            {{ form_errors(form.billingCity) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.Comment'|trans }}</label>
                                         <div class="form-content">
                                             {{ form_widget(form.comment, {'attr': {'class': 'form-control'}}) }}

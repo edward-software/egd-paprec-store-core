@@ -110,7 +110,7 @@
                         </div>
                     </li>
                 {% endif %}
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_COMMERCIAL') %}
+                {% if is_granted('ROLE_USER') %}
                     <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_commercial'|length) == 'paprec_commercial' %} active{% endif %}">
                         <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownCommercial"
                            data-toggle="dropdown"

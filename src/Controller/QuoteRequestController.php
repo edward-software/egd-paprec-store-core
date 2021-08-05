@@ -9,6 +9,7 @@ use App\Form\QuoteRequestLineEditType;
 use App\Form\QuoteRequestType;
 use App\Service\NumberManager;
 use App\Service\QuoteRequestManager;
+use App\Service\UserManager;
 use App\Tools\DataTable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -33,6 +34,7 @@ class QuoteRequestController extends AbstractController
 {
     private $em;
     private $numberManager;
+    private $userManager;
     private $quoteRequestManager;
     private $translator;
 
@@ -40,9 +42,11 @@ class QuoteRequestController extends AbstractController
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         NumberManager $numberManager,
+        UserManager $userManager,
         QuoteRequestManager $quoteRequestManager
     ) {
         $this->em = $em;
+        $this->userManager = $userManager;
         $this->numberManager = $numberManager;
         $this->quoteRequestManager = $quoteRequestManager;
         $this->translator = $translator;
@@ -50,24 +54,40 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("", name="paprec_quoteRequest_index")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function indexAction()
     {
-        return $this->render('quoteRequest/index.html.twig');
+        $status = array();
+        foreach ($this->getParameter('paprec_quote_status') as $s) {
+            $status[$s] = $s;
+        }
+
+        return $this->render('quoteRequest/index.html.twig', array(
+            'status' => $status
+        ));
     }
 
     /**
      * @Route("/loadList", name="paprec_quoteRequest_loadList")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
 
         $systemUser = $this->getUser();
-        $isAdmin = in_array('ROLE_ADMIN', $systemUser->getRoles());
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $systemUser->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $systemUser->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $systemUser->getRoles(), true);
 
         $return = [];
+
+        /**
+         * Récupération des filtres
+         */
+        $catalog = $request->get('selectedCatalog');
+        $status = $request->get('selectedStatus');
+        $lastUpdateDate = $request->get('lastUpdateDate');
 
         $filters = $request->get('filters');
         $pageSize = $request->get('length');
@@ -128,13 +148,63 @@ class QuoteRequestController extends AbstractController
             ->where('q.deleted IS NULL');
 
         /**
-         * Si l'utilisateur n'est pas administrateur, alors on récupère uniquement les devis qui lui sont rattachés
+         * Application des filtres
          */
-        if (!$isAdmin) {
+        if ($catalog !== null && $catalog !== '#') {
             $queryBuilder
-                ->andWhere('q.userInCharge = :userId')
-                ->setParameter('userId', $systemUser->getId());
+                ->andWhere('q.type = :catalog')
+                ->setParameter('catalog', $catalog);
         }
+        if ($status !== null && $status !== '#') {
+            $queryBuilder
+                ->andWhere('q.quoteStatus = :status')
+                ->setParameter('status', $status);
+        }
+        if ($lastUpdateDate !== null && $lastUpdateDate !== '') {
+            $day = new \DateTime($lastUpdateDate);
+            $dayAfter = new \DateTime($lastUpdateDate);
+            $dayAfter->add(new \DateInterval('P1D'));
+
+            $queryBuilder
+                ->andWhere('q.dateUpdate >= :day')
+                ->andWhere('q.dateUpdate < :dayAfter')
+                ->setParameter('day', $day->format('Y-m-d') . ' 00:00:00')
+                ->setParameter('dayAfter', $dayAfter->format('Y-m-d') . ' 23:59:59');
+        }
+
+
+        /**
+         * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
+         */
+        if ($isCommercialMultiSite) {
+            $queryBuilder
+                ->andWhere('q.isMultisite = true');
+        }
+        /**
+         * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+         */
+        if ($isManager) {
+            $commercials = $this->userManager->getCommercialsFromManager($systemUser->getId());
+            $commercialIds = array();
+            if ($commercials && count($commercials)) {
+                foreach ($commercials as $commercial) {
+                    $commercialIds[] = $commercial->getId();
+                }
+            }
+            $queryBuilder
+                ->andWhere('q.userInCharge IN (:commercialIds)')
+                ->setParameter('commercialIds', $commercialIds);
+        }
+        /**
+         * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+         */
+        if ($isCommercial) {
+            $queryBuilder
+                ->andWhere('q.userInCharge = :userInChargeId')
+                ->setParameter('userInChargeId', $systemUser->getId());
+        }
+
+
         /**
          * TODO : Si manager, récupéré toutes les quotesRequests auxquelles ses commerciaux sont rattachés
          */
@@ -157,6 +227,7 @@ class QuoteRequestController extends AbstractController
                 ))->setParameter(1, '%' . $search['value'] . '%');
             }
         }
+
 
         $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
             $paginator, $rowPrefix);
@@ -186,7 +257,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/export/{status}/{dateStart}/{dateEnd}", defaults={"status"=null, "dateStart"=null, "dateEnd"=null}, name="paprec_quoteRequest_export")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function exportAction(Request $request, $dateStart, $dateEnd, $status)
     {
@@ -309,7 +380,7 @@ class QuoteRequestController extends AbstractController
             }
             $yAxe++;
         }
-        
+
 
         // Resize columns
         for ($i = 'A'; $i != $sheet->getHighestDataColumn(); $i++) {
@@ -334,7 +405,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/view/{id}", name="paprec_quoteRequest_view")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function viewAction(Request $request, QuoteRequest $quoteRequest)
@@ -349,7 +420,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/add", name="paprec_quoteRequest_add")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function addAction(Request $request)
     {
@@ -422,7 +493,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="paprec_quoteRequest_edit")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \Exception
      */
@@ -451,7 +522,7 @@ class QuoteRequestController extends AbstractController
         foreach ($this->getParameter('paprec_quote_staff') as $s) {
             $staff[$s] = $s;
         }
-        
+
         $floorNumber = array();
         foreach ($this->getParameter('paprec_quote_floor_number') as $f) {
             $floorNumber[$f] = $f;
@@ -513,7 +584,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/remove/{id}", name="paprec_quoteRequest_remove")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function removeAction(Request $request, QuoteRequest $quoteRequest)
     {
@@ -525,7 +596,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/removeMany/{ids}", name="paprec_quoteRequest_removeMany")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function removeManyAction(Request $request)
     {
@@ -534,7 +605,7 @@ class QuoteRequestController extends AbstractController
         if (!$ids) {
             throw new NotFoundHttpException();
         }
-        
+
         $ids = explode(',', $ids);
 
         if (is_array($ids) && count($ids)) {
@@ -550,7 +621,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/addLine", name="paprec_quoteRequest_addLine")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function addLineAction(Request $request, QuoteRequest $quoteRequest)
     {
@@ -585,7 +656,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/editLine/{quoteLineId}", name="paprec_quoteRequest_editLine")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @ParamConverter("quoteRequest", options={"id" = "id"})
      * @ParamConverter("quoteRequestLine", options={"id" = "quoteLineId"})
      */
@@ -622,7 +693,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/removeLine/{quoteLineId}", name="paprec_quoteRequest_removeLine")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @ParamConverter("quoteRequest", options={"id" = "id"})
      * @ParamConverter("quoteRequestLine", options={"id" = "quoteLineId"})
      */
@@ -651,7 +722,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/sendGeneratedQuote", name="paprec_quoteRequest_sendGeneratedQuote")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \Exception
      */
@@ -668,7 +739,7 @@ class QuoteRequestController extends AbstractController
             }
         }
 
-        $quoteRequest->setQuoteStatus('PROCESSING');
+        $quoteRequest->setQuoteStatus('QUOTE_SENT');
         $this->em->flush();
 
         return $this->redirectToRoute('paprec_quoteRequest_view', array(
@@ -678,7 +749,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/sendGeneratedContract", name="paprec_quoteRequest_sendGeneratedContract")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \Exception
      */
@@ -702,7 +773,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/downloadQuote", name="paprec_quote_request_download")
-     * @Security("has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Exception
      */
     public function downloadAssociatedInvoiceAction(QuoteRequest $quoteRequest)

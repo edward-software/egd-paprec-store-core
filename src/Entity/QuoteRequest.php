@@ -162,6 +162,14 @@ class QuoteRequest
     private $isSameSignatory;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isSameAddress", type="boolean")
+     * @Assert\NotBlank(groups={"public"})
+     */
+    private $isSameAddress;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="staff", type="text")
@@ -199,6 +207,22 @@ class QuoteRequest
      * @Assert\NotBlank(groups={"public_multisite"})
      */
     private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="billingAddress", type="text", nullable=true)
+     * @Assert\NotBlank(groups={"public_same_address"})
+     */
+    private $billingAddress;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="billingCity", type="string", length=255, nullable=true, nullable=true)
+     * @Assert\NotBlank(groups={"public_same_address"})
+     */
+    private $billingCity;
 
     /**
      * "Commentaire client" rempli par l'utilisateur Front Office
@@ -330,6 +354,12 @@ class QuoteRequest
     private $postalCode;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\PostalCode", inversedBy="billingQuoteRequests")
+     * @Assert\NotBlank(groups={"public_same_address"})
+     */
+    private $billingPostalCode;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequestLine", mappedBy="quoteRequest")
      */
     private $quoteRequestLines;
@@ -359,6 +389,7 @@ class QuoteRequest
         $this->otherNeeds = new ArrayCollection();
         $this->overallDiscount = 0;
         $this->isSameSignatory = false;
+        $this->isSameAddress = false;
     }
 
     /**
@@ -620,6 +651,25 @@ class QuoteRequest
     }
 
     /**
+     * @return bool
+     */
+    public function getIsSameAddress(): bool
+    {
+        return $this->isSameAddress;
+    }
+
+    /**
+     * @param bool $isSameAddress
+     * @return QuoteRequest
+     */
+    public function setIsSameAddress(bool $isSameAddress): self
+    {
+        $this->isSameAddress = $isSameAddress;
+        return $this;
+    }
+
+
+    /**
      * Set address.
      *
      * @param string|null $address
@@ -666,6 +716,43 @@ class QuoteRequest
     {
         return $this->city;
     }
+
+    /**
+     * @return ?string
+     */
+    public function getBillingAddress(): ?string
+    {
+        return $this->billingAddress;
+    }
+
+    /**
+     * @param string $billingAddress
+     * @return QuoteRequest
+     */
+    public function setBillingAddress(string $billingAddress): self
+    {
+        $this->billingAddress = $billingAddress;
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getBillingCity(): ?string
+    {
+        return $this->billingCity;
+    }
+
+    /**
+     * @param string $billingCity
+     * @return QuoteRequest
+     */
+    public function setBillingCity(string $billingCity): self
+    {
+        $this->billingCity = $billingCity;
+        return $this;
+    }
+
 
     /**
      * Set comment.
@@ -1052,7 +1139,6 @@ class QuoteRequest
     }
 
 
-
     /**
      * Set access.
      *
@@ -1118,6 +1204,25 @@ class QuoteRequest
     {
         return $this->postalCode;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingPostalCode()
+    {
+        return $this->billingPostalCode;
+    }
+
+    /**
+     * @param mixed $billingPostalCode
+     * @return QuoteRequest
+     */
+    public function setBillingPostalCode($billingPostalCode): self
+    {
+        $this->billingPostalCode = $billingPostalCode;
+        return $this;
+    }
+
 
     /**
      * Set number.

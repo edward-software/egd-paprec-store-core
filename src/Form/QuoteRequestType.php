@@ -86,6 +86,12 @@ class QuoteRequestType extends AbstractType
                 'required' => true
             ))
             ->add('city', TextType::class)
+            ->add('billingAddress', TextType::class)
+            ->add('billingPostalCode', TextType::class, array(
+                'invalid_message' => 'Public.Contact.PostalCodeError',
+                'required' => true
+            ))
+            ->add('billingCity', TextType::class)
             ->add('comment', TextareaType::class)
             ->add('quoteStatus', ChoiceType::class, array(
                 "choices" => $options['status'],
@@ -176,6 +182,8 @@ class QuoteRequestType extends AbstractType
             ->add('signatoryLastName1')
             ->add('signatoryTitle1');
         $builder->get('postalCode')
+            ->addModelTransformer($this->transformer);
+        $builder->get('billingPostalCode')
             ->addModelTransformer($this->transformer);
     }
 

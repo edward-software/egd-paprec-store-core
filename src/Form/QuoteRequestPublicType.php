@@ -94,13 +94,28 @@ class QuoteRequestPublicType extends AbstractType
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))
+            ->add('isSameAddress', ChoiceType::class, array(
+                "choices" => array(0, 1),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
+                "data" => 0,
+                "expanded" => true,
+            ))
             ->add('city', TextType::class)
+            ->add('billingAddress', TextType::class)
+            ->add('billingPostalCode', TextType::class, array(
+                'invalid_message' => 'Public.Contact.PostalCodeError'
+            ))
+            ->add('billingCity', TextType::class)
             ->add('comment', TextareaType::class)
         ->add('signatoryFirstName1', TextType::class)
         ->add('signatoryLastName1', TextType::class)
         ->add('signatoryTitle1', TextType::class);
 
         $builder->get('postalCode')
+            ->addModelTransformer($this->transformer);
+        $builder->get('billingPostalCode')
             ->addModelTransformer($this->transformer);
     }
 
@@ -119,6 +134,9 @@ class QuoteRequestPublicType extends AbstractType
                 }
                 if ($data->getIsSameSignatory() === 0) {
                     $groups[] = 'public_same_signatory';
+                }
+                if ($data->getIsSameAddress() === 0) {
+                    $groups[] = 'public_same_address';
                 }
                 return $groups;
             },

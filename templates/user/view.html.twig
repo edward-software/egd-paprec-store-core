@@ -160,7 +160,7 @@
                                 <label class="col-form-label">
                                     {% for postalCode in user.postalCodes %}
                                         {% if postalCode.deleted is null %}
-                                            <a href="{{ path('paprec_catalog_postalCode_view', {id: postalCode.id}) }}">{{ postalCode.code }}</a>
+                                            <a href="{{ path('paprec_postalCode_view', {id: postalCode.id}) }}">{{ postalCode.code }}</a>
                                         {% endif %}
                                     {% endfor %}
                                 </label>

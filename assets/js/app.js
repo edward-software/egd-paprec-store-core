@@ -28,6 +28,8 @@ import 'datatables.net-select-bs4';
 import 'datatables.net-rowreorder';
 import 'jquery-sortable';
 import 'jquery-ui';
+import 'jquery-ui/ui/widgets/datepicker';
+import 'jquery-ui/ui/i18n/datepicker-fr';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/ui/disable-selection';

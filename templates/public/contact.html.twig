@@ -93,7 +93,7 @@
                             {{ form_widget(form.isMultisite, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
                             {{ form_errors(form.isMultisite) }}
                         </div>
-                        <h2 class="color-secondary m-y-25">Adresse de prestation</h2>
+                        <h2 class="color-secondary m-t-25 m-b-15">Adresse de prestation</h2>
                         <div class="form-group">
                             <label>{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.address, {'attr': {'class': 'form-control address-field'}}) }}
@@ -124,8 +124,32 @@
                         <span id="multisite-info">
                                 {{ 'Public.Contact.isMultisiteInfo'| trans({}, "messages", locale) }}
                             </span>
-                        <h2 class="color-secondary m-y-25">{{ 'Public.Contact.Signatory'| trans({}, "messages", locale) }}</h2>
-                        <div class="form-group paprec-flex align-items_center m-t-30">
+
+                        <h2 class="color-secondary m-t-25 m-b-15">Adresse de facturation</h2>
+                        <div class="form-group paprec-flex align-items_center">
+                            <label>{{ 'Public.Contact.IsSameAddress'| trans({}, "messages", locale) }}* :</label>
+                            {{ form_widget(form.isSameAddress, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
+                            {{ form_errors(form.isSameAddress) }}
+                        </div>
+                        <div class="form-group">
+                            <label>{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
+                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control billing-address-field'}}) }}
+                            {{ form_errors(form.billingAddress) }}
+                        </div>
+                        <div class="form-group">
+                            <label>{{ 'Public.Contact.PostalCode'| trans({}, "messages", locale) }}* :</label>
+                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control billing-address-field', 'data-url': path('paprec_public_postalCode_autocomplete') }}) }}
+                            {{ form_errors(form.billingPostalCode) }}
+                        </div>
+                        <div class="form-group">
+                            <label>{{ 'Public.Contact.City'| trans({}, "messages", locale) }}* :</label>
+                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control billing-address-field'}}) }}
+                            {{ form_errors(form.billingCity) }}
+                        </div>
+
+
+                        <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.Signatory'| trans({}, "messages", locale) }}</h2>
+                        <div class="form-group paprec-flex align-items_center">
                             <label>{{ 'Public.Contact.IsSameSignatory'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.isSameSignatory, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
                             {{ form_errors(form.isSameSignatory) }}

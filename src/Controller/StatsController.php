@@ -11,7 +11,7 @@ class StatsController extends Controller
 {
     /**
      * @Route("/stats", name="paprec_stats_index")
-     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function indexAction(Request $request)
     {

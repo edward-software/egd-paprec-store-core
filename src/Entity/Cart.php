@@ -46,6 +46,15 @@ class Cart
     private $disabled;
 
     /**
+     * Date de collecte souhaitée
+     *
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="ponctualDate", type="datetime", nullable=true)
+     */
+    private $ponctualDate;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="city", type="string", length=255, nullable=true)
@@ -58,7 +67,7 @@ class Cart
      * @ORM\Column(name="frequency", type="string", length=255, nullable=true)
      */
     private $frequency;
-    
+
     /**
      * @var string
      *
@@ -102,7 +111,6 @@ class Cart
         $this->content = array();
         $this->otherNeeds = new ArrayCollection();
     }
-
 
 
     /**
@@ -359,5 +367,25 @@ class Cart
     public function getOtherNeeds()
     {
         return $this->otherNeeds;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getPonctualDate(): ?\DateTime
+    {
+        return $this->ponctualDate;
+    }
+
+    /**
+     * @param \DateTime|null $ponctualDate
+     * @return Cart
+     */
+    public function setPonctualDate(?\DateTime $ponctualDate): self
+    {
+        $this->ponctualDate = $ponctualDate;
+
+
+        return $this;
     }
 }

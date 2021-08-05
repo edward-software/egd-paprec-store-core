@@ -5,7 +5,15 @@
 {% endblock %}
 
 {% block stylesheets %}
+    <style>
+        select.form-control {
+            width: auto;
+        }
 
+        #lastUpdateDatepicker {
+            width: auto;
+        }
+    </style>
 {% endblock %}
 
 {% block content_title %}
@@ -33,6 +41,33 @@
                 </div>
 
                 <div class="card-body">
+                    <div class="paprec-flex mb-4">
+                        <select id="selectedCatalog" class="form-control mr-2 input-sm">
+                            <option value="#">Sélectionner catalogue</option>
+                            <option value="regular">{{ 'Commercial.QuoteRequest.Regular'|trans }}</option>
+                            <option value="ponctual">{{ 'Commercial.QuoteRequest.Ponctual'|trans }}</option>
+                        </select>
+                        <select id="selectedStatus" class="form-control mr-2 input-sm">
+                            <option value="#">Sélectionner un statut</option>
+                            {% for stat in status %}
+                                <option value="{{ stat }}">{{ ('Commercial.QuoteStatusList.' ~ stat)|trans }}</option>
+                            {% endfor %}
+                        </select>
+                        <input class="form-control mr-2 input-sm"
+                               placeholder="Date de dernière maj"
+                               type="text"
+                               id="lastUpdateDatepicker">
+                        <button
+                                id="applyFilterButton"
+                                class="btn btn-outline-primary mr-2">
+                            Appliquer les filtres
+                        </button>
+                        <button
+                                id="resetFilterButton"
+                                class="btn btn-outline-secondary">
+                            Réinitialiser
+                        </button>
+                    </div>
                     <table id="quoteRequestsListDatatable" class="table table-striped table-bordered table-hover"
                            cellpadding="0" cellspacing="0" border="0" width="100%">
                         <thead>
@@ -64,6 +99,7 @@
 {% block javascripts %}
     <script>
         $(function () {
+
 
             $('#quoteRequestsListDatatable').EgdDatatable({
                 url: "{{ path('paprec_quoteRequest_loadList') }}",
@@ -116,6 +152,43 @@
 
                 ]
             });
+        });
+
+        $('#lastUpdateDatepicker').datepicker({
+            option: $.datepicker.regional["fr"]
+        });
+
+        $('#applyFilterButton').on('click', function () {
+            {% autoescape false %}
+            const listUrl = "{{ url('paprec_quoteRequest_loadList') }}";
+            {% endautoescape %}
+
+            const filterUrl = new URL(listUrl);
+            const params = new URLSearchParams(filterUrl.search);
+            params.set('selectedCatalog', $('#selectedCatalog').val());
+            params.set('selectedStatus', $('#selectedStatus').val());
+            params.set('lastUpdateDate', $('#lastUpdateDatepicker').val().split('/').reverse().join('-'));
+
+            filterUrl.search = params;
+
+            $('#quoteRequestsListDatatable').DataTable().ajax.url(filterUrl.toString()).load();
+        });
+
+        $('#resetFilterButton').on('click', function() {
+            {% autoescape false %}
+            const listUrl = "{{ url('paprec_quoteRequest_loadList') }}";
+            {% endautoescape %}
+
+            const filterUrl = new URL(listUrl);
+            const params = new URLSearchParams(filterUrl.search);
+            
+            $('#selectedCatalog').val('#');
+            $('#selectedStatus').val('#');
+            $('#lastUpdateDatepicker').val(null);
+
+            params.set('sessionReset', true);
+            filterUrl.search = params;
+            $('#quoteRequestsListDatatable').DataTable().ajax.url(filterUrl.toString()).load();
         });
     </script>
 {% endblock %}

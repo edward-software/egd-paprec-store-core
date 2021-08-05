@@ -10,11 +10,11 @@ namespace App\Service;
 
 
 use App\Entity\Cart;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use \Exception;
 use App\Entity\OtherNeed;
 use App\Entity\Product;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
@@ -349,7 +349,8 @@ class CartManager
      * @param $frequencyTimes
      * @param $frequencyInterval
      */
-    public function editProductFrequency($cartUuid, Product $product, $frequency, $frequencyTimes, $frequencyInterval) {
+    public function editProductFrequency($cartUuid, Product $product, $frequency, $frequencyTimes, $frequencyInterval)
+    {
         $cart = $this->get($cartUuid);
 
         $qtty = 1;
@@ -375,5 +376,24 @@ class CartManager
         $this->em->persist($cart);
         $this->em->flush();
         return $qtty;
+    }
+
+    /**
+     * Mise à jour de la date de collecte souhaitée d'un cart ponctual
+     *
+     * @param $cartUuid
+     * @param $ponctualDate
+     * @return Cart|object|null
+     * @throws Exception
+     */
+    public function editPonctualDate($cartUuid, $ponctualDate)
+    {
+        $cart = $this->get($cartUuid);
+
+        $cart->setPonctualDate($ponctualDate);
+        $this->em->persist($cart);
+        $this->em->flush();
+
+        return $cart;
     }
 }

@@ -25,10 +25,14 @@ class ProductManager
 
     private $em;
     private $container;
+    private $numberManager;
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $em,
+        NumberManager $numberManager,
+        ContainerInterface $container)
     {
         $this->em = $em;
+        $this->numberManager = $numberManager;
         $this->container = $container;
     }
 
@@ -144,7 +148,7 @@ class ProductManager
      */
     public function calculatePrice(QuoteRequestLine $quoteRequestLine)
     {
-        $numberManager = $this->container->get('paprec_catalog.number_manager');
+        $numberManager = $this->numberManager;
 
 
         return (

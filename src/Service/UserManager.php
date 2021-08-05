@@ -16,8 +16,8 @@ class UserManager
 
     private $em;
     private $container;
-    
-    
+
+
     /**
      * UserManager constructor.
      *
@@ -30,7 +30,7 @@ class UserManager
         $this->container = $container;
     }
 
-    
+
     /**
      * Retourne un User en passant son Id ou un object USer
      * @param $user
@@ -40,13 +40,13 @@ class UserManager
     public function get($user)
     {
         $id = $user;
-        
+
         if ($user instanceof User) {
             $id = $user->getId();
         }
-        
+
         try {
-            
+
             /** @var User $user */
             $user = $this->em->getRepository(User::class)->find($id);
 
@@ -85,7 +85,7 @@ class UserManager
 
             return true;
         }
-        
+
         return false;
     }
 
@@ -96,10 +96,10 @@ class UserManager
      * @return object|User|null
      * @throws Exception
      */
-    public function getUserInChargeByPostalCode(PostalCode $pc)
+    public function getUserInChargeByPostalCode($pc)
     {
         try {
-            if ($pc == null) {
+            if (!$pc) {
                 return null;
             }
 
@@ -114,7 +114,50 @@ class UserManager
             }
 
             return $user;
-            
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+
+    /**
+     * Retourne les Commercials dont le manager est l'user passé en param
+     *
+     * @param User $systemUser
+     */
+    public function getCommercialsFromManager($managerId)
+    {
+        try {
+
+            return $this->em->getRepository(User::class)->createQueryBuilder('u')
+                ->where('u.deleted is NULL')
+                ->andWhere('u.manager = :manager')
+                ->setParameter('manager', $managerId)
+                ->getQuery()
+                ->getResult();
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Retourne le premier commercial multisite trouvé
+     * null si aucun trouvé
+     */
+    public function getRandomCommercialMultiSite()
+    {
+        try {
+
+            return $this->em->getRepository(User::class)->createQueryBuilder('u')
+                ->where('u.deleted is NULL')
+                ->andWhere("u.roles LIKE :role")
+                ->setParameter('role', '%ROLE_COMMERCIAL_MULTISITES%')
+                ->setMaxresults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }

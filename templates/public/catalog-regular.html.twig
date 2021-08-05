@@ -240,8 +240,8 @@
             {% endfor %}
             <div class="row product-container">
                 <div class="col-md-6 product">
-                    <div class="devis">
-                        <div class="p-20">
+                    <div class="row devis">
+                        <div class="col-xl-7 p-20">
                             <div class="devis__products-container">
                                 <h2 class="m-b-20">{{ 'Public.Catalog.Quote'| trans({}, "messages", locale) }}</h2>
                                 <div class="devis__recap" id="devis-recap">
@@ -266,6 +266,9 @@
                                     {% endfor %}
                                 </div>
                             </div>
+
+                        </div>
+                        <div class="col-xl-5 devis__frequency-container p-20">
                             <button type="button"
                                     class="btn btn__blue btn__large"
                                     data-url="{{ path('paprec_public_contact_regulier_index', {locale: locale, cartUuid: cart.id}) }}"
@@ -274,7 +277,6 @@
                                 {{ 'Public.Catalog.NextStep'| trans({}, "messages", locale) }}
                             </button>
                         </div>
-
                     </div>
                 </div>
             </div>

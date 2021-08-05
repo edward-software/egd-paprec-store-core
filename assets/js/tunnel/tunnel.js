@@ -32,6 +32,37 @@ $(function () {
     //     });
     // });
 
+    if ($('.catalog-ponctual').is('div')) {
+        /**
+         * Gestion des datepickers
+         */
+
+            // On ne peut choisir une date de prestation qu'à partir d'aujourd'hui
+
+        var now = new Date(); // On définit arbitrairement la date maximum pour le rappel à dans 3 mois
+
+        var maxDate = moment(now);
+        $('#frequencyPonctualDatepicker').datepicker({
+            option: $.datepicker.regional["fr"],
+            minDate: +1,
+            maxDate: "+1M"
+        });
+
+        $('#frequencyPonctualDatepicker').change(function () {
+            const ponctualDate = $(this).val().split('/').reverse().join('-');
+            const url = $(this).data('url');
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    "ponctual_date": ponctualDate
+                },
+            });
+
+        })
+    }
+
 
     /*****************************
      *  Gestion du bouton flottant en bas de page
@@ -230,6 +261,16 @@ $(function () {
         }
     });
 
+    // Désactivation des champs de adresse de facturation quand on sélecitonne facturation identique
+    $('input[name*=isSameAddress]').change(function () {
+        if (this.value == 1) {
+            $('.billing-address-field').prop("disabled", true);
+            $('.billing-address-field').val('');
+        } else if (this.value == 0) {
+            $('.billing-address-field').prop("disabled", false);
+        }
+    });
+
     // Désactivation des champs de signatory quand on sélecitonne signataire
     $('input[name*=isSameSignatory]').change(function () {
         if (this.value == 1) {
@@ -283,6 +324,14 @@ $(function () {
         minLength: 1,
         select: function (event, ui) {
             $('#paprec_catalogbundle_quote_request_public_city').val(ui.item.label.substring(8));
+        }
+    });
+
+    $('#paprec_catalogbundle_quote_request_public_billingPostalCode').autocomplete({
+        source: '' + $('#paprec_catalogbundle_quote_request_public_billingPostalCode').data('url'),
+        minLength: 1,
+        select: function (event, ui) {
+            $('#paprec_catalogbundle_quote_request_public_billingCity').val(ui.item.label.substring(8));
         }
     });
 

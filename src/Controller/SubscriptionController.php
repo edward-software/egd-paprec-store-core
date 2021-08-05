@@ -230,7 +230,7 @@ class SubscriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
             $quoteRequest = $form->getData();
-            $quoteRequest->setQuoteStatus('CREATED');
+            $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
             $quoteRequest->setType($cart->getType());
@@ -259,7 +259,11 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setReference($reference);
 
 
-            $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+            if ($quoteRequest->getIsMultisite()) {
+                $quoteRequest->setUserInCharge($this->userManager->getRandomCommercialMultiSite());
+            } else {
+                $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+            }
 
             $this->em->persist($quoteRequest);
 
@@ -316,6 +320,7 @@ class SubscriptionController extends AbstractController
      */
     private function captchaVerify($recaptchaToken)
     {
+
         $url = "https://www.google.com/recaptcha/api/siteverify";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -323,7 +328,7 @@ class SubscriptionController extends AbstractController
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-            "secret" => $_ENV['recaptcha_secret_key'],
+            "secret" => $_ENV['RECAPTCHA_SECRET_KEY'],
             "response" => $recaptchaToken
         ));
         $response = curl_exec($ch);
@@ -513,6 +518,36 @@ class SubscriptionController extends AbstractController
 
 
     /**
+     * Met à jour la date de collecte souhaitée pour le ctalogue PONCTUAL
+     *
+     * @Route("/{locale}/editPonctualDate/{cartUuid}", name="paprec_public_catalog_editPonctualDate", condition="request.isXmlHttpRequest()")
+     * @throws \Exception
+     */
+    public function editPonctualDateAction(Request $request, $locale, $cartUuid)
+    {
+        try {
+
+            /**
+             * Récupération des infos du body
+             */
+            $ponctualDate = $request->get('ponctual_date');
+
+            $ponctualDate = \DateTime::createFromFormat('Y-m-d', $ponctualDate);
+
+            // On ajoute ou on supprime le produit sélectionné au tableau des displayedCategories du Cart
+            $cart = $this->cartManager->editPonctualDate($cartUuid, $ponctualDate);
+
+
+            return new JsonResponse(null, 200);
+
+
+        } catch (\Exception $e) {
+            return new JsonResponse(null, 400);
+        }
+    }
+
+
+    /**
      * Ajout ou suppression d'un OtherNeed au Cart
      *
      * @Route("/{locale}/addRemoveOtherNeed/{cartUuid}/{otherNeedId}", name="paprec_public_catalog_addRemoveOtherNeed", condition="request.isXmlHttpRequest()")
@@ -560,7 +595,7 @@ class SubscriptionController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $quoteRequest = $form->getData();
-                $quoteRequest->setQuoteStatus('CREATED');
+                $quoteRequest->setQuoteStatus('QUOTE_CREATED');
 
                 $this->em->persist($quoteRequest);
 

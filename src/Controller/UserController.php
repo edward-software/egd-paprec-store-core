@@ -374,7 +374,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/editMyProfile", name="paprec_user_editMyProfile")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER')")
      *
      * @param Request                      $request
      * @param UserPasswordEncoderInterface $passwordEncoder

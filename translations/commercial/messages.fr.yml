@@ -22,6 +22,9 @@ Commercial:
         Address: Adresse
         PostalCode: Code postal
         City: Ville
+        BillingAddress: Adresse de factu
+        BillingPostalCode: Code postal de factu
+        BillingCity: Ville de factu
         Informations-BO: Informations Back-Office
         Informations-FO: Informations Front-Office
         Frequency: Fréquence

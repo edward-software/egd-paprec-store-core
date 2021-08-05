@@ -9,7 +9,7 @@
 {% endblock %}
 {% block main_content %}
     <section class="page-section">
-        <div class="container">
+        <div class="container catalog-ponctual">
             <div class="row">
                 <div class="col-md-12 col-lg-6 col-12">
                     <h1>{{ 'Public.Catalog.Title'| trans({}, "messages", locale) }}
@@ -132,94 +132,6 @@
 
                                             </div>
                                         </div>
-                                        <div class="product__frequency paprec-flex">
-                                            <div>{{ 'Public.Catalog.Frequency'| trans({}, "messages", locale) }} :</div>
-                                            <div class="paprec-flex product__frequency__container">
-                                                {% set frequency = '' %}
-                                                {% set frequencyTimes = '0' %}
-                                                {% set frequencyInterval = '' %}
-                                                {% for item in cart.content %}
-                                                    {% if item['pId'] == product.id %}
-                                                        {% set frequency = item['frequency'] %}
-                                                        {% set frequencyTimes = item['frequencyTimes'] %}
-                                                        {% set frequencyInterval = item['frequencyInterval'] %}
-                                                    {% endif %}
-                                                {% endfor %}
-                                                <!-- Group of default radios - option Regular-->
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" class="custom-control-input"
-                                                           id="regularFrequencyButton__{{ product.id }}"
-                                                           value="regular"
-                                                           data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                           {% if frequency == 'regular' %}checked{% endif %}
-                                                           name="productFrequencyRadios__{{ product.id }}">
-                                                    <label class="custom-control-label"
-                                                           for="regularFrequencyButton__{{ product.id }}">{{ 'Public.Catalog.Regular'| trans({}, "messages", locale) }}</label>
-                                                </div>
-
-                                                <!-- Group of default radios - option Ponctual -->
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" class="custom-control-input"
-                                                           id="ponctualFrequencyButton__{{ product.id }}"
-                                                           value="ponctual"
-                                                           data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                           {% if frequency == 'ponctual' %}checked{% endif %}
-                                                           name="productFrequencyRadios__{{ product.id }}">
-                                                    <label class="custom-control-label"
-                                                           for="ponctualFrequencyButton__{{ product.id }}">{{ 'Public.Catalog.OnDemand'| trans({}, "messages", locale) }}
-                                                    </label>
-                                                </div>
-                                                <!-- Group of default radios - option Unknown -->
-                                                <div class="custom-control custom-radio">
-                                                    <input type="radio" class="custom-control-input"
-                                                           id="unknowFrequencyButton__{{ product.id }}"
-                                                           value="unknown"
-                                                           data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                           {% if frequency == 'unknown' %}checked{% endif %}
-                                                           name="productFrequencyRadios__{{ product.id }}">
-                                                    <label class="custom-control-label"
-                                                           for="unknowFrequencyButton__{{ product.id }}">{{ 'Public.Catalog.Unknown'| trans({}, "messages", locale) }}
-                                                    </label>
-                                                </div>
-
-
-                                                <div class="paprec-flex">
-                                                    <input class="product__frequency__container__input text-center mr-2"
-                                                           size="1"
-                                                           type="number"
-                                                           max="9"
-                                                           min="0"
-                                                           {% if frequency != 'regular' %}disabled{% endif %}
-                                                           data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                           id="productFrequencyTimesInput__{{ product.id }}"
-                                                           value="{{ frequencyTimes }}"/>
-                                                    <span class="devis__frequence__times">{{ 'Public.Catalog.Times'| trans({}, "messages", locale) }}</span>
-                                                    <select class="catalog-frequency-select ml-2"
-                                                            {% if frequency != 'regular' %}disabled{% endif %}
-                                                            data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                            id="productFrequencyIntervalSelect__{{ product.id }}">
-                                                        <option value="week"
-                                                                {% if frequencyInterval == 'week' %}selected{% endif %}>
-                                                            {{ 'Public.Catalog.Week'| trans({}, "messages", locale) }}
-                                                        </option>
-                                                        <option value="month"
-                                                                {% if frequencyInterval == 'month' %}selected{% endif %}>
-                                                            {{ 'Public.Catalog.Month'| trans({}, "messages", locale) }}
-                                                        </option>
-                                                        <option value="bimestre"
-                                                                {% if frequencyInterval == 'bimestre' %}selected{% endif %}>
-                                                            {{ 'Public.Catalog.Bimestre'| trans({}, "messages", locale) }}
-                                                        </option>
-                                                        <option value="quarter"
-                                                                {% if frequencyInterval == 'quarter' %}selected{% endif %}>
-                                                            {{ 'Public.Catalog.Quarter'| trans({}, "messages", locale) }}
-                                                        </option>
-                                                    </select>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -229,8 +141,9 @@
             {% endfor %}
             <div class="row product-container">
                 <div class="col-md-6 product">
-                    <div class="devis">
-                        <div class="p-20">
+                    <div class="row devis">
+
+                        <div class="col-xl-6 p-20 border-right">
                             <div class="devis__products-container">
                                 <h2 class="m-b-20">{{ 'Public.Catalog.Quote'| trans({}, "messages", locale) }}</h2>
                                 <div class="devis__recap" id="devis-recap">
@@ -255,15 +168,25 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-xl-6 devis__frequency-container p-20">
+                            <h2 class="m-b-20">{{ 'Public.Catalog.Collect-date'| trans({}, "messages", locale) }}</h2>
+
+                            <div class="devis__frequency-container__content paprec-flex column">
+                                <input placeholder="jj/mm/aaaa"
+                                       data-url="{{ path('paprec_public_catalog_editPonctualDate', {locale: locale, cartUuid: cart.id}) }}"
+                                       type="text"
+                                       id="frequencyPonctualDatepicker">
+
+                            </div>
                             <button type="button"
                                     class="btn btn__blue btn__large"
-                                    data-url="{{ path('paprec_public_contact_ponctuel_index', {locale: locale, cartUuid: cart.id}) }}"
+                                    data-url="{{ path('paprec_public_contact_regulier_index', {locale: locale, cartUuid: cart.id}) }}"
                                     data-ajax="{{ path('paprec_public_catalog_addFrequency', {locale: locale, cartUuid: cart.id}) }}"
                                     id="catalog_next_step_button">
                                 {{ 'Public.Catalog.NextStep'| trans({}, "messages", locale) }}
                             </button>
                         </div>
-
                     </div>
                 </div>
             </div>

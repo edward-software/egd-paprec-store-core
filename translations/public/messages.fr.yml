@@ -63,6 +63,7 @@ Public:
         Quote: Devis
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
+        Collect-date: Date de collecte souhaitée
         OnDemand: à la demande
         Regular: régulière
         Unknown: je ne sais pas
@@ -92,6 +93,7 @@ Public:
         IsMultisite: Prestation multi-sites
         isMultisiteInfo: Votre demande de prestation multisite a bien été pris en compte. Vous serez contacté très prochainement par le service commercial.
         IsSameSignatory:  Signataire du contrat identique au contact
+        IsSameAddress:  Adresse de facturation identique
         Access: Accès
         FloorNumber: Nombre d'étages
         Staff: Effectif

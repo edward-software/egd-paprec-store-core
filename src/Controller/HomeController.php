@@ -12,7 +12,7 @@ class HomeController extends AbstractController
 {
     /**
      * @Route("/", name="paprec_home_home")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_USER')")
      *
      * @return Response
      */

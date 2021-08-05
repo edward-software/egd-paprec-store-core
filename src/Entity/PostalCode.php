@@ -178,6 +178,11 @@ class PostalCode
 
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequest", mappedBy="billingPostalCode")
+     */
+    private $billingQuoteRequests;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Agency", inversedBy="postalCodes")
      * @Assert\NotBlank
      */

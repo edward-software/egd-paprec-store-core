@@ -406,7 +406,7 @@ class QuoteRequestManager
     {
 
         try {
-            $from = $this->container->getParameter('paprec_email_sender');
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
             $this->get($quoteRequest);
 
             $rcptTo = $quoteRequest->getEmail();
@@ -460,7 +460,7 @@ class QuoteRequestManager
     {
 
         try {
-            $from = $this->container->getParameter('paprec_email_sender');
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
             $this->get($quoteRequest);
 
             $translator = $this->container->get('translator');
@@ -476,7 +476,7 @@ class QuoteRequestManager
                 $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
             } else {
                 if ($quoteRequest->getIsMultisite()) {
-                    $rcptTo = $this->container->getParameter('privacia_salesman_multisite_email');
+                    $rcptTo = $_ENV['PAPREC_SALESMAN_MULTISITE_EMAIL'];
                 } else {
                     // TODO
 //                    $rcptTo = $quoteRequest->getPostalCode()->getRegion()->getEmail();
@@ -556,7 +556,7 @@ class QuoteRequestManager
     public function sendGeneratedQuoteEmail(QuoteRequest $quoteRequest)
     {
         try {
-            $from = $this->container->getParameter('paprec_email_sender');
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
             $rcptTo = $quoteRequest->getEmail();
 
@@ -610,6 +610,7 @@ class QuoteRequestManager
                 if (file_exists($pdfFile)) {
                     unlink($pdfFile);
                 }
+
                 return true;
             }
             return false;
@@ -631,7 +632,7 @@ class QuoteRequestManager
     public function sendGeneratedContractEmail(QuoteRequest $quoteRequest)
     {
         try {
-            $from = $this->container->getParameter('paprec_email_sender');
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
             $rcptTo = $quoteRequest->getEmail();
 
@@ -697,7 +698,7 @@ class QuoteRequestManager
     public function sendNewContractEmail(QuoteRequest $quoteRequest)
     {
         try {
-            $from = $this->container->getParameter('paprec_email_sender');
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
             /**
              * Si la quoteRequest est associé à un commercial, on lui envoie le mail
@@ -710,7 +711,7 @@ class QuoteRequestManager
                 $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
             } else {
                 if ($quoteRequest->getIsMultisite()) {
-                    $rcptTo = $this->container->getParameter('privacia_salesman_multisite_email');
+                    $rcptTo = $_ENV['PAPREC_SALESMAN_MULTISITE_EMAIL'];
                 } else {
                     // TODO
 //                    $rcptTo = $quoteRequest->getPostalCode()->getRegion()->getEmail();
