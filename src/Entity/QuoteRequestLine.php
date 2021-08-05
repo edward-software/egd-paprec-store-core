@@ -140,7 +140,7 @@ class QuoteRequestLine
     /**
      * @var string
      *
-     * @ORM\Column(name="frequency", type="string", length=255)
+     * @ORM\Column(name="frequency", type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
     private $frequency;
@@ -148,7 +148,7 @@ class QuoteRequestLine
     /**
      * @var string
      *
-     * @ORM\Column(name="frequencyTimes", type="string", length=255)
+     * @ORM\Column(name="frequencyTimes", type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
     private $frequencyTimes;
@@ -156,7 +156,7 @@ class QuoteRequestLine
     /**
      * @var string
      *
-     * @ORM\Column(name="frequencyInterval", type="string", length=255)
+     * @ORM\Column(name="frequencyInterval", type="string", length=255, nullable=true)
      * @Assert\NotBlank()
      */
     private $frequencyInterval;

@@ -42,13 +42,14 @@
                         {% endif %}
                         <a id="sendGeneratedContractButton" href="javascript:void(0);"
                            class="btn btn-sm btn-success mr-1 {% if not quoteRequest.hasValidSignatories %}btn-disabled{% endif %}"><i
-                                    class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}</a>
-                            <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
-                               class="btn btn-sm btn-warning"><i
-                                        class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a>
-                            <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
-                               class="btn btn-sm btn-danger"><i
-                                        class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
+                                    class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}
+                        </a>
+                        <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
+                           class="btn btn-sm btn-warning"><i
+                                    class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a>
+                        <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
+                           class="btn btn-sm btn-danger"><i
+                                    class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
                     </div>
                     <div class="float-left">
                         <a href="{{ path('paprec_quoteRequest_index') }}" class="btn btn-sm btn-default"><i
@@ -149,13 +150,9 @@
                                         </label>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Frequency'|trans }}</label>
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PonctualDate'|trans }}</label>
                                         <label class="col-form-label">
-                                            {% if quoteRequest.frequency == 'ponctual' %}
-                                                {{ 'Commercial.QuoteRequest.Ponctual'|trans }}
-                                            {% elseif quoteRequest.frequency == 'regular' %}
-                                                {{ quoteRequest.frequencyTimes }} / {{ ('Public.Catalog.' ~ quoteRequest.frequencyInterval|capitalize)|trans }}
-                                            {% endif %}
+                                            {{ quoteRequest.ponctualDate }}
                                         </label>
                                     </div>
                                     <div class="form-group row">
@@ -366,24 +363,24 @@
                                             </td>
                                             <td>{{ quoteRequestLine.quantity }}</td>
                                             <td>
-                                                {% if quoteRequestLine.rentalUnitPrice == 0 %}
+                                                {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
                                                     0
                                                 {% else %}
-                                                    {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.rentalUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                    {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if quoteRequestLine.treatmentUnitPrice == 0 %}
+                                                {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
                                                     0
                                                 {% else %}
-                                                    {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.treatmentUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                    {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.editableTreatmentUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if quoteRequestLine.traceabilityUnitPrice == 0 %}
+                                                {% if quoteRequestLine.editableTraceabilityUnitPrice == 0 %}
                                                     0
                                                 {% else %}
-                                                    {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.traceabilityUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                    {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.editableTraceabilityUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
                                                 {% endif %}
                                             </td>
                                             <td>{{ quoteRequestLine.totalAmount|formatAmount('', app.request.locale) }}</td>

@@ -3,13 +3,13 @@
 namespace App\Form;
 
 use App\Entity\QuoteRequest;
-use App\Form\DataTransformer\PostalCodeToStringTransformer;
 use App\Entity\User;
+use App\Form\DataTransformer\PostalCodeToStringTransformer;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -69,6 +69,10 @@ class QuoteRequestType extends AbstractType
                     return 'Commercial.StaffList.' . $choiceValue;
                 },
             ))
+            ->add('ponctualDate', DateType::class, array(
+                'widget' => 'single_text',
+                'html5' => false,
+            ))
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('email', TextType::class)
@@ -113,51 +117,6 @@ class QuoteRequestType extends AbstractType
                 },
                 'required' => true,
                 'expanded' => true
-            ))
-            ->add('frequency', ChoiceType::class, array(
-                'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                ),
-                'empty_data' => 'ponctual',
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Commercial.QuoteRequest.' . ucfirst($choiceValue);
-                },
-                'required' => true,
-                'expanded' => true
-            ))
-            ->add('frequencyTimes', ChoiceType::class, array(
-                'choices' => array(
-                    '0' => '0',
-                    '1' => '1',
-                    '2' => '2',
-                    '3' => '3',
-                    '4' => '4',
-                    '5' => '5',
-                    '6' => '6',
-                    '7' => '7',
-                    '8' => '8',
-                    '9' => '9',
-                    '10' => '10',
-                    '11' => '11',
-                    '12' => '12'
-                ),
-                'expanded' => false,
-                'multiple' => false
-            ))
-            ->add('frequencyInterval', ChoiceType::class, array(
-                'choices' => array(
-                    'week' => 'week',
-                    'month' => 'month',
-                    'bimestre' => 'bimestre',
-                    'quarter' => 'quarter',
-                    'quadrimestre' => 'quadrimestre'
-                ),
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return ($choiceValue) ? 'Public.Catalog.' . ucfirst($choiceValue) : '';
-                },
-                'expanded' => false,
-                'multiple' => false
             ))
             ->add('reference')
             ->add('customerId')

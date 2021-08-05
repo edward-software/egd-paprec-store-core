@@ -39,6 +39,7 @@ Commercial:
         CoworkerNumber: Effectif
         UserInCharge: Commercial en charge
         Reference: Référence de l'offre
+        PonctualDate: Date de collecte souhaitée
         IsMultisite: Prestation multi-sites
         Comment: Commentaire
         OverallDiscount: Ajustement prix (+/- en %)
@@ -58,6 +59,7 @@ Commercial:
         Edit: Edition du devis
         Ponctual: A la demande
         Regular: Régulière
+        Unknown: Ne sais pas
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         Error:
@@ -121,6 +123,11 @@ Commercial:
         ProductName: Nom du produit
         UnitPrice: Prix unitaire
         Quantity: Quantité
+        RentalUnitPrice: PU location
+        TransportUnitPrice: PU Transport
+        TreatmentUnitPrice: PU Traitement
+        TraceabilityUnitPrice: PU Traçabilité
+        BasePrice: PU de base
         RentalPrice: Location
         Transport: Transport
         Treatment: Traitement

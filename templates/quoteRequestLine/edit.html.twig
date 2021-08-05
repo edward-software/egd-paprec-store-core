@@ -23,9 +23,11 @@
                         <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.Add'|trans }}
                     </h4>
                     <div class="float-right">
-                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-quoteRequestLine-save-button"><i
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-success catalog-quoteRequestLine-save-button"><i
                                     class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-quoteRequestLine-cancel-button"><i
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-danger catalog-quoteRequestLine-cancel-button"><i
                                     class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
                     </div>
                 </div>
@@ -43,6 +45,84 @@
                                         {{ form_errors(form.quantity) }}
                                     </div>
                                 </div>
+                                <div class="form-group no-gutters">
+                                    <label class="form-label">{{ 'Commercial.QuoteRequestLine.TransportUnitPrice'|trans }}</label>
+                                    <div class="paprec-flex no-gutters">
+                                        <div class="form-content col-md-6">
+                                            {{ form_widget(form.editableTransportUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.editableTransportUnitPrice) }}
+                                        </div>
+                                        <div class="ml-2" style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }} : {{ quoteRequestLine.transportUnitPrice / 100 }}</div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group no-gutters">
+                                    <label class="form-label">{{ 'Commercial.QuoteRequestLine.RentalUnitPrice'|trans }}</label>
+                                    <div class="paprec-flex no-gutters">
+                                        <div class="form-content col-md-6">
+                                            {{ form_widget(form.editableRentalUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.editableRentalUnitPrice) }}
+                                        </div>
+                                        <div class="ml-2" style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }} : {{ quoteRequestLine.rentalUnitPrice / 100 }}</div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group no-gutters">
+                                    <label class="form-label">{{ 'Commercial.QuoteRequestLine.TreatmentUnitPrice'|trans }}</label>
+                                    <div class="paprec-flex no-gutters">
+                                        <div class="form-content col-md-6">
+                                            {{ form_widget(form.editableTreatmentUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.editableTreatmentUnitPrice) }}
+                                        </div>
+                                        <div class="ml-2" style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }} : {{ quoteRequestLine.treatmentUnitPrice / 100 }}</div>
+                                    </div>
+                                </div>
+                                <div class="form-group no-gutters">
+                                    <label class="form-label">{{ 'Commercial.QuoteRequestLine.TraceabilityUnitPrice'|trans }}</label>
+                                    <div class="paprec-flex no-gutters">
+                                        <div class="form-content col-md-6">
+                                            {{ form_widget(form.editableTraceabilityUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.editableTraceabilityUnitPrice) }}
+                                        </div>
+                                        <div class="ml-2" style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }} : {{ quoteRequestLine.traceabilityUnitPrice / 100 }}</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">{{ 'Commercial.QuoteRequest.Frequency'|trans }}
+                                        *</label>
+                                    <div class="form-content">
+                                        {% for radio in form.frequency.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.PassingFrequency'|trans }}</label>
+                                        <div class="form-content">
+                                            {% if quoteRequestLine.frequency != 'regular' %}
+                                                {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
+                                            {% else %}
+                                                {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
+                                            {% endif %}
+                                            {{ form_errors(form.frequencyTimes) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="form-content">
+                                            {% if quoteRequestLine.frequency != 'regular' %}
+                                                {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
+                                            {% else %}
+                                                {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
+                                            {% endif %}
+                                            {{ form_errors(form.frequencyInterval) }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -50,9 +130,11 @@
 
                 <div class="card-footer">
                     <div class="float-right">
-                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-quoteRequestLine-save-button"><i
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-success catalog-quoteRequestLine-save-button"><i
                                     class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-quoteRequestLine-cancel-button"><i
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-danger catalog-quoteRequestLine-cancel-button"><i
                                     class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
                     </div>
                 </div>
@@ -86,7 +168,7 @@
                     showCancelButton: true,
                     confirmButtonText: "{{ 'General.Yes'|trans }}",
                     cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function(result){
+                }).then(function (result) {
                     if (result.value) {
                         $(location).attr('href', url);
                     }
@@ -94,6 +176,19 @@
 
             });
 
+            /*
+* Désactivation ou activation du choix de fréquence en fonction de si c'est Régulier ou A la demande
+*/
+            $('input[name*="quote_request_line_edit[frequency]"]').change(function () {
+                if (this.value === 'ponctual') {
+                    $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", true);
+                    $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", true);
+
+                } else if (this.value === 'regular') {
+                    $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", false);
+                    $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", false)
+                }
+            });
         });
     </script>
 {% endblock %}

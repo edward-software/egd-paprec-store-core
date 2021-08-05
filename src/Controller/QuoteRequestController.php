@@ -672,11 +672,22 @@ class QuoteRequestController extends AbstractController
 
         $user = $this->getUser();
 
+        $quoteRequestLine->setEditableTransportUnitPrice($this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()));
+        $quoteRequestLine->setEditableRentalUnitPrice($this->numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()));
+        $quoteRequestLine->setEditableTreatmentUnitPrice($this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()));
+        $quoteRequestLine->setEditableTraceabilityUnitPrice($this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()));
+
         $form = $this->createForm(QuoteRequestLineEditType::class, $quoteRequestLine);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $quoteRequestLine->setEditableTransportUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableTransportUnitPrice()));
+            $quoteRequestLine->setEditableRentalUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableRentalUnitPrice()));
+            $quoteRequestLine->setEditableTreatmentUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableTreatmentUnitPrice()));
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableTraceabilityUnitPrice()));
+
             $this->quoteRequestManager->editLine($quoteRequest, $quoteRequestLine, $user);
 
             return $this->redirectToRoute('paprec_quoteRequest_view', array(

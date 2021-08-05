@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\QuoteRequestLine;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +21,63 @@ class QuoteRequestLineEditType extends AbstractType
         $builder
             ->add('quantity', IntegerType::class, array(
                 "required" => true
+            ))
+            ->add('editableRentalUnitPrice', IntegerType::class, array(
+                "required" => true
+            ))
+            ->add('editableTransportUnitPrice', IntegerType::class, array(
+                "required" => true
+            ))
+            ->add('editableTraceabilityUnitPrice', IntegerType::class, array(
+                "required" => true
+            ))
+            ->add('editableTreatmentUnitPrice', IntegerType::class, array(
+                "required" => true
+            ))
+            ->add('frequency', ChoiceType::class, array(
+                'choices' => array(
+                    'Regular' => 'regular',
+                    'Ponctual' => 'ponctual',
+                    'Unknown' => 'unknown'
+                ),
+                'empty_data' => 'ponctual',
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'Commercial.QuoteRequest.' . ucfirst($choiceValue);
+                },
+                'required' => true,
+                'expanded' => true
+            ))
+            ->add('frequencyTimes', ChoiceType::class, array(
+                'choices' => array(
+                    '0' => '0',
+                    '1' => '1',
+                    '2' => '2',
+                    '3' => '3',
+                    '4' => '4',
+                    '5' => '5',
+                    '6' => '6',
+                    '7' => '7',
+                    '8' => '8',
+                    '9' => '9',
+                    '10' => '10',
+                    '11' => '11',
+                    '12' => '12'
+                ),
+                'expanded' => false,
+                'multiple' => false
+            ))
+            ->add('frequencyInterval', ChoiceType::class, array(
+                'choices' => array(
+                    'week' => 'week',
+                    'month' => 'month',
+                    'bimestre' => 'bimestre',
+                    'quarter' => 'quarter'
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return ($choiceValue) ? 'Public.Catalog.' . ucfirst($choiceValue) : '';
+                },
+                'expanded' => false,
+                'multiple' => false
             ));
     }
 

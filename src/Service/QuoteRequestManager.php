@@ -257,7 +257,31 @@ class QuoteRequestManager
              */
             if ($quoteRequest->getPostalCode()) {
                 $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
-                $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getTransportRate());
+                switch($quoteRequestLine->getProduct()->getTransportType()) {
+                    case 'C_BROYEUR' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCBroyeurTransportRate());
+                    }
+                    case 'FOURGON_PL' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getFourgonPLTransportRate());
+
+                    }
+                    case 'FOURGON_VL' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getFourgonVLTransportRate());
+
+                    }
+                    case 'AMPLIROLL' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getAmplirollTransportRate());
+
+                    }
+                    case 'BOM' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
+
+                    }
+                    default : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getLivraisonTransportRate());
+
+                    }
+                }
                 $quoteRequestLine->setTreatmentRate($quoteRequest->getPostalCode()->getTreatmentRate());
                 $quoteRequestLine->setTraceabilityRate($quoteRequest->getPostalCode()->getTraceabilityRate());
             } else {

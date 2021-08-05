@@ -170,6 +170,15 @@ class QuoteRequest
     private $isSameAddress;
 
     /**
+     * Date de collecte souhaitée
+     *
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="ponctualDate", type="datetime", nullable=true)
+     */
+    private $ponctualDate;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="staff", type="text")
@@ -268,27 +277,6 @@ class QuoteRequest
      * @ORM\Column(name="annualBudget", type="integer", nullable=true)
      */
     private $annualBudget;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="frequency", type="string", length=255, nullable=true)
-     */
-    private $frequency;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="frequencyTimes", type="string", length=255, nullable=true)
-     */
-    private $frequencyTimes;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="frequencyInterval", type="string", length=255, nullable=true)
-     */
-    private $frequencyInterval;
 
     /**
      * @var string
@@ -850,29 +838,6 @@ class QuoteRequest
         return $this->salesmanComment;
     }
 
-    /**
-     * Set frequency.
-     *
-     * @param string|null $frequency
-     *
-     * @return QuoteRequest
-     */
-    public function setFrequency($frequency = null)
-    {
-        $this->frequency = $frequency;
-
-        return $this;
-    }
-
-    /**
-     * Get frequency.
-     *
-     * @return string|null
-     */
-    public function getFrequency()
-    {
-        return $this->frequency;
-    }
 
     /**
      * Set userCreation.
@@ -1004,54 +969,6 @@ class QuoteRequest
     public function getTotalAmount()
     {
         return $this->totalAmount;
-    }
-
-    /**
-     * Set frequencyTimes.
-     *
-     * @param string|null $frequencyTimes
-     *
-     * @return QuoteRequest
-     */
-    public function setFrequencyTimes($frequencyTimes = null)
-    {
-        $this->frequencyTimes = $frequencyTimes;
-
-        return $this;
-    }
-
-    /**
-     * Get frequencyTimes.
-     *
-     * @return string|null
-     */
-    public function getFrequencyTimes()
-    {
-        return $this->frequencyTimes;
-    }
-
-    /**
-     * Set frequencyInterval.
-     *
-     * @param string|null $frequencyInterval
-     *
-     * @return QuoteRequest
-     */
-    public function setFrequencyInterval($frequencyInterval = null)
-    {
-        $this->frequencyInterval = $frequencyInterval;
-
-        return $this;
-    }
-
-    /**
-     * Get frequencyInterval.
-     *
-     * @return string|null
-     */
-    public function getFrequencyInterval()
-    {
-        return $this->frequencyInterval;
     }
 
     /**
@@ -1464,5 +1381,24 @@ class QuoteRequest
     {
         return $this->token;
     }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getPonctualDate(): ?\DateTime
+    {
+        return $this->ponctualDate;
+    }
+
+    /**
+     * @param \DateTime|null $ponctualDate
+     * @return QuoteRequest
+     */
+    public function setPonctualDate(?\DateTime $ponctualDate): self
+    {
+        $this->ponctualDate = $ponctualDate;
+        return $this;
+    }
+
 
 }

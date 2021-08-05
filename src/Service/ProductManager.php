@@ -9,15 +9,15 @@
 namespace App\Service;
 
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
-use Doctrine\ORM\ORMException;
-use Exception;
 use App\Entity\PostalCode;
 use App\Entity\Product;
 use App\Entity\ProductLabel;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestLine;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ProductManager
@@ -27,10 +27,11 @@ class ProductManager
     private $container;
     private $numberManager;
 
-    public function __construct(EntityManagerInterface $em,
+    public function __construct(
+        EntityManagerInterface $em,
         NumberManager $numberManager,
-        ContainerInterface $container)
-    {
+        ContainerInterface $container
+    ) {
         $this->em = $em;
         $this->numberManager = $numberManager;
         $this->container = $container;
@@ -152,9 +153,10 @@ class ProductManager
 
 
         return (
-                ((($quoteRequestLine->getRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate())) * (1 + $numberManager->denormalize($quoteRequestLine->getQuoteRequest()->getOverallDiscount() / 100)))
-                + ((($quoteRequestLine->getTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate())) * (1 + $numberManager->denormalize($quoteRequestLine->getQuoteRequest()->getOverallDiscount() / 100)))
-                + ((($quoteRequestLine->getTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate())) * (1 + $numberManager->denormalize($quoteRequestLine->getQuoteRequest()->getOverallDiscount() / 100))))
+                ((($quoteRequestLine->getTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate())))
+                + ((($quoteRequestLine->getRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate())))
+                + ((($quoteRequestLine->getTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate())))
+                + ((($quoteRequestLine->getTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()))))
             * $quoteRequestLine->getQuantity();
 
     }

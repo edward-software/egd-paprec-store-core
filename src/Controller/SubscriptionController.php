@@ -234,9 +234,7 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
             $quoteRequest->setType($cart->getType());
-            $quoteRequest->setFrequency($cart->getFrequency());
-            $quoteRequest->setFrequencyTimes($cart->getFrequencyTimes());
-            $quoteRequest->setFrequencyInterval($cart->getFrequencyInterval());
+            $quoteRequest->setPonctualDate($cart->getPonctualDate());
             $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
             /**
              * Set Signatory if isSameSignatory

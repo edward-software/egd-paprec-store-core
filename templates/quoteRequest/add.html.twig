@@ -132,38 +132,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.Frequency'|trans }}
-                                            *</label>
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.PonctualDate'|trans }}</label>
                                         <div class="form-content">
-                                            {% for radio in form.frequency.children %}
-                                                <div class="form__check ml-4">
-                                                    {% if radio.vars.value == 'ponctual' %}
-                                                        {{ form_widget(radio, {'attr': {'checked': 'checked'}}) }}
-                                                    {% else %}
-                                                        {{ form_widget(radio) }}
-                                                    {% endif %}
-                                                    {{ form_label(radio) }}
-                                                </div>
-                                            {% endfor %}
-                                            {{ form_errors(form.frequency) }}
+                                            {{ form_widget(form.ponctualDate, {'attr': {'class': 'form-control ponctual-date-datepicker'}}) }}
+                                            {{ form_errors(form.ponctualDate) }}
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-6">
-                                            <label class="form-label">{{ 'Commercial.QuoteRequest.PassingFrequency'|trans }}</label>
-                                            <div class="form-content">
-                                                {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
-                                                {{ form_errors(form.frequencyTimes) }}
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-6">
-                                            <label class="form-label">&nbsp;</label>
-                                            <div class="form-content">
-                                                {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
-                                                {{ form_errors(form.frequencyInterval) }}
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.IsMultisite'|trans }}</label>
                                         <div class="form-content">
@@ -337,32 +312,13 @@
     <script>
         $(function () {
 
-            /*
-             * Désactivation des champs Adresse en MultiSite vrai
-             */
-            // $('select[name*="paprec_catalogbundle_quote_request[isMultisite]"]').change(function () {
-            //     if (this.value == true) {
-            //         $('.address-field').prop("disabled", true);
-            //         $('.address-field').val('');
-            //     } else if (this.value == false) {
-            //         $('.address-field').prop("disabled", false);
-            //     }
-            // });
-
-            /*
-            * Désactivation ou activation du choix de fréquence en fonction de si c'est Régulier ou A la demande
-            */
-            $('input[name*="paprec_catalogbundle_quote_request[frequency]"]').change(function () {
-                if (this.value === 'ponctual') {
-                    $('select[name*="paprec_catalogbundle_quote_request[frequencyTimes]"]').prop("disabled", true);
-                    $('select[name*="paprec_catalogbundle_quote_request[frequencyInterval]').prop("disabled", true);
-                    $('select[name*="paprec_catalogbundle_quote_request[frequencyInterval]').val(null);
-                    $('select[name*="paprec_catalogbundle_quote_request[frequencyTimes]').val(0);
-                } else if (this.value === 'regular') {
-                    $('select[name*="paprec_catalogbundle_quote_request[frequencyTimes]"]').prop("disabled", false);
-                    $('select[name*="paprec_catalogbundle_quote_request[frequencyInterval]').prop("disabled", false)
-                }
+            // you may need to change this code if you are not using Bootstrap Datepicker
+            $('.ponctual-date-datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                minDate: +1,
+                maxDate: "+1M"
             });
+
 
             $('#paprec_catalogbundle_quote_request_postalCode').autocomplete({
                 source: '' + $('#paprec_catalogbundle_quote_request_postalCode').data('url'),
