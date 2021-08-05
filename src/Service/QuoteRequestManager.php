@@ -243,6 +243,13 @@ class QuoteRequestManager
             $quoteRequestLine->setTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
             $quoteRequestLine->setTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
+            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
+            $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
+            $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
+            $quoteRequestLine->setFrequency($quoteRequestLine->getProduct()->getFrequency());
+            $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getProduct()->getFrequencyInterval());
+            $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getProduct()->getFrequencyTimes());
             $quoteRequestLine->setProductName($quoteRequestLine->getProduct()->getId());
 
             /**

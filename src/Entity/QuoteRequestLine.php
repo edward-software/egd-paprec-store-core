@@ -82,6 +82,34 @@ class QuoteRequestLine
     /**
      * @var int
      *
+     * @ORM\Column(name="editableRentalUnitPrice", type="integer", nullable=true)
+     */
+    private $editableRentalUnitPrice;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="editableTransportUnitPrice", type="integer", nullable=true)
+     */
+    private $editableTransportUnitPrice;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="editableTreatmentUnitPrice", type="integer", nullable=true)
+     */
+    private $editableTreatmentUnitPrice;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="editableTraceabilityUnitPrice", type="integer", nullable=true)
+     */
+    private $editableTraceabilityUnitPrice;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="rentalRate", type="bigint")
      */
     private $rentalRate;
@@ -107,6 +135,31 @@ class QuoteRequestLine
      * @ORM\Column(name="traceabilityRate", type="bigint", nullable=true)
      */
     private $traceabilityRate;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="frequency", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $frequency;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="frequencyTimes", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $frequencyTimes;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="frequencyInterval", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $frequencyInterval;
 
     /**
      * @var int
@@ -483,6 +536,78 @@ class QuoteRequestLine
     }
 
     /**
+     * @return int
+     */
+    public function getEditableRentalUnitPrice(): int
+    {
+        return $this->editableRentalUnitPrice;
+    }
+
+    /**
+     * @param int $editableRentalUnitPrice
+     * @return QuoteRequestLine
+     */
+    public function setEditableRentalUnitPrice(int $editableRentalUnitPrice): self
+    {
+        $this->editableRentalUnitPrice = $editableRentalUnitPrice;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEditableTransportUnitPrice(): int
+    {
+        return $this->editableTransportUnitPrice;
+    }
+
+    /**
+     * @param int $editableTransportUnitPrice
+     * @return QuoteRequestLine
+     */
+    public function setEditableTransportUnitPrice(int $editableTransportUnitPrice): self
+    {
+        $this->editableTransportUnitPrice = $editableTransportUnitPrice;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEditableTreatmentUnitPrice(): int
+    {
+        return $this->editableTreatmentUnitPrice;
+    }
+
+    /**
+     * @param int $editableTreatmentUnitPrice
+     * @return QuoteRequestLine
+     */
+    public function setEditableTreatmentUnitPrice(int $editableTreatmentUnitPrice): self
+    {
+        $this->editableTreatmentUnitPrice = $editableTreatmentUnitPrice;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEditableTraceabilityUnitPrice(): int
+    {
+        return $this->editableTraceabilityUnitPrice;
+    }
+
+    /**
+     * @param int $editableTraceabilityUnitPrice
+     * @return QuoteRequestLine
+     */
+    public function setEditableTraceabilityUnitPrice(int $editableTraceabilityUnitPrice): self
+    {
+        $this->editableTraceabilityUnitPrice = $editableTraceabilityUnitPrice;
+        return $this;
+    }
+
+    /**
      * Set transportRate.
      *
      * @param int $transportRate
@@ -601,4 +726,59 @@ class QuoteRequestLine
     {
         return $this->accessPrice;
     }
+
+    /**
+     * @return string
+     */
+    public function getFrequency(): string
+    {
+        return $this->frequency;
+    }
+
+    /**
+     * @param string $frequency
+     * @return QuoteRequestLine
+     */
+    public function setFrequency(string $frequency): self
+    {
+        $this->frequency = $frequency;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFrequencyTimes(): string
+    {
+        return $this->frequencyTimes;
+    }
+
+    /**
+     * @param string $frequencyTimes
+     * @return QuoteRequestLine
+     */
+    public function setFrequencyTimes(string $frequencyTimes): self
+    {
+        $this->frequencyTimes = $frequencyTimes;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFrequencyInterval(): string
+    {
+        return $this->frequencyInterval;
+    }
+
+    /**
+     * @param string $frequencyInterval
+     * @return QuoteRequestLine
+     */
+    public function setFrequencyInterval(string $frequencyInterval): self
+    {
+        $this->frequencyInterval = $frequencyInterval;
+        return $this;
+    }
+
 }

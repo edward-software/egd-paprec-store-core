@@ -684,7 +684,7 @@ class QuoteRequestController extends AbstractController
             ));
         }
 
-        return $this->render('quoteRequestLine:edit.html.twig', array(
+        return $this->render('quoteRequestLine/edit.html.twig', array(
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
             'quoteRequestLine' => $quoteRequestLine
