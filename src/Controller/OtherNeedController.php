@@ -103,6 +103,7 @@ class OtherNeedController extends AbstractController
         $tmp = array();
         foreach ($dt['data'] as $data) {
             $line = $data;
+            $line['catalog'] = $data['catalog'] ? $this->translator->trans('Catalog.OtherNeed.Catalog.' . ucfirst($data['catalog'])) : '/';
             $line['isDisplayed'] = $data['isDisplayed'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
             $tmp[] = $line;
         }

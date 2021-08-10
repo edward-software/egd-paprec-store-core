@@ -258,7 +258,7 @@ class SubscriptionController extends AbstractController
 
 
             if ($quoteRequest->getIsMultisite()) {
-                $quoteRequest->setUserInCharge($this->userManager->getRandomCommercialMultiSite());
+                $quoteRequest->setUserInCharge(null);
             } else {
                 $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
             }
