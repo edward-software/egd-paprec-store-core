@@ -153,10 +153,10 @@ class ProductManager
 
 
         return (
-                ((($quoteRequestLine->getTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate())))
-                + ((($quoteRequestLine->getRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate())))
-                + ((($quoteRequestLine->getTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate())))
-                + ((($quoteRequestLine->getTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()))))
+                ((($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate())))
+                + ((($quoteRequestLine->getEditableRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate())))
+                + ((($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate())))
+                + ((($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()))))
             * $quoteRequestLine->getQuantity();
 
     }

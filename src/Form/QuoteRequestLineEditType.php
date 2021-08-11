@@ -6,6 +6,8 @@ use App\Entity\QuoteRequestLine;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -22,18 +24,10 @@ class QuoteRequestLineEditType extends AbstractType
             ->add('quantity', IntegerType::class, array(
                 "required" => true
             ))
-            ->add('editableRentalUnitPrice', IntegerType::class, array(
-                "required" => true
-            ))
-            ->add('editableTransportUnitPrice', IntegerType::class, array(
-                "required" => true
-            ))
-            ->add('editableTraceabilityUnitPrice', IntegerType::class, array(
-                "required" => true
-            ))
-            ->add('editableTreatmentUnitPrice', IntegerType::class, array(
-                "required" => true
-            ))
+            ->add('editableRentalUnitPrice', TextType::class)
+            ->add('editableTransportUnitPrice', TextType::class)
+            ->add('editableTraceabilityUnitPrice', TextType::class)
+            ->add('editableTreatmentUnitPrice', TextType::class)
             ->add('frequency', ChoiceType::class, array(
                 'choices' => array(
                     'Regular' => 'regular',

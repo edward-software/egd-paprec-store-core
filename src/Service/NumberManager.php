@@ -77,6 +77,7 @@ class NumberManager
      */
     public function denormalize($value)
     {
+
         if ($value === 0) {
             return 0;
         }

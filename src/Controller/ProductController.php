@@ -407,6 +407,7 @@ class ProductController extends AbstractController
         $product->setTreatmentUnitPrice($this->numberManager->denormalize($product->getTreatmentUnitPrice()));
         $product->setTraceabilityUnitPrice($this->numberManager->denormalize($product->getTraceabilityUnitPrice()));
 
+
         $form1 = $this->createForm(ProductType::class, $product, array(
             'transportTypes' => $transportTypes,
         ));

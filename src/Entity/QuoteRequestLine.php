@@ -538,7 +538,7 @@ class QuoteRequestLine
     /**
      * @return int
      */
-    public function getEditableRentalUnitPrice(): int
+    public function getEditableRentalUnitPrice()
     {
         return $this->editableRentalUnitPrice;
     }
@@ -547,7 +547,7 @@ class QuoteRequestLine
      * @param int $editableRentalUnitPrice
      * @return QuoteRequestLine
      */
-    public function setEditableRentalUnitPrice(int $editableRentalUnitPrice): self
+    public function setEditableRentalUnitPrice($editableRentalUnitPrice): self
     {
         $this->editableRentalUnitPrice = $editableRentalUnitPrice;
         return $this;
@@ -556,7 +556,7 @@ class QuoteRequestLine
     /**
      * @return int
      */
-    public function getEditableTransportUnitPrice(): int
+    public function getEditableTransportUnitPrice()
     {
         return $this->editableTransportUnitPrice;
     }
@@ -565,7 +565,7 @@ class QuoteRequestLine
      * @param int $editableTransportUnitPrice
      * @return QuoteRequestLine
      */
-    public function setEditableTransportUnitPrice(int $editableTransportUnitPrice): self
+    public function setEditableTransportUnitPrice($editableTransportUnitPrice): self
     {
         $this->editableTransportUnitPrice = $editableTransportUnitPrice;
         return $this;
@@ -574,7 +574,7 @@ class QuoteRequestLine
     /**
      * @return int
      */
-    public function getEditableTreatmentUnitPrice(): int
+    public function getEditableTreatmentUnitPrice()
     {
         return $this->editableTreatmentUnitPrice;
     }
@@ -583,7 +583,7 @@ class QuoteRequestLine
      * @param int $editableTreatmentUnitPrice
      * @return QuoteRequestLine
      */
-    public function setEditableTreatmentUnitPrice(int $editableTreatmentUnitPrice): self
+    public function setEditableTreatmentUnitPrice($editableTreatmentUnitPrice): self
     {
         $this->editableTreatmentUnitPrice = $editableTreatmentUnitPrice;
         return $this;
@@ -592,7 +592,7 @@ class QuoteRequestLine
     /**
      * @return int
      */
-    public function getEditableTraceabilityUnitPrice(): int
+    public function getEditableTraceabilityUnitPrice()
     {
         return $this->editableTraceabilityUnitPrice;
     }
@@ -601,7 +601,7 @@ class QuoteRequestLine
      * @param int $editableTraceabilityUnitPrice
      * @return QuoteRequestLine
      */
-    public function setEditableTraceabilityUnitPrice(int $editableTraceabilityUnitPrice): self
+    public function setEditableTraceabilityUnitPrice($editableTraceabilityUnitPrice): self
     {
         $this->editableTraceabilityUnitPrice = $editableTraceabilityUnitPrice;
         return $this;

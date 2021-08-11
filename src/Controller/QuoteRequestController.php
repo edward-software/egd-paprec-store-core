@@ -683,6 +683,8 @@ class QuoteRequestController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $quoteRequestLine = $form->getData();
+
             $quoteRequestLine->setEditableTransportUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableTransportUnitPrice()));
             $quoteRequestLine->setEditableRentalUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableRentalUnitPrice()));
             $quoteRequestLine->setEditableTreatmentUnitPrice($this->numberManager->normalize($quoteRequestLine->getEditableTreatmentUnitPrice()));

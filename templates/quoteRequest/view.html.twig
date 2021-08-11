@@ -344,6 +344,7 @@
                                         <th>#</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Traceability'|trans }}</th>
@@ -363,27 +364,38 @@
                                             </td>
                                             <td>{{ quoteRequestLine.quantity }}</td>
                                             <td>
+                                                {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTransportUnitPrice - quoteRequestLine.transportUnitPrice) / quoteRequestLine.transportUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
                                                 {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
                                                     0
                                                 {% else %}
-                                                    {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                    {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableRentalUnitPrice - quoteRequestLine.rentalUnitPrice) / quoteRequestLine.rentalUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
                                             </td>
                                             <td>
                                                 {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
                                                     0
                                                 {% else %}
-                                                    {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.editableTreatmentUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                    {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.editableTreatmentUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTreatmentUnitPrice - quoteRequestLine.treatmentUnitPrice) / quoteRequestLine.treatmentUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
                                             </td>
                                             <td>
                                                 {% if quoteRequestLine.editableTraceabilityUnitPrice == 0 %}
                                                     0
                                                 {% else %}
-                                                    {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.editableTraceabilityUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000))|number_format(2, ',') }}
+                                                    {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.editableTraceabilityUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
                                             </td>
-                                            <td>{{ quoteRequestLine.totalAmount|formatAmount('', app.request.locale) }}</td>
+                                            <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
                                             <td class="text-center">
                                                 <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"
                                                    class="btn btn-sm btn-warning btn-sm mx-1"
