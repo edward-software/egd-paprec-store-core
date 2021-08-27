@@ -90,7 +90,7 @@ input:focus {
 
         &:disabled {
           color: $darkgray;
-          opacity: 80%;
+          opacity: 0.8 !important;
         }
       }
 
