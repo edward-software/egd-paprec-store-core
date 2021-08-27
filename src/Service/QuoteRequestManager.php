@@ -258,28 +258,29 @@ class QuoteRequestManager
             if ($quoteRequest->getPostalCode()) {
                 $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
                 switch($quoteRequestLine->getProduct()->getTransportType()) {
-                    case 'C_BROYEUR' : {
-                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCBroyeurTransportRate());
+                    case 'CBR_REG' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
                     }
-                    case 'FOURGON_PL' : {
-                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getFourgonPLTransportRate());
-
+                    case 'CBR_PONCT' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
                     }
-                    case 'FOURGON_VL' : {
-                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getFourgonVLTransportRate());
-
+                    case 'VL_PL_CFS_REG' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
                     }
-                    case 'AMPLIROLL' : {
-                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getAmplirollTransportRate());
-
+                    case 'VL_PL_CFS_PONCT' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
+                    }
+                    case 'VL_PL' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
                     }
                     case 'BOM' : {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
-
+                    }
+                    case 'PL_PONCT' : {
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
                     }
                     default : {
-                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getLivraisonTransportRate());
-
+                        $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
                     }
                 }
                 $quoteRequestLine->setTreatmentRate($quoteRequest->getPostalCode()->getTreatmentRate());
@@ -464,8 +465,7 @@ class QuoteRequestManager
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($locale),
-                            'salesman' => $quoteRequest->getPostalCode()->getAgency()->getSalesman(),
-                            'assistant' => $quoteRequest->getPostalCode()->getAgency()->getAssistant()
+                            'salesman' => $quoteRequest->getPostalCode()->getUserInCharge()
                         )
                     ),
                     'text/html'

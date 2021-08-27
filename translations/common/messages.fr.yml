@@ -97,9 +97,10 @@ General:
         Unknown: Je ne sais pas
 
     TransportType:
-        C_BROYEUR: C Broyeur
-        FOURGON_PL: Fourgon PL mutualisé
-        FOURGON_VL: Fourgon VL mutualisé
-        AMPLIROLL: Ampliroll (AR)
+        CBR_REG: CBR régulier
+        CBR_PONCT: CBR ponctuel
+        VL_PL_CFS_REG: VL/PL CFS régulier
+        VL_PL_CFS_PONCT: VL/PL CFS ponctuel
+        VL_PL: VL/PL
         BOM: BOM
-        LIVRAISON: Livraison
+        PL_PONCT: Ponctuel PL

@@ -26,7 +26,7 @@ class PostalCodeRepository extends EntityRepository
 
 
     /**
-     * Vérifie s'il existe ddéjà un postalCode NON supprimé aec le même code
+     * Vérifie s'il existe déjà un postalCode NON supprimé aec le même code
      *
      * @param $params
      * @return array
@@ -35,6 +35,20 @@ class PostalCodeRepository extends EntityRepository
     {
         return $this->findBy(array(
             'code' => $params['code'],
+            'deleted' => null
+        ));
+    }
+
+    /**
+     * Vérifie s'il existe déjà un PostalCode avec le couple code et city NON supprimé
+     *
+     * @param $params
+     * @return array
+     */
+    public function isCodeAndCityUnique($params) {
+        return $this->findBy(array(
+            'code' => $params['code'],
+            'city' => $params['city'],
             'deleted' => null
         ));
     }

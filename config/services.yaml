@@ -34,12 +34,13 @@ parameters:
         - PONCTUAL
 
     paprec_transport_types:
-        - C_BROYEUR
-        - FOURGON_PL
-        - FOURGON_VL
-        - AMPLIROLL
+        - CBR_REG
+        - CBR_PONCT
+        - VL_PL_CFS_REG
+        - VL_PL_CFS_PONCT
+        - VL_PL
         - BOM
-        - LIVRAISON
+        - PL_PONCT
 
     paprec.data_tmp_directory: "%kernel.root_dir%/data/tmp"
     paprec.files_directory: "%kernel.root_dir%/data/pdf"

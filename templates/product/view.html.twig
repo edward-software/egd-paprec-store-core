@@ -108,7 +108,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TransportType'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
-                                        {{ product.transportType }}
+                                        {{ ('General.TransportType.' ~ product.transportType)|trans }}
                                     </label>
                                 </div>
                                 <div class="form-group row">

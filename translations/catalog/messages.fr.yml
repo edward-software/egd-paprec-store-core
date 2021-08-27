@@ -59,11 +59,13 @@ Catalog:
         Confirm-remove: Etes-vous sûr de vouloir supprimer ce code postal ?
         RentalRate: Coef. location
         TransportRate: Variable Transport
-        CBroyeurTransportRate: Coef. transport C Broyeur
-        FourgonPLTransportRate: Coef. transport fourgon PL mutualisé
-        FourgonVLTransportRate: Coef. transport fourgon VL mutualisé
-        AmplirollTransportRate: Coef. transport Ampliroll (AR)
+        CbrRegTransportRate: Coef. transport CBR régulier
+        CbrPonctTransportRate: Coef. transport CBR ponctuel
+        VlPlCfsRegTransportRate: Coef. transport VL/PL CFS régulier
+        VlPlCfsPonctTransportRate: Coef. transport VL/PL CFS ponctuel
+        VlPlTransportRate: Coef. transport fourgon VL mutualisé
         BomTransportRate: Coef. transport BOM
+        PlPonctTransportRate: Coef. trasnport ponctuel PL
         LivraisonTransportRate: Coef. transport Livraison
         TreatmentRate: Coef. traitement
         TraceabilityRate: Coef. traçabilité

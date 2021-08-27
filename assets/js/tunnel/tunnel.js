@@ -323,7 +323,7 @@ $(function () {
         source: '' + $('#paprec_catalogbundle_quote_request_public_postalCode').data('url'),
         minLength: 1,
         select: function (event, ui) {
-            $('#paprec_catalogbundle_quote_request_public_city').val(ui.item.label.substring(8));
+            $('#paprec_catalogbundle_quote_request_public_city').val(ui.item.label.substring(ui.item.label.indexOf('-') + 2));
         }
     });
 

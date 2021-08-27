@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="postalCodes")
  * @ORM\Entity(repositoryClass="App\Repository\PostalCodeRepository")
- * @UniqueEntity(fields={"code"}, repositoryMethod="isCodeUnique")
+ * @UniqueEntity(fields={"code", "city"}, repositoryMethod="isCodeAndCityUnique")
  */
 class PostalCode
 {
@@ -83,37 +83,54 @@ class PostalCode
      */
     private $rentalRate;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="cBroyeurTransportRate", type="bigint")
-     * @Assert\NotBlank()
-     */
-    private $cBroyeurTransportRate;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="fourgonPLTransportRate", type="bigint")
+     * @ORM\Column(name="plPonctTransportRate", type="bigint")
      * @Assert\NotBlank()
      */
-    private $fourgonPLTransportRate;
+    private $plPonctTransportRate;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="fourgonVLTransportRate", type="bigint")
+     * @ORM\Column(name="vlPlTransportRate", type="bigint")
      * @Assert\NotBlank()
      */
-    private $fourgonVLTransportRate;
+    private $vlPlTransportRate;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="amplirollTransportRate", type="bigint")
+     * @ORM\Column(name="vlPlCfsPonctTransportRate", type="bigint")
      * @Assert\NotBlank()
      */
-    private $amplirollTransportRate;
+    private $vlPlCfsPonctTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="vlPlCfsRegTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $vlPlCfsRegTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cbrPonctTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $cbrPonctTransportRate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cbrRegTransportRate", type="bigint")
+     * @Assert\NotBlank()
+     */
+    private $cbrRegTransportRate;
 
     /**
      * @var int
@@ -123,13 +140,6 @@ class PostalCode
      */
     private $bomTransportRate;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="livraisonTransportRate", type="bigint")
-     * @Assert\NotBlank()
-     */
-    private $livraisonTransportRate;
 
     /**
      * @var int
@@ -308,74 +318,110 @@ class PostalCode
     }
 
     /**
-     * @return null|int
+     * @return int
      */
-    public function getCBroyeurTransportRate(): ?int
+    public function getPlPonctTransportRate(): int
     {
-        return $this->cBroyeurTransportRate;
+        return $this->plPonctTransportRate;
     }
 
     /**
-     * @param int $cBroyeurTransportRate
+     * @param int $plPonctTransportRate
      * @return PostalCode
      */
-    public function setCBroyeurTransportRate(int $cBroyeurTransportRate): self
+    public function setPlPonctTransportRate(int $plPonctTransportRate): self
     {
-        $this->cBroyeurTransportRate = $cBroyeurTransportRate;
+        $this->plPonctTransportRate = $plPonctTransportRate;
         return $this;
     }
 
     /**
-     * @return null|int
+     * @return int
      */
-    public function getFourgonPLTransportRate(): ?int
+    public function getVlPlTransportRate(): int
     {
-        return $this->fourgonPLTransportRate;
+        return $this->vlPlTransportRate;
     }
 
     /**
-     * @param int $fourgonPLTransportRate
+     * @param int $vlPlTransportRate
      * @return PostalCode
      */
-    public function setFourgonPLTransportRate(int $fourgonPLTransportRate): self
+    public function setVlPlTransportRate(int $vlPlTransportRate): self
     {
-        $this->fourgonPLTransportRate = $fourgonPLTransportRate;
+        $this->vlPlTransportRate = $vlPlTransportRate;
         return $this;
     }
 
     /**
-     * @return null|int
+     * @return int
      */
-    public function getFourgonVLTransportRate(): ?int
+    public function getVlPlCfsPonctTransportRate(): int
     {
-        return $this->fourgonVLTransportRate;
+        return $this->vlPlCfsPonctTransportRate;
     }
 
     /**
-     * @param int $fourgonVLTransportRate
+     * @param int $vlPlCfsPonctTransportRate
      * @return PostalCode
      */
-    public function setFourgonVLTransportRate(int $fourgonVLTransportRate): self
+    public function setVlPlCfsPonctTransportRate(int $vlPlCfsPonctTransportRate): self
     {
-        $this->fourgonVLTransportRate = $fourgonVLTransportRate;
+        $this->vlPlCfsPonctTransportRate = $vlPlCfsPonctTransportRate;
         return $this;
     }
 
     /**
-     * @return null|int
+     * @return int
      */
-    public function getAmplirollTransportRate(): ?int
+    public function getVlPlCfsRegTransportRate(): int
     {
-        return $this->amplirollTransportRate;
+        return $this->vlPlCfsRegTransportRate;
     }
 
     /**
-     * @param int $amplirollTransportRate
+     * @param int $vlPlCfsRegTransportRate
      * @return PostalCode
      */
-    public function setAmplirollTransportRate(int $amplirollTransportRate): self
+    public function setVlPlCfsRegTransportRate(int $vlPlCfsRegTransportRate): self
     {
-        $this->amplirollTransportRate = $amplirollTransportRate;
+        $this->vlPlCfsRegTransportRate = $vlPlCfsRegTransportRate;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCbrPonctTransportRate(): int
+    {
+        return $this->cbrPonctTransportRate;
+    }
+
+    /**
+     * @param int $cbrPonctTransportRate
+     * @return PostalCode
+     */
+    public function setCbrPonctTransportRate(int $cbrPonctTransportRate): self
+    {
+        $this->cbrPonctTransportRate = $cbrPonctTransportRate;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCbrRegTransportRate(): int
+    {
+        return $this->cbrRegTransportRate;
+    }
+
+    /**
+     * @param int $cbrRegTransportRate
+     * @return PostalCode
+     */
+    public function setCbrRegTransportRate(int $cbrRegTransportRate): self
+    {
+        $this->cbrRegTransportRate = $cbrRegTransportRate;
         return $this;
     }
 
@@ -396,25 +442,6 @@ class PostalCode
         $this->bomTransportRate = $bomTransportRate;
         return $this;
     }
-
-    /**
-     * @return null|int
-     */
-    public function getLivraisonTransportRate(): ?int
-    {
-        return $this->livraisonTransportRate;
-    }
-
-    /**
-     * @param int $livraisonTransportRate
-     * @return PostalCode
-     */
-    public function setLivraisonTransportRate(int $livraisonTransportRate): self
-    {
-        $this->livraisonTransportRate = $livraisonTransportRate;
-        return $this;
-    }
-
 
     /**
      * Set treatmentRate.

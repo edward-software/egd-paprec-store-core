@@ -37,25 +37,17 @@
 <br><br>
 <i>{{ 'Commercial.ConfirmEmail.NoReply'| trans({}, "messages", locale) }}</i>
 <br><br>
-<b>{{ salesman.firstName }} {{ salesman.lastName }}</b>
-<br>
-<u>Téléphone</u> :{{ salesman.phoneNumber }}
-<br>
-<u>Mobile</u> : {{ salesman.mobileNumber }}
-<br>
-<u>Email</u> : {{ salesman.email }}
-<br>
-<u>Titre</u> : {{ salesman.jobTitle }}
-<br><br>
-<b>{{ assistant.firstName }} {{ assistant.lastName }}</b>
-<br>
-<u>Téléphone</u> : {{ assistant.phoneNumber }}
-<br>
-<u>Mobile</u> : {{ assistant.mobileNumber }}
-<br>
-<u>Email</u> : {{ assistant.email }}
-<br>
-<u>Titre</u> : {{ assistant.jobTitle }}
+{% if salesman %}
+    <b>{{ salesman.firstName }} {{ salesman.lastName }}</b>
+    <br>
+    <u>Téléphone</u> :{{ salesman.phoneNumber }}
+    <br>
+    <u>Mobile</u> : {{ salesman.mobileNumber }}
+    <br>
+    <u>Email</u> : {{ salesman.email }}
+    <br>
+    <u>Titre</u> : {{ salesman.jobTitle }}
+{% endif %}
 
 
 </body>
