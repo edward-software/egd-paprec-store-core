@@ -317,10 +317,7 @@ class PostalCode
         return $this->code;
     }
 
-    /**
-     * @return int
-     */
-    public function getPlPonctTransportRate(): int
+    public function getPlPonctTransportRate()
     {
         return $this->plPonctTransportRate;
     }
@@ -335,10 +332,7 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getVlPlTransportRate(): int
+    public function getVlPlTransportRate()
     {
         return $this->vlPlTransportRate;
     }
@@ -353,10 +347,7 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getVlPlCfsPonctTransportRate(): int
+    public function getVlPlCfsPonctTransportRate()
     {
         return $this->vlPlCfsPonctTransportRate;
     }
@@ -371,10 +362,7 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getVlPlCfsRegTransportRate(): int
+    public function getVlPlCfsRegTransportRate()
     {
         return $this->vlPlCfsRegTransportRate;
     }
@@ -389,10 +377,7 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getCbrPonctTransportRate(): int
+    public function getCbrPonctTransportRate()
     {
         return $this->cbrPonctTransportRate;
     }
@@ -407,10 +392,7 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getCbrRegTransportRate(): int
+    public function getCbrRegTransportRate()
     {
         return $this->cbrRegTransportRate;
     }
@@ -425,10 +407,7 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * @return null|int
-     */
-    public function getBomTransportRate(): ?int
+    public function getBomTransportRate()
     {
         return $this->bomTransportRate;
     }
@@ -457,11 +436,6 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * Get treatmentRate.
-     *
-     * @return int
-     */
     public function getTreatmentRate()
     {
         return $this->treatmentRate;
@@ -481,11 +455,6 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * Get traceabilityRate.
-     *
-     * @return int
-     */
     public function getTraceabilityRate()
     {
         return $this->traceabilityRate;
@@ -637,11 +606,6 @@ class PostalCode
         return $this;
     }
 
-    /**
-     * Get rentalRate.
-     *
-     * @return int
-     */
     public function getRentalRate()
     {
         return $this->rentalRate;

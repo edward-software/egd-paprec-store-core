@@ -225,12 +225,22 @@ class PostalCodeController extends AbstractController
             $postalCode = $form->getData();
 
             $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setCBroyeurTransportRate($this->numberManager->normalize15($postalCode->getCBroyeurTransportRate()));
-            $postalCode->setFourgonPLTransportRate($this->numberManager->normalize15($postalCode->getFourgonPLTransportRate()));
-            $postalCode->setFourgonVLTransportRate($this->numberManager->normalize15($postalCode->getFourgonVLTransportRate()));
-            $postalCode->setAmplirollTransportRate($this->numberManager->normalize15($postalCode->getAmplirollTransportRate()));
-            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
-            $postalCode->setLivraisonTransportRate($this->numberManager->normalize15($postalCode->getLivraisonTransportRate()));
+
+            $postalCode->setCbrRegTransportRate($this->numberManager->denormalize15($postalCode->getCbrRegTransportRate()));
+            $postalCode->setCbrPonctTransportRate($this->numberManager->denormalize15($postalCode->getCbrPonctTransportRate()));
+            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
+            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
+            $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
+            $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
+
+//            $postalCode->setCBroyeurTransportRate($this->numberManager->normalize15($postalCode->getCBroyeurTransportRate()));
+//            $postalCode->setFourgonPLTransportRate($this->numberManager->normalize15($postalCode->getFourgonPLTransportRate()));
+//            $postalCode->setFourgonVLTransportRate($this->numberManager->normalize15($postalCode->getFourgonVLTransportRate()));
+//            $postalCode->setAmplirollTransportRate($this->numberManager->normalize15($postalCode->getAmplirollTransportRate()));
+//            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
+//            $postalCode->setLivraisonTransportRate($this->numberManager->normalize15($postalCode->getLivraisonTransportRate()));
+
             $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
             $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
@@ -264,14 +274,17 @@ class PostalCodeController extends AbstractController
         $this->postalCodeManager->isDeleted($postalCode, true);
 
         $postalCode->setRentalRate($this->numberManager->denormalize15($postalCode->getRentalRate()));
-        $postalCode->setCBroyeurTransportRate($this->numberManager->denormalize15($postalCode->getCBroyeurTransportRate()));
-        $postalCode->setFourgonPLTransportRate($this->numberManager->denormalize15($postalCode->getFourgonPLTransportRate()));
-        $postalCode->setFourgonVLTransportRate($this->numberManager->denormalize15($postalCode->getFourgonVLTransportRate()));
-        $postalCode->setAmplirollTransportRate($this->numberManager->denormalize15($postalCode->getAmplirollTransportRate()));
         $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
-        $postalCode->setLivraisonTransportRate($this->numberManager->denormalize15($postalCode->getLivraisonTransportRate()));
         $postalCode->setTreatmentRate($this->numberManager->denormalize15($postalCode->getTreatmentRate()));
         $postalCode->setTraceabilityRate($this->numberManager->denormalize15($postalCode->getTraceabilityRate()));
+
+        $postalCode->setCbrRegTransportRate($this->numberManager->denormalize15($postalCode->getCbrRegTransportRate()));
+        $postalCode->setCbrPonctTransportRate($this->numberManager->denormalize15($postalCode->getCbrPonctTransportRate()));
+        $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
+        $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
+        $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
+        $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
+        $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
 
         $form = $this->createForm(PostalCodeType::class, $postalCode);
 
@@ -282,14 +295,17 @@ class PostalCodeController extends AbstractController
             $postalCode = $form->getData();
 
             $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setCBroyeurTransportRate($this->numberManager->normalize15($postalCode->getCBroyeurTransportRate()));
-            $postalCode->setFourgonPLTransportRate($this->numberManager->normalize15($postalCode->getFourgonPLTransportRate()));
-            $postalCode->setFourgonVLTransportRate($this->numberManager->normalize15($postalCode->getFourgonVLTransportRate()));
-            $postalCode->setAmplirollTransportRate($this->numberManager->normalize15($postalCode->getAmplirollTransportRate()));
             $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
-            $postalCode->setLivraisonTransportRate($this->numberManager->normalize15($postalCode->getLivraisonTransportRate()));
             $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
             $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
+
+            $postalCode->setCbrRegTransportRate($this->numberManager->denormalize15($postalCode->getCbrRegTransportRate()));
+            $postalCode->setCbrPonctTransportRate($this->numberManager->denormalize15($postalCode->getCbrPonctTransportRate()));
+            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
+            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
+            $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
+            $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
 
             $postalCode->setDateUpdate(new \DateTime);
             $postalCode->setUserUpdate($user);
