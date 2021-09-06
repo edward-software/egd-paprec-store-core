@@ -271,6 +271,7 @@ class SubscriptionController extends AbstractController
                 $quoteRequest->setUserInCharge(null);
             } else {
                 $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+                $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
             }
 
             $this->em->persist($quoteRequest);
