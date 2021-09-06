@@ -27,7 +27,6 @@ class ProductType extends AbstractType
         $builder
             ->add('capacity')
             ->add('capacityUnit')
-            ->add('folderNumber')
             ->add('dimensions', TextareaType::class)
             ->add('isEnabled', ChoiceType::class, array(
                 "choices" => array(

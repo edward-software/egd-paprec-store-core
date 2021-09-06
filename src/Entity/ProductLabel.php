@@ -71,22 +71,6 @@ class ProductLabel
     /**
      * @var string
      *
-     * @ORM\Column(name="product_version", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
-     */
-    private $version;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lock_type", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
-     */
-    private $lockType;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="language", type="string", length=255)
      * @Assert\NotBlank()
      */
@@ -358,53 +342,5 @@ class ProductLabel
     public function getProduct()
     {
         return $this->product;
-    }
-
-    /**
-     * Set version.
-     *
-     * @param string $version
-     *
-     * @return ProductLabel
-     */
-    public function setVersion($version)
-    {
-        $this->version = $version;
-
-        return $this;
-    }
-
-    /**
-     * Get version.
-     *
-     * @return string
-     */
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    /**
-     * Set lockType.
-     *
-     * @param string|null $lockType
-     *
-     * @return ProductLabel
-     */
-    public function setLockType($lockType = null)
-    {
-        $this->lockType = $lockType;
-
-        return $this;
-    }
-
-    /**
-     * Get lockType.
-     *
-     * @return string|null
-     */
-    public function getLockType()
-    {
-        return $this->lockType;
     }
 }

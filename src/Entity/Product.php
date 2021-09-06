@@ -69,14 +69,6 @@ class Product
      */
     private $dimensions;
 
-    /**
-     * @var string
-     * Le nombre de documents accepté
-     * @ORM\Column(name="folder_number", type="string", length=255)
-     * @Assert\NotBlank()
-     */
-    private $folderNumber;
-
 
     /**
      * @var boolean
@@ -784,31 +776,6 @@ class Product
     public function getPosition()
     {
         return $this->position;
-    }
-
-
-    /**
-     * Set folderNumber.
-     *
-     * @param string $folderNumber
-     *
-     * @return Product
-     */
-    public function setFolderNumber($folderNumber)
-    {
-        $this->folderNumber = $folderNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get folderNumber.
-     *
-     * @return string
-     */
-    public function getFolderNumber()
-    {
-        return $this->folderNumber;
     }
 
     /**

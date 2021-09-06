@@ -21,8 +21,6 @@ class ProductLabelType extends AbstractType
         $builder
             ->add('name')
             ->add('shortDescription', TextareaType::class)
-            ->add('version')
-            ->add('lockType')
             ->add('language', ChoiceType::class, array(
                 'choices' => $options['languages'],
                 'data' => $options['language']
