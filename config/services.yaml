@@ -73,10 +73,11 @@ parameters:
     tmp_lock_prog: 20
 
     paprec_quote_staff:
-        - '120'
-        - '2150'
+        - '050'
         - '51100'
-        - '100+'
+        - '101250'
+        - '251500'
+        - '500+'
 
     paprec_quote_floor_number:
         - 0
@@ -90,6 +91,11 @@ parameters:
         - 8
         - 9
 
+    paprec.frequency_interval.monthly_coefficients:
+        week: 4.33
+        month: 1.08
+        bimestre: 0.54
+        quarter: 0.36
 
 services:
     # default configuration for services in *this* file

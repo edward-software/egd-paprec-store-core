@@ -181,7 +181,7 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="staff", type="text")
+     * @ORM\Column(name="staff", type="text", nullable=true)
      * @Assert\NotBlank(groups={"public"})
      */
     private $staff;
@@ -212,8 +212,14 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=255, nullable=true, nullable=true)
-     * @Assert\NotBlank(groups={"public_multisite"})
+     * @ORM\Column(name="addressDetail", type="text", nullable=true)
+     */
+    private $addressDetail;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
@@ -679,6 +685,26 @@ class QuoteRequest
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAddressDetail()
+    {
+        return $this->addressDetail;
+    }
+
+    /**
+     * @param string|null $addressDetail
+     *
+     * @return QuoteRequest
+     */
+    public function setAddressDetail($addressDetail = null)
+    {
+        $this->addressDetail = $addressDetail;
+
+        return $this;
     }
 
     /**

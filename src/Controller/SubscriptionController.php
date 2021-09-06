@@ -284,23 +284,21 @@ class SubscriptionController extends AbstractController
 
 
             if ($sendConfirmEmail && $sendNewRequestEmail) {
-                if ($quoteRequest->getType() === 'PONCTUAL') {
+                if ($quoteRequest->getType() === 'ponctual') {
                     return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
                         'locale' => $locale,
                         'cartUuid' => $cart->getId(),
                         'quoteRequestId' => $quoteRequest->getId()
                     ));
+                } else {
+                    return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
+                        'locale' => $locale,
+                        'cartUuid' => $cart->getId(),
+                        'quoteRequestId' => $quoteRequest->getId()
+                    ));
                 }
-
-                return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
-                    'locale' => $locale,
-                    'cartUuid' => $cart->getId(),
-                    'quoteRequestId' => $quoteRequest->getId()
-                ));
             }
-            exit;
         }
-
 
         return $this->render('public/contact.html.twig', array(
             'locale' => $locale,
@@ -366,10 +364,9 @@ class SubscriptionController extends AbstractController
      */
     public function confirmAction(Request $request, $locale, $cartUuid, $quoteRequestId)
     {
-        $quoteRequestManager = $this->get('paprec_commercial.quote_request_manager');
 
         $cart = $this->cartManager->get($cartUuid);
-        $quoteRequest = $quoteRequestManager->get($quoteRequestId);
+        $quoteRequest = $this->quoteRequestManager->get($quoteRequestId);
 
         return $this->render('public/confirm.html.twig', array(
             'locale' => $locale,

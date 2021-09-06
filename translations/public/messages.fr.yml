@@ -64,7 +64,7 @@ Public:
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
         Collect-date: Date de collecte souhaitée
-        OnDemand: à la demande
+        Ponctual: à la demande
         Regular: régulière
         Unknown: je ne sais pas
         Week: semaine
@@ -99,9 +99,10 @@ Public:
         Staff: Effectif
         DestructionType: Type de destruction
         Address: Adresse
-        PostalCode: Code postal
+        AddressDetail: Précision de l'adresse
+        PostalCode: Code postal ou Ville
         City: Ville
-        Comment: Message
+        Comment: Précision
         SendRequest: Envoyer la demande
         BreadcrumbContent: Coordonnées du client
         Signatory: Signataire

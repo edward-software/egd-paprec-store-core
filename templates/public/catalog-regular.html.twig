@@ -69,28 +69,10 @@
                                                 <div class="product__value">{{ product.capacity }} {{ product.capacityUnit }}</div>
                                             </div>
                                             <div class="paprec-flex space-between">
-                                                <div class="product__label">{{ 'Catalog.Product.FolderNumber'|trans({}, "messages", app.request.locale) }}
-                                                    :
-                                                </div>
-                                                <div class="product__value">{{ product.folderNumber }}</div>
-                                            </div>
-                                            <div class="paprec-flex space-between">
                                                 <div class="product__label">{{ 'Catalog.Product.Dimensions'|trans({}, "messages", app.request.locale) }}
                                                     :
                                                 </div>
                                                 <div class="product__value">{{ product.dimensions }}</div>
-                                            </div>
-                                            <div class="paprec-flex space-between">
-                                                <div class="product__label">{{ 'Catalog.ProductLabel.Version'|trans({}, "messages", app.request.locale) }}
-                                                    :
-                                                </div>
-                                                <div class="product__value">{{ product|productLabelTranslation(locale, 'version') }} </div>
-                                            </div>
-                                            <div class="paprec-flex space-between">
-                                                <div class="product__label">{{ 'Catalog.ProductLabel.Lock'|trans({}, "messages", app.request.locale) }}
-                                                    :
-                                                </div>
-                                                <div class="product__value">{{ product|productLabelTranslation(locale,'lockType') }}</div>
                                             </div>
                                         </div>
                                         <div class="product__quantity paprec-flex">
@@ -103,10 +85,10 @@
                                                     {% endif %}
                                                 {% endfor %}
                                                 <div class="paprec-flex">
-                                                    <button class="addOneToCartButton round-btn round-btn--blue mr-2"
-                                                            id="addOneToCartButton{{ product.id }}"
-                                                            data-url="{{ path('paprec_public_catalog_addOneContent', {locale: locale, cartUuid: cart.id, productId: product.id}) }}">
-                                                        <i class="fas fa-plus"></i>
+                                                    <button class="removeOneToCartButton round-btn round-btn--blue mr-2 {% if qtty == 0 %}round-btn--disable{% endif %}"
+                                                            id="removeOneToCartButton{{ product.id }}"
+                                                            data-url="{{ path('paprec_public_catalog_removeOneContent', {locale: locale, cartUuid: cart.id, productId: product.id}) }}">
+                                                        <i class="fas fa-minus"></i>
                                                     </button>
                                                     <select name=""
                                                             disabled="disabled"
@@ -123,10 +105,10 @@
                                                             {% endif %}
                                                         {% endfor %}
                                                     </select>
-                                                    <button class="removeOneToCartButton round-btn round-btn--blue ml-2 {% if qtty == 0 %}round-btn--disable{% endif %}"
-                                                            id="removeOneToCartButton{{ product.id }}"
-                                                            data-url="{{ path('paprec_public_catalog_removeOneContent', {locale: locale, cartUuid: cart.id, productId: product.id}) }}">
-                                                        <i class="fas fa-minus"></i>
+                                                    <button class="addOneToCartButton round-btn round-btn--blue ml-2"
+                                                            id="addOneToCartButton{{ product.id }}"
+                                                            data-url="{{ path('paprec_public_catalog_addOneContent', {locale: locale, cartUuid: cart.id, productId: product.id}) }}">
+                                                        <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
 
@@ -177,7 +159,7 @@
                                                            {% if frequency == 'ponctual' %}checked{% endif %}
                                                            name="productFrequencyRadios__{{ product.id }}">
                                                     <label class="custom-control-label"
-                                                           for="ponctualFrequencyButton__{{ product.id }}">{{ 'Public.Catalog.OnDemand'| trans({}, "messages", locale) }}
+                                                           for="ponctualFrequencyButton__{{ product.id }}">{{ 'Public.Catalog.Ponctual'| trans({}, "messages", locale) }}
                                                     </label>
                                                 </div>
                                                 <!-- Group of default radios - option Unknown -->

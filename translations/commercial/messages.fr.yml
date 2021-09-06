@@ -91,10 +91,11 @@ Commercial:
         CONTRACT_LOST: Contact non gagné
 
     StaffList:
-        120: De 1 à 20 employés
-        2150: De 21 à 50 employés
+        050: De 0 à 50 employés
         51100: De 51 à 100 employés
-        100+: Plus de 100 employés
+        101250: De 101 à 250 employés
+        251500: De 251 à 500 employés
+        500+: Plus de 500 employés
 
     PonctualDuration:
         1: 1 mois
