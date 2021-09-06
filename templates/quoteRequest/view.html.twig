@@ -193,9 +193,13 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
                                         <label class="col-form-label">
                                             {% if quoteRequest.billingPostalCode %}
+                                                {% if quoteRequest.isSameAddress == 1 %}
                                                 <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
-                                                    {{ quoteRequest.billingPostalCode.code }}
+                                                    {{ quoteRequest.billingPostalCode }}
                                                 </a>
+                                                {% else %}
+                                                    {{ quoteRequest.billingPostalCode }}
+                                                {% endif %}
                                             {% endif %}
                                         </label>
                                     </div>
