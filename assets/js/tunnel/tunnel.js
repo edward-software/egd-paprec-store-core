@@ -261,7 +261,6 @@ $(function () {
         }
     });
 
-    // TODO à modifier en fonction de l'autocomplete Google
     // Désactivation des champs de adresse de facturation quand on sélecitonne facturation identique
     $('input[name*=isSameAddress]').change(function () {
         if (this.value == 1) {
@@ -341,15 +340,6 @@ $(function () {
          */
         if ($('#paprec_catalogbundle_quote_request_public_postalCode').val() == '') {
             $('.address-content').hide();
-        }
-    });
-
-    // TODO à modifier en fonction de l'autocomplete
-    $('#paprec_catalogbundle_quote_request_public_billingPostalCode').autocomplete({
-        source: '' + $('#paprec_catalogbundle_quote_request_public_billingPostalCode').data('url'),
-        minLength: 1,
-        select: function (event, ui) {
-            $('#paprec_catalogbundle_quote_request_public_billingCity').val(ui.item.label.substring(8));
         }
     });
 

@@ -11,3 +11,4 @@ twig:
         paprec_public_technical_service: "%env(PAPREC_PUBLIC_TECHNICAL_SERVICE)%"
         recaptcha_site_key: '%env(RECAPTCHA_SITE_KEY)%'
         recaptcha_secret_key: '%env(RECAPTCHA_SECRET_KEY)%'
+        places_secret_key: '%env(PLACES_SECRET_KEY)%'

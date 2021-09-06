@@ -109,11 +109,10 @@
                             {{ form_widget(form.addressDetail, {'attr': {'class': 'form-control address-field'}}) }}
                             {{ form_errors(form.addressDetail) }}
                         </div>
-{#                        <div class="form-group">#}
-{#                            <label>{{ 'Public.Contact.City'| trans({}, "messages", locale) }}* :</label>#}
-{#                            {{ form_widget(form.city, {'attr': {'class': 'form-control address-field'}}) }}#}
+{#                        <div class="form-group address-content">#}
+{#                            {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}#}
 {#                            {{ form_errors(form.city) }}#}
-{#                        </div>#}
+                        </div>
                         {% if cart.otherNeeds and cart.otherNeeds|length > 0 %}
                             <div class="form-group">
                                 <label>{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }}</label>
@@ -136,22 +135,20 @@
                             {{ form_widget(form.isSameAddress, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
                             {{ form_errors(form.isSameAddress) }}
                         </div>
+                        <label class="billing-address-label">{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
+                        <input id="billingAddressAutocomplete" class="form-control billing-address-field"/>
                         <div class="form-group">
-                            <label class="billing-address-label">{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control billing-address-field'}}) }}
+                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control billing-address-field', 'hidden': true}}) }}
                             {{ form_errors(form.billingAddress) }}
                         </div>
                         <div class="form-group">
-                            <label class="billing-address-label">{{ 'Public.Contact.PostalCode'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control billing-address-field', 'data-url': path('paprec_public_postalCode_autocomplete') }}) }}
+                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control billing-address-field', 'hidden': true}}) }}
                             {{ form_errors(form.billingPostalCode) }}
                         </div>
                         <div class="form-group">
-                            <label class="billing-address-label">{{ 'Public.Contact.City'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control billing-address-field'}}) }}
+                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control billing-address-field', 'hidden': true}}) }}
                             {{ form_errors(form.billingCity) }}
                         </div>
-
 
                         <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.Signatory'| trans({}, "messages", locale) }}</h2>
                         <div class="form-group paprec-flex align-items_center">
@@ -190,6 +187,7 @@
 {% endblock %}
 {% block javascripts %}
     <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ places_secret_key }}"></script>
     <script>
         $(function () {
             // Par défaut, les champs Signataire sont identiques au contact, donc ils ne doivent pas apparaître en arrivant
@@ -198,9 +196,6 @@
             $('.signatory-field').hide().prop('required', false);
             $('.signatory-field').val('');
 
-            /**
-             * TODO A changer par l'autocomplete Google
-             */
             // Par défaut, les champs de Facturation sont identiques à l'adresse de prestation, donc ils ne doivent pas
             // apparaître en arrivant sur cette page
             $('.billing-address-label').hide();
@@ -208,6 +203,54 @@
             $('.billing-address-field').val('');
 
             $('.address-content').hide();
+
+            google.maps.event.addDomListener(window, 'load', function() {
+                var element = document.getElementById('billingAddressAutocomplete');
+
+                if (element) {
+                    var autocomplete = new google.maps.places.Autocomplete(element, { types: ['geocode'] });
+                    autocomplete.setComponentRestrictions({
+                        country: ["fr"],
+                    });
+                    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+
+                        var place = this.getPlace();
+
+                        for (var i in place.address_components) {
+                            var component = place.address_components[i];
+
+                            var componentType = component.types[0];
+
+                            switch (componentType) {
+                                case 'postal_code': {
+                                    $('#paprec_catalogbundle_quote_request_public_billingPostalCode').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'street_number': {
+                                    $('#paprec_catalogbundle_quote_request_public_billingAddress').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'route': {
+                                    var text = $('#paprec_catalogbundle_quote_request_public_billingAddress').val();
+
+                                    text += ' ' + component.long_name;
+
+                                    $('#paprec_catalogbundle_quote_request_public_billingAddress').val(text);
+                                    break;
+                                }
+
+                                case 'locality': {
+                                    $('#paprec_catalogbundle_quote_request_public_billingCity').val(component.long_name);
+                                    break;
+                                }
+                            }
+                        }
+
+                    });
+                }
+            });
 
         });
 

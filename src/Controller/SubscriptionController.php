@@ -242,6 +242,16 @@ class SubscriptionController extends AbstractController
             if ($quoteRequest->getIsSameSignatory()) {
                 $quoteRequest->setSignatoryLastName1($quoteRequest->getLastName());
                 $quoteRequest->setSignatoryFirstName1($quoteRequest->getFirstName());
+                $quoteRequest->setSignatoryTitle1($quoteRequest->getCivility());
+            }
+
+            /**
+             * Set BillingAddress if isSameAddress
+             */
+            if ($quoteRequest->getIsSameAddress()) {
+                $quoteRequest->setBillingAddress($quoteRequest->getAddress());
+                $quoteRequest->setBillingPostalCode($quoteRequest->getPostalCode()->getCode());
+                $quoteRequest->setBillingCity($quoteRequest->getPostalCode()->getCity());
             }
 
             if ($cart->getOtherNeeds() && count($cart->getOtherNeeds())) {
@@ -282,22 +292,36 @@ class SubscriptionController extends AbstractController
             $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
-
-            if ($sendConfirmEmail && $sendNewRequestEmail) {
-                if ($quoteRequest->getType() === 'ponctual') {
-                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
-                        'locale' => $locale,
-                        'cartUuid' => $cart->getId(),
-                        'quoteRequestId' => $quoteRequest->getId()
-                    ));
-                } else {
-                    return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
-                        'locale' => $locale,
-                        'cartUuid' => $cart->getId(),
-                        'quoteRequestId' => $quoteRequest->getId()
-                    ));
-                }
+            if ($quoteRequest->getType() === 'ponctual') {
+                return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
+                    'locale' => $locale,
+                    'cartUuid' => $cart->getId(),
+                    'quoteRequestId' => $quoteRequest->getId()
+                ));
+            } else {
+                return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
+                    'locale' => $locale,
+                    'cartUuid' => $cart->getId(),
+                    'quoteRequestId' => $quoteRequest->getId()
+                ));
             }
+
+
+//            if ($sendConfirmEmail && $sendNewRequestEmail) {
+//                if ($quoteRequest->getType() === 'ponctual') {
+//                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
+//                        'locale' => $locale,
+//                        'cartUuid' => $cart->getId(),
+//                        'quoteRequestId' => $quoteRequest->getId()
+//                    ));
+//                } else {
+//                    return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
+//                        'locale' => $locale,
+//                        'cartUuid' => $cart->getId(),
+//                        'quoteRequestId' => $quoteRequest->getId()
+//                    ));
+//                }
+//            }
         }
 
         return $this->render('public/contact.html.twig', array(

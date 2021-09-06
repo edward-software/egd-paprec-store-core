@@ -64,7 +64,7 @@ class QuoteRequestPublicType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.StaffList.' . $choiceValue;
                 },
-                'data' => '050',
+                'data' => '150',
                 'required' => true
             ))
 
@@ -116,8 +116,8 @@ class QuoteRequestPublicType extends AbstractType
 
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
-        $builder->get('billingPostalCode')
-            ->addModelTransformer($this->transformer);
+//        $builder->get('billingPostalCode')
+//            ->addModelTransformer($this->transformer);
     }
 
     /**
