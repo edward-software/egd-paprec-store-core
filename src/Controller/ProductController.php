@@ -185,13 +185,10 @@ class ProductController extends AbstractController
             'Position',
             'User creation ID',
             'User update ID',
-            'Folder number',
             'PL. ID',
             'Name',
             'Short desc.',
             'Language',
-            'Product version',
-            'Lock type',
         ];
 
         $xAxe = 'A';
@@ -212,7 +209,7 @@ class ProductController extends AbstractController
             $getters = [
                 $product->getId(),
                 $product->getDateCreation()->format('Y-m-d'),
-                $product->getDateUpdate()->format('Y-m-d'),
+                ($product->getDateUpdate() == null) ? null : $product->getDateUpdate()->format('Y-m-d'),
                 $product->getDeleted() ? 'true' : 'false',
                 $product->getCapacity(),
                 $product->getCapacityUnit(),
@@ -225,13 +222,10 @@ class ProductController extends AbstractController
                 $product->getPosition(),
                 $product->getUserCreation(),
                 $product->getUserUpdate(),
-                $product->getFolderNumber(),
                 $productLabel->getId(),
                 $productLabel->getName(),
                 $productLabel->getShortDescription(),
                 $productLabel->getLanguage(),
-                $productLabel->getVersion(),
-                $productLabel->getLockType(),
             ];
 
             $xAxe = 'A';

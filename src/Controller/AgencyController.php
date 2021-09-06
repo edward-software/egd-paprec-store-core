@@ -143,7 +143,7 @@ class AgencyController extends AbstractController
             ->setCellValue('A1', 'ID')
             ->setCellValue('B1', 'Nom')
             ->setCellValue('C1', 'Raison sociale')
-            ->setCellValue('D1', 'Tariff Identification société')
+            ->setCellValue('D1', 'Tarif Identification société')
             ->setCellValue('E1', 'Adresse')
             ->setCellValue('F1', 'Ville')
             ->setCellValue('G1', 'Code postal');
@@ -157,8 +157,9 @@ class AgencyController extends AbstractController
                 ->setCellValue('B' . $i, $agency->getName())
                 ->setCellValue('C' . $i, $agency->getBusinessName())
                 ->setCellValue('D' . $i, $agency->getBusinessId())
-                ->setCellValue('E' . $i, $agency->getBusinessId())
-                ->setCellValue('I' . $i, ($agency->getUserInCharge()) ? $agency->getUserInCharge()->getEmail() : '');
+                ->setCellValue('E' . $i, $agency->getAddress())
+                ->setCellValue('F' . $i, $agency->getCity())
+                ->setCellValue('G' . $i, $agency->getPostalCode());
             $i++;
         }
 
