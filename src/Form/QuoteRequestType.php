@@ -142,8 +142,8 @@ class QuoteRequestType extends AbstractType
             ->add('signatoryTitle1');
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
-        $builder->get('billingPostalCode')
-            ->addModelTransformer($this->transformer);
+//        $builder->get('billingPostalCode')
+//            ->addModelTransformer($this->transformer);
     }
 
     /**
