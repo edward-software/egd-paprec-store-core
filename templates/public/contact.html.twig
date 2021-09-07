@@ -93,7 +93,7 @@
                             {{ form_widget(form.isMultisite, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
                             {{ form_errors(form.isMultisite) }}
                         </div>
-                        <h2 class="color-secondary m-t-25 m-b-15">Adresse de prestation</h2>
+                        <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.DeliveryAddress'| trans({}, "messages", locale) }}</h2>
                         <div class="form-group">
                             <label>{{ 'Public.Contact.PostalCode'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.postalCode, {'attr': {'class': 'form-control address-field', 'data-url': path('paprec_public_postalCode_autocomplete') }}) }}
@@ -129,7 +129,7 @@
                                 {{ 'Public.Contact.isMultisiteInfo'| trans({}, "messages", locale) }}
                             </span>
 
-                        <h2 class="color-secondary m-t-25 m-b-15">Adresse de facturation</h2>
+                        <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.BillingAddress'| trans({}, "messages", locale) }}</h2>
                         <div class="form-group paprec-flex align-items_center">
                             <label>{{ 'Public.Contact.IsSameAddress'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.isSameAddress, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
@@ -187,7 +187,7 @@
 {% endblock %}
 {% block javascripts %}
     <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ places_secret_key }}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ google_places_secret_key }}"></script>
     <script>
         $(function () {
             // Par défaut, les champs Signataire sont identiques au contact, donc ils ne doivent pas apparaître en arrivant
