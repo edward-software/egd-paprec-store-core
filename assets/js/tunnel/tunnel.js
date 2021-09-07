@@ -44,8 +44,8 @@ $(function () {
         var maxDate = moment(now);
         $('#frequencyPonctualDatepicker').datepicker({
             option: $.datepicker.regional["fr"],
-            minDate: +1,
-            maxDate: "+1M"
+            minDate: +3,
+            maxDate: "+3M"
         });
 
         $('#frequencyPonctualDatepicker').change(function () {
@@ -142,10 +142,9 @@ $(function () {
 
     $('[id^=ponctualFrequencyButton__], [id^=unknowFrequencyButton__]').on('click', function () {
         const productId = (this.name).replace('productFrequencyRadios__', '');
-        $('#productFrequencyTimesInput__' + productId).val(0);
+        $('#productFrequencyTimesInput__' + productId).val(1);
         $('#productFrequencyTimesInput__' + productId).prop("disabled", true);
         $('#productFrequencyIntervalSelect__' + productId).prop("disabled", true);
-
     });
 
     $('#addFrequencyButton').on('click', function () {
@@ -258,26 +257,31 @@ $(function () {
         } else if (this.value == 0) {
             $('.address-field').prop("disabled", false);
             $('#multisite-info').hide();
+            $('.address-content').hide();
         }
     });
 
     // Désactivation des champs de adresse de facturation quand on sélecitonne facturation identique
     $('input[name*=isSameAddress]').change(function () {
         if (this.value == 1) {
-            $('.billing-address-field').prop("disabled", true);
+            $('.billing-address-label').hide();
+            $('.billing-address-field').hide().prop('required',false);
             $('.billing-address-field').val('');
         } else if (this.value == 0) {
-            $('.billing-address-field').prop("disabled", false);
+            $('.billing-address-label').show();
+            $('.billing-address-field').show().prop('required',true);
         }
     });
 
     // Désactivation des champs de signatory quand on sélecitonne signataire
     $('input[name*=isSameSignatory]').change(function () {
         if (this.value == 1) {
-            $('.signatory-field').prop("disabled", true);
+            $('.signatory-label').hide();
+            $('.signatory-field').hide().prop('required', false);
             $('.signatory-field').val('');
         } else if (this.value == 0) {
-            $('.signatory-field').prop("disabled", false);
+            $('.signatory-field').show().prop('required', true);
+            $('.signatory-label').show();
         }
     });
 
@@ -323,15 +327,19 @@ $(function () {
         source: '' + $('#paprec_catalogbundle_quote_request_public_postalCode').data('url'),
         minLength: 1,
         select: function (event, ui) {
-            $('#paprec_catalogbundle_quote_request_public_city').val(ui.item.label.substring(ui.item.label.indexOf('-') + 2));
+            // $('#paprec_catalogbundle_quote_request_public_city').val(ui.item.label.substring(ui.item.label.indexOf('-') + 2));
+            /**
+             * Dès qu'un code postal a été sélectionné pour l'adresse de facturation, on affiche les autres champs
+             * (adresse et précision de l'adresse)
+             */
+            $('.address-content').show();
         }
-    });
-
-    $('#paprec_catalogbundle_quote_request_public_billingPostalCode').autocomplete({
-        source: '' + $('#paprec_catalogbundle_quote_request_public_billingPostalCode').data('url'),
-        minLength: 1,
-        select: function (event, ui) {
-            $('#paprec_catalogbundle_quote_request_public_billingCity').val(ui.item.label.substring(8));
+    }).keyup(function(){
+        /**
+         * s'il n'y a plus de valeur dans le code postal, on masque les autres champs
+         */
+        if ($('#paprec_catalogbundle_quote_request_public_postalCode').val() == '') {
+            $('.address-content').hide();
         }
     });
 

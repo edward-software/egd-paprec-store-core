@@ -85,7 +85,7 @@ class PostalCodeManager
         try {
 
             return $this->em->getRepository(PostalCode::class)->createQueryBuilder('pC')
-                ->where('pC.code LIKE :code')
+                ->where('pC.code LIKE :code OR pC.city LIKE :code')
                 ->andWhere('pC.deleted is NULL')
                 ->setParameter('code', $code . '%')
                 ->getQuery()

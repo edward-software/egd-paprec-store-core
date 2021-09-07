@@ -151,13 +151,22 @@ class ProductManager
     {
         $numberManager = $this->numberManager;
 
+        $frequencyIntervalValue = 1;
+        if ($quoteRequestLine->getFrequency() === 'regular') {
+            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
+            $frequencyInterval = $quoteRequestLine->getFrequencyInterval();
+            if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
+                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
+            }
+        }
 
         return (
                 ((($quoteRequestLine->getEditableRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate()) * $quoteRequestLine->getQuantity()))
                 + ((($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate())))
                 + ((($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate())))
-            ) * $quoteRequestLine->getQuantity()
-        + ((($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate())));
+                * $quoteRequestLine->getQuantity())
+            * ($frequencyIntervalValue);
+        //+ ((($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate())));
 
     }
 

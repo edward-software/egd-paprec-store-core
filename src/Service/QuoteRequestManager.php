@@ -248,8 +248,8 @@ class QuoteRequestManager
             $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
             $quoteRequestLine->setFrequency($quoteRequestLine->getProduct()->getFrequency());
-            $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getProduct()->getFrequencyInterval());
-            $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getProduct()->getFrequencyTimes());
+            $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
+            $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());
             $quoteRequestLine->setProductName($quoteRequestLine->getProduct()->getId());
 
             /**
@@ -333,7 +333,7 @@ class QuoteRequestManager
      * @param $qtty
      * @throws Exception
      */
-    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $doFlush = true)
+    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequencyTimes, $frequencyInterval, $doFlush = true)
     {
         try {
             $product = $this->productManager->get($productId);
@@ -341,6 +341,8 @@ class QuoteRequestManager
 
             $quoteRequestLine->setProduct($product);
             $quoteRequestLine->setQuantity($qtty);
+            $quoteRequestLine->setFrequencyTimes($frequencyTimes);
+            $quoteRequestLine->setFrequencyInterval($frequencyInterval);
             $this->addLine($quoteRequest, $quoteRequestLine, null, $doFlush);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());

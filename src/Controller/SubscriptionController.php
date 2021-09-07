@@ -242,6 +242,16 @@ class SubscriptionController extends AbstractController
             if ($quoteRequest->getIsSameSignatory()) {
                 $quoteRequest->setSignatoryLastName1($quoteRequest->getLastName());
                 $quoteRequest->setSignatoryFirstName1($quoteRequest->getFirstName());
+                $quoteRequest->setSignatoryTitle1($quoteRequest->getCivility());
+            }
+
+            /**
+             * Set BillingAddress if isSameAddress
+             */
+            if ($quoteRequest->getIsSameAddress()) {
+                $quoteRequest->setBillingAddress($quoteRequest->getAddress());
+                $quoteRequest->setBillingPostalCode($quoteRequest->getPostalCode()->getCode());
+                $quoteRequest->setBillingCity($quoteRequest->getPostalCode()->getCity());
             }
 
             if ($cart->getOtherNeeds() && count($cart->getOtherNeeds())) {
@@ -261,6 +271,7 @@ class SubscriptionController extends AbstractController
                 $quoteRequest->setUserInCharge(null);
             } else {
                 $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+                $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
             }
 
             $this->em->persist($quoteRequest);
@@ -271,7 +282,7 @@ class SubscriptionController extends AbstractController
              */
             if ($cart->getContent() !== null) {
                 foreach ($cart->getContent() as $item) {
-                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'], false);
+                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'], $item['frequencyTimes'], $item['frequencyInterval'], false);
                 }
             }
             $this->em->flush();
@@ -282,25 +293,37 @@ class SubscriptionController extends AbstractController
             $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
-
-            if ($sendConfirmEmail && $sendNewRequestEmail) {
-                if ($quoteRequest->getType() === 'PONCTUAL') {
-                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
-                        'locale' => $locale,
-                        'cartUuid' => $cart->getId(),
-                        'quoteRequestId' => $quoteRequest->getId()
-                    ));
-                }
-
+            if ($quoteRequest->getType() === 'ponctual') {
+                return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
+                    'locale' => $locale,
+                    'cartUuid' => $cart->getId(),
+                    'quoteRequestId' => $quoteRequest->getId()
+                ));
+            } else {
                 return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
                     'locale' => $locale,
                     'cartUuid' => $cart->getId(),
                     'quoteRequestId' => $quoteRequest->getId()
                 ));
             }
-            exit;
-        }
 
+
+//            if ($sendConfirmEmail && $sendNewRequestEmail) {
+//                if ($quoteRequest->getType() === 'ponctual') {
+//                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
+//                        'locale' => $locale,
+//                        'cartUuid' => $cart->getId(),
+//                        'quoteRequestId' => $quoteRequest->getId()
+//                    ));
+//                } else {
+//                    return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
+//                        'locale' => $locale,
+//                        'cartUuid' => $cart->getId(),
+//                        'quoteRequestId' => $quoteRequest->getId()
+//                    ));
+//                }
+//            }
+        }
 
         return $this->render('public/contact.html.twig', array(
             'locale' => $locale,
@@ -366,10 +389,9 @@ class SubscriptionController extends AbstractController
      */
     public function confirmAction(Request $request, $locale, $cartUuid, $quoteRequestId)
     {
-        $quoteRequestManager = $this->get('paprec_commercial.quote_request_manager');
 
         $cart = $this->cartManager->get($cartUuid);
-        $quoteRequest = $quoteRequestManager->get($quoteRequestId);
+        $quoteRequest = $this->quoteRequestManager->get($quoteRequestId);
 
         return $this->render('public/confirm.html.twig', array(
             'locale' => $locale,

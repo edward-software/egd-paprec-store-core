@@ -197,7 +197,7 @@ class RangeController extends AbstractController
             $getters = [
                 $range->getId(),
                 $range->getDateCreation()->format('Y-m-d'),
-                $range->getDateUpdate()->format('Y-m-d'),
+                ($range->getDateUpdate() == null) ? null : $range->getDateUpdate()->format('Y-m-d'),
                 $range->getDeleted() ? 'true' : 'false',
                 $range->getIsEnabled(),
                 $range->getPosition(),

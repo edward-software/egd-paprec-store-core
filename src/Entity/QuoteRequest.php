@@ -162,10 +162,12 @@ class QuoteRequest
     private $isSameSignatory;
 
     /**
+     * TODO revoir l'annotation @Assert\NotBlank(groups={"public"}) pour isSameAddress
+     */
+    /**
      * @var boolean
      *
      * @ORM\Column(name="isSameAddress", type="boolean")
-     * @Assert\NotBlank(groups={"public"})
      */
     private $isSameAddress;
 
@@ -181,7 +183,7 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="staff", type="text")
+     * @ORM\Column(name="staff", type="text", nullable=true)
      * @Assert\NotBlank(groups={"public"})
      */
     private $staff;
@@ -212,8 +214,14 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=255, nullable=true, nullable=true)
-     * @Assert\NotBlank(groups={"public_multisite"})
+     * @ORM\Column(name="addressDetail", type="text", nullable=true)
+     */
+    private $addressDetail;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
@@ -221,17 +229,20 @@ class QuoteRequest
      * @var string
      *
      * @ORM\Column(name="billingAddress", type="text", nullable=true)
-     * @Assert\NotBlank(groups={"public_same_address"})
      */
     private $billingAddress;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="billingCity", type="string", length=255, nullable=true, nullable=true)
-     * @Assert\NotBlank(groups={"public_same_address"})
+     * @ORM\Column(name="billingCity", type="string", length=255, nullable=true)
      */
     private $billingCity;
+
+    /**
+     * @ORM\Column(name="billingPostalCode", type="string", length=255, nullable=true)
+     */
+    private $billingPostalCode;
 
     /**
      * "Commentaire client" rempli par l'utilisateur Front Office
@@ -340,12 +351,6 @@ class QuoteRequest
      * @Assert\NotBlank(groups={"public_multisite"})
      */
     private $postalCode;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\PostalCode", inversedBy="billingQuoteRequests")
-     * @Assert\NotBlank(groups={"public_same_address"})
-     */
-    private $billingPostalCode;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequestLine", mappedBy="quoteRequest")
@@ -679,6 +684,26 @@ class QuoteRequest
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAddressDetail()
+    {
+        return $this->addressDetail;
+    }
+
+    /**
+     * @param string|null $addressDetail
+     *
+     * @return QuoteRequest
+     */
+    public function setAddressDetail($addressDetail = null)
+    {
+        $this->addressDetail = $addressDetail;
+
+        return $this;
     }
 
     /**

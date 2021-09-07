@@ -64,7 +64,7 @@ class QuoteRequestPublicType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.StaffList.' . $choiceValue;
                 },
-                'data' => '120',
+                'data' => '150',
                 'required' => true
             ))
 
@@ -87,10 +87,11 @@ class QuoteRequestPublicType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
                 },
-                "data" => 0,
+                "data" => 1,
                 "expanded" => true,
             ))
             ->add('address', TextType::class)
+            ->add('addressDetail', TextType::class)
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))
@@ -99,10 +100,10 @@ class QuoteRequestPublicType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
                 },
-                "data" => 0,
+                "data" => 1,
                 "expanded" => true,
             ))
-            ->add('city', TextType::class)
+            //->add('city', TextType::class)
             ->add('billingAddress', TextType::class)
             ->add('billingPostalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
@@ -115,8 +116,8 @@ class QuoteRequestPublicType extends AbstractType
 
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
-        $builder->get('billingPostalCode')
-            ->addModelTransformer($this->transformer);
+//        $builder->get('billingPostalCode')
+//            ->addModelTransformer($this->transformer);
     }
 
     /**

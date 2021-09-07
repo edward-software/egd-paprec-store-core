@@ -53,7 +53,7 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.Staff'| trans({}, "messages", locale) }}* :</label>
+                            <label>{{ 'Public.Contact.Staff'| trans({}, "messages", locale) }} :</label>
                             <select id="contact_staff_select" class="form-control">
                                 <option value="" selected disabled hidden></option>
                                 {% for opt in form.staff.vars.choices %}#}
@@ -64,7 +64,7 @@
                             {{ form_errors(form.staff) }}
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.Comment'| trans({}, "messages", locale) }}* :</label>
+                            <label>{{ 'Public.Contact.Comment'| trans({}, "messages", locale) }} :</label>
                             {{ form_widget(form.comment, {'attr': {'class': 'form-control', 'rows': '11'}}) }}
                             {{ form_errors(form.comment) }}
                         </div>
@@ -93,22 +93,26 @@
                             {{ form_widget(form.isMultisite, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
                             {{ form_errors(form.isMultisite) }}
                         </div>
-                        <h2 class="color-secondary m-t-25 m-b-15">Adresse de prestation</h2>
-                        <div class="form-group">
-                            <label>{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.address, {'attr': {'class': 'form-control address-field'}}) }}
-                            {{ form_errors(form.address) }}
-                        </div>
+                        <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.DeliveryAddress'| trans({}, "messages", locale) }}</h2>
                         <div class="form-group">
                             <label>{{ 'Public.Contact.PostalCode'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.postalCode, {'attr': {'class': 'form-control address-field', 'data-url': path('paprec_public_postalCode_autocomplete') }}) }}
                             {{ form_errors(form.postalCode) }}
                         </div>
-                        <div class="form-group">
-                            <label>{{ 'Public.Contact.City'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.city, {'attr': {'class': 'form-control address-field'}}) }}
-                            {{ form_errors(form.city) }}
+                        <div class="form-group address-content">
+                            <label>{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
+                            {{ form_widget(form.address, {'attr': {'class': 'form-control address-field'}}) }}
+                            {{ form_errors(form.address) }}
                         </div>
+                        <div class="form-group address-content">
+                            <label>{{ 'Public.Contact.AddressDetail'| trans({}, "messages", locale) }} :</label>
+                            {{ form_widget(form.addressDetail, {'attr': {'class': 'form-control address-field'}}) }}
+                            {{ form_errors(form.addressDetail) }}
+                        </div>
+{#                        <div class="form-group address-content">#}
+{#                            {{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}#}
+{#                            {{ form_errors(form.city) }}#}
+{#                        </div>#}
                         {% if cart.otherNeeds and cart.otherNeeds|length > 0 %}
                             <div class="form-group">
                                 <label>{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }}</label>
@@ -125,28 +129,26 @@
                                 {{ 'Public.Contact.isMultisiteInfo'| trans({}, "messages", locale) }}
                             </span>
 
-                        <h2 class="color-secondary m-t-25 m-b-15">Adresse de facturation</h2>
+                        <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.BillingAddress'| trans({}, "messages", locale) }}</h2>
                         <div class="form-group paprec-flex align-items_center">
                             <label>{{ 'Public.Contact.IsSameAddress'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.isSameAddress, {'attr': {'class': 'form-check form-check-inline radio-form'}}) }}
                             {{ form_errors(form.isSameAddress) }}
                         </div>
+                        <label class="billing-address-label">{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
+                        <input id="billingAddressAutocomplete" class="form-control billing-address-field"/>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.Address'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control billing-address-field'}}) }}
+                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control billing-address-field', 'hidden': true}}) }}
                             {{ form_errors(form.billingAddress) }}
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.PostalCode'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control billing-address-field', 'data-url': path('paprec_public_postalCode_autocomplete') }}) }}
+                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control billing-address-field', 'hidden': true}}) }}
                             {{ form_errors(form.billingPostalCode) }}
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.City'| trans({}, "messages", locale) }}* :</label>
-                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control billing-address-field'}}) }}
+                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control billing-address-field', 'hidden': true}}) }}
                             {{ form_errors(form.billingCity) }}
                         </div>
-
 
                         <h2 class="color-secondary m-t-25 m-b-15">{{ 'Public.Contact.Signatory'| trans({}, "messages", locale) }}</h2>
                         <div class="form-group paprec-flex align-items_center">
@@ -155,17 +157,17 @@
                             {{ form_errors(form.isSameSignatory) }}
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.SignatoryLastName1'| trans({}, "messages", locale) }}* :</label>
+                            <label class="signatory-label">{{ 'Public.Contact.SignatoryLastName1'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.signatoryLastName1, {'attr': {'class': 'form-control signatory-field'}}) }}
                             {{ form_errors(form.signatoryLastName1) }}
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.SignatoryFirstName1'| trans({}, "messages", locale) }}* :</label>
+                            <label class="signatory-label">{{ 'Public.Contact.SignatoryFirstName1'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.signatoryFirstName1, {'attr': {'class': 'form-control signatory-field'}}) }}
                             {{ form_errors(form.signatoryFirstName1) }}
                         </div>
                         <div class="form-group">
-                            <label>{{ 'Public.Contact.SignatoryTitle1'| trans({}, "messages", locale) }}* :</label>
+                            <label class="signatory-label">{{ 'Public.Contact.SignatoryTitle1'| trans({}, "messages", locale) }}* :</label>
                             {{ form_widget(form.signatoryTitle1, {'attr': {'class': 'form-control signatory-field'}}) }}
                             {{ form_errors(form.signatoryTitle1) }}
                         </div>
@@ -185,7 +187,72 @@
 {% endblock %}
 {% block javascripts %}
     <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ google_places_secret_key }}"></script>
     <script>
+        $(function () {
+            // Par défaut, les champs Signataire sont identiques au contact, donc ils ne doivent pas apparaître en arrivant
+            // sur cette page
+            $('.signatory-label').hide();
+            $('.signatory-field').hide().prop('required', false);
+            $('.signatory-field').val('');
+
+            // Par défaut, les champs de Facturation sont identiques à l'adresse de prestation, donc ils ne doivent pas
+            // apparaître en arrivant sur cette page
+            $('.billing-address-label').hide();
+            $('.billing-address-field').hide().prop('required', false);
+            $('.billing-address-field').val('');
+
+            $('.address-content').hide();
+
+            google.maps.event.addDomListener(window, 'load', function() {
+                var element = document.getElementById('billingAddressAutocomplete');
+
+                if (element) {
+                    var autocomplete = new google.maps.places.Autocomplete(element, { types: ['geocode'] });
+                    autocomplete.setComponentRestrictions({
+                        country: ["fr"],
+                    });
+                    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+
+                        var place = this.getPlace();
+
+                        for (var i in place.address_components) {
+                            var component = place.address_components[i];
+
+                            var componentType = component.types[0];
+
+                            switch (componentType) {
+                                case 'postal_code': {
+                                    $('#paprec_catalogbundle_quote_request_public_billingPostalCode').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'street_number': {
+                                    $('#paprec_catalogbundle_quote_request_public_billingAddress').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'route': {
+                                    var text = $('#paprec_catalogbundle_quote_request_public_billingAddress').val();
+
+                                    text += ' ' + component.long_name;
+
+                                    $('#paprec_catalogbundle_quote_request_public_billingAddress').val(text);
+                                    break;
+                                }
+
+                                case 'locality': {
+                                    $('#paprec_catalogbundle_quote_request_public_billingCity').val(component.long_name);
+                                    break;
+                                }
+                            }
+                        }
+
+                    });
+                }
+            });
+
+        });
 
     </script>
 {% endblock %}

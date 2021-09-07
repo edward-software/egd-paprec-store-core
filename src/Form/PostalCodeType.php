@@ -35,22 +35,7 @@ class PostalCodeType extends AbstractType
             ->add('rentalRate', TextType::class, array(
                 "required" => true
             ))
-            ->add('cBroyeurTransportRate', TextType::class, array(
-                "required" => true
-            ))
-            ->add('fourgonPLTransportRate', TextType::class, array(
-                "required" => true
-            ))
-            ->add('fourgonVLTransportRate', TextType::class, array(
-                "required" => true
-            ))
-            ->add('amplirollTransportRate', TextType::class, array(
-                "required" => true
-            ))
             ->add('bomTransportRate', TextType::class, array(
-                "required" => true
-            ))
-            ->add('livraisonTransportRate', TextType::class, array(
                 "required" => true
             ))
             ->add('treatmentRate', TextType::class, array(
@@ -59,6 +44,40 @@ class PostalCodeType extends AbstractType
             ->add('traceabilityRate', TextType::class, array(
                 "required" => true
             ))
+            ->add('cbrRegTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('cbrPonctTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('vlPlCfsRegTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('vlPlCfsPonctTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('vlPlTransportRate', TextType::class, array(
+                "required" => true
+            ))
+            ->add('plPonctTransportRate', TextType::class, array(
+                "required" => true
+            ))
+//            ->add('cBroyeurTransportRate', TextType::class, array(
+//                "required" => true
+//            ))
+//            ->add('fourgonPLTransportRate', TextType::class, array(
+//                "required" => true
+//            ))
+//            ->add('fourgonVLTransportRate', TextType::class, array(
+//                "required" => true
+//            ))
+//            ->add('amplirollTransportRate', TextType::class, array(
+//                "required" => true
+//            ))
+//            ->add('livraisonTransportRate', TextType::class, array(
+//                "required" => true
+//            ))
+
             ->add('agency', EntityType::class, array(
                 'class' => Agency::class,
                 'multiple' => false,

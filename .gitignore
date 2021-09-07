@@ -10,6 +10,8 @@
 /var/
 /vendor/
 /public/build/
+/src/data
+
 ###< symfony/framework-bundle ###
 /.idea
 /node_modules
