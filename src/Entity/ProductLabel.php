@@ -103,7 +103,7 @@ class ProductLabel
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="productLabels")
-     * @ORM\JoinColumn(name="productId", nullable=false)
+     * @ORM\JoinColumn(name="productId")
      */
     private $product;
 
