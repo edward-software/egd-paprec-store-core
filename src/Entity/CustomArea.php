@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * CustomArea
  *
- * @ORM\Table(name="custom_area")
+ * @ORM\Table(name="customAreas")
  * @ORM\Entity(repositoryClass="App\Repository\CustomAreaRepository")
  */
 class CustomArea

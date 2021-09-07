@@ -194,12 +194,14 @@ class PostalCode
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Agency", inversedBy="postalCodes")
+     * @ORM\JoinColumn(name="agencyId")
      * @Assert\NotBlank
      */
     private $agency;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="postalCodes")
+     * @ORM\JoinColumn(name="userInChargeId")
      */
     private $userInCharge;
 

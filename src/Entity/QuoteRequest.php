@@ -343,11 +343,13 @@ class QuoteRequest
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="quoteRequests")
+     * @ORM\JoinColumn(name="userInChargeId")
      */
     private $userInCharge;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PostalCode", inversedBy="quoteRequests")
+     * @ORM\JoinColumn(name="postalCodeId")
      * @Assert\NotBlank(groups={"public_multisite"})
      */
     private $postalCode;

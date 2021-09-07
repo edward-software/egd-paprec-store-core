@@ -112,11 +112,19 @@ class OtherNeed
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Cart", inversedBy="otherNeeds")
+     * @ORM\JoinTable(name="otherNeeds_carts",
+     *      joinColumns={@ORM\JoinColumn(name="otherNeedId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="cartId", referencedColumnName="id")}
+     *      )
      */
     private $carts;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\QuoteRequest", inversedBy="otherNeeds")
+     * @ORM\JoinTable(name="otherNeeds_quoteRequests",
+     *      joinColumns={@ORM\JoinColumn(name="otherNeedId", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="quoteRequestId", referencedColumnName="id")}
+     *      )
      */
     private $quoteRequests;
 

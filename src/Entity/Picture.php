@@ -43,27 +43,32 @@ class Picture
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="pictures")
+     * @ORM\JoinColumn(name="productId")
      */
     private $product;
 
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Range", inversedBy="pictures")
+     * @ORM\JoinColumn(name="rangeId")
      */
     private $range;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Agency", inversedBy="pictures")
+     * @ORM\JoinColumn(name="agencyId")
      */
     private $agency;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\CustomArea", inversedBy="pictures")
+     * @ORM\JoinColumn(name="customAreaId")
      */
     private $customArea;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\OtherNeed", inversedBy="pictures")
+     * @ORM\JoinColumn(name="otherNeedId")
      */
     private $otherNeed;
 

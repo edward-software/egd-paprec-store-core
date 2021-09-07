@@ -103,6 +103,7 @@ class RangeLabel
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Range", inversedBy="rangeLabels")
+     * @ORM\JoinColumn(name="rangeId")
      */
     private $range;
 

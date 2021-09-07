@@ -188,6 +188,7 @@ class User implements UserInterface
     /**
      * type User
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="subordinates")
+     * @ORM\JoinColumn(name="managerId")
      */
     private $manager;
 

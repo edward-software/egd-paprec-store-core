@@ -214,6 +214,7 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Range", inversedBy="products")
+     * @ORM\JoinColumn(name="rangeId")
      */
     private $range;
 
