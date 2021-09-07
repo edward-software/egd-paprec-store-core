@@ -74,21 +74,21 @@ class User implements UserInterface
     /**
      * @var string
      *getDateUpdate
-     * @ORM\Column(name="last_login", type="string", nullable=true)
+     * @ORM\Column(name="lastLogin", type="string", nullable=true)
      */
     private $lastLogin;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="confirmation_token", type="string", length=180, nullable=true)
+     * @ORM\Column(name="confirmationToken", type="string", length=180, nullable=true)
      */
     private $confirmationToken;
 
     /**
      * @var DateTime
      *
-     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
+     * @ORM\Column(name="passwordRequestedAt", type="datetime", nullable=true)
      */
     private $passwordRequestedAt;
 
