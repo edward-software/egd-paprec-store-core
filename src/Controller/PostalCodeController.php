@@ -146,7 +146,7 @@ class PostalCodeController extends AbstractController
 
         $sheet
             ->setCellValue('A1', $this->translator->trans('Catalog.PostalCode.Name'))
-            ->setCellValue('B1', $this->translator->trans('Catalog.PostalCode.Commune'))
+            ->setCellValue('B1', $this->translator->trans('Catalog.PostalCode.City'))
             ->setCellValue('C1', $this->translator->trans('Catalog.PostalCode.Agency'))
             ->setCellValue('D1', $this->translator->trans('Catalog.PostalCode.UserInCharge'))
             ->setCellValue('E1', $this->translator->trans('Catalog.PostalCode.RentalRate'))
