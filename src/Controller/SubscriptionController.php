@@ -248,7 +248,7 @@ class SubscriptionController extends AbstractController
             /**
              * Set BillingAddress if isSameAddress
              */
-            if ($quoteRequest->getIsSameAddress()) {
+            if ($quoteRequest->getIsSameAddress() && !$quoteRequest->getIsMultisite()) {
                 $quoteRequest->setBillingAddress($quoteRequest->getAddress());
                 $quoteRequest->setBillingPostalCode($quoteRequest->getPostalCode()->getCode());
                 $quoteRequest->setBillingCity($quoteRequest->getPostalCode()->getCity());

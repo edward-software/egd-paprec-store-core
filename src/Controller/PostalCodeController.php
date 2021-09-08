@@ -115,6 +115,12 @@ class PostalCodeController extends AbstractController
      */
     public function exportAction(Request $request)
     {
+        /**
+         * TODO temporaire
+         * JML - le nombre de codes postaux est conséquent, il faut augmenter la taille mémoire pour réaliser l'export
+         */
+        ini_set('memory_limit','-1');
+
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(PostalCode::class)->createQueryBuilder('pC');
 
         $queryBuilder->select(array('pC'))
