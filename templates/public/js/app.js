@@ -3,8 +3,8 @@
 import '../scss/global.scss';
 
 global.$ = global.jQuery = require('jquery');
-import '../js/plugins/egd-datatable';
-import '../js/plugins/egd-datatable-locales';
+import '../../../assets/js/plugins/egd-datatable';
+import '../../../assets/js/plugins/egd-datatable-locales';
 import 'datatables.net';
 import 'datatables.net-buttons';
 import 'datatables.net-buttons-bs4';
