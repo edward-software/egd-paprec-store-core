@@ -41,7 +41,7 @@ Encore
     .autoProvidejQuery()
 
     .copyFiles([
-        {from: './assets/static', to: './static/[name].[ext]'},
+        {from: './templates/public/static', to: './static/[name].[ext]'},
         {
             from: './node_modules/ckeditor/',
             to: 'ckeditor/[path][name].[ext]',
