@@ -63,6 +63,9 @@
                                         </div>
                                         <div class="product__description">
                                             <div class="paprec-flex space-between">
+                                                <div class="product__label">{{ product|productLabelTranslation(locale,'shortDescription') }}</div>
+                                            </div>
+                                            <div class="paprec-flex space-between">
                                                 <div class="product__label">{{ 'Catalog.Product.Capacity'|trans({}, "messages", app.request.locale) }}
                                                     :
                                                 </div>
@@ -175,20 +178,20 @@
                                                     </label>
                                                 </div>
 
-
                                                 <div class="paprec-flex">
                                                     <input class="product__frequency__container__input text-center mr-2"
                                                            size="1"
                                                            type="number"
                                                            max="9"
                                                            min="0"
-                                                           {% if frequency != 'regular' %}disabled{% endif %}
+                                                           {% if frequency != 'regular' %}hidden{% endif %}
                                                            data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
                                                            id="productFrequencyTimesInput__{{ product.id }}"
                                                            value="{{ frequencyTimes }}"/>
-                                                    <span class="devis__frequence__times">{{ 'Public.Catalog.Times'| trans({}, "messages", locale) }}</span>
+                                                    <span class="devis__frequence__times" id="textFrequencyTimes__{{ product.id }}"
+                                                          {% if frequency != 'regular' %}hidden{% endif %}>{{ 'Public.Catalog.Times'| trans({}, "messages", locale) }}</span>
                                                     <select class="catalog-frequency-select ml-2"
-                                                            {% if frequency != 'regular' %}disabled{% endif %}
+                                                            {% if frequency != 'regular' %}hidden{% endif %}
                                                             data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
                                                             id="productFrequencyIntervalSelect__{{ product.id }}">
                                                         <option value="week"
