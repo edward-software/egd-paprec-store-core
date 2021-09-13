@@ -133,18 +133,26 @@ $(function () {
     });
 
 
+    /**
+     * Lorsque l'on clique sur la fréquence régulière, l'input et le select pour configurer la fréquence s'affiche
+     */
     $('[id^=regularFrequencyButton__]').on('click', function () {
-        const productId = (this.id).replace('regularFrequencyButton__', '');
-        $('#productFrequencyIntervalSelect__' + productId).prop("disabled", false);
-        $('#productFrequencyTimesInput__' + productId).prop("disabled", false);
+        const productId = (this.name).replace('productFrequencyRadios__', '');
+        $('#productFrequencyIntervalSelect__' + productId).prop('hidden', false);
+        $('#productFrequencyTimesInput__' + productId).prop('hidden', false);
+        $('#textFrequencyTimes__' + productId).prop('hidden', false);
         $('#productFrequencyTimesInput__' + productId).val(1);
     });
 
-    $('[id^=ponctualFrequencyButton__], [id^=unknowFrequencyButton__]').on('click', function () {
+    /**
+     * Lorsque l'on clique sur les autres fréquences, l'input et le select pour configurer la fréquence ne doivent plus s'affiche
+     */
+    $('[id^=ponctualFrequencyButton__], [id^=unknownFrequencyButton__]').on('click', function () {
         const productId = (this.name).replace('productFrequencyRadios__', '');
-        $('#productFrequencyTimesInput__' + productId).val(1);
-        $('#productFrequencyTimesInput__' + productId).prop("disabled", true);
-        $('#productFrequencyIntervalSelect__' + productId).prop("disabled", true);
+        $('#productFrequencyTimesInput__' + productId).prop('hidden', true);
+        $('#textFrequencyTimes__' + productId).prop('hidden', true);
+        $('#productFrequencyIntervalSelect__' + productId).prop('hidden', true);
+        $('#productFrequencyTimesInput__' + productId).val(0);
     });
 
     $('#addFrequencyButton').on('click', function () {
