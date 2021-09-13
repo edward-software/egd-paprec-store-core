@@ -91,7 +91,7 @@ class QuoteRequestPublicType extends AbstractType
                 "expanded" => true,
             ))
             ->add('address', TextType::class)
-            ->add('addressDetail', TextType::class)
+            ->add('addressDetail', TextType::class, array('required' => false))
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))
