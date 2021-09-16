@@ -377,6 +377,11 @@ class QuoteRequestManager
         $now = new \DateTime();
 
         $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
+//        if ($quoteRequest->getOverallDiscount() > 0) {
+//            $totalLine += ($totalLine * ($quoteRequest->getOverallDiscount() / 100)) / 100;
+//        } elseif ($quoteRequest->getOverallDiscount() < 0) {
+//            $totalLine -= ($totalLine * ($quoteRequest->getOverallDiscount() / 100)) / 100;
+//        }
         $quoteRequestLine->setTotalAmount($totalLine);
         $quoteRequestLine->setDateUpdate($now);
 
@@ -692,7 +697,7 @@ class QuoteRequestManager
                 return false;
             }
 
-            $attachment = new Swift_Message(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
+            $attachment = new \Swift_Attachment(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
 
             $translator = $this->container->get('translator');
 

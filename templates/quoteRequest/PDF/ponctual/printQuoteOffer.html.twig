@@ -502,24 +502,25 @@
                                 {% set unitPrice = (((line.rentalRate / 1000000000000000) * (line.rentalUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000) ) %}
                                 {% set total = (unitPrice * quantity) %}
                                 {% set rentalTotalHT = rentalTotalHT + total %}
+
+                                <tr>
+                                    <td>
+                                        <div class="flex align-item-center">
+                                            <div class="check {% if quantity > 0 %} active {% endif %} "
+                                                 style="margin-right: 10px;"></div>
+                                            <p>{{ product|productLabelTranslation('fr') }}</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if quantity > 0 %}
+                                            {{ quantity }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{% if unitPrice > 0 %}{{ unitPrice|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
+                                    <td>{% if total > 0 %}{{ total|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
-                        <tr>
-                            <td>
-                                <div class="flex align-item-center">
-                                    <div class="check {% if quantity > 0 %} active {% endif %} "
-                                         style="margin-right: 10px;"></div>
-                                    <p>{{ product|productLabelTranslation('fr') }}</p>
-                                </div>
-                            </td>
-                            <td>
-                                {% if quantity > 0 %}
-                                    {{ quantity }}
-                                {% endif %}
-                            </td>
-                            <td>{% if unitPrice > 0 %}{{ unitPrice|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
-                            <td>{% if total > 0 %}{{ total|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
-                        </tr>
                     {% endfor %}
                     <tr>
                         <td colspan="3"></td>

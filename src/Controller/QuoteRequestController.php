@@ -638,7 +638,10 @@ class QuoteRequestController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        /**
+         * TODO $form->isValid() ne fonctionne pas
+         */
+        if ($form->isSubmitted()) {
             $quoteRequestLine = $form->getData();
             $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
 

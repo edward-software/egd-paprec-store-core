@@ -67,11 +67,6 @@ class PostalCode
      * @var string
      * @ORM\Column(name="code", type="string")
      * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern="/^\d{2}(\*|(?:\d{3}))$/",
-     *     match=true,
-     *     message="Le codes postal doivent être un nombre de 5 caractères ou 2 suivis d'une *. (ex: 15*, 1530)"
-     * )
      */
     private $code;
 

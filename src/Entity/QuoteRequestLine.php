@@ -748,16 +748,16 @@ class QuoteRequestLine
     /**
      * @return string
      */
-    public function getFrequencyTimes(): string
+    public function getFrequencyTimes()
     {
         return $this->frequencyTimes;
     }
 
     /**
-     * @param string $frequencyTimes
+     * @param $frequencyTimes
      * @return QuoteRequestLine
      */
-    public function setFrequencyTimes(string $frequencyTimes): self
+    public function setFrequencyTimes($frequencyTimes): self
     {
         $this->frequencyTimes = $frequencyTimes;
         return $this;
@@ -766,16 +766,16 @@ class QuoteRequestLine
     /**
      * @return string
      */
-    public function getFrequencyInterval(): string
+    public function getFrequencyInterval()
     {
         return $this->frequencyInterval;
     }
 
     /**
-     * @param string $frequencyInterval
+     * @param $frequencyInterval
      * @return QuoteRequestLine
      */
-    public function setFrequencyInterval(string $frequencyInterval): self
+    public function setFrequencyInterval($frequencyInterval): self
     {
         $this->frequencyInterval = $frequencyInterval;
         return $this;
