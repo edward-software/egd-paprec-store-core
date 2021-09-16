@@ -443,21 +443,22 @@
                             {% set treatmentProductTotalTTC = treatmentProductTotalHT %}
                             {% set treatmentTotalHT = treatmentTotalHT + treatmentProductTotalHT %}
                             {% set treatmentTotalTTC = treatmentTotalTTC + rentalProductTotalTTC %}
+
+                            <tr>
+                                <td>
+                                    <div class="flex align-item-center">
+                                        <div class="check {% if quantity > 0 %} active {% endif %}"
+                                             style="margin-right: 10px;"></div>
+                                        <p>{{ product|productLabelTranslation('fr') }}</p>
+                                    </div>
+                                </td>
+                                <td>{% if quantity > 0 %}{{ quantity }}{% endif %}</td>
+                                <td>{% if rentalUnitPrice > 0 %}{{ rentalUnitPrice|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
+                                <td>{% if rentalProductTotalHT > 0 %}{{ rentalProductTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
+                            </tr>
                         {% endif %}
                     {% endfor %}
 
-                    <tr>
-                        <td>
-                            <div class="flex align-item-center">
-                                <div class="check {% if quantity > 0 %} active {% endif %}"
-                                     style="margin-right: 10px;"></div>
-                                <p>{{ product|productLabelTranslation('fr') }}</p>
-                            </div>
-                        </td>
-                        <td>{% if quantity > 0 %}{{ quantity }}{% endif %}</td>
-                        <td>{% if rentalUnitPrice > 0 %}{{ rentalUnitPrice|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
-                        <td>{% if rentalProductTotalHT > 0 %}{{ rentalProductTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
-                    </tr>
                 {% endfor %}
                 <tr>
                     <td colspan="3" class="text-right bold">

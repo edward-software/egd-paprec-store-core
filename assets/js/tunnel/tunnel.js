@@ -68,47 +68,47 @@ $(function () {
      *  Gestion du bouton flottant en bas de page
      *****************************/
 
-    if ($('.product-container').is('div')) {
-
-
-        var navbarOffset = $('.navbar')[0].getBoundingClientRect().top;
-        var productOffset = $('.product-container')[0].getBoundingClientRect().top;
-        var otherNeedsOffset = $('.other-needs-container')[0].getBoundingClientRect().top;
-        var otherNeedsHeight = $('.other-needs-container').height();
-        var duration = 350;
-
-        $(window).scroll(function () {
-                const scrollTop = $(this).scrollTop();
-                if (scrollTop <= navbarOffset) {
-                    $('#define-need-button').fadeOut(duration);
-                    $('#other-needs-button').fadeOut(duration);
-                } else if (scrollTop > navbarOffset && scrollTop < productOffset) {
-                    $('#define-need-button').fadeIn(duration);
-                    $('#other-needs-button').fadeOut(duration);
-
-                } else if (scrollTop >= productOffset && scrollTop <= ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
-                    $('#define-need-button').fadeOut(duration);
-                    $('#other-needs-button').fadeIn(duration);
-                } else if (scrollTop > ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
-                    $('#other-needs-button').fadeOut(duration);
-                }
-            }
-        );
-
-        $('#define-need-button').on('click', function (e) {
-            e.preventDefault();
-            $('html, body').animate({
-                scrollTop: productOffset
-            }, 750);
-        });
-
-        $('#other-needs-button').on('click', function (e) {
-            e.preventDefault();
-            $('html, body').animate({
-                scrollTop: otherNeedsOffset
-            }, 750);
-        });
-    }
+    // if ($('.product-container').is('div')) {
+    //
+    //
+    //     var navbarOffset = $('.navbar')[0].getBoundingClientRect().top;
+    //     var productOffset = $('.product-container')[0].getBoundingClientRect().top;
+    //     var otherNeedsOffset = $('.other-needs-container')[0].getBoundingClientRect().top;
+    //     var otherNeedsHeight = $('.other-needs-container').height();
+    //     var duration = 350;
+    //
+    //     $(window).scroll(function () {
+    //             const scrollTop = $(this).scrollTop();
+    //             if (scrollTop <= navbarOffset) {
+    //                 $('#define-need-button').fadeOut(duration);
+    //                 $('#other-needs-button').fadeOut(duration);
+    //             } else if (scrollTop > navbarOffset && scrollTop < productOffset) {
+    //                 $('#define-need-button').fadeIn(duration);
+    //                 $('#other-needs-button').fadeOut(duration);
+    //
+    //             } else if (scrollTop >= productOffset && scrollTop <= ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
+    //                 $('#define-need-button').fadeOut(duration);
+    //                 $('#other-needs-button').fadeIn(duration);
+    //             } else if (scrollTop > ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
+    //                 $('#other-needs-button').fadeOut(duration);
+    //             }
+    //         }
+    //     );
+    //
+    //     $('#define-need-button').on('click', function (e) {
+    //         e.preventDefault();
+    //         $('html, body').animate({
+    //             scrollTop: productOffset
+    //         }, 750);
+    //     });
+    //
+    //     $('#other-needs-button').on('click', function (e) {
+    //         e.preventDefault();
+    //         $('html, body').animate({
+    //             scrollTop: otherNeedsOffset
+    //         }, 750);
+    //     });
+    // }
 
     /*****************************
      *  Gestion otherNeed

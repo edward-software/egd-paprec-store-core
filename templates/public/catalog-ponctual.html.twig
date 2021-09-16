@@ -175,29 +175,29 @@
                     </div>
                 </div>
             </div>
-            <div class="">
-                <div class="row">
-                    <div class="col-md-12 col-lg-6 col-12">
-                        <h2>{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }} </h2>
-                        <div style="font-style: italic">{{ 'Public.Catalog.Other-Needs-Info'| trans({}, "messages", locale) }} </div>
-                    </div>
-                </div>
-                <div class="row other-needs-container mb-4">
-                    {% for otherNeed in otherNeeds %}
-                        {% if otherNeed.pictures and otherNeed.pictures|length > 0 %}
-                            <div class="col other-needs-image {% for cartOtherNeed in cart.otherNeeds %}{% if cartOtherNeed.id == otherNeed.id %}active{% endif %}{% endfor %}"
-                                 id="otherNeedImage{{ otherNeed.id }}"
-                                 data-url="{{ path('paprec_public_catalog_addRemoveOtherNeed', {locale: locale, cartUuid: cart.id, otherNeedId: otherNeed.id}) }}">
-                                <img src="{{ asset('/uploads/pictos/' ~ otherNeed.pictures[0].path) }}">
-                                <div class="other-needs-image__title">
-                                    {{ otherNeed.name }}
-                                </div>
-                                <i class="fas fa-check"></i>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
+{#            <div class="">#}
+{#                <div class="row">#}
+{#                    <div class="col-md-12 col-lg-6 col-12">#}
+{#                        <h2>{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }} </h2>#}
+{#                        <div style="font-style: italic">{{ 'Public.Catalog.Other-Needs-Info'| trans({}, "messages", locale) }} </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="row other-needs-container mb-4">#}
+{#                    {% for otherNeed in otherNeeds %}#}
+{#                        {% if otherNeed.pictures and otherNeed.pictures|length > 0 %}#}
+{#                            <div class="col other-needs-image {% for cartOtherNeed in cart.otherNeeds %}{% if cartOtherNeed.id == otherNeed.id %}active{% endif %}{% endfor %}"#}
+{#                                 id="otherNeedImage{{ otherNeed.id }}"#}
+{#                                 data-url="{{ path('paprec_public_catalog_addRemoveOtherNeed', {locale: locale, cartUuid: cart.id, otherNeedId: otherNeed.id}) }}">#}
+{#                                <img src="{{ asset('/uploads/pictos/' ~ otherNeed.pictures[0].path) }}">#}
+{#                                <div class="other-needs-image__title">#}
+{#                                    {{ otherNeed.name }}#}
+{#                                </div>#}
+{#                                <i class="fas fa-check"></i>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                </div>#}
+{#            </div>#}
         </div>
     </section>
     <div id="define-need-button"
