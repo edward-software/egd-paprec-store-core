@@ -15,6 +15,7 @@ use Knp\Snappy\Pdf;
 use Swift_Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function PHPUnit\Framework\isEmpty;
 
 class QuoteRequestManager
 {
@@ -377,11 +378,9 @@ class QuoteRequestManager
         $now = new \DateTime();
 
         $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
-//        if ($quoteRequest->getOverallDiscount() > 0) {
-//            $totalLine += ($totalLine * ($quoteRequest->getOverallDiscount() / 100)) / 100;
-//        } elseif ($quoteRequest->getOverallDiscount() < 0) {
-//            $totalLine -= ($totalLine * ($quoteRequest->getOverallDiscount() / 100)) / 100;
-//        }
+        if ($quoteRequest->getOverallDiscount() !== null) {
+            $totalLine *= (1 + $quoteRequest->getOverallDiscount() / 10000);
+        }
         $quoteRequestLine->setTotalAmount($totalLine);
         $quoteRequestLine->setDateUpdate($now);
 
