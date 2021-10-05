@@ -147,7 +147,7 @@ $(function () {
     /**
      * Lorsque l'on clique sur les autres fréquences, l'input et le select pour configurer la fréquence ne doivent plus s'affiche
      */
-    $('[id^=ponctualFrequencyButton__], [id^=unknownFrequencyButton__]').on('click', function () {
+    $('[id^=unknownFrequencyButton__]').on('click', function () {
         const productId = (this.name).replace('productFrequencyRadios__', '');
         $('#productFrequencyTimesInput__' + productId).prop('hidden', true);
         $('#textFrequencyTimes__' + productId).prop('hidden', true);

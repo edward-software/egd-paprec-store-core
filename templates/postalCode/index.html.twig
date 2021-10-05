@@ -99,7 +99,7 @@
                     {
                         label: '{{ "General.Remove"|trans }}',
                         type: 'ajax',
-                        url: "{{ path("paprec_postalCode_remove", {id: '__rowId__', json: 1}) }}",
+                        url: "{{ path("paprec_postalCode_removeMany", {ids: '__rowId__', json: 1}) }}",
                         confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
                         className: 'btn btn-danger btn-sm',
                         icon: "fa fa-times"

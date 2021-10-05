@@ -282,7 +282,7 @@ class CustomAreaController extends AbstractController
      * @Route("/removeMany/{ids}", name="paprec_custom_area_removeMany")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function removeManyAction(Request $request): RedirectResponse
+    public function removeManyAction(Request $request)
     {
         $ids = $request->get('ids');
 
@@ -306,7 +306,9 @@ class CustomAreaController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_custom_area_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

@@ -495,7 +495,9 @@ class ProductController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_product_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

@@ -587,7 +587,6 @@ class UserController extends AbstractController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
      * @throws Exception
      */
     public function removeManyAction(Request $request)
@@ -621,6 +620,8 @@ class UserController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_user_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 }

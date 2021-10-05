@@ -363,7 +363,9 @@ class PostalCodeController extends AbstractController
             $em->flush();
         }
 
-        return $this->redirectToRoute('paprec_postalCode_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

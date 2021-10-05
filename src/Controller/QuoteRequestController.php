@@ -616,7 +616,9 @@ class QuoteRequestController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_quoteRequest_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**
