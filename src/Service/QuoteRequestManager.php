@@ -377,6 +377,54 @@ class QuoteRequestManager
     ) {
         $now = new \DateTime();
 
+        if ($quoteRequest->getPostalCode()) {
+            $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
+            switch($quoteRequestLine->getProduct()->getTransportType()) {
+                case 'CBR_REG' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
+                    break;
+                }
+                case 'CBR_PONCT' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
+                    break;
+                }
+                case 'VL_PL_CFS_REG' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
+                    break;
+                }
+                case 'VL_PL_CFS_PONCT' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
+                    break;
+                }
+                case 'VL_PL' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
+                    break;
+                }
+                case 'BOM' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
+                    break;
+                }
+                case 'PL_PONCT' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
+                    break;
+                }
+                default : {
+                    $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
+                    break;
+                }
+            }
+            $quoteRequestLine->setTreatmentRate($quoteRequest->getPostalCode()->getTreatmentRate());
+            $quoteRequestLine->setTraceabilityRate($quoteRequest->getPostalCode()->getTraceabilityRate());
+        } else {
+            /**
+             * Si pas de code postal, on met tous les coefs à 1 par défaut
+             */
+            $quoteRequestLine->setRentalRate($this->numberManager->normalize15(1));
+            $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
+            $quoteRequestLine->setTreatmentRate($this->numberManager->normalize15(1));
+            $quoteRequestLine->setTraceabilityRate($this->numberManager->normalize15(1));
+        }
+
         $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
         if ($quoteRequest->getOverallDiscount() !== null) {
             $totalLine *= (1 + $quoteRequest->getOverallDiscount() / 10000);

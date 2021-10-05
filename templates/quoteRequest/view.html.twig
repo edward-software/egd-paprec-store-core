@@ -399,7 +399,9 @@
                                                     <span class="small color-darkgray">({{ ((quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
                                             </td>
-                                            <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
+                                            <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}
+                                                <span class="small color-darkgray">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                            </td>
                                             <td class="text-center">
                                                 <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"
                                                    class="btn btn-sm btn-warning btn-sm mx-1"
