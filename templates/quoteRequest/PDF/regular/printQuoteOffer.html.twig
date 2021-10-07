@@ -170,11 +170,11 @@
         }
 
         .offer__ref-items > div:first-child {
-            width: 70%;
+            width: 60%;
         }
 
         .offer__ref-items > div:last-child {
-            width: 30%;
+            width: 40%;
             padding-right: 15px;
         }
 
@@ -330,7 +330,7 @@
     </div>
 
     <div class="offer__title flex space-between">
-        <h1>Contrat de Location et de Prestations</h1>
+        <h1>{{ 'Commercial.PDF.Title'|trans({}, "messages", app.request.locale) }}</h1>
         <p class="offer__title__ref">{{ quoteRequest.reference }}</p>
     </div>
 
@@ -340,57 +340,123 @@
 
             {# partie 1 #}
 
-            <h2>1. Client</h2>
-            <p><span class="bold">Nom de la société :</span> {{ quoteRequest.businessName }}</p>
-            <p><span class="bold">Numéro / Rue :</span> {{ quoteRequest.address }}</p>
-            <div class="flex offer__ref-items">
-                <div>
-                    <p>
-                        <span class="bold">Code Postal / Ville :</span> {% if quoteRequest.postalCode %}{{ quoteRequest.postalCode.code }}{% endif %} {{ quoteRequest.city }}
-                    </p>
-                </div>
-
-            </div>
-            <p class="bold"><u>Personne responsable (droit à la signature) :</u></p>
-            <div class="flex offer__ref-items">
-                <div>
-                    <p><span class="bold">Nom :</span> {{ quoteRequest.signatoryLastName1 }}</p>
-                </div>
-                <div>
-                    <p><span class="bold">Prénom :</span> {{ quoteRequest.signatoryFirstName1 }}</p>
-                </div>
-            </div>
-            <p><span class="bold">Fonction :</span> {{ quoteRequest.signatoryTitle1 }}</p>
-            <p class="bold"><u>Personne contact si différente :</u></p>
-            <div class="flex offer__ref-items">
-                <div>
-                    <p><span class="bold">Nom :</span> {{ quoteRequest.lastName }}</p>
-                </div>
-                <div>
-                    <p><span class="bold">Prénom :</span> {{ quoteRequest.firstName }}</p>
-                </div>
-            </div>
-            {# <p><span class="bold">Fonction :</span> fonction</p> #}
-            <p><span class="bold">Télephone :</span> {{ quoteRequest.phone }}</p>
-            <p><span class="bold">Email :</span> {{ quoteRequest.email }}</p>
+            <h2>1. {{ 'Commercial.PDF.CustomerTitle'|trans({}, "messages", app.request.locale) }}</h2>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.Company'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.businessName }}
+            </p>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.Address'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.address }}
+            </p>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.PostalCode'|trans({}, "messages", app.request.locale) }} :</span> {% if quoteRequest.postalCode %}{{ quoteRequest.postalCode.code }}{% endif %} {{ quoteRequest.city }}
+            </p>
 
             {# partie 2 #}
 
-            <h2>2. Objet, Durée, Prix HT</h2>
+            <h2>2. {{ 'Commercial.PDF.ContactTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <div class="flex offer__ref-items">
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SignatoryLastName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.signatoryLastName1 }}
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.ContactLastName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.lastName }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SignatoryFirstName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.signatoryFirstName1 }}
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.ContactFirstName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.firstName }}
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.PhoneNumber'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.phone }}
+            </p>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.Email'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.email }}
+            </p>
+
+            {# partie 3 #}
+
+            <h2>3. {{ 'Commercial.PDF.ServiceTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <table style="width: 95%; margin-left: 20px; margin-top: 10px">
+                <tbody>
+                <tr>
+                    <th>{{ 'Commercial.PDF.ContractProduct'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractLocationPrice'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractTreatmentPrice'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractFrequency'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractMensuelAmount'|trans({}, "messages", app.request.locale) }}</th>
+                </tr>
+                {% set quantity = 0 %}
+                {% set rentalUnitPrice = 0 %}
+                {% set treatmentUnitPrice = 0 %}
+                {% set transportUnitPrice = 0 %}
+                {% set traceabilityUnitPrice = 0 %}
+                {% set frequency = 1 %}
+                {% set treatmentCollectPrice = 0 %}
+                {% for line in quoteRequest.quoteRequestLines %}
+                    {% set quantity = line.quantity %}
+                    {% set rentalUnitPrice = ((line.rentalRate / 1000000000000000) * (line.editableRentalUnitPrice)) %}
+                    {% set transportUnitPrice = ((line.transportRate / 1000000000000000) * (line.editableTransportUnitPrice)) %}
+                    {% set treatmentUnitPrice = ((line.treatmentRate / 1000000000000000) * (line.editableTreatmentUnitPrice)) %}
+                    {% set traceabilityUnitPrice = ((line.traceabilityRate / 1000000000000000) * (line.editableTraceabilityUnitPrice)) %}
+                    {% if line.frequencyTimes > 0 %}
+                        {% set frequency = line.frequencyTimes %}
+                    {% endif %}
+
+                    {% set treatmentCollectPrice = (((transportUnitPrice + (treatmentUnitPrice + traceabilityUnitPrice))/quantity))/frequency %}
+
+                    <tr>
+                        <td>
+                            <p>{{ line.product|productLabelTranslation('fr') }}</p>
+                        </td>
+                        <td>{{ quantity }}</td>
+                        <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ line.frequencyTimes }}</td>
+                        <td>{{ line.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
+                    </tr>
+
+                {% endfor %}
+                <tr>
+                    <td colspan="5" class="text-right bold">
+                        {{ 'Commercial.PDF.ContractTotalAmount'|trans({}, "messages", app.request.locale) }}
+                    </td>
+                    <td>{{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+
             <div class="flex">
-                <p class="bold">Durée du contrat : </p>
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.ContractDuration'|trans({}, "messages", app.request.locale) }} :</span> 36 mois
+                </p>
                 {# <div class="flex align-item-center"> #}
                 {# #}{# class active pour check the box #}
                 {# <div class="check {% if quoteRequest.regularDuration == 24 %}active {% endif %}" #}
                 {# style="margin-left: 10px;margin-right: 10px;"></div> #}
                 {# <p>24 mois</p> #}
                 {# </div> #}
-                <div class="flex align-item-center" style="margin-left: 30px;">
-                    <!-- TODO à revoir -->
-{#                    <div class="check {% if quoteRequest.regularDuration == 36 %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-                    <p>36 mois</p>
-                </div>
+                {# <div class="check {% if quoteRequest.regularDuration == 36 %}active {% endif %}" #}
+                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
                 {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
                 {# <div class="check {% if quoteRequest.regularDuration == 48 %}active {% endif %}" #}
                 {# style="margin-left: 10px;margin-right: 10px;"></div> #}
@@ -403,288 +469,296 @@
                 {# </div> #}
             </div>
 
-            <p class="bold">Location Conteneurs :</p>
-            <table style="width: 95%; margin-left: 20px;">
-                <tbody>
-                <tr>
-                    <th>Type Conteneurs</th>
-                    <th>Qtté</th>
-                    <th>
-                        Prix/unit HT
-                    </th>
-                    <th>
-                        Total HT
-                    </th>
-                </tr>
-                {% set rentalTotalHT = 0 %}
-                {% set rentalTotalTTC = 0 %}
-                {% set treatmentTotalHT = 0 %}
-                {% set treatmentTotalTTC = 0 %}
-                {% set totalQuantity = 0 %}
-                {% for product in products %}
-                    {% set quantity = 0 %}
-                    {% set rentalUnitPrice = 0 %}
-                    {% set rentalProductTotalHT = 0 %}
-                    {% set rentalProductTotalTTC = 0 %}
-                    {% set treatmentUnitPrice = 0 %}
-                    {% set treatmentProductTotalHT = 0 %}
-                    {% set treatmentProductTotalTTC = 0 %}
-                    {% for line in quoteRequest.quoteRequestLines %}
-                        {% if line.product.id == product.id %}
-                            {% set quantity = line.quantity %}
-                            {% set totalQuantity = totalQuantity + quantity %}
-                            {% set rentalUnitPrice = (((line.rentalRate / 1000000000000000) * (line.rentalUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000) ) %}
-                            {% set rentalProductTotalHT = (rentalUnitPrice * quantity) %}
-                            {% set rentalProductTotalTTC = rentalProductTotalHT * 1.2 %}
-                            {% set rentalTotalHT = rentalTotalHT + rentalProductTotalHT %}
-                            {% set rentalTotalTTC = rentalTotalTTC + rentalProductTotalTTC %}
-                            {% set treatmentUnitPrice = (((line.treatmentRate / 1000000000000000) * (line.treatmentUnitPrice / 100)) * (1 + quoteRequest.overallDiscount / 10000) ) %}
-                            {% set treatmentProductTotalHT = (treatmentUnitPrice * quantity) %}
-                            {% set treatmentProductTotalTTC = treatmentProductTotalHT %}
-                            {% set treatmentTotalHT = treatmentTotalHT + treatmentProductTotalHT %}
-                            {% set treatmentTotalTTC = treatmentTotalTTC + rentalProductTotalTTC %}
-
-                            <tr>
-                                <td>
-                                    <div class="flex align-item-center">
-                                        <div class="check {% if quantity > 0 %} active {% endif %}"
-                                             style="margin-right: 10px;"></div>
-                                        <p>{{ product|productLabelTranslation('fr') }}</p>
-                                    </div>
-                                </td>
-                                <td>{% if quantity > 0 %}{{ quantity }}{% endif %}</td>
-                                <td>{% if rentalUnitPrice > 0 %}{{ rentalUnitPrice|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
-                                <td>{% if rentalProductTotalHT > 0 %}{{ rentalProductTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}{% endif %}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-
-                {% endfor %}
-                <tr>
-                    <td colspan="3" class="text-right bold">
-                        Budget Locations (€/mois)
-                    </td>
-                    <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>
-                </tr>
-                </tbody>
-            </table>
-
-
-            <div class="flex">
-                <p class="bold">Nombre de passages&nbsp;:</p>
-                <!-- TODO à revoir -->
-{#                <div class="flex align-item-center">#}
-{#                    #}{# class active pour check the box #}
-{#                    <div class="check {% if quoteRequest.frequencyTimes == 1 %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>1</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if quoteRequest.frequencyTimes == 2 %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>2</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if quoteRequest.frequencyTimes == 3 %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>3</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if quoteRequest.frequencyTimes == 4 %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>4</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if quoteRequest.frequencyTimes == 5 %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>5</p>#}
-{#                </div>#}
-            </div>
-
-            <div class="flex">
-                <p class="bold">Récurrence :</p>
-                <!-- TODO à revoir -->
-{#                <div class="flex align-item-center">#}
-{#                    #}{# class active pour check the box #}
-{#                    <div class="check {% if quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'week' %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>Semaine</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'month' %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>Mois</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'bimestre' %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>Bimestre</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'quarter' %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>Trimestre</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check  {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'quadrimestre' %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>Quadrimestre</p>#}
-{#                </div>#}
-{#                <div class="flex align-item-center" style="margin-left: 30px;">#}
-{#                    <div class="check {% if  quoteRequest.frequency == 'ponctual' %}active {% endif %}"#}
-{#                         style="margin-left: 10px;margin-right: 10px;"></div>#}
-{#                    <p>A la demande</p>#}
-{#                </div>#}
-            </div>
-
-            {#            <p class="mb-14"><span class="bold"><u>Accès/manutention :</u></span></p>#}
-
-            {% if (quoteRequest.access == 'stairs' and quoteRequest.floorNumber > 0) %}
-                <table style="width: 95%; margin-left: 20px;">
-                    <tbody>
-                    <tr class="table-header">
-                        <th class="text-left">Prix de chargement en étage par collecteur :</th>
-                        <th>Qtté</th>
-                        <th>Prix/unit HT</th>
-
-                    </tr>
-                    <tr>
-                        <td class="text-left">Situations de pénibilité (Escaliers,...)</td>
-                        <td>{% if quoteRequest.access == 'stairs' %}{{ quoteRequest.floorNumber }} {% else %} 0 {% endif %}</td>
-                        <td>5,00 €</td>
-                    </tr>
-                    <tr>
-                        <td class="text-left">Frais de péages (facturés en sus)</td>
-                        <td></td>
-{#                        <td>{{ quoteRequest.tollFees|formatAmount('EUR', 'fr') }}</td>#}
-                    </tr>
-                    </tbody>
-                </table>
-            {% endif %}
-
-            <p class="bold">BUDGET :</p>
-
-            <div class="flex">
-{#                {% if quoteRequest.frequency == 'regular' %}#}
-{#                    {% set prestationTotalHT =  ((((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) + treatmentTotalHT) * (1 + quoteRequest.overallDiscount / 10000)) %}#}
-{#                    {% set penibilityTotalHT = totalQuantity * quoteRequest.floorNumber * 5 + quoteRequest.tollfees / 100 %}#}
-{#                    {% set frequencyInterval = quoteRequest.frequencyInterval %}#}
-{#                    {% if frequencyInterval == 'week' %}#}
-{#                        {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes * 4 %}#}
-{#                        {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes * 4 %}#}
-{#                    {% elseif frequencyInterval == 'month' %}#}
-{#                        {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes %}#}
-{#                        {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes %}#}
-{#                    {% elseif frequencyInterval == 'bimestre' %}#}
-{#                        {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 2 %}#}
-{#                        {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 2 %}#}
-{#                    {% elseif frequencyInterval == 'quarter' %}#}
-{#                        {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 3 %}#}
-{#                        {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 3 %}#}
-{#                    {% elseif frequencyInterval == 'quadrimestre' %}#}
-{#                        {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 4 %}#}
-{#                        {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 4 %}#}
-{#                    {% endif %}#}
-{#                    {% set prestationTotalTTC =  prestationTotalHT * 1.2 %}#}
-{#                    {% set penibilityTotalTTC = penibilityTotalHT * 1.2 %}#}
-
-{#                    {% set totalHT =  prestationTotalHT + rentalTotalHT + penibilityTotalHT %}#}
-{#                    {% set totalTTC =  totalHT * 1.2 %}#}
-{#                    <table style="width:48%; margin-right: 20px; margin-left: 20px;">#}
-{#                        <tbody>#}
-{#                        <tr>#}
-{#                            <th>Prestations récurrentes</th>#}
-{#                            <th>Montant HT</th>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget locations (€/mois)</td>#}
-{#                            <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget prestation(€/mois)<br>#}
-{#                                <span style="font-size: 11px;font-style: italic;">(Transport - Destruction - Traçabilité)</span>#}
-{#                            </td>#}
-{#                            <td>{{ prestationTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget pénibilité(€/mois)<br>#}
-{#                                <span style="font-size: 11px;font-style: italic;">(conteneurs x étages X 5,00)</span>#}
-{#                            </td>#}
-{#                            <td>{{ penibilityTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget Mensuel (€/mois)</td>#}
-{#                            <td>{{ totalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        </tbody>#}
-{#                    </table>#}
-{#                {% endif %}#}
-
-{#                {% if quoteRequest.frequency == 'ponctual' %}#}
-{#                    {% set prestationTotalHT =  ((((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) + treatmentTotalHT) * (1 + quoteRequest.overallDiscount / 10000)) %}#}
-{#                    {% set penibilityTotalHT = totalQuantity * quoteRequest.floorNumber * 5 + quoteRequest.tollFees / 100 %}#}
-{#                    {% set prestationTotalTTC =  prestationTotalHT * 1.2 %}#}
-{#                    {% set penibilityTotalTTC = penibilityTotalHT * 1.2 %}#}
-{#                    {% set totalHT =  prestationTotalHT + rentalTotalHT %}#}
-{#                    {% set totalTTC =  totalHT %}#}
-{#                    <table style="width:50%;  margin-left: 20px;">#}
-{#                        <tbody>#}
-{#                        <tr>#}
-{#                            <th>Prestations à la demande</th>#}
-{#                            <th>Montant HT</th>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget locations (€/mois)</td>#}
-{#                            <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget prestation(€/passage)<br>#}
-{#                                <span style="font-size: 11px;font-style: italic;">(Transport - Destruction - Traçabilité)</span>#}
-{#                            </td>#}
-{#                            <td>{{ prestationTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        <tr>#}
-{#                            <td>Budget pénibilité(€/passage)<br>#}
-{#                                <span style="font-size: 11px;font-style: italic;">(conteneurs x étages X 5,00)</span>#}
-{#                            </td>#}
-{#                            <td>{{ penibilityTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td>#}
-{#                        </tr>#}
-{#                        </tbody>#}
-{#                    </table>#}
-{#                {% endif %}#}
-            </div>
         </div>
 
 
-        {# partie 3 #}
+        {# partie 4 #}
 
-        <h2 style="margin-top: 0;">3. Remarques</h2>
+        <h2>4. {{ 'Commercial.PDF.CommentTitle'|trans({}, "messages", app.request.locale) }}</h2>
         <div>
             {% if quoteRequest.comment %}
                 {{ quoteRequest.comment }}
             {% else %}
-                Pas de remarques.
+                {{ 'Commercial.PDF.NoComment'|trans({}, "messages", app.request.locale) }}
             {% endif %}
         </div>
 
-        {# partie 4 #}
+        {# partie 5 #}
 
-        <h2>4. Signature</h2>
-        <div class="flex align-item-center mb-30">
-            <p>Signé en deux exemplaires, le </p>
-            <hr>
-            <p>à</p>
-            <hr>
+        <h2>5. {{ 'Commercial.PDF.OtherContractualTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+        {# partie 6 #}
+
+        <h2>6. {{ 'Commercial.PDF.SignatureTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle1'|trans({}, "messages", app.request.locale) }}</span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle2'|trans({}, "messages", app.request.locale) }} </span>
+                </p>
+            </div>
         </div>
-        <div class="flex align-item-center">
-            <p style="margin-right: 70px;">Signature et&nbsp;cachet</p>
-            <hr>
-            <hr>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
         </div>
-        <div class="flex align-item-center" style="margin-left: 210px;">
-            <p style="margin-right: 45px;">Pour le preneur, Lu et approuvé</p>
-            <p>Pour PRIVACIA, Lu et approuvé</p>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
         </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        {# partie 7 #}
+
+        <h2>7. {{ 'Commercial.PDF.MentionTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+
+        {# <div class="flex"> #}
+        {# <p class="bold">Nombre de passages&nbsp;:</p> #}
+
+        {# <div class="flex align-item-center"> #}
+        {# #}{# class active pour check the box #}
+        {# <div class="check {% if quoteRequest.frequencyTimes == 1 %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>1</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if quoteRequest.frequencyTimes == 2 %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>2</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if quoteRequest.frequencyTimes == 3 %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>3</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if quoteRequest.frequencyTimes == 4 %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>4</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if quoteRequest.frequencyTimes == 5 %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>5</p> #}
+        {# </div> #}
+        {# </div> #}
+
+        {# <div class="flex"> #}
+        {# <p class="bold">Récurrence :</p> #}
+
+        {# <div class="flex align-item-center"> #}
+        {# #}{# class active pour check the box #}
+        {# <div class="check {% if quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'week' %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>Semaine</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'month' %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>Mois</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'bimestre' %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>Bimestre</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'quarter' %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>Trimestre</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check  {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'quadrimestre' %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>Quadrimestre</p> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# <div class="check {% if  quoteRequest.frequency == 'ponctual' %}active {% endif %}" #}
+        {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# <p>A la demande</p> #}
+        {# </div> #}
+        {# </div> #}
+
+        {# <p class="mb-14"><span class="bold"><u>Accès/manutention :</u></span></p> #}
+
+        {# {% if (quoteRequest.access == 'stairs' and quoteRequest.floorNumber > 0) %} #}
+        {# <table style="width: 95%; margin-left: 20px;"> #}
+        {# <tbody> #}
+        {# <tr class="table-header"> #}
+        {# <th class="text-left">Prix de chargement en étage par collecteur :</th> #}
+        {# <th>Qtté</th> #}
+        {# <th>Prix/unit HT</th> #}
+
+        {# </tr> #}
+        {# <tr> #}
+        {# <td class="text-left">Situations de pénibilité (Escaliers,...)</td> #}
+        {# <td>{% if quoteRequest.access == 'stairs' %}{{ quoteRequest.floorNumber }} {% else %} 0 {% endif %}</td> #}
+        {# <td>5,00 €</td> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td class="text-left">Frais de péages (facturés en sus)</td> #}
+        {# <td></td> #}
+        {# <td>{{ quoteRequest.tollFees|formatAmount('EUR', 'fr') }}</td> #}
+        {# </tr> #}
+        {# </tbody> #}
+        {# </table> #}
+        {# {% endif %} #}
+
+        {# <p class="bold">BUDGET :</p> #}
+
+        {# <div class="flex"> #}
+        {# {% if quoteRequest.frequency == 'regular' %} #}
+        {# {% set prestationTotalHT =  ((((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) + treatmentTotalHT) * (1 + quoteRequest.overallDiscount / 10000)) %} #}
+        {# {% set penibilityTotalHT = totalQuantity * quoteRequest.floorNumber * 5 + quoteRequest.tollfees / 100 %} #}
+        {# {% set frequencyInterval = quoteRequest.frequencyInterval %} #}
+        {# {% if frequencyInterval == 'week' %} #}
+        {# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes * 4 %} #}
+        {# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes * 4 %} #}
+        {# {% elseif frequencyInterval == 'month' %} #}
+        {# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes %} #}
+        {# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes %} #}
+        {# {% elseif frequencyInterval == 'bimestre' %} #}
+        {# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 2 %} #}
+        {# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 2 %} #}
+        {# {% elseif frequencyInterval == 'quarter' %} #}
+        {# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 3 %} #}
+        {# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 3 %} #}
+        {# {% elseif frequencyInterval == 'quadrimestre' %} #}
+        {# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 4 %} #}
+        {# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 4 %} #}
+        {# {% endif %} #}
+        {# {% set prestationTotalTTC =  prestationTotalHT * 1.2 %} #}
+        {# {% set penibilityTotalTTC = penibilityTotalHT * 1.2 %} #}
+
+        {# {% set totalHT =  prestationTotalHT + rentalTotalHT + penibilityTotalHT %} #}
+        {# {% set totalTTC =  totalHT * 1.2 %} #}
+        {# <table style="width:48%; margin-right: 20px; margin-left: 20px;"> #}
+        {# <tbody> #}
+        {# <tr> #}
+        {# <th>Prestations récurrentes</th> #}
+        {# <th>Montant HT</th> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget locations (€/mois)</td> #}
+        {# <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget prestation(€/mois)<br> #}
+        {# <span style="font-size: 11px;font-style: italic;">(Transport - Destruction - Traçabilité)</span> #}
+        {# </td> #}
+        {# <td>{{ prestationTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget pénibilité(€/mois)<br> #}
+        {# <span style="font-size: 11px;font-style: italic;">(conteneurs x étages X 5,00)</span> #}
+        {# </td> #}
+        {# <td>{{ penibilityTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget Mensuel (€/mois)</td> #}
+        {# <td>{{ totalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# </tbody> #}
+        {# </table> #}
+        {# {% endif %} #}
+
+        {# {% if quoteRequest.frequency == 'ponctual' %} #}
+        {# {% set prestationTotalHT =  ((((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) + treatmentTotalHT) * (1 + quoteRequest.overallDiscount / 10000)) %} #}
+        {# {% set penibilityTotalHT = totalQuantity * quoteRequest.floorNumber * 5 + quoteRequest.tollFees / 100 %} #}
+        {# {% set prestationTotalTTC =  prestationTotalHT * 1.2 %} #}
+        {# {% set penibilityTotalTTC = penibilityTotalHT * 1.2 %} #}
+        {# {% set totalHT =  prestationTotalHT + rentalTotalHT %} #}
+        {# {% set totalTTC =  totalHT %} #}
+        {# <table style="width:50%;  margin-left: 20px;"> #}
+        {# <tbody> #}
+        {# <tr> #}
+        {# <th>Prestations à la demande</th> #}
+        {# <th>Montant HT</th> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget locations (€/mois)</td> #}
+        {# <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget prestation(€/passage)<br> #}
+        {# <span style="font-size: 11px;font-style: italic;">(Transport - Destruction - Traçabilité)</span> #}
+        {# </td> #}
+        {# <td>{{ prestationTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# <tr> #}
+        {# <td>Budget pénibilité(€/passage)<br> #}
+        {# <span style="font-size: 11px;font-style: italic;">(conteneurs x étages X 5,00)</span> #}
+        {# </td> #}
+        {# <td>{{ penibilityTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# </tr> #}
+        {# </tbody> #}
+        {# </table> #}
+        {# {% endif %} #}
+        {# </div> #}
+
+        {# <div class="flex align-item-center mb-30"> #}
+        {# <p>Signé en deux exemplaires, le </p> #}
+        {# <hr> #}
+        {# <p>à</p> #}
+        {# <hr> #}
+        {# </div> #}
+        {# <div class="flex align-item-center"> #}
+        {# <p style="margin-right: 70px;">Signature et&nbsp;cachet</p> #}
+        {# <hr> #}
+        {# <hr> #}
+        {# </div> #}
+        {# <div class="flex align-item-center" style="margin-left: 210px;"> #}
+        {# <p style="margin-right: 45px;">Pour le preneur, Lu et approuvé</p> #}
+        {# <p>Pour PRIVACIA, Lu et approuvé</p> #}
+        {# </div> #}
     </div>
 </div>
 

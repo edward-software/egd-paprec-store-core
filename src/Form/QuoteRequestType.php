@@ -108,11 +108,11 @@ class QuoteRequestType extends AbstractType
             ->add('annualBudget')
             ->add('type', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
                 ),
-                'empty_data' => 'ponctual',
                 "choice_label" => function ($choiceValue, $key, $value) {
+                    $choiceValue = strtolower($choiceValue);
                     return 'Commercial.QuoteRequest.Type.' . ucfirst($choiceValue);
                 },
                 'required' => true,
