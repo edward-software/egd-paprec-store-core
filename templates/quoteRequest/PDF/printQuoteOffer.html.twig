@@ -1,0 +1,747 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//FR"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>PDF Paprec Offer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <style type="text/css">
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            color: #4a4a4a;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        h1 {
+            color: #004a8e;
+            font-size: 20px;
+            font-weight: 900;
+            margin: 0;
+            width: 70%;
+        }
+
+        h2 {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            border-bottom: 1px solid #4a4a4a;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        hr {
+            border: 1px dashed #d8d8d8;
+            width: 200px;
+            height: 1px;
+            margin: 8px 20px 0 20px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .offer__container {
+            width: 800px;
+            /*height: 1280px;*/
+            margin: auto;
+            /*margin-bottom: 50px;*/
+            position: relative;
+        }
+
+        /* FLEXBOX */
+
+        .flex {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: -moz-box;
+            /*display: box;*/
+            display: flex;
+        }
+
+        .align-item-center {
+            -webkit-box-align: center;
+            -moz-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            box-align: center;
+            align-items: center;
+        }
+
+        .align-item-end {
+            -webkit-box-align: end;
+            -moz-box-align: end;
+            -ms-flex-align: end;
+            -webkit-align-items: end;
+            box-align: end;
+            align-items: flex-end;
+        }
+
+        .justify-center {
+            -webkit-box-pack: center;
+            box-pack: center;
+            justify-content: center;
+        }
+
+        .justify-end {
+            -webkit-box-pack: end;
+            box-pack: end;
+            justify-content: flex-end;
+        }
+
+        .space-between {
+            -webkit-box-pack: justify;
+            box-pack: justify;
+            justify-content: space-between;
+        }
+
+        .w50 {
+            width: 50%;
+        }
+
+        .mb-14 {
+            margin-bottom: 14px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mb-30 {
+            margin-bottom: 30px;
+        }
+
+        .mb-40 {
+            margin-bottom: 40px;
+        }
+
+        /***** PAGE OFFRE *****/
+
+        /*Title*/
+
+        .offer__title {
+            border-bottom: 2px solid #004a8e;
+        }
+
+        .offer__title__ref {
+            border-top: 2px solid #004a8e;
+            border-right: 2px solid #004a8e;
+            border-left: 2px solid #004a8e;
+            margin: 0;
+            padding: 2px 5px 0 5px;
+            color: #f00f0f;
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        /*content*/
+
+        .offer__content {
+            padding: 0 0 30px 0;
+        }
+
+        .offer__ref-items > div:first-child {
+            width: 60%;
+        }
+
+        .offer__ref-items > div:last-child {
+            width: 40%;
+            padding-right: 15px;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        table p {
+            margin: 0;
+        }
+
+        table td, table th {
+            font-size: 13px;
+            overflow: hidden;
+            word-break: normal;
+            text-align: center;
+            border: 1px solid #004a8e;
+            border-right: 0px;
+            border-bottom: 0px;
+            height: 22px;
+        }
+
+        table th {
+            padding: 5px 10px;
+            vertical-align: top;
+        }
+
+        table td {
+            padding: 2px 5px;
+        }
+
+        table span {
+            font-weight: normal;
+        }
+
+        table tr:last-child > td {
+            border-bottom: 1px solid #004a8e;
+        }
+
+        table tr > td:last-child, table tr > th:last-child {
+            border-right: 1px solid #004a8e;
+        }
+
+        table .table-header td {
+            padding: 0;
+            border-top: 0;
+        }
+
+        table .table-footer1 td:nth-child(n+2):nth-child(-n+3) {
+            border-left: 0;
+        }
+
+        table .table-footer1 td:last-child {
+            border-left: 0;
+        }
+
+        table .table-footer1 td:nth-child(n+5):nth-child(-n+7) {
+            border-bottom: 1px solid #004a8e;
+        }
+
+        table .table-footer1 td {
+            padding: 2px 0;
+        }
+
+        table .table-footer2 td:nth-child(n+2):nth-child(-n+3) {
+            border-left: 0;
+        }
+
+        table .table-footer2 td:nth-child(-n+4) {
+            border-top: 0;
+        }
+
+        table .table-footer2 td:last-child {
+            border-right: 0;
+        }
+
+        table .table-footer2 td {
+            padding: 0 0 2px 0;
+        }
+
+        table .empty {
+            height: 15px;
+        }
+
+        table .empty td:last-child {
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+
+        .check {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            outline: 2px solid grey;
+            margin-left: 5px;
+        }
+
+        .check.active {
+            border: 2px solid white;
+            outline: 2px solid grey;
+            background-color: black;
+        }
+
+        .offer__signature > div {
+            width: 48%;
+        }
+
+        /* simple-table */
+
+        table.simple-table tr:not(:first-child) td {
+            border-top: 0 !important;
+        }
+
+        table.simple-table td {
+            padding: 2px 5px;
+        }
+
+        table.simple-table tr td:first-child {
+            width: 250px;
+            padding-right: 30px;
+        }
+
+        table.simple-table tr td:nth-child(2) {
+            width: 150px;
+            border-left: 0;
+        }
+
+        table.simple-table tr td:nth-child(3) {
+            width: 100px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="offer__container">
+
+    <div class="offer__title flex space-between">
+        <h1>{{ 'Commercial.PDF.Title'|trans({}, "messages", app.request.locale) }}</h1>
+        <p class="offer__title__ref">{{ quoteRequest.reference }}</p>
+    </div>
+
+    <div class="offer__content">
+
+        <div class="offer__ref">
+
+            {# partie 1 #}
+
+            <h2>1. {{ 'Commercial.PDF.CustomerTitle'|trans({}, "messages", app.request.locale) }}</h2>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.Company'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.businessName }}
+            </p>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.Address'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.address }}
+            </p>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.PostalCode'|trans({}, "messages", app.request.locale) }} :</span> {% if quoteRequest.postalCode %}{{ quoteRequest.postalCode.code }}{% endif %} {{ quoteRequest.city }}
+            </p>
+
+            {# partie 2 #}
+
+            <h2>2. {{ 'Commercial.PDF.ContactTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <div class="flex offer__ref-items">
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SignatoryLastName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.signatoryLastName1 }}
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.ContactLastName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.lastName }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SignatoryFirstName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.signatoryFirstName1 }}
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.ContactFirstName'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.firstName }}
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.PhoneNumber'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.phone }}
+            </p>
+            <p>
+                <span class="bold">{{ 'Commercial.PDF.Email'|trans({}, "messages", app.request.locale) }} :</span> {{ quoteRequest.email }}
+            </p>
+
+            {# partie 3 #}
+
+            <h2>3. {{ 'Commercial.PDF.ServiceTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <table style="width: 95%; margin-left: 20px; margin-top: 10px">
+                <tbody>
+                <tr>
+                    <th>{{ 'Commercial.PDF.ContractProduct'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractLocationPrice'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractTreatmentPrice'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractFrequency'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractMensuelAmount'|trans({}, "messages", app.request.locale) }}</th>
+                </tr>
+                {% set quantity = 0 %}
+                {% set rentalUnitPrice = 0 %}
+                {% set treatmentUnitPrice = 0 %}
+                {% set transportUnitPrice = 0 %}
+                {% set traceabilityUnitPrice = 0 %}
+                {% set frequency = 1 %}
+                {% set treatmentCollectPrice = 0 %}
+                {% for line in quoteRequest.quoteRequestLines %}
+                    {% set quantity = line.quantity %}
+                    {% set rentalUnitPrice = ((line.rentalRate / 1000000000000000) * (line.editableRentalUnitPrice)) %}
+                    {% set transportUnitPrice = ((line.transportRate / 1000000000000000) * (line.editableTransportUnitPrice)) %}
+                    {% set treatmentUnitPrice = ((line.treatmentRate / 1000000000000000) * (line.editableTreatmentUnitPrice)) %}
+                    {% set traceabilityUnitPrice = ((line.traceabilityRate / 1000000000000000) * (line.editableTraceabilityUnitPrice)) %}
+                    {% if line.frequencyTimes > 0 %}
+                        {% set frequency = line.frequencyTimes %}
+                    {% endif %}
+
+                    {% set treatmentCollectPrice = (((transportUnitPrice + (treatmentUnitPrice + traceabilityUnitPrice))/quantity))/frequency %}
+
+                    <tr>
+                        <td>
+                            <p>{{ line.product|productLabelTranslation('fr') }}</p>
+                        </td>
+                        <td>{{ quantity }}</td>
+                        <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ line.frequencyTimes }}</td>
+                        <td>{{ line.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
+                    </tr>
+
+                {% endfor %}
+                <tr>
+                    <td colspan="5" class="text-right bold">
+                        {{ 'Commercial.PDF.ContractTotalAmount'|trans({}, "messages", app.request.locale) }}
+                    </td>
+                    <td>{{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <div class="flex">
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.ContractDuration'|trans({}, "messages", app.request.locale) }} :</span>
+                    36 mois
+                </p>
+                {# <div class="flex align-item-center"> #}
+                {# class active pour check the box #}
+                {# <div class="check {% if quoteRequest.regularDuration == 24 %}active {% endif %}" #}
+                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+                {# <p>24 mois</p> #}
+                {# </div> #}
+                {# <div class="check {% if quoteRequest.regularDuration == 36 %}active {% endif %}" #}
+                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+                {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+                {# <div class="check {% if quoteRequest.regularDuration == 48 %}active {% endif %}" #}
+                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+                {# <p>48 mois</p> #}
+                {# </div> #}
+                {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+                {# <div class="check {% if quoteRequest.regularDuration == 60 %}active {% endif %}" #}
+                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
+                {# <p>60 mois</p> #}
+                {# </div> #}
+            </div>
+
+        </div>
+
+
+        {# partie 4 #}
+
+        <h2>4. {{ 'Commercial.PDF.CommentTitle'|trans({}, "messages", app.request.locale) }}</h2>
+        <div>
+            {% if quoteRequest.comment %}
+                {{ quoteRequest.comment }}
+            {% else %}
+                {{ 'Commercial.PDF.NoComment'|trans({}, "messages", app.request.locale) }}
+            {% endif %}
+        </div>
+
+        {# partie 5 #}
+
+        <h2>5. {{ 'Commercial.PDF.OtherContractualTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+        {# partie 6 #}
+
+        <h2>6. {{ 'Commercial.PDF.SignatureTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle1'|trans({}, "messages", app.request.locale) }}</span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle2'|trans({}, "messages", app.request.locale) }} </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+
+            <div>
+                <p>{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        {# partie 7 #}
+
+        <h2>7. {{ 'Commercial.PDF.MentionTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+
+        {# #}{# <div class="flex"> #}
+        {# #}{# <p class="bold">Nombre de passages&nbsp;:</p> #}
+
+        {# #}{# <div class="flex align-item-center"> #}
+        {# #}{# #}{# #}{# class active pour check the box #}
+        {# #}{# <div class="check {% if quoteRequest.frequencyTimes == 1 %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>1</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if quoteRequest.frequencyTimes == 2 %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>2</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if quoteRequest.frequencyTimes == 3 %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>3</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if quoteRequest.frequencyTimes == 4 %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>4</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if quoteRequest.frequencyTimes == 5 %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>5</p> #}
+        {# #}{# </div> #}
+        {# #}{# </div> #}
+
+        {# #}{# <div class="flex"> #}
+        {# #}{# <p class="bold">Récurrence :</p> #}
+
+        {# #}{# <div class="flex align-item-center"> #}
+        {# #}{# #}{# #}{# class active pour check the box #}
+        {# #}{# <div class="check {% if quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'week' %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>Semaine</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'month' %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>Mois</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'bimestre' %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>Bimestre</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'quarter' %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>Trimestre</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check  {% if  quoteRequest.frequency == 'regular' and quoteRequest.frequencyInterval == 'quadrimestre' %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>Quadrimestre</p> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 30px;"> #}
+        {# #}{# <div class="check {% if  quoteRequest.frequency == 'ponctual' %}active {% endif %}" #}
+        {# #}{# style="margin-left: 10px;margin-right: 10px;"></div> #}
+        {# #}{# <p>A la demande</p> #}
+        {# #}{# </div> #}
+        {# #}{# </div> #}
+
+        {# #}{# <p class="mb-14"><span class="bold"><u>Accès/manutention :</u></span></p> #}
+
+        {# #}{# {% if (quoteRequest.access == 'stairs' and quoteRequest.floorNumber > 0) %} #}
+        {# #}{# <table style="width: 95%; margin-left: 20px;"> #}
+        {# #}{# <tbody> #}
+        {# #}{# <tr class="table-header"> #}
+        {# #}{# <th class="text-left">Prix de chargement en étage par collecteur :</th> #}
+        {# #}{# <th>Qtté</th> #}
+        {# #}{# <th>Prix/unit HT</th> #}
+
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td class="text-left">Situations de pénibilité (Escaliers,...)</td> #}
+        {# #}{# <td>{% if quoteRequest.access == 'stairs' %}{{ quoteRequest.floorNumber }} {% else %} 0 {% endif %}</td> #}
+        {# #}{# <td>5,00 €</td> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td class="text-left">Frais de péages (facturés en sus)</td> #}
+        {# #}{# <td></td> #}
+        {# #}{# <td>{{ quoteRequest.tollFees|formatAmount('EUR', 'fr') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# </tbody> #}
+        {# #}{# </table> #}
+        {# #}{# {% endif %} #}
+
+        {# #}{# <p class="bold">BUDGET :</p> #}
+
+        {# #}{# <div class="flex"> #}
+        {# #}{# {% if quoteRequest.frequency == 'regular' %} #}
+        {# #}{# {% set prestationTotalHT =  ((((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) + treatmentTotalHT) * (1 + quoteRequest.overallDiscount / 10000)) %} #}
+        {# #}{# {% set penibilityTotalHT = totalQuantity * quoteRequest.floorNumber * 5 + quoteRequest.tollfees / 100 %} #}
+        {# #}{# {% set frequencyInterval = quoteRequest.frequencyInterval %} #}
+        {# #}{# {% if frequencyInterval == 'week' %} #}
+        {# #}{# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes * 4 %} #}
+        {# #}{# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes * 4 %} #}
+        {# #}{# {% elseif frequencyInterval == 'month' %} #}
+        {# #}{# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes %} #}
+        {# #}{# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes %} #}
+        {# #}{# {% elseif frequencyInterval == 'bimestre' %} #}
+        {# #}{# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 2 %} #}
+        {# #}{# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 2 %} #}
+        {# #}{# {% elseif frequencyInterval == 'quarter' %} #}
+        {# #}{# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 3 %} #}
+        {# #}{# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 3 %} #}
+        {# #}{# {% elseif frequencyInterval == 'quadrimestre' %} #}
+        {# #}{# {% set prestationTotalHT = prestationTotalHT * quoteRequest.frequencyTimes / 4 %} #}
+        {# #}{# {% set penibilityTotalHT = penibilityTotalHT * quoteRequest.frequencyTimes / 4 %} #}
+        {# #}{# {% endif %} #}
+        {# #}{# {% set prestationTotalTTC =  prestationTotalHT * 1.2 %} #}
+        {# #}{# {% set penibilityTotalTTC = penibilityTotalHT * 1.2 %} #}
+
+        {# #}{# {% set totalHT =  prestationTotalHT + rentalTotalHT + penibilityTotalHT %} #}
+        {# #}{# {% set totalTTC =  totalHT * 1.2 %} #}
+        {# #}{# <table style="width:48%; margin-right: 20px; margin-left: 20px;"> #}
+        {# #}{# <tbody> #}
+        {# #}{# <tr> #}
+        {# #}{# <th>Prestations récurrentes</th> #}
+        {# #}{# <th>Montant HT</th> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget locations (€/mois)</td> #}
+        {# #}{# <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget prestation(€/mois)<br> #}
+        {# #}{# <span style="font-size: 11px;font-style: italic;">(Transport - Destruction - Traçabilité)</span> #}
+        {# #}{# </td> #}
+        {# #}{# <td>{{ prestationTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget pénibilité(€/mois)<br> #}
+        {# #}{# <span style="font-size: 11px;font-style: italic;">(conteneurs x étages X 5,00)</span> #}
+        {# #}{# </td> #}
+        {# #}{# <td>{{ penibilityTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget Mensuel (€/mois)</td> #}
+        {# #}{# <td>{{ totalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# </tbody> #}
+        {# #}{# </table> #}
+        {# #}{# {% endif %} #}
+
+        {# #}{# {% if quoteRequest.frequency == 'ponctual' %} #}
+        {# #}{# {% set prestationTotalHT =  ((((quoteRequest.transportRate / 1000000000000000) * (quoteRequest.minTransportUnitPrice / 100)) + treatmentTotalHT) * (1 + quoteRequest.overallDiscount / 10000)) %} #}
+        {# #}{# {% set penibilityTotalHT = totalQuantity * quoteRequest.floorNumber * 5 + quoteRequest.tollFees / 100 %} #}
+        {# #}{# {% set prestationTotalTTC =  prestationTotalHT * 1.2 %} #}
+        {# #}{# {% set penibilityTotalTTC = penibilityTotalHT * 1.2 %} #}
+        {# #}{# {% set totalHT =  prestationTotalHT + rentalTotalHT %} #}
+        {# #}{# {% set totalTTC =  totalHT %} #}
+        {# #}{# <table style="width:50%;  margin-left: 20px;"> #}
+        {# #}{# <tbody> #}
+        {# #}{# <tr> #}
+        {# #}{# <th>Prestations à la demande</th> #}
+        {# #}{# <th>Montant HT</th> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget locations (€/mois)</td> #}
+        {# #}{# <td>{{ rentalTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget prestation(€/passage)<br> #}
+        {# #}{# <span style="font-size: 11px;font-style: italic;">(Transport - Destruction - Traçabilité)</span> #}
+        {# #}{# </td> #}
+        {# #}{# <td>{{ prestationTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# <tr> #}
+        {# #}{# <td>Budget pénibilité(€/passage)<br> #}
+        {# #}{# <span style="font-size: 11px;font-style: italic;">(conteneurs x étages X 5,00)</span> #}
+        {# #}{# </td> #}
+        {# #}{# <td>{{ penibilityTotalHT|formatAmount('EUR', 'fr', 'DEC2') }}</td> #}
+        {# #}{# </tr> #}
+        {# #}{# </tbody> #}
+        {# #}{# </table> #}
+        {# #}{# {% endif %} #}
+        {# #}{# </div> #}
+
+        {# #}{# <div class="flex align-item-center mb-30"> #}
+        {# #}{# <p>Signé en deux exemplaires, le </p> #}
+        {# #}{# <hr> #}
+        {# #}{# <p>à</p> #}
+        {# #}{# <hr> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center"> #}
+        {# #}{# <p style="margin-right: 70px;">Signature et&nbsp;cachet</p> #}
+        {# #}{# <hr> #}
+        {# #}{# <hr> #}
+        {# #}{# </div> #}
+        {# #}{# <div class="flex align-item-center" style="margin-left: 210px;"> #}
+        {# #}{# <p style="margin-right: 45px;">Pour le preneur, Lu et approuvé</p> #}
+        {# #}{# <p>Pour PRIVACIA, Lu et approuvé</p> #}
+        {# #}{# </div> #}
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -885,8 +885,6 @@ class QuoteRequestManager
 
             $filename = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
             $filenameOffer = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
-            $filenameContract = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
-
 
             $dateEndOffer = clone(($quoteRequest->getDateUpdate()) ?: $quoteRequest->getDateCreation());
             $dateEndOffer = $dateEndOffer->modify('+1 year');
@@ -902,18 +900,13 @@ class QuoteRequestManager
 
 //            $snappy->setOption('footer-html', $this->container->get('templating')->render('@PaprecCommercial/QuoteRequest/PDF/fr/_footer.html.twig'));
 
-            $templateDir = 'quoteRequest/PDF/';
+            $templateDir = 'quoteRequest/PDF';
 
+            $snappy->setOption('header-html', $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html', $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
-            }
-
-            print_r($quoteRequest->getType());
-            if (strtoupper($quoteRequest->getType()) === 'REGULAR') {
-                $templateDir .= 'regular/';
-            } else {
-                $templateDir .= 'ponctual/';
             }
 
             $products = $this->productManager->getAvailableProducts($quoteRequest->getType());
@@ -972,38 +965,10 @@ class QuoteRequestManager
                 }
             }
 
-            if ($addContract) {
-                /**
-                 * On génère la page de contract
-                 */
-                $snappy->generateFromHtml(
-                    array(
-                        $this->container->get('templating')->render(
-                            $templateDir . '/printQuoteContract.html.twig',
-                            array(
-                                'quoteRequest' => $quoteRequest,
-                                'date' => $today,
-                                'dateEndOffer' => $dateEndOffer,
-                                'products' => $products
-                            )
-                        )
-                    ),
-                    $filenameContract
-                );
-
-                $pdfArray[] = $filenameContract;
-
-            }
-
-
             if (count($pdfArray)) {
                 $merger = new Merger();
                 $merger->addIterator($pdfArray);
                 file_put_contents($filename, $merger->merge());
-            }
-
-            if (file_exists($filenameContract)) {
-                unlink($filenameContract);
             }
 
             if (!file_exists($filename)) {

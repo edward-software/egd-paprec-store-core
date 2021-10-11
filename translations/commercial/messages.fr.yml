@@ -203,6 +203,46 @@ Commercial:
         Dear: Cher (ère) Collègue Privacia,
         Message1: Pour information, tu trouveras ci-joint un contrat que le client devrait rapidement nous renvoyer signé.
         Partner: Ton partenaire Privacia
+
+    PDF:
+        Title: Devis de Prestation
+        Company: Nom de la société
+        Address: Adresse
+        PostalCode: CP / Ville
+        CustomerTitle: Client
+        ContactTitle: Contacts
+        SignatoryLastName: Nom signataire
+        SignatoryFirstName: Prénom signataire
+        ContactLastName: Nom contact
+        ContactFirstName: Prénom contact
+        PhoneNumber: Téléphone
+        Email: Email
+        ServiceTitle: Résumé de la prestation
+        CommentTitle: Remarques
+        NoComment: Pas de remarques
+        OtherContractualTitle: Autres infos contractuelles
+        SignatureTitle: Signatures
+        SignatureSubTitle1: PAPREC - (nom Agence)
+        SignatureSubTitle2: CLIENT - (nom + signature + cachet)
+        SignatureCity: Fait à
+        SignatureDate: Le
+        SignatureLastName: Nom
+        SignatureFirstName: Prénom
+        SignatureQuality: Qualité
+        MentionTitle: CGV
+        ContractDuration: Durée du contrat
+        ContractProduct: Matériel
+        ContractQuantity: Quantité
+        ContractLocationPrice: Prix/unit Location (€ HT)
+        ContractTreatmentPrice: Prix Collecte et Traitement (€ HT)
+        ContractFrequency: Fréquence de passage
+        ContractMensuelAmount: Montant Mensuel (€ HT)
+        ContractTotalAmount: Budget Total (€ HT)
+        Footer:
+            StreetName: 7 rue du Docteur Lancereaux - 75008 Paris
+            PhoneNumberTitle: Tél.
+            FaxTitle: Fax
+            OtherReferences: 'Siège social : 7 rue du Docteur Lancereaux - 75008 Paris - SAS Privacia au capital de 5000 € - 512 034 851 RCS Paris - Code NAD: 8299 F'
 User:
     User:
         Lang: Langue
