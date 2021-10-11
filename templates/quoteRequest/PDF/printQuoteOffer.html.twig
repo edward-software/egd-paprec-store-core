@@ -145,12 +145,24 @@
         }
 
         .offer__title__ref {
-            border-top: 2px solid #004a8e;
-            border-right: 2px solid #004a8e;
-            border-left: 2px solid #004a8e;
+            /*border-top: 2px solid #004a8e;*/
+            /*border-right: 2px solid #004a8e;*/
+            /*border-left: 2px solid #004a8e;*/
             margin: 0;
             padding: 2px 5px 0 5px;
             color: #f00f0f;
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        .offer__title__date {
+            /*border-top: 2px solid #004a8e;*/
+            /*border-right: 2px solid #004a8e;*/
+            /*border-left: 2px solid #004a8e;*/
+            color: #004a8e;
+            margin: 0;
+            padding: 2px 5px 0 5px;
             font-size: 20px;
             text-transform: uppercase;
             font-weight: 900;
@@ -309,8 +321,8 @@
 <div class="offer__container">
 
     <div class="offer__title flex space-between">
-        <h1>{{ 'Commercial.PDF.Title'|trans({}, "messages", app.request.locale) }}</h1>
-        <p class="offer__title__ref">{{ quoteRequest.reference }}</p>
+        <h1>{{ 'Commercial.PDF.Title'|trans({}, "messages", app.request.locale) }} - {{ quoteRequest.reference }}</h1>
+        <p class="offer__title__date">{{ 'now'|date('d/m/Y') }}</p>
     </div>
 
     <div class="offer__content">
