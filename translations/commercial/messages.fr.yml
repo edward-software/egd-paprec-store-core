@@ -238,6 +238,11 @@ Commercial:
         ContractFrequency: Fréquence de passage
         ContractMensuelAmount: Montant Mensuel (€ HT)
         ContractTotalAmount: Budget Total (€ HT)
+        Footer:
+            StreetName: 7 rue du Docteur Lancereaux - 75008 Paris
+            PhoneNumberTitle: Tél.
+            FaxTitle: Fax
+            OtherReferences: 'Siège social : 7 rue du Docteur Lancereaux - 75008 Paris - SAS Privacia au capital de 5000 € - 512 034 851 RCS Paris - Code NAD: 8299 F'
 User:
     User:
         Lang: Langue

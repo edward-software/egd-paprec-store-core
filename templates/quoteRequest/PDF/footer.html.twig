@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//FR"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style type="text/css">
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        color: #4a4a4a;
+    }
+
+    .footer__container {
+        width: 800px;
+        margin: auto;
+        border-top: 2px solid #004a8e;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+
+    .footer__container p {
+        padding: 0;
+        margin: 0;
+    }
+
+</style>
+
+<body>
+
+<div class="footer__container">
+
+    <p>PRIVACIA</p>
+    <p>{{ 'Commercial.PDF.Footer.StreetName'|trans({}, "messages", app.request.locale) }}</p>
+    <p>{{ 'Commercial.PDF.Footer.PhoneNumberTitle'|trans({}, "messages", app.request.locale) }} : 01 42 99 43 10 - {{ 'Commercial.PDF.Footer.FaxTitle'|trans({}, "messages", app.request.locale) }} : 01 42 99 43 31</p>
+    <p style="font-size: 12px">{{ 'Commercial.PDF.Footer.OtherReferences'|trans({}, "messages", app.request.locale) }}</p>
+
+</div>
+</body>
+
+</html>

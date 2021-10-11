@@ -902,6 +902,8 @@ class QuoteRequestManager
 
             $templateDir = 'quoteRequest/PDF';
 
+            $snappy->setOption('header-html', $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html', $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
