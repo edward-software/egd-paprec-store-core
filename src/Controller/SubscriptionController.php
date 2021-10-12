@@ -161,7 +161,7 @@ class SubscriptionController extends AbstractController
             ));
         }
 
-        $products = $this->productManager->getAvailableProducts($cart->getType());
+//        $products = $this->productManager->getAvailableProducts($cart->getType());
         $rangesQb = $this->rangeManager->getAvailableRanges(false, $cart->getType());
         $ranges = $this->rangeManager->addAvailableProducts($rangesQb, true);
 

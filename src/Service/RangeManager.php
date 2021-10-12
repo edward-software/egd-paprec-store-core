@@ -184,8 +184,7 @@ class RangeManager
 
         $queryBuilder->select(array('r'))
             ->where('r.deleted IS NULL')
-            ->andWhere('r.isEnabled = 1')
-            ->orderBy('r.position');
+            ->andWhere('r.isEnabled = 1');
 
         if ($catalog) {
             $queryBuilder
@@ -212,7 +211,8 @@ class RangeManager
             ->leftJoin('r.products', 'p')
             ->andWhere('p.deleted IS NULL')
             ->andWhere('p.isEnabled = 1')
-            ->orderBy('p.position');
+            ->addOrderBy('r.position', 'ASC')
+            ->addOrderBy('p.position', 'ASC');
 
         if ($executeQuery) {
             return $queryBuilder->getQuery()->getResult();
