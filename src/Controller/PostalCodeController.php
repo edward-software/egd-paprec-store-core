@@ -299,13 +299,13 @@ class PostalCodeController extends AbstractController
             $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
             $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
-            $postalCode->setCbrRegTransportRate($this->numberManager->denormalize15($postalCode->getCbrRegTransportRate()));
-            $postalCode->setCbrPonctTransportRate($this->numberManager->denormalize15($postalCode->getCbrPonctTransportRate()));
-            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
-            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
-            $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
-            $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
-            $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
+            $postalCode->setCbrRegTransportRate($this->numberManager->normalize15($postalCode->getCbrRegTransportRate()));
+            $postalCode->setCbrPonctTransportRate($this->numberManager->normalize15($postalCode->getCbrPonctTransportRate()));
+            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->normalize15($postalCode->getVlPlCfsRegTransportRate()));
+            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->normalize15($postalCode->getVlPlCfsPonctTransportRate()));
+            $postalCode->setVlPlTransportRate($this->numberManager->normalize15($postalCode->getVlPlTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
+            $postalCode->setPlPonctTransportRate($this->numberManager->normalize15($postalCode->getPlPonctTransportRate()));
 
             $postalCode->setDateUpdate(new \DateTime);
             $postalCode->setUserUpdate($user);

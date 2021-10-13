@@ -320,10 +320,10 @@ class PostalCode
     }
 
     /**
-     * @param int $plPonctTransportRate
+     * @param $plPonctTransportRate
      * @return PostalCode
      */
-    public function setPlPonctTransportRate(int $plPonctTransportRate): self
+    public function setPlPonctTransportRate($plPonctTransportRate): self
     {
         $this->plPonctTransportRate = $plPonctTransportRate;
         return $this;
@@ -335,10 +335,10 @@ class PostalCode
     }
 
     /**
-     * @param int $vlPlTransportRate
+     * @param $vlPlTransportRate
      * @return PostalCode
      */
-    public function setVlPlTransportRate(int $vlPlTransportRate): self
+    public function setVlPlTransportRate($vlPlTransportRate): self
     {
         $this->vlPlTransportRate = $vlPlTransportRate;
         return $this;
@@ -350,10 +350,10 @@ class PostalCode
     }
 
     /**
-     * @param int $vlPlCfsPonctTransportRate
+     * @param $vlPlCfsPonctTransportRate
      * @return PostalCode
      */
-    public function setVlPlCfsPonctTransportRate(int $vlPlCfsPonctTransportRate): self
+    public function setVlPlCfsPonctTransportRate($vlPlCfsPonctTransportRate): self
     {
         $this->vlPlCfsPonctTransportRate = $vlPlCfsPonctTransportRate;
         return $this;
@@ -365,10 +365,10 @@ class PostalCode
     }
 
     /**
-     * @param int $vlPlCfsRegTransportRate
+     * @param $vlPlCfsRegTransportRate
      * @return PostalCode
      */
-    public function setVlPlCfsRegTransportRate(int $vlPlCfsRegTransportRate): self
+    public function setVlPlCfsRegTransportRate($vlPlCfsRegTransportRate): self
     {
         $this->vlPlCfsRegTransportRate = $vlPlCfsRegTransportRate;
         return $this;
@@ -380,10 +380,10 @@ class PostalCode
     }
 
     /**
-     * @param int $cbrPonctTransportRate
+     * @param $cbrPonctTransportRate
      * @return PostalCode
      */
-    public function setCbrPonctTransportRate(int $cbrPonctTransportRate): self
+    public function setCbrPonctTransportRate($cbrPonctTransportRate): self
     {
         $this->cbrPonctTransportRate = $cbrPonctTransportRate;
         return $this;
@@ -395,10 +395,10 @@ class PostalCode
     }
 
     /**
-     * @param int $cbrRegTransportRate
+     * @param $cbrRegTransportRate
      * @return PostalCode
      */
-    public function setCbrRegTransportRate(int $cbrRegTransportRate): self
+    public function setCbrRegTransportRate($cbrRegTransportRate): self
     {
         $this->cbrRegTransportRate = $cbrRegTransportRate;
         return $this;
@@ -410,10 +410,10 @@ class PostalCode
     }
 
     /**
-     * @param int $bomTransportRate
+     * @param $bomTransportRate
      * @return PostalCode
      */
-    public function setBomTransportRate(int $bomTransportRate): self
+    public function setBomTransportRate($bomTransportRate): self
     {
         $this->bomTransportRate = $bomTransportRate;
         return $this;
@@ -422,7 +422,7 @@ class PostalCode
     /**
      * Set treatmentRate.
      *
-     * @param int $treatmentRate
+     * @param $treatmentRate
      *
      * @return PostalCode
      */
@@ -441,7 +441,7 @@ class PostalCode
     /**
      * Set traceabilityRate.
      *
-     * @param int $traceabilityRate
+     * @param $traceabilityRate
      *
      * @return PostalCode
      */

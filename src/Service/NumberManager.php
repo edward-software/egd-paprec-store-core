@@ -78,7 +78,7 @@ class NumberManager
     public function denormalize($value)
     {
 
-        if ($value === 0) {
+        if ($value === 0 || $value === '0') {
             return 0;
         }
         
@@ -99,7 +99,7 @@ class NumberManager
      */
     public function normalize($value)
     {
-        if ($value === 0) {
+        if ($value === 0 || $value === '0') {
             return 0;
         }
         
@@ -123,7 +123,7 @@ class NumberManager
      */
     public function denormalize15($value)
     {
-        if ($value === 0) {
+        if ($value === 0 || $value === '0') {
             return 0;
         }
         
@@ -146,7 +146,7 @@ class NumberManager
      */
     public function normalize15($value)
     {
-        if ($value === 0) {
+        if ($value === 0 || $value === '0') {
             return 0;
         }
         
