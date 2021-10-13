@@ -36,7 +36,6 @@ class ProductType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
                 },
-                'data' => '1',
                 "expanded" => true,
             ))
             ->add('rentalUnitPrice', TextType::class)
