@@ -324,7 +324,6 @@ class UserController extends AbstractController
      * @param Request $request
      * @param User    $user
      *
-     * @return RedirectResponse|Response
      * @throws Exception
      */
     public function editAction(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder)
@@ -354,10 +353,6 @@ class UserController extends AbstractController
 
             $user = $form->getData();
             $user->setDateUpdate(new DateTime);
-            $user->setPassword($passwordEncoder->encodePassword(
-                $user,
-                $user->getPassword()
-            ));
 
             $this->em->flush();
 

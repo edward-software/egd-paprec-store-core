@@ -16,8 +16,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields={"email"}, repositoryMethod="isMailUnique")
- * @UniqueEntity(fields={"username"}, repositoryMethod="isUsernameUnique")
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="This email is already used",
+ *     payload="emailAlreadyUsed"
+ * )
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     message="This username is already used",
+ *     payload="usernameAlreadyUsed"
+ * )
  *
  * @package App\Entity
  */
@@ -36,7 +44,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=180, unique=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Username should not be empty")
      */
     private $username;
 
@@ -45,8 +53,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      *
-     * @Assert\NotBlank()
-     * @Assert\Email(message = "email_error")
+     * @Assert\NotBlank(message="Email should not be empty")
      */
     private $email;
 
@@ -237,7 +244,7 @@ class User implements UserInterface
     /**
      * @param string $username
      */
-    public function setUsername(string $username): void
+    public function setUsername($username): void
     {
         $this->username = $username;
     }
@@ -253,7 +260,7 @@ class User implements UserInterface
     /**
      * @param string $email
      */
-    public function setEmail(string $email): void
+    public function setEmail($email): void
     {
         $this->email = $email;
     }
