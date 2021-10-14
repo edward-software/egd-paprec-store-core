@@ -400,7 +400,6 @@
                 {% set treatmentUnitPrice = 0 %}
                 {% set transportUnitPrice = 0 %}
                 {% set traceabilityUnitPrice = 0 %}
-                {% set frequency = 1 %}
                 {% set treatmentCollectPrice = 0 %}
                 {% for line in quoteRequest.quoteRequestLines %}
                     {% set quantity = line.quantity %}
@@ -408,11 +407,8 @@
                     {% set transportUnitPrice = ((line.transportRate / 1000000000000000) * (line.editableTransportUnitPrice)) %}
                     {% set treatmentUnitPrice = ((line.treatmentRate / 1000000000000000) * (line.editableTreatmentUnitPrice)) %}
                     {% set traceabilityUnitPrice = ((line.traceabilityRate / 1000000000000000) * (line.editableTraceabilityUnitPrice)) %}
-                    {% if line.frequencyTimes > 0 %}
-                        {% set frequency = line.frequencyTimes %}
-                    {% endif %}
 
-                    {% set treatmentCollectPrice = (((transportUnitPrice + (treatmentUnitPrice + traceabilityUnitPrice))/quantity))/frequency %}
+                    {% set treatmentCollectPrice = transportUnitPrice + (treatmentUnitPrice + traceabilityUnitPrice) * quantity %}
 
                     <tr>
                         <td>
