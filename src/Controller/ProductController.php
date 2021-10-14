@@ -413,7 +413,8 @@ class ProductController extends AbstractController
         $form1->handleRequest($request);
         $form2->handleRequest($request);
 
-        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+//        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted()) {
 
             $product = $form1->getData();
 
@@ -623,7 +624,8 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
             $productLabel = $form->getData();
             $productLabel->setDateUpdate(new \DateTime);
