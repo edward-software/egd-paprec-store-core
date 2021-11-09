@@ -243,6 +243,10 @@
             border-bottom: 1px solid #004a8e;
         }
 
+        table td[rowspan="2"] {
+            border-bottom: 1px solid #004a8e;
+        }
+
         table .table-footer1 td {
             padding: 2px 0;
         }
@@ -388,12 +392,12 @@
             <table style="width: 95%; margin-left: 20px; margin-top: 10px">
                 <tbody>
                 <tr>
-                    <th>{{ 'Commercial.PDF.ContractProduct'|trans({}, "messages", app.request.locale) }}</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
-                    <th>{{ 'Commercial.PDF.ContractLocationPrice'|trans({}, "messages", app.request.locale) }}</th>
                     <th>{{ 'Commercial.PDF.ContractTreatmentPrice'|trans({}, "messages", app.request.locale) }}</th>
-                    <th>{{ 'Commercial.PDF.ContractFrequency'|trans({}, "messages", app.request.locale) }}</th>
-                    <th>{{ 'Commercial.PDF.ContractMensuelAmount'|trans({}, "messages", app.request.locale) }}</th>
+                    <th>{{ 'Commercial.PDF.ContractMensuelEstimation'|trans({}, "messages", app.request.locale) }}</th>
                 </tr>
                 {% set quantity = 0 %}
                 {% set rentalUnitPrice = 0 %}
@@ -408,26 +412,39 @@
                     {% set treatmentUnitPrice = ((line.treatmentRate / 1000000000000000) * (line.editableTreatmentUnitPrice)) %}
                     {% set traceabilityUnitPrice = ((line.traceabilityRate / 1000000000000000) * (line.editableTraceabilityUnitPrice)) %}
 
-                    {% set treatmentCollectPrice = transportUnitPrice + (treatmentUnitPrice + traceabilityUnitPrice) * quantity %}
+                    {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}
+
+                    {% set price = quantity * (rentalUnitPrice / 100) %}
+                    {% set total = (line.totalAmount / 100) - price  %}
+
+                    {% set total2 = total * 100 %}
+                    {% set price2 = price * 100 %}
 
                     <tr>
-                        <td>
+                        <td rowspan="2">
                             <p>{{ line.product|productLabelTranslation('fr') }}</p>
                         </td>
+                        <td>{{ 'Commercial.PDF.ContractLocation'|trans({}, "messages", app.request.locale) }}</td>
+                        <td></td>
                         <td>{{ quantity }}</td>
                         <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ price2|formatAmount('EUR', app.request.locale) }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'Commercial.PDF.ContractTreatmentCollect'|trans({}, "messages", app.request.locale) }}</td>
+                        <td>{{ line.frequencyTimes }} x/ {{ line.frequencyInterval }}</td>
                         <td>{{ line.frequencyTimes }}</td>
-                        <td>{{ line.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ total2|formatAmount('EUR', app.request.locale) }}</td>
                     </tr>
 
                 {% endfor %}
-                <tr>
-                    <td colspan="5" class="text-right bold">
-                        {{ 'Commercial.PDF.ContractTotalAmount'|trans({}, "messages", app.request.locale) }}
-                    </td>
-                    <td>{{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}</td>
-                </tr>
+{#                <tr>#}
+{#                    <td colspan="5" class="text-right bold">#}
+{#                        {{ 'Commercial.PDF.ContractTotalAmount'|trans({}, "messages", app.request.locale) }}#}
+{#                    </td>#}
+{#                    <td>{{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}</td>#}
+{#                </tr>#}
                 </tbody>
             </table>
 

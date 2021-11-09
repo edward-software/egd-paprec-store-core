@@ -73,7 +73,6 @@ class PostalCodeController extends AbstractController
         $cols['code'] = array('label' => 'code', 'id' => 'pC.code', 'method' => array('getCode'));
         $cols['city'] = array('label' => 'city', 'id' => 'pC.city', 'method' => array('getCity'));
         $cols['agency'] = array('label' => 'agency', 'id' => 'pC.agency', 'method' => array('getAgency', 'getName'));
-        $cols['zone'] = array('label' => 'zone', 'id' => 'pC.zone', 'method' => array('getZone'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(PostalCode::class)->createQueryBuilder('pC');
 

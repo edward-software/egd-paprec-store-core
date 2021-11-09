@@ -233,10 +233,11 @@ Commercial:
         ContractDuration: Durée du contrat
         ContractProduct: Matériel
         ContractQuantity: Quantité
-        ContractLocationPrice: Prix/unit Location (€ HT)
-        ContractTreatmentPrice: Prix Collecte et Traitement (€ HT)
+        ContractLocation: Location
+        ContractTreatmentCollect: Collecte et traitement
+        ContractTreatmentPrice: Prix Unitaire / contenant
         ContractFrequency: Fréquence de passage
-        ContractMensuelAmount: Montant Mensuel (€ HT)
+        ContractMensuelEstimation: Estimation Mensuelle
         ContractTotalAmount: Budget Total (€ HT)
         Footer:
             StreetName: 7 rue du Docteur Lancereaux - 75008 Paris

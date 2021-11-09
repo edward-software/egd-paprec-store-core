@@ -109,7 +109,7 @@ class QuoteRequestPublicType extends AbstractType
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))
             ->add('billingCity', TextType::class)
-            ->add('comment', TextareaType::class)
+            ->add('comment', TextareaType::class, array('required' => false))
         ->add('signatoryFirstName1', TextType::class)
         ->add('signatoryLastName1', TextType::class)
         ->add('signatoryTitle1', TextType::class);

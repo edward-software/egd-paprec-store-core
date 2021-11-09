@@ -109,8 +109,8 @@ Public:
         SignatoryFirstName1: Prénom signataire
         SignatoryLastName1: Nom signataire
         SignatoryTitle1: Titre signataire
-        BillingAddress: Addresse de facturation
-        DeliveryAddress: Addresse de prestation
+        BillingAddress: Adresse de facturation
+        DeliveryAddress: Adresse de prestation
 
     Signatory:
         BreadcrumbTitle:            Définition des signataires

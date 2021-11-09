@@ -37,7 +37,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ 'Catalog.ProductLabel.Name'|trans }}</th>
-                            <th>{{ 'Catalog.Product.Dimensions'|trans }}</th>
+                            <th>{{ 'Catalog.Product.Range'|trans }}</th>
                             <th>{{ 'Catalog.Product.IsEnabled.IsEnabled'|trans }}</th>
                             <th></th>
                         </tr>
@@ -63,7 +63,7 @@
                 columns: [
                     {"data": "id"},
                     {"data": "name"},
-                    {"data": "dimensions"},
+                    {"data": "range", bSortable: false},
                     {"data": "isEnabled"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],
