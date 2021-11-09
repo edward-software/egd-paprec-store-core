@@ -29,6 +29,35 @@
 
 {{ 'Commercial.ConfirmEmail.Message1'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }}
 <br><br>
+{{ 'Commercial.ConfirmEmail.QuoteRequestRecap'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }} :
+<br><br>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+    <tr>
+        <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
+        <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
+        <th>{{ 'Commercial.QuoteRequestLine.Frequency'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for quoteRequestLine in quoteRequestLines %}
+        <tr>
+            <td>
+                {{ quoteRequestLine.product|productLabelTranslation(app.request.locale) }}
+            </td>
+            <td>{{ quoteRequestLine.quantity }}</td>
+            <td>
+                {% set frequencyIntervalName = 'Commercial.QuoteRequest.' ~ quoteRequestLine.frequencyInterval %}
+                {{ quoteRequestLine.frequencyTimes }}
+                x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<br><br>
 {{ 'Commercial.ConfirmEmail.Message2'| trans({}, "messages", locale) }}
 <br><br>
 {{ 'Commercial.ConfirmEmail.Regards'| trans({}, "messages", locale) }}

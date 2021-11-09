@@ -351,10 +351,12 @@
                                         <th>#</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
-                                        <th>{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Frequency'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Traceability'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.TotalAmount'|trans }}</th>
 
                                         <th></th>
@@ -380,16 +382,6 @@
                                             </td>
                                             <td>{{ quoteRequestLine.quantity }}</td>
                                             <td>
-                                                {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
-                                                    0
-                                                {% else %}
-                                                    {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-{#                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTransportUnitPrice - quoteRequestLine.transportUnitPrice) / quoteRequestLine.transportUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>#}
-                                                    <span class="small"
-                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
                                                 {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
                                                     0
                                                 {% else %}
@@ -398,6 +390,20 @@
                                                     <span class="small"
                                                           style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    {#                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTransportUnitPrice - quoteRequestLine.transportUnitPrice) / quoteRequestLine.transportUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>#}
+                                                    <span class="small"
+                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% set frequencyIntervalName = 'Commercial.QuoteRequest.' ~ quoteRequestLine.frequencyInterval %}
+                                                {{ quoteRequestLine.frequencyTimes }} x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
                                             </td>
                                             <td>
                                                 {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
@@ -419,6 +425,7 @@
 {#                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>#}
                                                 {% endif %}
                                             </td>
+                                            <td></td>
                                             <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}
                                                 <span class="small"
                                                       style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>

@@ -420,6 +420,8 @@
                     {% set totalRentalPrice = totalRentalPrice * 100 %}
                     {% set totalProduct = totalProduct * 100 %}
 
+                    {% set frequencyIntervalName = 'Commercial.QuoteRequest.' ~ line.frequencyInterval %}
+
                     <tr>
                         <td rowspan="2">
                             <p>{{ line.product|productLabelTranslation('fr') }}</p>
@@ -432,7 +434,7 @@
                     </tr>
                     <tr>
                         <td>{{ 'Commercial.PDF.ContractTreatmentCollect'|trans({}, "messages", app.request.locale) }}</td>
-                        <td>{{ line.frequencyTimes }} x/ {{ line.frequencyInterval }}</td>
+                        <td>{{ line.frequencyTimes }} x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}</td>
                         <td>{{ line.frequencyTimes }}</td>
                         <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
                         <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>

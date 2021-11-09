@@ -130,9 +130,11 @@ Commercial:
         TraceabilityUnitPrice: PU Traçabilité
         BasePrice: PU de base
         RentalPrice: Location
-        Transport: Transport
+        Transport: Transport/passage
+        Frequency: Fréquence de passage
         Treatment: Traitement
-        Traceability: Traçabilité
+        Traceability: Traçabilité/contenant
+        TreatmentCollect: PU Collecte et traitement/contenant
         Access: Accès
         TotalAmount: Montant total
         Add: Ajout d'un produit
@@ -159,6 +161,7 @@ Commercial:
             Mrs: Chère Madame
         Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
         Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        QuoteRequestRecap: Voici le récapitulatif de votre demande
         TechnicalService: service technique
         Message2: Nous vous enverrons notre offre pour les services PRIVACIA dans les 24 heures.
         Regards: Bien cordialement

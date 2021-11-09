@@ -526,6 +526,7 @@ class QuoteRequestManager
                         'quoteRequest/emails/confirmQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
+                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                             'locale' => strtolower($locale),
                             'salesman' => $quoteRequest->getPostalCode()->getUserInCharge()
                         )
