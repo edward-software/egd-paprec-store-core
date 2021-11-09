@@ -414,11 +414,11 @@
 
                     {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}
 
-                    {% set price = quantity * (rentalUnitPrice / 100) %}
-                    {% set total = (line.totalAmount / 100) - price  %}
+                    {% set totalRentalPrice = quantity * (rentalUnitPrice / 100) %}
+                    {% set totalProduct = (line.totalAmount / 100) - totalRentalPrice  %}
 
-                    {% set total2 = total * 100 %}
-                    {% set price2 = price * 100 %}
+                    {% set totalRentalPrice = totalRentalPrice * 100 %}
+                    {% set totalProduct = totalProduct * 100 %}
 
                     <tr>
                         <td rowspan="2">
@@ -428,14 +428,14 @@
                         <td></td>
                         <td>{{ quantity }}</td>
                         <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ price2|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
                     </tr>
                     <tr>
                         <td>{{ 'Commercial.PDF.ContractTreatmentCollect'|trans({}, "messages", app.request.locale) }}</td>
                         <td>{{ line.frequencyTimes }} x/ {{ line.frequencyInterval }}</td>
                         <td>{{ line.frequencyTimes }}</td>
                         <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ total2|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>
                     </tr>
 
                 {% endfor %}
