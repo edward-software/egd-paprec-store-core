@@ -316,15 +316,19 @@ input:focus {
     &__image {
       //height: 100%;
       //margin: auto;
-      width: 50px;
+      width: 100px;
       text-align: center;
 
       img {
-        max-height: 50px;
+        max-height: 100px;
         max-width: 100%;
       }
     }
 
+  }
+
+  p {
+    font-size: 15px;
   }
 
 }
