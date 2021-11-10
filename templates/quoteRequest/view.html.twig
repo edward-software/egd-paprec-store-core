@@ -430,7 +430,9 @@
 {#                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>#}
                                                 {% endif %}
                                             </td>
-                                            <td></td>
+                                            <td>{{ quoteRequestLine.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}
+                                                <span class="small"
+                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span></td>
                                             <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}
                                                 <span class="small"
                                                       style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>

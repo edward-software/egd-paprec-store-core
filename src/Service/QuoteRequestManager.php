@@ -258,6 +258,8 @@ class QuoteRequestManager
              */
             $totalLine = $this->calculateTotalLine($currentQuoteLine);
             $currentQuoteLine->setTotalAmount($totalLine);
+            $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
+            $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);
             $this->em->flush();
         } else {
             $quoteRequestLine->setQuoteRequest($quoteRequest);
@@ -267,8 +269,9 @@ class QuoteRequestManager
             $quoteRequestLine->setTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
             $quoteRequestLine->setTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
-            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
+
             $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
+            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
             $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
             $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
@@ -346,6 +349,9 @@ class QuoteRequestManager
              */
             $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
             $quoteRequestLine->setTotalAmount($totalLine);
+
+            $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
+            $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);
             $this->em->flush();
         }
 
@@ -405,6 +411,19 @@ class QuoteRequestManager
     ) {
         $now = new \DateTime();
 
+        $quoteRequestLine->setRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
+        $quoteRequestLine->setTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
+        $quoteRequestLine->setTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
+        $quoteRequestLine->setTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
+
+        $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
+        $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
+        $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
+        $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
+        $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
+        $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
+        $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());
+
         if ($quoteRequest->getPostalCode()) {
             $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
             switch($quoteRequestLine->getProduct()->getTransportType()) {
@@ -458,6 +477,8 @@ class QuoteRequestManager
             $totalLine *= (1 + $quoteRequest->getOverallDiscount() / 10000);
         }
         $quoteRequestLine->setTotalAmount($totalLine);
+        $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
+        $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);
         $quoteRequestLine->setDateUpdate($now);
 
         if ($editQuoteRequest) {
@@ -517,6 +538,30 @@ class QuoteRequestManager
         }
 
         return $totalAmount;
+    }
+
+    /**
+     * Fonction calculant le prix unitaire de collecte et traitement par contenant (PUct)
+     * Si le calcul est modifiée, il faudra donc le modifier uniquement ici
+     *
+     * @param QuoteRequestLine $quoteRequestLine
+     * @return float|int
+     * @throws Exception
+     */
+    public function calculateTreatmentCollectPrice(QuoteRequestLine $quoteRequestLine)
+    {
+        $transportUnitPrice = ($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice());
+
+        $quantity = $quoteRequestLine->getQuantity();
+
+        $treatmentUnitPrice = ($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice());
+
+        $tracaeabilityUnitPrice = ($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice());
+
+        $treatmentCollectPrice = ($transportUnitPrice + $quantity * ($treatmentUnitPrice + $tracaeabilityUnitPrice)) / $quantity;
+
+        return $this->numberManager->normalize($treatmentCollectPrice);
+
     }
 
 

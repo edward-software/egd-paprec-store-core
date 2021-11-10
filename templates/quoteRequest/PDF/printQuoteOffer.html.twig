@@ -404,15 +404,15 @@
                 {% set treatmentUnitPrice = 0 %}
                 {% set transportUnitPrice = 0 %}
                 {% set traceabilityUnitPrice = 0 %}
-                {% set treatmentCollectPrice = 0 %}
+{#                {% set treatmentCollectPrice = 0 %}#}
                 {% for line in quoteRequest.quoteRequestLines %}
                     {% set quantity = line.quantity %}
-                    {% set rentalUnitPrice = ((line.rentalRate / 1000000000000000) * (line.editableRentalUnitPrice)) %}
-                    {% set transportUnitPrice = ((line.transportRate / 1000000000000000) * (line.editableTransportUnitPrice)) %}
-                    {% set treatmentUnitPrice = ((line.treatmentRate / 1000000000000000) * (line.editableTreatmentUnitPrice)) %}
-                    {% set traceabilityUnitPrice = ((line.traceabilityRate / 1000000000000000) * (line.editableTraceabilityUnitPrice)) %}
+                    {% set rentalUnitPrice = line.editableRentalUnitPrice %}
+                    {% set transportUnitPrice = line.editableTransportUnitPrice %}
+                    {% set treatmentUnitPrice = line.editableTreatmentUnitPrice %}
+                    {% set traceabilityUnitPrice = line.editableTraceabilityUnitPrice %}
 
-                    {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}
+{#                    {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}#}
 
                     {% set totalRentalPrice = quantity * (rentalUnitPrice / 100) %}
                     {% set totalProduct = (line.totalAmount / 100) - totalRentalPrice  %}
@@ -442,7 +442,7 @@
                             {% endif %}
                         </td>
                         <td>{{ line.frequencyTimes }}</td>
-                        <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ line.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
                         <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
                     </tr>
 
