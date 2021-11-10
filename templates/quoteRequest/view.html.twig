@@ -41,7 +41,7 @@
                             </a>
                         {% endif %}
                         <a href="javascript:void(0);"
-                           class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not quoteRequest.hasValidSignatories %}btn-disabled{% endif %}"><i
+                           class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i
                                     class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}
                         </a>
                         <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
@@ -402,8 +402,13 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% set frequencyIntervalName = 'Commercial.QuoteRequest.' ~ quoteRequestLine.frequencyInterval %}
-                                                {{ quoteRequestLine.frequencyTimes }} x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                                {% if quoteRequestLine.frequency == 'unknown' %}
+                                                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                                {% else %}
+                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval|capitalize %}
+                                                    {{ quoteRequestLine.frequencyTimes }}
+                                                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                                {% endif %}
                                             </td>
                                             <td>
                                                 {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}

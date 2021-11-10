@@ -29,7 +29,8 @@
 
 {{ 'Commercial.ConfirmEmail.Message1'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }}
 <br><br>
-{{ 'Commercial.ConfirmEmail.QuoteRequestRecap'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }} :
+{{ 'Commercial.ConfirmEmail.QuoteRequestRecap'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }}
+:
 <br><br>
 
 <table border="1" cellspacing="0" cellpadding="5">
@@ -48,9 +49,13 @@
             </td>
             <td>{{ quoteRequestLine.quantity }}</td>
             <td>
-                {% set frequencyIntervalName = 'Commercial.QuoteRequest.' ~ quoteRequestLine.frequencyInterval %}
-                {{ quoteRequestLine.frequencyTimes }}
-                x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                {% if quoteRequestLine.frequency == 'unknown' %}
+                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                {% else %}
+                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval|capitalize %}
+                    {{ quoteRequestLine.frequencyTimes }}
+                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                {% endif %}
             </td>
         </tr>
     {% endfor %}

@@ -140,6 +140,9 @@
                                                     {% if not frequencyInterval %}
                                                         {% set frequencyInterval = product.frequencyInterval %}
                                                     {% endif %}
+                                                {% elseif frequency and frequency == 'unknown' %}
+                                                    {% set frequencyTimes = null %}
+                                                    {% set frequencyInterval = null %}
                                                 {% endif %}
                                                 <!-- Group of default radios - option Regular-->
                                                 <div class="paprec-flex">

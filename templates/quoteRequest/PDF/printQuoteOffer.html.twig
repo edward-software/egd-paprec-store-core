@@ -420,8 +420,6 @@
                     {% set totalRentalPrice = totalRentalPrice * 100 %}
                     {% set totalProduct = totalProduct * 100 %}
 
-                    {% set frequencyIntervalName = 'Commercial.QuoteRequest.' ~ line.frequencyInterval %}
-
                     <tr>
                         <td rowspan="2">
                             <p>{{ line.product|productLabelTranslation('fr') }}</p>
@@ -430,14 +428,22 @@
                         <td></td>
                         <td>{{ quantity }}</td>
                         <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>
                     </tr>
                     <tr>
                         <td>{{ 'Commercial.PDF.ContractTreatmentCollect'|trans({}, "messages", app.request.locale) }}</td>
-                        <td>{{ line.frequencyTimes }} x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}</td>
+                        <td>
+                            {% if line.frequency == 'unknown' %}
+                                {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                            {% else %}
+                                {% set frequencyIntervalName = 'General.Frequency.' ~ line.frequencyInterval|capitalize %}
+                                {{ line.frequencyTimes }}
+                                x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                            {% endif %}
+                        </td>
                         <td>{{ line.frequencyTimes }}</td>
                         <td>{{ treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
                     </tr>
 
                 {% endfor %}

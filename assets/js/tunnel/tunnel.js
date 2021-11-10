@@ -379,8 +379,12 @@ function disableButtonsFromQuantity(quantity, productId) {
 
 function editProductFrequency(url, productId) {
     const frequency = $('input[type=radio][name^="productFrequencyRadios__' + productId + '"]:checked').val();
-    const frequencyTimes = $("#productFrequencyTimesInput__" + productId).val();
-    const frequencyInterval = $("#productFrequencyIntervalSelect__" + productId).val();
+    let frequencyTimes = null;
+    let frequencyInterval = null;
+    if (frequency != 'unknown') {
+        frequencyTimes = $("#productFrequencyTimesInput__" + productId).val();
+        frequencyInterval = $("#productFrequencyIntervalSelect__" + productId).val();
+    }
 
     $.ajax({
         url: url,

@@ -203,6 +203,29 @@ class QuoteRequestManager
         return false;
     }
 
+    /**
+     * Vérifie si un produit d'une quoteRequest à la fréquence unknown
+     * Si c'est le cas, alors il faut que le bouton pour envoyer un email avec le contrat au client soit désactivé
+     *
+     * @param QuoteRequest $quoteRequest
+     * @return bool
+     */
+    public function isAbleToSendContractEmail(QuoteRequest $quoteRequest)
+    {
+        $quoteRequestLines = $quoteRequest->getQuoteRequestLines();
+
+        if (!empty($quoteRequestLines) && count($quoteRequestLines)) {
+            foreach ($quoteRequestLines as $quoteRequestLine) {
+                if ($quoteRequestLine->getFrequency() === 'unknown') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
+    }
+
 
     /**
      * Ajoute une quoteRequestLine à un quoteRequest
@@ -248,7 +271,7 @@ class QuoteRequestManager
             $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
             $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
-            $quoteRequestLine->setFrequency($quoteRequestLine->getProduct()->getFrequency());
+            $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
             $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
             $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());
             $quoteRequestLine->setProductName($quoteRequestLine->getProduct()->getId());
@@ -342,7 +365,7 @@ class QuoteRequestManager
      * @param $qtty
      * @throws Exception
      */
-    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequencyTimes, $frequencyInterval, $doFlush = true)
+    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequency, $frequencyTimes, $frequencyInterval, $doFlush = true)
     {
         try {
             $product = $this->productManager->get($productId);
@@ -350,8 +373,13 @@ class QuoteRequestManager
 
             $quoteRequestLine->setProduct($product);
             $quoteRequestLine->setQuantity($qtty);
-            $quoteRequestLine->setFrequencyTimes($frequencyTimes);
-            $quoteRequestLine->setFrequencyInterval($frequencyInterval);
+            $quoteRequestLine->setFrequency($frequency);
+            if (!empty($frequencyTimes)) {
+                $quoteRequestLine->setFrequencyTimes($frequencyTimes);
+            }
+            if (!empty($frequencyInterval)) {
+                $quoteRequestLine->setFrequencyInterval($frequencyInterval);
+            }
             $this->addLine($quoteRequest, $quoteRequestLine, null, $doFlush);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());

@@ -412,9 +412,11 @@ class QuoteRequestController extends AbstractController
     {
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
+        $isAbleToSendContractEmail = $this->quoteRequestManager->isAbleToSendContractEmail($quoteRequest);
 
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
+            'isAbleToSendContractEmail' => $isAbleToSendContractEmail
         ));
     }
 
