@@ -26,6 +26,14 @@ input:focus {
   }
 }
 
+//.fix-right-product {
+//  position: fixed;
+//  top: 100px;
+//  right: 0;
+//  z-index: 1;
+//  width: 400px;
+//}
+
 .product-container {
 
   margin-bottom: 40px;
@@ -299,6 +307,26 @@ input:focus {
       border: 1px solid #1A5C99 !important;
     }
   }
+}
+
+.range-container {
+
+  .range {
+
+    &__image {
+      //height: 100%;
+      //margin: auto;
+      width: 50px;
+      text-align: center;
+
+      img {
+        max-height: 50px;
+        max-width: 100%;
+      }
+    }
+
+  }
+
 }
 
 

@@ -46,8 +46,17 @@
 
             {% for range in ranges %}
                 <div class="range-container">
-                    <h2>{{ range|rangeLabelTranslation(locale) }}</h2>
-                    <div class="row product-container">
+                    <h2><a data-toggle="collapse" href="#rangeProductCollapse__{{ range.id }}">{{ range|rangeLabelTranslation(locale) }}</a></h2>
+                    <div id="rangeContentContainer__{{ range.id }}">
+                        <div class="range__image">
+                            <img src="{% if range.pictures|length > 0 %}{{ asset('/uploads/pictos/' ~ range.pictures[0].path) }}{% endif %}"
+                                 alt="#" class="">
+                        </div>
+                        <div class="paprec-flex space-between">
+                            <div class="m-b-15">{{ range|rangeLabelTranslation(locale,'shortDescription') }}</div>
+                        </div>
+                    </div>
+                    <div class="row product-container collapse multi-collapse" id="rangeProductCollapse__{{ range.id }}">
                         {% for product in range.products %}
                             <div class="col-md-6 product" id="productContainer_{{ product.id }}">
                                 <div class="row product__block">
