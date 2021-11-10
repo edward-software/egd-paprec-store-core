@@ -268,6 +268,13 @@
                                             {{ form_errors(form.quoteStatus) }}
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.RegularDuration'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.duration, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.duration) }}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">

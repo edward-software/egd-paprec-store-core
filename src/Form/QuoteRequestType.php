@@ -15,19 +15,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuoteRequestType extends AbstractType
 {
 
     private $transformer;
+    private $translator;
 
     /**
      * QuoteRequestPublicType constructor.
      * @param $transformer
      */
-    public function __construct(PostalCodeToStringTransformer $transformer)
+    public function __construct(PostalCodeToStringTransformer $transformer, TranslatorInterface $translator)
     {
         $this->transformer = $transformer;
+        $this->translator = $translator;
     }
 
     /**
@@ -139,7 +142,21 @@ class QuoteRequestType extends AbstractType
             ))
             ->add('signatoryFirstName1')
             ->add('signatoryLastName1')
-            ->add('signatoryTitle1');
+            ->add('signatoryTitle1')
+            ->add('duration', ChoiceType::class, array(
+                'choices' => array(
+                    '12' => '12',
+                    '24' => '24',
+                    '36' => '36',
+                    '48' => '48',
+                    '60' => '60'
+                ),
+                'choice_label' => function ($choiceValue, $key, $value) {
+                    return $choiceValue . ' ' . $this->translator->trans('Commercial.QuoteRequest.month');
+                },
+                'expanded' => false,
+                'multiple' => false
+            ));
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
 //        $builder->get('billingPostalCode')
