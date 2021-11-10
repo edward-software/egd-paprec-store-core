@@ -737,7 +737,7 @@ class QuoteRequestLine
     /**
      * @return string
      */
-    public function getFrequency(): string
+    public function getFrequency()
     {
         return $this->frequency;
     }
@@ -746,7 +746,7 @@ class QuoteRequestLine
      * @param string $frequency
      * @return QuoteRequestLine
      */
-    public function setFrequency(string $frequency): self
+    public function setFrequency($frequency): self
     {
         $this->frequency = $frequency;
         return $this;

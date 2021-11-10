@@ -131,7 +131,9 @@ Commercial:
         BasePrice: PU de base
         RentalPrice: Location
         Transport: Transport/passage
-        Frequency: Fréquence de passage
+        Frequency: Fréquence
+        PassingFrequency: Fréquence de passage
+        RegularPassingFrequency: Fréquence de passage (si régulier)
         Treatment: Traitement
         Traceability: Traçabilité/contenant
         TreatmentCollect: PU Collecte et traitement/contenant

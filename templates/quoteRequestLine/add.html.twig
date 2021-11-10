@@ -52,6 +52,29 @@
                                         {{ form_errors(form.quantity) }}
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-label">{{ 'Commercial.QuoteRequestLine.Frequency'|trans }}</label>
+                                    <div class="form-content">
+                                        {{ form_widget(form.frequency, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.frequency) }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label class="form-label">{{ 'Commercial.QuoteRequestLine.RegularPassingFrequency'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.frequencyTimes) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.frequencyInterval) }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -7,6 +7,7 @@ use App\Entity\QuoteRequestLine;
 use App\Repository\ProductRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -36,6 +37,51 @@ class QuoteRequestLineAddType extends AbstractType
                 'choice_label' => 'productLabels[0].name',
                 'placeholder' => '',
                 'empty_data' => null,
+            ))
+            ->add('frequency', ChoiceType::class, array(
+                'choices' => array(
+                    'Regular' => 'regular',
+                    'Ponctual' => 'ponctual',
+                    'Unknown' => 'unknown'
+                ),
+                'empty_data' => 'Unknown',
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.Frequency.' . ucfirst($choiceValue);
+                },
+                'required' => true,
+                'expanded' => true
+            ))
+            ->add('frequencyTimes', ChoiceType::class, array(
+                'choices' => array(
+                    '0' => '0',
+                    '1' => '1',
+                    '2' => '2',
+                    '3' => '3',
+                    '4' => '4',
+                    '5' => '5',
+                    '6' => '6',
+                    '7' => '7',
+                    '8' => '8',
+                    '9' => '9',
+                    '10' => '10',
+                    '11' => '11',
+                    '12' => '12'
+                ),
+                'expanded' => false,
+                'multiple' => false
+            ))
+            ->add('frequencyInterval', ChoiceType::class, array(
+                'choices' => array(
+                    'week' => 'week',
+                    'month' => 'month',
+                    'bimestre' => 'bimestre',
+                    'quarter' => 'quarter'
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return ($choiceValue) ? 'General.Frequency.' . ucfirst($choiceValue) : '';
+                },
+                'expanded' => false,
+                'multiple' => false
             ));
     }
 
