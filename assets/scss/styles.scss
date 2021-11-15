@@ -124,6 +124,24 @@ a {
     &__last {
       color: #71b24e !important;
     }
+
+    .progress {
+      height: 0.7rem;
+      border: 1px solid black;
+      background-color: white;
+    }
+
+    .pg-background {
+      background-color: #71b24e;
+    }
+
+    .item {
+      color: #B3B3B3;
+    }
+
+    .item-active {
+      color: #71b24e !important;
+    }
   }
 }
 

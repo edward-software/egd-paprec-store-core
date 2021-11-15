@@ -216,3 +216,11 @@
     <div id="other-needs-button"
          class="floating-bottom-button">{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }}</div>
 {% endblock %}
+{% block javascripts %}
+    <script>
+        $(function () {
+            $('.progress-bar').css('width', '38%').attr('aria-valuenow', '33%');
+        });
+
+    </script>
+{% endblock %}
