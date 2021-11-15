@@ -81,7 +81,7 @@ Public:
 
     Contact:
         BreadcrumbTitle: Coordonnées du client
-        Title: Entrez vos coordonnées pour être contacté et recevoir votre devis.
+        Title: Entrez vos coordonnées pour être contacté et recevoir votre devis
         BusinessName: Nom société
         Civility: Civilité
         LastName: Nom
@@ -111,6 +111,9 @@ Public:
         SignatoryTitle1: Titre signataire
         BillingAddress: Adresse de facturation
         DeliveryAddress: Adresse de prestation
+
+    Request:
+        Title: Entrez vos coordonnées pour être contacté et accompagné dans la création de votre demande
 
     Signatory:
         BreadcrumbTitle:            Définition des signataires

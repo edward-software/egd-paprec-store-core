@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Form\ContactRequestPublicType;
 use App\Form\QuoteRequestPublicType;
 use App\Service\CartManager;
 use App\Service\OtherNeedManager;
@@ -400,6 +401,48 @@ class SubscriptionController extends AbstractController
             'locale' => $locale,
             'quoteRequest' => $quoteRequest,
             'cart' => $cart,
+        ));
+    }
+
+    /**
+     * @Route("/{locale}/contact/request", name="paprec_public_contact_request_index")
+     *
+     * @param Request $request
+     * @param $locale
+     */
+    public function contactRequestAction(Request $request, $locale)
+    {
+        $form = $this->createForm(ContactRequestPublicType::class, null, array(
+            'locale' => $locale
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $this->quoteRequestManager->sendConfirmContactRequestEmail($data);
+
+            return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
+                'locale' => $locale
+            ));
+        }
+
+        return $this->render('public/contact-request.html.twig', array(
+            'locale' => $locale,
+            'form' => $form->createView()
+        ));
+
+    }
+
+    /**
+     * @Route("/{locale}/contact/request/confirm", name="paprec_public_confirm_contact_request_index")
+     * @param Request $request
+     * @param $locale
+     */
+    public function confirmContactRequestAction(Request $request, $locale) {
+        return $this->render('public/confirm-contact-request.html.twig', array(
+            'locale' => $locale
         ));
     }
 

@@ -173,6 +173,17 @@ Commercial:
             Message1: Vous avez reçu cet e-mail pour vous informer des modifications importantes apportées aux services
             Message2: que vous utilisez
 
+    ConfirmContactRequestEmail:
+        Object: Accompagnement dans la création de votre demande
+        Dear: Cher
+        Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        TechnicalService: service technique
+        Message2: Nous vous contacterons dans les 24 heures afin de vous aider dans la création de votre demande.
+        Regards: Bien cordialement
+        Partner: Votre partenaire Privacia
+        NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
+
     GeneratedQuoteEmail:
         FileName: Offre Privacia
         Object: Offre de services Privacia

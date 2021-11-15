@@ -14,6 +14,7 @@ use iio\libmergepdf\Merger;
 use Knp\Snappy\Pdf;
 use Swift_Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use function PHPUnit\Framework\isEmpty;
 
@@ -613,6 +614,52 @@ class QuoteRequestManager
 
         } catch (ORMException $e) {
             throw new Exception('unableToSendConfirmQuoteRequest', 500);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Envoie un mail à la personne ayant fait une demande d'aide pour la création d'un devis
+     * @throws Exception
+     */
+    public function sendConfirmContactRequestEmail($data)
+    {
+
+        try {
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
+
+            $rcptTo = $data['email'];
+
+            if ($rcptTo == null || $rcptTo == '') {
+                return false;
+            }
+
+            $locale = 'FR';
+
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.ConfirmContactRequestEmail.Object',
+                    array(), 'messages', strtolower($locale)))
+                ->setFrom($from)
+                ->setTo($rcptTo)
+                ->setBody(
+                    $this->container->get('templating')->render(
+                        'quoteRequest/emails/confirmContactRequestEmail.html.twig',
+                        array(
+                            'locale' => strtolower($locale),
+                            'data' => $data
+                        )
+                    ),
+                    'text/html'
+                );
+            if ($this->container->get('mailer')->send($message)) {
+                return true;
+            }
+            return false;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToSendConfirmContactRequest', Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
