@@ -156,7 +156,8 @@ class QuoteRequestType extends AbstractType
                 },
                 'expanded' => false,
                 'multiple' => false
-            ));
+            ))
+            ->add('startDate');
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
 //        $builder->get('billingPostalCode')

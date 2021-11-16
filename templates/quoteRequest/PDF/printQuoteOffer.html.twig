@@ -33,13 +33,15 @@
         h2 {
             font-size: 14px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             margin-top: 20px;
             border-bottom: 1px solid #4a4a4a;
+            padding-bottom: 5px;
         }
 
         p {
             margin: 5px 0;
+            padding-bottom: 15px;
         }
 
         hr {
@@ -318,6 +320,10 @@
             width: 100px;
         }
 
+        .cgv-page {
+            page-break-before: always;
+        }
+
     </style>
 
 </head>
@@ -389,98 +395,147 @@
 
             <h2>3. {{ 'Commercial.PDF.ServiceTitle'|trans({}, "messages", app.request.locale) }}</h2>
 
-            <table style="width: 95%; margin-left: 20px; margin-top: 10px">
-                <tbody>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
-                    <th>{{ 'Commercial.PDF.ContractTreatmentPrice'|trans({}, "messages", app.request.locale) }}</th>
-                    <th>{{ 'Commercial.PDF.ContractMensuelEstimation'|trans({}, "messages", app.request.locale) }}</th>
-                </tr>
-                {% set quantity = 0 %}
-                {% set rentalUnitPrice = 0 %}
-                {% set treatmentUnitPrice = 0 %}
-                {% set transportUnitPrice = 0 %}
-                {% set traceabilityUnitPrice = 0 %}
-{#                {% set treatmentCollectPrice = 0 %}#}
-                {% for line in quoteRequest.quoteRequestLines %}
-                    {% set quantity = line.quantity %}
-                    {% set rentalUnitPrice = line.editableRentalUnitPrice %}
-                    {% set transportUnitPrice = line.editableTransportUnitPrice %}
-                    {% set treatmentUnitPrice = line.editableTreatmentUnitPrice %}
-                    {% set traceabilityUnitPrice = line.editableTraceabilityUnitPrice %}
+            {% if quoteRequest.type == 'REGULAR' or quoteRequest.type == 'regular' %}
 
-{#                    {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}#}
-
-                    {% set totalRentalPrice = quantity * (rentalUnitPrice / 100) %}
-                    {% set totalProduct = (line.totalAmount / 100) - totalRentalPrice  %}
-
-                    {% set totalRentalPrice = totalRentalPrice * 100 %}
-                    {% set totalProduct = totalProduct * 100 %}
-
+                <table style="width: 95%; margin-left: 20px; margin-top: 10px">
+                    <tbody>
                     <tr>
-                        <td rowspan="2">
-                            <p>{{ line.product|productLabelTranslation('fr') }}</p>
-                        </td>
-                        <td>{{ 'Commercial.PDF.ContractLocation'|trans({}, "messages", app.request.locale) }}</td>
-                        <td></td>
-                        <td>{{ quantity }}</td>
-                        <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
+                        <th>{{ 'Commercial.PDF.ContractTreatmentPrice'|trans({}, "messages", app.request.locale) }}</th>
+                        <th>{{ 'Commercial.PDF.ContractMensuelEstimation'|trans({}, "messages", app.request.locale) }}</th>
                     </tr>
-                    <tr>
-                        <td>{{ 'Commercial.PDF.ContractTreatmentCollect'|trans({}, "messages", app.request.locale) }}</td>
-                        <td>
-                            {% if line.frequency == 'unknown' %}
-                                {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
-                            {% else %}
-                                {% set frequencyIntervalName = 'General.Frequency.' ~ line.frequencyInterval|capitalize %}
-                                {{ line.frequencyTimes }}
-                                x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
-                            {% endif %}
-                        </td>
-                        <td>{{ line.frequencyTimes }}</td>
-                        <td>{{ line.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
-                        <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
-                    </tr>
+                    {% set quantity = 0 %}
+                    {% set rentalUnitPrice = 0 %}
+                    {% set treatmentUnitPrice = 0 %}
+                    {% set transportUnitPrice = 0 %}
+                    {% set traceabilityUnitPrice = 0 %}
+                    {#                {% set treatmentCollectPrice = 0 %}#}
+                    {% for line in quoteRequest.quoteRequestLines %}
+                        {% set quantity = line.quantity %}
+                        {% set rentalUnitPrice = line.editableRentalUnitPrice %}
+                        {% set transportUnitPrice = line.editableTransportUnitPrice %}
+                        {% set treatmentUnitPrice = line.editableTreatmentUnitPrice %}
+                        {% set traceabilityUnitPrice = line.editableTraceabilityUnitPrice %}
 
-                {% endfor %}
-{#                <tr>#}
-{#                    <td colspan="5" class="text-right bold">#}
-{#                        {{ 'Commercial.PDF.ContractTotalAmount'|trans({}, "messages", app.request.locale) }}#}
-{#                    </td>#}
-{#                    <td>{{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}</td>#}
-{#                </tr>#}
-                </tbody>
-            </table>
+                        {#                    {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}#}
+
+                        {% set totalRentalPrice = quantity * (rentalUnitPrice / 100) %}
+                        {% set totalProduct = (line.totalAmount / 100) - totalRentalPrice  %}
+
+                        {% set totalRentalPrice = totalRentalPrice * 100 %}
+                        {% set totalProduct = totalProduct * 100 %}
+
+                        <tr>
+                            <td rowspan="2">
+                                <p>{{ line.product|productLabelTranslation(app.request.locale) }}</p>
+                            </td>
+                            <td>{{ 'Commercial.PDF.ContractLocation'|trans({}, "messages", app.request.locale) }}</td>
+                            <td></td>
+                            <td>{{ quantity }}</td>
+                            <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
+                            <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'Commercial.PDF.ContractTreatmentCollect'|trans({}, "messages", app.request.locale) }}</td>
+                            <td>
+                                {% if line.frequency == 'unknown' %}
+                                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                {% else %}
+                                    {% set frequencyIntervalName = 'General.Frequency.' ~ line.frequencyInterval|capitalize %}
+                                    {{ line.frequencyTimes }}
+                                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                {% endif %}
+                            </td>
+                            <td>{{ line.frequencyTimes }}</td>
+                            <td>{{ line.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
+                            <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    {#                <tr>#}
+                    {#                    <td colspan="5" class="text-right bold">#}
+                    {#                        {{ 'Commercial.PDF.ContractTotalAmount'|trans({}, "messages", app.request.locale) }}#}
+                    {#                    </td>#}
+                    {#                    <td>{{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}</td>#}
+                    {#                </tr>#}
+                    </tbody>
+                </table>
+
+                {% elseif quoteRequest.type == 'PONCTUAL' or quoteRequest.type == 'ponctual' %}
+
+                    <table style="width: 95%; margin-left: 20px; margin-top: 10px">
+                        <tbody>
+                        <tr>
+                            <th>{{ 'Commercial.PDF.ContractRangeProduct'|trans({}, "messages", app.request.locale) }}</th>
+                            <th colspan="2">{{ 'Commercial.PDF.ContractProductDescriptions'|trans({}, "messages", app.request.locale) }}</th>
+                            <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
+                            <th>{{ 'Commercial.PDF.ContractPrice'|trans({}, "messages", app.request.locale) }}</th>
+                        </tr>
+                        {% set quantity = 0 %}
+                        {% set rentalUnitPrice = 0 %}
+                        {% set treatmentUnitPrice = 0 %}
+                        {% set transportUnitPrice = 0 %}
+                        {% set traceabilityUnitPrice = 0 %}
+                        {#                {% set treatmentCollectPrice = 0 %}#}
+                        {% for line in quoteRequest.quoteRequestLines %}
+                            {% set quantity = line.quantity %}
+                            {% set rentalUnitPrice = line.editableRentalUnitPrice %}
+                            {% set transportUnitPrice = line.editableTransportUnitPrice %}
+                            {% set treatmentUnitPrice = line.editableTreatmentUnitPrice %}
+                            {% set traceabilityUnitPrice = line.editableTraceabilityUnitPrice %}
+
+                            {#                    {% set treatmentCollectPrice = (transportUnitPrice + quantity * (treatmentUnitPrice + traceabilityUnitPrice)) / quantity %}#}
+
+                            {% set totalRentalPrice = quantity * (rentalUnitPrice / 100) %}
+                            {% set totalProduct = (line.totalAmount / 100) - totalRentalPrice  %}
+
+                            {% set totalRentalPrice = totalRentalPrice * 100 %}
+                            {% set totalProduct = totalProduct * 100 %}
+
+                            <tr>
+                                <td>
+                                    <p>{{ line.product.range|rangeLabelTranslation(app.request.locale) }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ line.product|productLabelTranslation(app.request.locale) }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ line.product|productLabelTranslation(app.request.locale, 'shortDescription') }}</p>
+                                </td>
+                                <td>{{ quantity }}</td>
+                                <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
+                            </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+            {% endif %}
+
 
 
             <div class="flex">
                 <p>
                     <span class="bold">{{ 'Commercial.PDF.ContractDuration'|trans({}, "messages", app.request.locale) }} :</span>
-                    36 mois
+                    {% if quoteRequest.duration is not null %}
+                        {{ quoteRequest.duration }} {{ 'Commercial.QuoteRequest.month'|trans }}
+                    {% endif %}
                 </p>
-                {# <div class="flex align-item-center"> #}
-                {# class active pour check the box #}
-                {# <div class="check {% if quoteRequest.regularDuration == 24 %}active {% endif %}" #}
-                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
-                {# <p>24 mois</p> #}
-                {# </div> #}
-                {# <div class="check {% if quoteRequest.regularDuration == 36 %}active {% endif %}" #}
-                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
-                {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
-                {# <div class="check {% if quoteRequest.regularDuration == 48 %}active {% endif %}" #}
-                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
-                {# <p>48 mois</p> #}
-                {# </div> #}
-                {# <div class="flex align-item-center" style="margin-left: 30px;"> #}
-                {# <div class="check {% if quoteRequest.regularDuration == 60 %}active {% endif %}" #}
-                {# style="margin-left: 10px;margin-right: 10px;"></div> #}
-                {# <p>60 mois</p> #}
-                {# </div> #}
             </div>
+
+            {% if quoteRequest.type == 'REGULAR' or quoteRequest.type == 'regular' %}
+                <div class="flex">
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.StartDateContract'|trans({}, "messages", app.request.locale) }} :</span>
+                        {% if quoteRequest.startDate is not null %}
+                            {{ quoteRequest.startDate|localizeddate('short', 'none', app.request.locale) }}
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
 
         </div>
 
@@ -499,6 +554,56 @@
         {# partie 5 #}
 
         <h2>5. {{ 'Commercial.PDF.OtherContractualTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>
+                    <span class="bold" style="margin-left: 150px">{{ 'Commercial.PDF.BillingSubTitle'|trans({}, "messages", app.request.locale) }}</span>
+                </p>
+            </div>
+
+            <div>
+                <p>
+                    <span class="bold">{{ 'Commercial.PDF.SiteSubTitle'|trans({}, "messages", app.request.locale) }} </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.CorporateName'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.Address'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.City'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.PhoneNumber'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.TVAIntracomNumber'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
+
+        <div class="flex offer__ref-items">
+            <div>
+                <p>{{ 'Commercial.PDF.CommandNumber'|trans({}, "messages", app.request.locale) }}</p>
+            </div>
+        </div>
 
         {# partie 6 #}
 
@@ -570,7 +675,13 @@
 
         {# partie 7 #}
 
-        <h2>7. {{ 'Commercial.PDF.MentionTitle'|trans({}, "messages", app.request.locale) }}</h2>
+        <div class="cgv-page">
+            <h2>7. {{ 'Commercial.PDF.MentionTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <img src="{{ absolute_url(asset('build/static/CGV_' ~ app.request.locale ~ '.png')) }}" alt="CGV Privacia">
+        </div>
+
+
 
 
         {# #}{# <div class="flex"> #}

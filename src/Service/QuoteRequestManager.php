@@ -412,15 +412,10 @@ class QuoteRequestManager
     ) {
         $now = new \DateTime();
 
-        $quoteRequestLine->setRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
-        $quoteRequestLine->setTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
-        $quoteRequestLine->setTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
-        $quoteRequestLine->setTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
-
-        $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
-        $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
-        $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
-        $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
+        $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getEditableTransportUnitPrice());
+        $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getEditableRentalUnitPrice());
+        $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getEditableTreatmentUnitPrice());
+        $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getEditableTraceabilityUnitPrice());
         $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
         $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
         $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());

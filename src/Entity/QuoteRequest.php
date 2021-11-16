@@ -341,6 +341,13 @@ class QuoteRequest
      */
     private $duration;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startDate", type="datetime", nullable=true)
+     */
+    private $startDate;
+
 
     /**
      * #################################
@@ -1443,6 +1450,18 @@ class QuoteRequest
     public function setDuration(?int $duration): self
     {
         $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTime
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate): self
+    {
+        $this->startDate = $startDate;
 
         return $this;
     }

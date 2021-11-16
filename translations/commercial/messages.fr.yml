@@ -62,6 +62,7 @@ Commercial:
         Unknown: Ne sais pas
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
+        StartDate: Date de démarrage
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
@@ -237,6 +238,12 @@ Commercial:
         CommentTitle: Remarques
         NoComment: Pas de remarques
         OtherContractualTitle: Autres infos contractuelles
+        BillingSubTitle: Facturation
+        SiteSubTitle: Site
+        CorporateName: Raison sociale
+        City: Ville
+        TVAIntracomNumber: N° TVA intracom
+        CommandNumber: N° de commande
         SignatureTitle: Signatures
         SignatureSubTitle1: PAPREC - (nom Agence)
         SignatureSubTitle2: CLIENT - (nom + signature + cachet)
@@ -247,9 +254,13 @@ Commercial:
         SignatureQuality: Qualité
         MentionTitle: CGV
         ContractDuration: Durée du contrat
+        StartDateContract: Démarrage du contrat
         ContractProduct: Matériel
         ContractQuantity: Quantité
         ContractLocation: Location
+        ContractPrice: Prix (€ HT)
+        ContractRangeProduct: Typologie
+        ContractProductDescriptions: Désignation
         ContractTreatmentCollect: Collecte et traitement
         ContractTreatmentPrice: Prix Unitaire / contenant
         ContractFrequency: Fréquence de passage
