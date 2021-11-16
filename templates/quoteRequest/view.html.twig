@@ -97,9 +97,11 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Civility'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ ('General.' ~ quoteRequest.civility)|trans }}
-                                        </label>
+                                        {% if quoteRequest.civility is not null %}
+                                            <label class="col-form-label">
+                                                {{ ('General.' ~ quoteRequest.civility)|trans }}
+                                            </label>
+                                        {% endif %}
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.LastName'|trans }}</label>
@@ -423,7 +425,8 @@
                                                     {% elseif percentageTransport < 0 %}
                                                         {% set colorTransport = 'red' %}
                                                     {% endif %}
-                                                     <span class="small" style="color: {{ colorTransport }}">({{ percentageTransport|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                    <span class="small"
+                                                          style="color: {{ colorTransport }}">({{ percentageTransport|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
                                             </td>
                                             <td>

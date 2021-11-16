@@ -405,43 +405,72 @@ class SubscriptionController extends AbstractController
     }
 
     /**
-     * @Route("/{locale}/contact/request", name="paprec_public_contact_request_index")
+     * @Route("/{locale}/contact/request/{cartUuid}", name="paprec_public_contact_request_index")
      *
      * @param Request $request
      * @param $locale
+     * @param $cartUuid
      */
-    public function contactRequestAction(Request $request, $locale)
+    public function contactRequestAction(Request $request, $locale, $cartUuid)
     {
-        $form = $this->createForm(ContactRequestPublicType::class, null, array(
+        $cart = $this->cartManager->get($cartUuid);
+
+        $quoteRequest = $this->quoteRequestManager->add(false);
+
+        $form = $this->createForm(ContactRequestPublicType::class, $quoteRequest, array(
             'locale' => $locale
         ));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $quoteRequest = $form->getData();
 
-            $this->quoteRequestManager->sendConfirmContactRequestEmail($data, $locale);
-            $this->quoteRequestManager->sendNewContactRequestEmail($data, $locale);
+            $quoteRequest->setQuoteStatus('QUOTE_CREATED');
+            $quoteRequest->setOrigin('SHOP');
+            $quoteRequest->setLocale($locale);
+            $quoteRequest->setType($cart->getType());
+            $quoteRequest->setIsMultisite(false);
+            $quoteRequest->setAccess('ground');
+
+            if ($quoteRequest->getType() === 'PONCTUAL') {
+                $quoteRequest->setPonctualDate($cart->getPonctualDate());
+            }
+
+            $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
+
+            $reference = $this->quoteRequestManager->generateReference($quoteRequest);
+            $quoteRequest->setReference($reference);
+
+            $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+            $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
+
+            $this->em->persist($quoteRequest);
+            $this->em->flush();
+
+            $this->quoteRequestManager->sendConfirmContactRequestEmail($quoteRequest, $locale);
+            $this->quoteRequestManager->sendNewContactRequestEmail($quoteRequest, $locale);
 
             return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
-                'locale' => $locale
+                'locale' => $locale,
+                'cartUuid' => $cart->getId(),
             ));
         }
 
         return $this->render('public/contact-request.html.twig', array(
             'locale' => $locale,
+            'cart' => $cart,
             'form' => $form->createView()
         ));
 
     }
 
     /**
-     * @Route("/{locale}/contact/request/confirm", name="paprec_public_confirm_contact_request_index")
+     * @Route("/{locale}/contact/request/confirm/{cartUuid}", name="paprec_public_confirm_contact_request_index")
      * @param Request $request
      * @param $locale
      */
-    public function confirmContactRequestAction(Request $request, $locale) {
+    public function confirmContactRequestAction(Request $request, $locale, $cartUuid) {
         return $this->render('public/confirm-contact-request.html.twig', array(
             'locale' => $locale
         ));

@@ -618,13 +618,13 @@ class QuoteRequestManager
      * Envoie un mail à la personne ayant fait une demande d'aide pour la création d'un devis
      * @throws Exception
      */
-    public function sendConfirmContactRequestEmail($data, $locale)
+    public function sendConfirmContactRequestEmail(QuoteRequest $quoteRequest, $locale)
     {
 
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
-            $rcptTo = $data['email'];
+            $rcptTo = $quoteRequest->getEmail();
 
             if ($rcptTo == null || $rcptTo == '') {
                 return false;
@@ -641,7 +641,7 @@ class QuoteRequestManager
                         'quoteRequest/emails/confirmContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
-                            'data' => $data
+                            'quoteRequest' => $quoteRequest
                         )
                     ),
                     'text/html'
@@ -662,21 +662,24 @@ class QuoteRequestManager
      * Envoie un mail au service commercial suite à une demande d'aide d'un client pour la création d'un devis
      * @throws Exception
      */
-    public function sendNewContactRequestEmail($data, $locale)
+    public function sendNewContactRequestEmail(QuoteRequest $quoteRequest, $locale)
     {
 
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
-            $rcptTo = $_ENV['PAPREC_HELP_REQUEST_EMAIL'];
+            /**
+             * Si la quoteRequest est associé à un commercial, on lui envoie le mail d'information de la création d'une nouvelle demande
+             * Sinon => à spécifier
+             */
+            $rcptTo = null;
+            if ($quoteRequest->getUserInCharge()) {
+                $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
+            }
 
-            $postalCode = $data['postalCode'];
-
-            $data['city'] = $postalCode->getCity();
-
-            $data['code'] = $postalCode->getCode();
-
-            unset($data['postalCode']);
+            if ($rcptTo === null || $rcptTo === '') {
+                return false;
+            }
 
             $message = new Swift_Message();
             $message
@@ -689,7 +692,7 @@ class QuoteRequestManager
                         'quoteRequest/emails/newContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
-                            'data' => $data
+                            'quoteRequest' => $quoteRequest
                         )
                     ),
                     'text/html'

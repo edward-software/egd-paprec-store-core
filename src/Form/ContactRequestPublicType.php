@@ -52,6 +52,7 @@ class ContactRequestPublicType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'data_class' => QuoteRequest::class,
             'validation_groups' => function (FormInterface $form) {
                 return;
             },

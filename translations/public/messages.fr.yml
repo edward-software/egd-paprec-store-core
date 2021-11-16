@@ -60,6 +60,7 @@ Public:
         Quantity: Quantité
         AddToQuote: Ajouter au devis
         NextStep: Étape suivante
+        ToBeCall: Être appelé
         Quote: Panier
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte

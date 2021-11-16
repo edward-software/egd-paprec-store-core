@@ -21,7 +21,7 @@
 
 </head>
 <body>
-{{ 'Commercial.ConfirmContactRequestEmail.Dear'|trans({}, "messages", locale) }} {{ data.firstName }} {{ data.lastName }},<br><br>
+{{ 'Commercial.ConfirmContactRequestEmail.Dear'|trans({}, "messages", locale) }} {{ quoteRequest.firstName }} {{ quoteRequest.lastName }},<br><br>
 
 {{ 'Commercial.ConfirmContactRequestEmail.Message1'| trans({'%date%': 'now'|localizeddate('short', 'medium', locale)}, "messages", locale) }}
 

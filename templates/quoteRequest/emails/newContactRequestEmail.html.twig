@@ -23,20 +23,13 @@
 <body>
 {{ 'Commercial.NewContactRequestEmail.Dear'|trans({}, "messages", locale) }},<br><br>
 
-{{ 'Commercial.NewContactRequestEmail.Message1'| trans({}, "messages", locale) }} :
+{{ 'Commercial.NewContactRequestEmail.Message1'| trans({}, "messages", locale) }}
 <br><br>
 
-<b>{{ 'Commercial.NewContactRequestEmail.CompanyName'| trans({}, "messages", locale) }}</b> : {{ data.businessName }}
-<br>
-<b>{{ 'Commercial.NewContactRequestEmail.PostalCode'| trans({}, "messages", locale) }}</b> : {{ data.code }} - {{ data.city }}
-<br>
-<b>{{ 'Commercial.NewContactRequestEmail.LastName'| trans({}, "messages", locale) }}</b> : {{ data.lastName }}
-<br>
-<b>{{ 'Commercial.NewContactRequestEmail.FirstName'| trans({}, "messages", locale) }}</b> : {{ data.firstName }}
-<br>
-<b>{{ 'Commercial.NewContactRequestEmail.Email'| trans({}, "messages", locale) }}</b> : {{ data.email }}
-<br>
-<b>{{ 'Commercial.NewContactRequestEmail.PhoneNumber'| trans({}, "messages", locale) }}</b> : {{ data.phone }}
+<a href="{{ paprec_public_store_url }}/admin/commercial/quoteRequest/view/{{ quoteRequest.id }}">
+    {{ 'Commercial.NewContactRequestEmail.QuoteLink'| trans({}, "messages", locale) }}
+</a>
+
 <br><br>
 
 {{ 'Commercial.NewContactRequestEmail.Message2'| trans({}, "messages", locale) }}

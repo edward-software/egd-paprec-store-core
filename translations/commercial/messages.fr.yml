@@ -188,13 +188,8 @@ Commercial:
     NewContactRequestEmail:
         Object: Voici une nouvelle demande d'accompagnement pour un client
         Dear: Cher(ère) Collègue Privacia
-        Message1: Une demande d'accompagnement a été effectué, voici les informations du client
-        CompanyName: Société
-        PostalCode: Code Postal - Ville
-        LastName: Nom
-        FirstName: Prénom
-        Email: E-mail
-        PhoneNumber: Téléphone
+        Message1: Tu trouveras ci-joint une demande d'accompagnement d'un client.
+        QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
         Message2: Nous t’en remercions par avance.
         Regards: Bien cordialement
         Partner: Ton partenaire Privacia

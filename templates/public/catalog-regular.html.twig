@@ -271,10 +271,10 @@
             </div>
             <div class="row product-container">
                 <div class="col-xl-5 devis__frequency-container p-20">
-                    <a href="{{ path('paprec_public_contact_request_index', {locale: locale}) }}" type="button"
+                    <a href="{{ path('paprec_public_contact_request_index', {locale: locale, cartUuid: cart.id}) }}" type="button"
                             class="btn btn__blue btn__large"
                             id="catalog_next_step_button">
-                        Etre appelé
+                        {{ 'Public.Catalog.ToBeCall'| trans({}, "messages", locale) }}
                     </a>
                 </div>
             </div>
