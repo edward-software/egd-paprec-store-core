@@ -618,7 +618,7 @@ class QuoteRequestManager
      * Envoie un mail à la personne ayant fait une demande d'aide pour la création d'un devis
      * @throws Exception
      */
-    public function sendConfirmContactRequestEmail($data)
+    public function sendConfirmContactRequestEmail($data, $locale)
     {
 
         try {
@@ -629,8 +629,6 @@ class QuoteRequestManager
             if ($rcptTo == null || $rcptTo == '') {
                 return false;
             }
-
-            $locale = 'FR';
 
             $message = new Swift_Message();
             $message
@@ -655,6 +653,54 @@ class QuoteRequestManager
 
         } catch (ORMException $e) {
             throw new Exception('unableToSendConfirmContactRequest', Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Envoie un mail au service commercial suite à une demande d'aide d'un client pour la création d'un devis
+     * @throws Exception
+     */
+    public function sendNewContactRequestEmail($data, $locale)
+    {
+
+        try {
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
+
+            $rcptTo = $_ENV['PAPREC_HELP_REQUEST_EMAIL'];
+
+            $postalCode = $data['postalCode'];
+
+            $data['city'] = $postalCode->getCity();
+
+            $data['code'] = $postalCode->getCode();
+
+            unset($data['postalCode']);
+
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.NewContactRequestEmail.Object',
+                    array(), 'messages', strtolower($locale)))
+                ->setFrom($from)
+                ->setTo($rcptTo)
+                ->setBody(
+                    $this->container->get('templating')->render(
+                        'quoteRequest/emails/newContactRequestEmail.html.twig',
+                        array(
+                            'locale' => strtolower($locale),
+                            'data' => $data
+                        )
+                    ),
+                    'text/html'
+                );
+            if ($this->container->get('mailer')->send($message)) {
+                return true;
+            }
+            return false;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToSendNewContactRequest', Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }

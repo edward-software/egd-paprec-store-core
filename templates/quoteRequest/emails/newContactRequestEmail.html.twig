@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css?family=Arimo:400,700|Oswald:300,400,500&display=swap&subset=latin-ext"
+          rel="stylesheet">
+    <title>Account Activation</title>
+
+    <!-- Web Font / @font-face : BEGIN -->
+    <!--[if mso]>
+    <style>
+        * {
+            font-family: Arial, sans-serif !important;
+        }
+    </style>
+    <![endif]-->
+
+
+</head>
+<body>
+{{ 'Commercial.NewContactRequestEmail.Dear'|trans({}, "messages", locale) }},<br><br>
+
+{{ 'Commercial.NewContactRequestEmail.Message1'| trans({}, "messages", locale) }} :
+<br><br>
+
+<b>{{ 'Commercial.NewContactRequestEmail.CompanyName'| trans({}, "messages", locale) }}</b> : {{ data.businessName }}
+<br>
+<b>{{ 'Commercial.NewContactRequestEmail.PostalCode'| trans({}, "messages", locale) }}</b> : {{ data.code }} - {{ data.city }}
+<br>
+<b>{{ 'Commercial.NewContactRequestEmail.LastName'| trans({}, "messages", locale) }}</b> : {{ data.lastName }}
+<br>
+<b>{{ 'Commercial.NewContactRequestEmail.FirstName'| trans({}, "messages", locale) }}</b> : {{ data.firstName }}
+<br>
+<b>{{ 'Commercial.NewContactRequestEmail.Email'| trans({}, "messages", locale) }}</b> : {{ data.email }}
+<br>
+<b>{{ 'Commercial.NewContactRequestEmail.PhoneNumber'| trans({}, "messages", locale) }}</b> : {{ data.phone }}
+<br><br>
+
+{{ 'Commercial.NewContactRequestEmail.Message2'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.NewContactRequestEmail.Regards'| trans({}, "messages", locale) }}
+<br>
+{{ 'Commercial.NewContactRequestEmail.Partner'| trans({}, "messages", locale) }}
+
+</body>
+</html>

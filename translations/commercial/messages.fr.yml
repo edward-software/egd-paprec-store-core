@@ -185,6 +185,20 @@ Commercial:
         Partner: Votre partenaire Privacia
         NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
 
+    NewContactRequestEmail:
+        Object: Voici une nouvelle demande d'accompagnement pour un client
+        Dear: Cher(ère) Collègue Privacia
+        Message1: Une demande d'accompagnement a été effectué, voici les informations du client
+        CompanyName: Société
+        PostalCode: Code Postal - Ville
+        LastName: Nom
+        FirstName: Prénom
+        Email: E-mail
+        PhoneNumber: Téléphone
+        Message2: Nous t’en remercions par avance.
+        Regards: Bien cordialement
+        Partner: Ton partenaire Privacia
+
     GeneratedQuoteEmail:
         FileName: Offre Privacia
         Object: Offre de services Privacia

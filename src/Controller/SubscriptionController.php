@@ -421,7 +421,8 @@ class SubscriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $this->quoteRequestManager->sendConfirmContactRequestEmail($data);
+            $this->quoteRequestManager->sendConfirmContactRequestEmail($data, $locale);
+            $this->quoteRequestManager->sendNewContactRequestEmail($data, $locale);
 
             return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
                 'locale' => $locale
