@@ -60,15 +60,15 @@
                     </div>
                     <div class="row product-container collapse multi-collapse" id="rangeProductCollapse__{{ range.id }}">
                         {% for product in range.products %}
-                            <div class="col-md-6 product" id="productContainer_{{ product.id }}">
+                            <div class="col-md-4 product" id="productContainer_{{ product.id }}">
                                 <div class="row product__block">
-                                    <div class="col-xl-4 paprec-flex align-items_center">
+                                    <div class="col-xl-3 paprec-flex align-items_center">
                                         <div class="product__image">
                                             <img src="{% if product.pilotPictures|length > 0 %}{{ asset('/uploads/pictos/' ~ product.pilotPictures[0].path) }}{% endif %}"
                                                  alt="#" class="">
                                         </div>
                                     </div>
-                                    <div class="col-xl-8">
+                                    <div class="col-xl-9">
                                         <div class="product__title">
                                             <h2 class="color-secondary m-b-20">{{ product|productLabelTranslation(locale) }}</h2>
                                         </div>
@@ -168,40 +168,6 @@
                                                                for="regularFrequencyButton__{{ product.id }}">{{ 'Public.Catalog.Regular'| trans({}, "messages", locale) }}</label>
                                                     </div>
 
-                                                    <div class="paprec-flex m-l-12">
-                                                        <input class="product__frequency__container__input text-center mr-2"
-                                                               size="1"
-                                                               type="number"
-                                                               max="9"
-                                                               min="0"
-                                                               {% if frequency != 'regular' %}hidden{% endif %}
-                                                               data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                               id="productFrequencyTimesInput__{{ product.id }}"
-                                                               value="{{ frequencyTimes }}"/>
-                                                        <span class="devis__frequence__times no-wrap" id="textFrequencyTimes__{{ product.id }}"
-                                                              {% if frequency != 'regular' %}hidden{% endif %}>{{ 'Public.Catalog.Times'| trans({}, "messages", locale) }}</span>
-                                                        <select class="catalog-frequency-select ml-2"
-                                                                {% if frequency != 'regular' %}hidden{% endif %}
-                                                                data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
-                                                                id="productFrequencyIntervalSelect__{{ product.id }}">
-                                                            <option value="week"
-                                                                    {% if frequencyInterval == 'week' %}selected{% endif %}>
-                                                                {{ 'Public.Catalog.Week'| trans({}, "messages", locale) }}
-                                                            </option>
-                                                            <option value="month"
-                                                                    {% if frequencyInterval == 'month' %}selected{% endif %}>
-                                                                {{ 'Public.Catalog.Month'| trans({}, "messages", locale) }}
-                                                            </option>
-                                                            <option value="bimestre"
-                                                                    {% if frequencyInterval == 'bimestre' %}selected{% endif %}>
-                                                                {{ 'Public.Catalog.Bimestre'| trans({}, "messages", locale) }}
-                                                            </option>
-                                                            <option value="quarter"
-                                                                    {% if frequencyInterval == 'quarter' %}selected{% endif %}>
-                                                                {{ 'Public.Catalog.Quarter'| trans({}, "messages", locale) }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
                                                 </div>
 
                                                 <!-- Group of default radios - option Unknown -->
@@ -217,7 +183,44 @@
                                                     </label>
                                                 </div>
 
+
+
                                             </div>
+                                        </div>
+
+                                        <div class="paprec-flex">
+                                            <input class="product__frequency__container__input text-center mr-2"
+                                                   size="1"
+                                                   type="number"
+                                                   max="9"
+                                                   min="0"
+                                                   {% if frequency != 'regular' %}hidden{% endif %}
+                                                   data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
+                                                   id="productFrequencyTimesInput__{{ product.id }}"
+                                                   value="{{ frequencyTimes }}"/>
+                                            <span class="devis__frequence__times no-wrap" id="textFrequencyTimes__{{ product.id }}"
+                                                  {% if frequency != 'regular' %}hidden{% endif %}>{{ 'Public.Catalog.Times'| trans({}, "messages", locale) }}</span>
+                                            <select class="catalog-frequency-select ml-2"
+                                                    {% if frequency != 'regular' %}hidden{% endif %}
+                                                    data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
+                                                    id="productFrequencyIntervalSelect__{{ product.id }}">
+                                                <option value="week"
+                                                        {% if frequencyInterval == 'week' %}selected{% endif %}>
+                                                    {{ 'Public.Catalog.Week'| trans({}, "messages", locale) }}
+                                                </option>
+                                                <option value="month"
+                                                        {% if frequencyInterval == 'month' %}selected{% endif %}>
+                                                    {{ 'Public.Catalog.Month'| trans({}, "messages", locale) }}
+                                                </option>
+                                                <option value="bimestre"
+                                                        {% if frequencyInterval == 'bimestre' %}selected{% endif %}>
+                                                    {{ 'Public.Catalog.Bimestre'| trans({}, "messages", locale) }}
+                                                </option>
+                                                <option value="quarter"
+                                                        {% if frequencyInterval == 'quarter' %}selected{% endif %}>
+                                                    {{ 'Public.Catalog.Quarter'| trans({}, "messages", locale) }}
+                                                </option>
+                                            </select>
                                         </div>
 
                                     </div>

@@ -82,12 +82,13 @@ input:focus {
 
   .product {
     margin-bottom: 30px;
-    padding-right: 30px;
+    //padding-right: 30px;
     padding-left: 30px;
 
     &__block {
       background-color: $lightgray;
-      padding: 20px;
+      padding-top: 20px;
+      padding-bottom: 20px;
       min-height: 250px;
 
       & select {
