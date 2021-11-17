@@ -169,7 +169,7 @@ $(function () {
         }
     });
 
-    $('#catalog_next_step_button').on('click', function () {
+    $('.catalog_next_step_button').on('click', function () {
         const url = $(this).data('url');
         $(location).attr('href', url);
     });
@@ -188,7 +188,7 @@ $(function () {
                 // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
                 var htmlToDisplay = response.trim();
                 $("#devis-recap-item-" + productId).remove();
-                $("#devis-recap").append(htmlToDisplay);
+                $(".devis-recap").append(htmlToDisplay);
                 // On met à jour la valeur du <select> de qtty du produit
                 $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));
                 disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
@@ -211,7 +211,7 @@ $(function () {
                 if (JSON.stringify(response) !== '{}') {
                     // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
                     var htmlToDisplay = response.trim();
-                    $("#devis-recap").append(htmlToDisplay);
+                    $(".devis-recap").append(htmlToDisplay);
                 }
                 // On met à jour la valeur du <select> de qtty du produit
                 $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));

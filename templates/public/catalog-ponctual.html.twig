@@ -187,14 +187,49 @@
                 </div>
             </div>
 
-            <div class="row product-container">
-                <div class="col-xl-5 devis__frequency-container p-20">
-                    <a href="{{ path('paprec_public_contact_request_index', {locale: locale, cartUuid: cart.id}) }}" type="button"
-                       class="btn btn__blue btn__large"
-                       id="catalog_next_step_button">
-                        {{ 'Public.Catalog.ToBeCall'| trans({}, "messages", locale) }}
-                    </a>
+            <div class="sticky-shop-cart-container showHide">
+
+                <h2 class="m-t-10 m-b-10">{{ 'Public.Catalog.Quote'| trans({}, "messages", locale) }}</h2>
+
+                <div class="items-list collapse" id="ViewCart">
+
+                    <div class="devis-recap">
+                        {% for range in ranges %}
+                            {% for product in range.products %}
+                                {% for item in cart.content %}
+                                    {% if item['pId'] == product.id %}
+                                        <div class="devis__recap__item"
+                                             id="devis-recap-item-{{ product.id }}">
+                                            <p><b>{{ item['qtty'] }}x</b> {{ product|productLabelTranslation(locale) }} | {{ ('Public.Catalog.' ~ (item['frequency']|capitalize))|trans({}, "messages", locale)|capitalize }} {% if item['frequency'] == 'regular' %}
+                                            <p>{{ item['frequencyTimes'] }} {{ 'Public.Catalog.Times'| trans({}, "messages", locale) }} {{ ('Public.Catalog.' ~ item['frequencyInterval']|capitalize)| trans({}, "messages", locale) }}
+
+                                                {% endif %}</p>
+
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+
                 </div>
+
+                <label data-toggle="collapse" data-target="#ViewCart" class="m-b-10" style="cursor: pointer">
+                    {{ 'Public.Catalog.MoreProducts'| trans({}, "messages", locale) }}
+                </label>
+
+                <button type="button"
+                        class="btn btn__blue btn__large catalog_next_step_button"
+                        data-url="{{ path('paprec_public_contact_regulier_index', {locale: locale, cartUuid: cart.id}) }}"
+                        data-ajax="{{ path('paprec_public_catalog_addFrequency', {locale: locale, cartUuid: cart.id}) }}">
+                    {{ 'Public.Catalog.NextStep'| trans({}, "messages", locale) }}
+                </button>
+
+                <a href="{{ path('paprec_public_contact_request_index', {locale: locale, cartUuid: cart.id}) }}" type="button"
+                   class="btn btn-call">
+                    {{ 'Public.Catalog.ToBeCall'| trans({}, "messages", locale) }}
+                </a>
+
             </div>
 {#            <div class="">#}
 {#                <div class="row">#}
@@ -230,6 +265,16 @@
     <script>
         $(function () {
             $('.progress-bar').css('width', '38%').attr('aria-valuenow', '33%');
+
+            $(window).scroll(function () {
+                var Bottom = $(window).height() + $(window).scrollTop() >= $(document).height();
+                if(Bottom )
+                {
+                    $('.showHide').fadeOut();
+                } else {
+                    $('.showHide').fadeIn();
+                }
+            });
         });
 
     </script>
