@@ -263,6 +263,7 @@ Commercial:
         SignatureQuality: Qualité
         MentionTitle: CGV
         ContractDuration: Durée du contrat
+        PonctualDate: Date de prestation
         StartDateContract: Démarrage du contrat
         ContractProduct: Matériel
         ContractQuantity: Quantité
