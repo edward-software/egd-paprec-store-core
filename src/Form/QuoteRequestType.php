@@ -72,9 +72,12 @@ class QuoteRequestType extends AbstractType
                     return 'Commercial.StaffList.' . $choiceValue;
                 },
             ))
+//            ->add('ponctualDate', DateType::class, array(
+//                'widget' => 'single_text',
+//                'html5' => false,
+//            ))
             ->add('ponctualDate', DateType::class, array(
-                'widget' => 'single_text',
-                'html5' => false,
+                'widget' => 'choice'
             ))
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
@@ -158,8 +161,7 @@ class QuoteRequestType extends AbstractType
                 'multiple' => false
             ))
             ->add('startDate', DateType::class, array(
-                'widget' => 'single_text',
-                'html5' => false,
+                'widget' => 'choice'
             ));
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);

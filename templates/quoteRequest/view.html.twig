@@ -157,7 +157,7 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PonctualDate'|trans }}</label>
                                         {% if quoteRequest.ponctualDate is not null and quoteRequest.type == 'PONCTUAL' %}
                                             <label class="col-form-label">
-                                                {{ quoteRequest.ponctualDate|localizeddate('short', 'medium', app.request.locale) }}
+                                                {{ quoteRequest.ponctualDate|localizeddate('short', 'none', app.request.locale) }}
                                             </label>
                                         {% endif %}
                                     </div>
