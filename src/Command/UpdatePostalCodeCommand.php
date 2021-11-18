@@ -106,7 +106,7 @@ class UpdatePostalCodeCommand extends Command
             $traceabilityRate = $cellIterator->current()->getValue();
             $cellIterator->next();
 
-            $this->postalCodeManager->update(
+            $postalCode = $this->postalCodeManager->update(
                 $code,
                 $city,
                 $agencyName,
@@ -123,6 +123,27 @@ class UpdatePostalCodeCommand extends Command
                 $traceabilityRate,
                 false
             );
+
+            if ($postalCode === null) {
+                $postalCode = $this->postalCodeManager->add(
+                    $code,
+                    $city,
+                    $agencyName,
+                    $commercialName,
+                    $rentalRate,
+                    $cbrRegTransportRate,
+                    $cbrPonctTransportRate,
+                    $vlPlCfsRegTransportRate,
+                    $vlPlCfsPonctTransportRate,
+                    $vlPlTransportRate,
+                    $bomTransportRate,
+                    $plPonctTransportRate,
+                    $treatmentRate,
+                    $traceabilityRate,
+                    false
+                );
+                $this->em->persist($postalCode);
+            }
 
         }
 

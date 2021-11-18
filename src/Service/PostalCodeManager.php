@@ -138,6 +138,114 @@ class PostalCodeManager
         }
     }
 
+    /**
+     * Ajout d'un code postal
+     *
+     * @param $code
+     * @param $city
+     * @param $agencyName
+     * @param $commercialName
+     * @param $rentalRate
+     * @param $cbrRegTransportRate
+     * @param $cbrPonctTransportRate
+     * @param $vlPlCfsRegTransportRate
+     * @param $vlPlCfsPonctTransportRate
+     * @param $vlPlTransportRate
+     * @param $bomTransportRate
+     * @param $plPonctTransportRate
+     * @param $treatmentRate
+     * @param $traceabilityRate
+     * @param bool $doFlush
+     * @return PostalCode
+     * @throws Exception
+     */
+    public function add(
+        $code,
+        $city,
+        $agencyName,
+        $commercialName,
+        $rentalRate,
+        $cbrRegTransportRate,
+        $cbrPonctTransportRate,
+        $vlPlCfsRegTransportRate,
+        $vlPlCfsPonctTransportRate,
+        $vlPlTransportRate,
+        $bomTransportRate,
+        $plPonctTransportRate,
+        $treatmentRate,
+        $traceabilityRate,
+        $doFlush = true
+    ) {
+        try {
+
+            $postalCode = new PostalCode();
+
+            $postalCode
+                ->setCode($code)
+                ->setCity($city)
+                ->setRentalRate($this->numberManager->normalize15($rentalRate))
+                ->setCbrRegTransportRate($this->numberManager->normalize15($cbrRegTransportRate))
+                ->setCbrPonctTransportRate($this->numberManager->normalize15($cbrPonctTransportRate))
+                ->setVlPlCfsRegTransportRate($this->numberManager->normalize15($vlPlCfsRegTransportRate))
+                ->setVlPlCfsPonctTransportRate($this->numberManager->normalize15($vlPlCfsPonctTransportRate))
+                ->setVlPlTransportRate($this->numberManager->normalize15($vlPlTransportRate))
+                ->setBomTransportRate($this->numberManager->normalize15($bomTransportRate))
+                ->setPlPonctTransportRate($this->numberManager->normalize15($plPonctTransportRate))
+                ->setTreatmentRate($this->numberManager->normalize15($treatmentRate))
+                ->setTraceabilityRate($this->numberManager->normalize15($traceabilityRate))
+                ->setZone('1')
+                ->setUserCreation($this->userManager->getByUsername('admin', true));
+
+            $agency = $this->agencyManager->getByName($agencyName, false);
+
+            if ($agency !== null) {
+                $postalCode
+                    ->setAgency($agency);
+            }
+
+            $commercialNames = explode(" ", $commercialName);
+            $firstName = $commercialNames[0];
+            $lastName = $commercialNames[1];
+
+            $commercial = $this->userManager->getByFirstNameAndLastName($firstName, $lastName, false);
+
+            if ($commercial !== null) {
+                $postalCode
+                    ->setUserInCharge($commercial);
+            }
+
+            if ($doFlush) {
+                $this->em->flush();
+            }
+
+            return $postalCode;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Modification d'un code postal
+     *
+     * @param $code
+     * @param $city
+     * @param $agencyName
+     * @param $commercialName
+     * @param $rentalRate
+     * @param $cbrRegTransportRate
+     * @param $cbrPonctTransportRate
+     * @param $vlPlCfsRegTransportRate
+     * @param $vlPlCfsPonctTransportRate
+     * @param $vlPlTransportRate
+     * @param $bomTransportRate
+     * @param $plPonctTransportRate
+     * @param $treatmentRate
+     * @param $traceabilityRate
+     * @param bool $doFlush
+     * @return PostalCode|object|null
+     * @throws Exception
+     */
     public function update(
         $code,
         $city,
