@@ -62,6 +62,7 @@ Commercial:
         Unknown: Ne sais pas
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
+        StartDate: Date de démarrage
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
@@ -130,9 +131,13 @@ Commercial:
         TraceabilityUnitPrice: PU Traçabilité
         BasePrice: PU de base
         RentalPrice: Location
-        Transport: Transport
+        Transport: Transport/passage
+        Frequency: Fréquence
+        PassingFrequency: Fréquence de passage
+        RegularPassingFrequency: Fréquence de passage (si régulier)
         Treatment: Traitement
-        Traceability: Traçabilité
+        Traceability: Traçabilité/contenant
+        TreatmentCollect: PU Collecte et traitement/contenant
         Access: Accès
         TotalAmount: Montant total
         Add: Ajout d'un produit
@@ -159,6 +164,7 @@ Commercial:
             Mrs: Chère Madame
         Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
         Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        QuoteRequestRecap: Voici le récapitulatif de votre demande
         TechnicalService: service technique
         Message2: Nous vous enverrons notre offre pour les services PRIVACIA dans les 24 heures.
         Regards: Bien cordialement
@@ -167,6 +173,26 @@ Commercial:
         Disclaimer:
             Message1: Vous avez reçu cet e-mail pour vous informer des modifications importantes apportées aux services
             Message2: que vous utilisez
+
+    ConfirmContactRequestEmail:
+        Object: Accompagnement dans la création de votre demande
+        Dear: Cher
+        Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        TechnicalService: service technique
+        Message2: Nous vous contacterons dans les 24 heures afin de vous aider dans la création de votre demande.
+        Regards: Bien cordialement
+        Partner: Votre partenaire Privacia
+        NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
+
+    NewContactRequestEmail:
+        Object: Voici une nouvelle demande d'accompagnement pour un client
+        Dear: Cher(ère) Collègue Privacia
+        Message1: Tu trouveras ci-joint une demande d'accompagnement d'un client.
+        QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
+        Message2: Nous t’en remercions par avance.
+        Regards: Bien cordialement
+        Partner: Ton partenaire Privacia
 
     GeneratedQuoteEmail:
         FileName: Offre Privacia
@@ -221,6 +247,12 @@ Commercial:
         CommentTitle: Remarques
         NoComment: Pas de remarques
         OtherContractualTitle: Autres infos contractuelles
+        BillingSubTitle: Facturation
+        SiteSubTitle: Site
+        CorporateName: Raison sociale
+        City: Ville
+        TVAIntracomNumber: N° TVA intracom
+        CommandNumber: N° de commande
         SignatureTitle: Signatures
         SignatureSubTitle1: PAPREC - (nom Agence)
         SignatureSubTitle2: CLIENT - (nom + signature + cachet)
@@ -231,12 +263,18 @@ Commercial:
         SignatureQuality: Qualité
         MentionTitle: CGV
         ContractDuration: Durée du contrat
+        PonctualDate: Date de prestation
+        StartDateContract: Démarrage du contrat
         ContractProduct: Matériel
         ContractQuantity: Quantité
-        ContractLocationPrice: Prix/unit Location (€ HT)
-        ContractTreatmentPrice: Prix Collecte et Traitement (€ HT)
+        ContractLocation: Location
+        ContractPrice: Prix (€ HT)
+        ContractRangeProduct: Typologie
+        ContractProductDescriptions: Désignation
+        ContractTreatmentCollect: Collecte et traitement
+        ContractTreatmentPrice: Prix Unitaire / contenant
         ContractFrequency: Fréquence de passage
-        ContractMensuelAmount: Montant Mensuel (€ HT)
+        ContractMensuelEstimation: Estimation Mensuelle
         ContractTotalAmount: Budget Total (€ HT)
         Footer:
             StreetName: 7 rue du Docteur Lancereaux - 75008 Paris

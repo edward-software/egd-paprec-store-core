@@ -240,11 +240,57 @@
             {% block breadcrumb_title %}{% endblock %}
         </div> #}
         <div class="breadcrumb__content">
-            <a class="breadcrumb__content__link"
-               href="{{ paprec_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>
-            > <a class="breadcrumb__content__link"
-                 href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Quote'| trans({}, "messages", locale) }}</a>
-            > <span class="breadcrumb__content__last">{% block breadcrumb_content %}{% endblock %}</span>
+{#            <a class="breadcrumb__content__link"#}
+{#               href="{{ paprec_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>#}
+{#            > <a class="breadcrumb__content__link"#}
+{#                 href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Quote'| trans({}, "messages", locale) }}</a>#}
+{#            > <span class="breadcrumb__content__last">{% block breadcrumb_content %}{% endblock %}</span>#}
+
+            <div class="progress">
+                <div class="progress-bar pg-background" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+
+            <div class="row">
+                {% if app.request.get('_route')|slice(0, 'paprec_public_devis_home'|length) == 'paprec_public_devis_home' %}
+                    <div class="col-md-4"><a class="item-active"
+                                href="{{ path('paprec_public_devis_home', {locale: locale}) }}">Définition du besoin</a>
+                    </div>
+                {% else %}
+                    <div class="col-md-4"><a class="item" href="{{ path('paprec_public_devis_home', {locale: locale}) }}">Définition
+                            du besoin</a></div>
+                {% endif %}
+
+                {% if app.request.get('_route')|slice(0, 'paprec_public_regular_'|length) == 'paprec_public_regular_' or app.request.get('_route')|slice(0, 'paprec_public_ponctual_'|length) == 'paprec_public_ponctual_' %}
+                    <div class="col-md-3 item-active">
+                        Choix des produits
+                    </div>
+                {% else %}
+                    <div class="col-md-3 item">
+                        Choix des produits
+                    </div>
+                {% endif %}
+
+                {% if app.request.get('_route')|slice(0, 'paprec_public_contact_'|length) == 'paprec_public_contact_' %}
+                    <div class="col-md-3 item-active">
+                        Formulaire de contact
+                    </div>
+                {% else %}
+                    <div class="col-md-3 item">
+                        Formulaire de contact
+                    </div>
+                {% endif %}
+
+                {% if app.request.get('_route')|slice(0, 'paprec_public_confirm_'|length) == 'paprec_public_confirm_' %}
+                    <div class="col-md-2 item-active">
+                        Validation demande
+                    </div>
+                {% else %}
+                    <div class="col-md-2 item">
+                        Validation demande
+                    </div>
+                {% endif %}
+            </div>
 
         </div>
     </div>
@@ -255,7 +301,6 @@
 
     <!-- /section -->
 {% endblock %}
-</main>
 
 {# <footer> #}
 {# <div class="container"> #}

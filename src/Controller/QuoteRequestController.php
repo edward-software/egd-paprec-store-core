@@ -412,9 +412,11 @@ class QuoteRequestController extends AbstractController
     {
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
+        $isAbleToSendContractEmail = $this->quoteRequestManager->isAbleToSendContractEmail($quoteRequest);
 
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
+            'isAbleToSendContractEmail' => $isAbleToSendContractEmail
         ));
     }
 
@@ -543,7 +545,8 @@ class QuoteRequestController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
             $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
             $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));

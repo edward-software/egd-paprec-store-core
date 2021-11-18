@@ -40,8 +40,8 @@
                                         class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
                             </a>
                         {% endif %}
-                        <a id="sendGeneratedContractButton" href="javascript:void(0);"
-                           class="btn btn-sm btn-success mr-1 {% if not quoteRequest.hasValidSignatories %}btn-disabled{% endif %}"><i
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i
                                     class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}
                         </a>
                         <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
@@ -97,9 +97,11 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Civility'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ ('General.' ~ quoteRequest.civility)|trans }}
-                                        </label>
+                                        {% if quoteRequest.civility is not null %}
+                                            <label class="col-form-label">
+                                                {{ ('General.' ~ quoteRequest.civility)|trans }}
+                                            </label>
+                                        {% endif %}
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.LastName'|trans }}</label>
@@ -116,7 +118,9 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Email'|trans }}</label>
                                         <label class="col-form-label">
-                                            {{ quoteRequest.email }}
+                                            <a class="send-generated-contract-button" href="javascript:void(0);">
+                                                {{ quoteRequest.email }}
+                                            </a>
                                         </label>
                                     </div>
                                     <div class="form-group row">
@@ -194,9 +198,9 @@
                                         <label class="col-form-label">
                                             {% if quoteRequest.billingPostalCode %}
                                                 {% if quoteRequest.isSameAddress == 1 %}
-                                                <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
-                                                    {{ quoteRequest.billingPostalCode }}
-                                                </a>
+                                                    <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
+                                                        {{ quoteRequest.billingPostalCode }}
+                                                    </a>
                                                 {% else %}
                                                     {{ quoteRequest.billingPostalCode }}
                                                 {% endif %}
@@ -259,6 +263,30 @@
                             <div class="card-body row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.QuoteStatus'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ ('Commercial.QuoteStatusList.' ~ quoteRequest.quoteStatus)|trans }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.RegularDuration'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.duration is null %}
+                                                0 {{ 'Commercial.QuoteRequest.month'|trans }}
+                                            {% else %}
+                                                {{ quoteRequest.duration }} {{ 'Commercial.QuoteRequest.month'|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.StartDate'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.startDate is not null %}
+                                                {{ quoteRequest.startDate|localizeddate('short', 'none', app.request.locale) }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.CustomerId'|trans }}</label>
                                         <label class="col-form-label">
                                             {{ quoteRequest.customerId }}
@@ -283,36 +311,12 @@
                                             {% endif %}
                                         </label>
                                     </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Reference'|trans }}</label>
                                         <label class="col-form-label">
                                             {{ quoteRequest.reference }}
-                                        </label>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.QuoteStatus'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ ('Commercial.QuoteStatusList.' ~ quoteRequest.quoteStatus)|trans }}
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }}
-                                        </label>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.AnnualBudget'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.annualBudget|formatAmount('EUR', app.request.locale) }}
-                                        </label>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.SalesmanComment'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.salesmanComment }}
                                         </label>
                                     </div>
                                     <div class="form-group row">
@@ -321,6 +325,25 @@
                                             {{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}
                                         </label>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    {# <div class="form-group row"> #}
+                                    {# <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.AnnualBudget'|trans }}</label> #}
+                                    {# <label class="col-form-label"> #}
+                                    {# {{ quoteRequest.annualBudget|formatAmount('EUR', app.request.locale) }} #}
+                                    {# </label> #}
+                                    {# </div> #}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.SalesmanComment'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {{ quoteRequest.salesmanComment }}
+                                        </label>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -348,10 +371,12 @@
                                         <th>#</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
-                                        <th>{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Traceability'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.TotalAmount'|trans }}</th>
 
                                         <th></th>
@@ -368,19 +393,49 @@
                                             </td>
                                             <td>{{ quoteRequestLine.quantity }}</td>
                                             <td>
-                                                {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
-                                                    0
-                                                {% else %}
-                                                    {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTransportUnitPrice - quoteRequestLine.transportUnitPrice) / quoteRequestLine.transportUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
                                                 {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
                                                     0
                                                 {% else %}
                                                     {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableRentalUnitPrice - quoteRequestLine.rentalUnitPrice) / quoteRequestLine.rentalUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                    {# <span class="small color-darkgray">({{ ((quoteRequestLine.editableRentalUnitPrice - quoteRequestLine.rentalUnitPrice) / quoteRequestLine.rentalUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
+                                                    {% set percentageRental = (quoteRequest.overallDiscount + (quoteRequestLine.editableRentalUnitPrice - quoteRequestLine.rentalUnitPrice) / quoteRequestLine.rentalUnitPrice * 100 * 100) %}
+                                                    {% set colorRental = null %}
+                                                    {% if percentageRental == 0 %}
+                                                        {% set colorRental = 'black' %}
+                                                    {% elseif percentageRental > 0 %}
+                                                        {% set colorRental = 'green' %}
+                                                    {% elseif percentageRental < 0 %}
+                                                        {% set colorRental = 'red' %}
+                                                    {% endif %}
+                                                    <span class="small"
+                                                          style="color: {{ colorRental }}">({{ percentageRental|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    {% set percentageTransport = (quoteRequest.overallDiscount + (quoteRequestLine.editableTransportUnitPrice - quoteRequestLine.transportUnitPrice) / quoteRequestLine.transportUnitPrice * 100 * 100) %}
+                                                    {% set colorTransport = null %}
+                                                    {% if percentageTransport == 0 %}
+                                                        {% set colorTransport = 'black' %}
+                                                    {% elseif percentageTransport > 0 %}
+                                                        {% set colorTransport = 'green' %}
+                                                    {% elseif percentageTransport < 0 %}
+                                                        {% set colorTransport = 'red' %}
+                                                    {% endif %}
+                                                    <span class="small"
+                                                          style="color: {{ colorTransport }}">({{ percentageTransport|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.frequency == 'unknown' %}
+                                                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                                {% else %}
+                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval|capitalize %}
+                                                    {{ quoteRequestLine.frequencyTimes }}
+                                                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
                                                 {% endif %}
                                             </td>
                                             <td>
@@ -388,7 +443,20 @@
                                                     0
                                                 {% else %}
                                                     {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.editableTreatmentUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTreatmentUnitPrice - quoteRequestLine.treatmentUnitPrice) / quoteRequestLine.treatmentUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                    {% set percentageTreatment = (quoteRequest.overallDiscount + (quoteRequestLine.editableTreatmentUnitPrice - quoteRequestLine.treatmentUnitPrice) / quoteRequestLine.treatmentUnitPrice * 100 * 100) %}
+                                                    {% set colorTreatment = null %}
+                                                    {% if percentageTreatment == 0 %}
+                                                        {% set colorTreatment = 'black' %}
+                                                    {% elseif percentageTreatment > 0 %}
+                                                        {% set colorTreatment = 'green' %}
+                                                    {% elseif percentageTreatment < 0 %}
+                                                        {% set colorTreatment = 'red' %}
+                                                    {% endif %}
+                                                    <span class="small"
+                                                          style="color: {{ colorTreatment }}">
+                                                    ({{ percentageTreatment|formatAmount('PERCENTAGE', app.request.locale) }})
+                                                    </span>
+                                                    {# <span class="small color-darkgray">({{ ((quoteRequestLine.editableTreatmentUnitPrice - quoteRequestLine.treatmentUnitPrice) / quoteRequestLine.treatmentUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
                                                 {% endif %}
                                             </td>
                                             <td>
@@ -396,11 +464,37 @@
                                                     0
                                                 {% else %}
                                                     {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.editableTraceabilityUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-                                                    <span class="small color-darkgray">({{ ((quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                    {% set percentageTreatment = (quoteRequest.overallDiscount + (quoteRequestLine.editableTreatmentUnitPrice - quoteRequestLine.treatmentUnitPrice) / quoteRequestLine.treatmentUnitPrice * 100 * 100) %}
+                                                    {% set percentageTraceability = (quoteRequest.overallDiscount + (quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100) %}
+                                                    {% set colorTraceability = null %}
+                                                    {% if percentageTraceability == 0 %}
+                                                        {% set colorTraceability = 'black' %}
+                                                    {% elseif percentageTraceability > 0 %}
+                                                        {% set colorTraceability = 'green' %}
+                                                    {% elseif percentageTraceability < 0 %}
+                                                        {% set colorTraceability = 'red' %}
+                                                    {% endif %}
+                                                    <span class="small"
+                                                          style="color: {{ colorTraceability }}">({{ percentageTraceability|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                    {# <span class="small color-darkgray">({{ ((quoteRequestLine.editableTraceabilityUnitPrice - quoteRequestLine.traceabilityUnitPrice) / quoteRequestLine.traceabilityUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
                                                 {% endif %}
                                             </td>
+
+                                            {% if quoteRequest.overallDiscount == 0 %}
+                                                {% set colorOverallDiscount = 'black' %}
+                                            {% elseif quoteRequest.overallDiscount > 0 %}
+                                                {% set colorOverallDiscount = 'green' %}
+                                            {% elseif quoteRequest.overallDiscount < 0 %}
+                                                {% set colorOverallDiscount = 'red' %}
+                                            {% endif %}
+
+                                            <td>{{ quoteRequestLine.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}
+                                                <span class="small"
+                                                      style="color: {{ colorOverallDiscount }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                            </td>
                                             <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}
-                                                <span class="small color-darkgray">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                <span class="small"
+                                                      style="color: {{ colorOverallDiscount }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                             </td>
                                             <td class="text-center">
                                                 <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"
@@ -501,7 +595,7 @@
 
             });
 
-            $('#sendGeneratedContractButton').on('click', function () {
+            $('.send-generated-contract-button').on('click', function () {
                 if (!$(this).hasClass('btn-disabled')) {
                     var url = "{{ path("paprec_quoteRequest_sendGeneratedContract", {id: quoteRequest.id}) }}";
 

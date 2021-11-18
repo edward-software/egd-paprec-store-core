@@ -46,18 +46,29 @@
 
             {% for range in ranges %}
                 <div class="range-container">
-                    <h2>{{ range|rangeLabelTranslation(locale) }}</h2>
-                    <div class="row product-container">
+                    <h2><a data-toggle="collapse" href="#rangeProductCollapse__{{ range.id }}">{{ range|rangeLabelTranslation(locale) }}</a></h2>
+                    <div id="rangeContentContainer__{{ range.id }}">
+                        <div class="row m-b-15 m-t-1">
+                            <div class="col-md-1 range__image">
+                                <img src="{% if range.pictures|length > 0 %}{{ asset('/uploads/pictos/' ~ range.pictures[0].path) }}{% endif %}"
+                                     alt="#" class="">
+                            </div>
+                            <div class="col-md-11">
+                                <p>{{ range|rangeLabelTranslation(locale,'shortDescription') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row product-container collapse multi-collapse" id="rangeProductCollapse__{{ range.id }}">
                         {% for product in range.products %}
-                            <div class="col-md-6 product" id="productContainer_{{ product.id }}">
+                            <div class="col-md-4 product" id="productContainer_{{ product.id }}">
                                 <div class="row product__block">
-                                    <div class="col-xl-4 paprec-flex align-items_center">
+                                    <div class="col-xl-3 paprec-flex align-items_center">
                                         <div class="product__image">
                                             <img src="{% if product.pilotPictures|length > 0 %}{{ asset('/uploads/pictos/' ~ product.pilotPictures[0].path) }}{% endif %}"
                                                  alt="#" class="">
                                         </div>
                                     </div>
-                                    <div class="col-xl-8">
+                                    <div class="col-xl-9">
                                         <div class="product__title">
                                             <h2 class="color-secondary m-b-20">{{ product|productLabelTranslation(locale) }}</h2>
                                         </div>
@@ -175,6 +186,51 @@
                     </div>
                 </div>
             </div>
+
+            <div class="sticky-shop-cart-container showHide">
+
+                <h2 class="m-t-10 m-b-10">{{ 'Public.Catalog.Quote'| trans({}, "messages", locale) }}</h2>
+
+                <div class="items-list collapse" id="ViewCart">
+
+                    <div class="devis-recap">
+                        {% for range in ranges %}
+                            {% for product in range.products %}
+                                {% for item in cart.content %}
+                                    {% if item['pId'] == product.id %}
+                                        <div class="devis__recap__item"
+                                             id="devis-recap-item-{{ product.id }}">
+                                            <p><b>{{ item['qtty'] }}x</b> {{ product|productLabelTranslation(locale) }} | {{ ('Public.Catalog.' ~ (item['frequency']|capitalize))|trans({}, "messages", locale)|capitalize }} {% if item['frequency'] == 'regular' %}
+                                            <p>{{ item['frequencyTimes'] }} {{ 'Public.Catalog.Times'| trans({}, "messages", locale) }} {{ ('Public.Catalog.' ~ item['frequencyInterval']|capitalize)| trans({}, "messages", locale) }}
+
+                                                {% endif %}</p>
+
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <label data-toggle="collapse" data-target="#ViewCart" class="m-b-10" style="cursor: pointer">
+                    {{ 'Public.Catalog.MoreProducts'| trans({}, "messages", locale) }}
+                </label>
+
+                <button type="button"
+                        class="btn btn__blue btn__large catalog_next_step_button"
+                        data-url="{{ path('paprec_public_contact_regulier_index', {locale: locale, cartUuid: cart.id}) }}"
+                        data-ajax="{{ path('paprec_public_catalog_addFrequency', {locale: locale, cartUuid: cart.id}) }}">
+                    {{ 'Public.Catalog.NextStep'| trans({}, "messages", locale) }}
+                </button>
+
+                <a href="{{ path('paprec_public_contact_request_index', {locale: locale, cartUuid: cart.id}) }}" type="button"
+                   class="btn btn-call">
+                    {{ 'Public.Catalog.ToBeCall'| trans({}, "messages", locale) }}
+                </a>
+
+            </div>
 {#            <div class="">#}
 {#                <div class="row">#}
 {#                    <div class="col-md-12 col-lg-6 col-12">#}
@@ -204,4 +260,22 @@
          class="floating-bottom-button">{{ 'Public.Catalog.Define-Need'| trans({}, "messages", locale) }}</div>
     <div id="other-needs-button"
          class="floating-bottom-button">{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }}</div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(function () {
+            $('.progress-bar').css('width', '38%').attr('aria-valuenow', '33%');
+
+            $(window).scroll(function () {
+                var Bottom = $(window).height() + $(window).scrollTop() >= $(document).height();
+                if(Bottom )
+                {
+                    $('.showHide').fadeOut();
+                } else {
+                    $('.showHide').fadeIn();
+                }
+            });
+        });
+
+    </script>
 {% endblock %}

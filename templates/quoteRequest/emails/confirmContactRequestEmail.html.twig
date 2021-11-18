@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://fonts.googleapis.com/css?family=Arimo:400,700|Oswald:300,400,500&display=swap&subset=latin-ext"
+          rel="stylesheet">
+    <title>Account Activation</title>
+
+    <!-- Web Font / @font-face : BEGIN -->
+    <!--[if mso]>
+    <style>
+        * {
+            font-family: Arial, sans-serif !important;
+        }
+    </style>
+    <![endif]-->
+
+
+</head>
+<body>
+{{ 'Commercial.ConfirmContactRequestEmail.Dear'|trans({}, "messages", locale) }} {{ quoteRequest.firstName }} {{ quoteRequest.lastName }},<br><br>
+
+{{ 'Commercial.ConfirmContactRequestEmail.Message1'| trans({'%date%': 'now'|localizeddate('short', 'medium', locale)}, "messages", locale) }}
+
+<br><br>
+{{ 'Commercial.ConfirmContactRequestEmail.Message2'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.ConfirmContactRequestEmail.Regards'| trans({}, "messages", locale) }}
+<br><br>
+{{ 'Commercial.ConfirmContactRequestEmail.Partner'| trans({}, "messages", locale) }}
+<br><br>
+<i>{{ 'Commercial.ConfirmContactRequestEmail.NoReply'| trans({}, "messages", locale) }}</i>
+<br><br>
+
+</body>
+</html>

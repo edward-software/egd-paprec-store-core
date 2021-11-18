@@ -20,15 +20,28 @@ class PostalCodeManager
 
     private $em;
     private $container;
+    private $numberManager;
+    private $agencyManager;
+    private $userManager;
 
-    public function __construct(EntityManagerInterface $em, ContainerInterface $container)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        ContainerInterface $container,
+        NumberManager $numberManager,
+        AgencyManager $agencyManager,
+        UserManager $userManager
+    ) {
         $this->em = $em;
         $this->container = $container;
+        $this->numberManager = $numberManager;
+        $this->agencyManager = $agencyManager;
+        $this->userManager = $userManager;
     }
 
-    public function get($postalCode)
-    {
+    public function get(
+        $postalCode,
+        $returnException = true
+    ) {
         $id = $postalCode;
         if ($postalCode instanceof PostalCode) {
             $id = $postalCode->getId();
@@ -38,7 +51,36 @@ class PostalCodeManager
             $postalCode = $this->em->getRepository('App:PostalCode')->find($id);
 
             if ($postalCode === null || $this->isDeleted($postalCode)) {
-                throw new EntityNotFoundException('postalCodeNotFound');
+                if ($returnException) {
+                    throw new EntityNotFoundException('postalCodeNotFound');
+                }
+                return null;
+            }
+
+            return $postalCode;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function getByCodeAndCity(
+        $code,
+        $city,
+        $returnException = true
+    ) {
+        try {
+
+            $postalCode = $this->em->getRepository(PostalCode::class)->findOneBy([
+                'code' => $code,
+                'city' => $city
+            ]);
+
+            if ($postalCode === null || $this->isDeleted($postalCode)) {
+                if ($returnException) {
+                    throw new EntityNotFoundException('postalCodeNotFound');
+                }
+                return null;
             }
 
             return $postalCode;
@@ -90,6 +132,96 @@ class PostalCodeManager
                 ->setParameter('code', $code . '%')
                 ->getQuery()
                 ->getResult();
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function update(
+        $code,
+        $city,
+        $agencyName,
+        $commercialName,
+        $rentalRate,
+        $cbrRegTransportRate,
+        $cbrPonctTransportRate,
+        $vlPlCfsRegTransportRate,
+        $vlPlCfsPonctTransportRate,
+        $vlPlTransportRate,
+        $bomTransportRate,
+        $plPonctTransportRate,
+        $treatmentRate,
+        $traceabilityRate,
+        $doFlush = true
+    ) {
+        try {
+            $postalCode = $this->getByCodeAndCity($code, $city, false);
+
+            if ($postalCode !== null) {
+                $postalCode
+                    ->setCity($city)
+                    ->setRentalRate($this->numberManager->normalize15($rentalRate))
+                    ->setCbrRegTransportRate($this->numberManager->normalize15($cbrRegTransportRate))
+                    ->setCbrPonctTransportRate($this->numberManager->normalize15($cbrPonctTransportRate))
+                    ->setVlPlCfsRegTransportRate($this->numberManager->normalize15($vlPlCfsRegTransportRate))
+                    ->setVlPlCfsPonctTransportRate($this->numberManager->normalize15($vlPlCfsPonctTransportRate))
+                    ->setVlPlTransportRate($this->numberManager->normalize15($vlPlTransportRate))
+                    ->setBomTransportRate($this->numberManager->normalize15($bomTransportRate))
+                    ->setPlPonctTransportRate($this->numberManager->normalize15($plPonctTransportRate))
+                    ->setTreatmentRate($this->numberManager->normalize15($treatmentRate))
+                    ->setTraceabilityRate($this->numberManager->normalize15($traceabilityRate))
+                    ->setDateUpdate(new \DateTime());
+
+                $agency = $this->agencyManager->getByName($agencyName, false);
+
+                if ($agency !== null) {
+                    $postalCode
+                        ->setAgency($agency);
+                }
+
+                $commercialNames = explode(" ", $commercialName);
+                $firstName = $commercialNames[0];
+                $lastName = $commercialNames[1];
+
+                $commercial = $this->userManager->getByFirstNameAndLastName($firstName, $lastName, false);
+
+                if ($commercial !== null) {
+                    $postalCode
+                        ->setUserInCharge($commercial);
+                }
+
+                $quoteRequests = $postalCode->getQuoteRequests();
+
+                if (!empty($quoteRequests) && count($quoteRequests)) {
+                    foreach ($quoteRequests as $quoteRequest) {
+                        if ($quoteRequest->getPostalCode() !== null) {
+                            $quoteRequest->setCity($city);
+                        }
+                        if ($quoteRequest->getIsSameAddress()) {
+                            $quoteRequest
+                                ->setBillingCity($city);
+                        }
+
+                        $quoteRequestLines = $quoteRequest->getQuoteRequestLines();
+
+                        if (!empty($quoteRequestLines) && count($quoteRequestLines)) {
+                            foreach ($quoteRequestLines as $quoteRequestLine) {
+                                $quoteRequestLine
+                                    ->setRentalRate($this->numberManager->normalize15($rentalRate))
+                                    ->setTreatmentRate($this->numberManager->normalize15($treatmentRate))
+                                    ->setTraceabilityRate($this->numberManager->normalize15($traceabilityRate));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($doFlush) {
+                $this->em->flush();
+            }
+
+            return $postalCode;
 
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());

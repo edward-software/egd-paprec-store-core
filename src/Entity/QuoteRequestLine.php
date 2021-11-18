@@ -171,6 +171,13 @@ class QuoteRequestLine
     /**
      * @var int
      *
+     * @ORM\Column(name="treatmentCollectPrice", type="integer")
+     */
+    private $treatmentCollectPrice;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="totalAmount", type="integer")
      */
     private $totalAmount;
@@ -730,7 +737,7 @@ class QuoteRequestLine
     /**
      * @return string
      */
-    public function getFrequency(): string
+    public function getFrequency()
     {
         return $this->frequency;
     }
@@ -739,7 +746,7 @@ class QuoteRequestLine
      * @param string $frequency
      * @return QuoteRequestLine
      */
-    public function setFrequency(string $frequency): self
+    public function setFrequency($frequency): self
     {
         $this->frequency = $frequency;
         return $this;
@@ -778,6 +785,18 @@ class QuoteRequestLine
     public function setFrequencyInterval($frequencyInterval): self
     {
         $this->frequencyInterval = $frequencyInterval;
+        return $this;
+    }
+
+    public function getTreatmentCollectPrice(): ?int
+    {
+        return $this->treatmentCollectPrice;
+    }
+
+    public function setTreatmentCollectPrice(int $treatmentCollectPrice): self
+    {
+        $this->treatmentCollectPrice = $treatmentCollectPrice;
+
         return $this;
     }
 

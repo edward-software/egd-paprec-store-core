@@ -334,6 +334,20 @@ class QuoteRequest
      */
     private $signatoryTitle1;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="duration", type="integer", nullable=true)
+     */
+    private $duration;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startDate", type="datetime", nullable=true)
+     */
+    private $startDate;
+
 
     /**
      * #################################
@@ -385,6 +399,7 @@ class QuoteRequest
         $this->overallDiscount = 0;
         $this->isSameSignatory = false;
         $this->isSameAddress = false;
+        $this->duration = 0;
     }
 
     /**
@@ -1424,6 +1439,30 @@ class QuoteRequest
     public function setPonctualDate(?\DateTime $ponctualDate): self
     {
         $this->ponctualDate = $ponctualDate;
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTime
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate): self
+    {
+        $this->startDate = $startDate;
+
         return $this;
     }
 
