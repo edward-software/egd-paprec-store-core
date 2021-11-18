@@ -13,19 +13,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UpdatePostalCodeCommand extends Command
 {
-    private $container;
     private $postalCodeManager;
     private $em;
 
     public function __construct(
         EntityManagerInterface $em,
-        ContainerInterface $container,
         PostalCodeManager $postalCodeManager
     ) {
         parent::__construct();
 
         $this->em = $em;
-        $this->container = $container;
         $this->postalCodeManager = $postalCodeManager;
     }
 

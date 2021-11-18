@@ -193,6 +193,37 @@ class PostalCodeController extends AbstractController
     }
 
     /**
+     * @Route("/import", name="paprec_postalCode_import")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function importAction(Request $request)
+    {
+        try {
+            $phpPath = $this->getParameter('paprec.php_path');
+            $projectPath = $this->getParameter('paprec.project_path');
+            $commandName = 'egd:update-postal-code';
+            $file = $request->files->get('file');
+            $filePath = $file->getPathName();
+
+            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath);
+
+//            return new JsonResponse([
+//                'resultCode' => 1,
+//                'resultMessage' => 'Success'
+//            ]);
+
+            return $this->redirectToRoute('paprec_postalCode_index');
+
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'resultCode' => 0,
+                'resultMessage' => $e->getCode() . ' : ' . $e->getMessage()
+            ]);
+        }
+
+    }
+
+    /**
      *@Route("/view/{id}", name="paprec_postalCode_view")
      * @Security("has_role('ROLE_ADMIN')")
      */

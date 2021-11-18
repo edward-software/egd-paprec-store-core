@@ -28,6 +28,17 @@
                         <a href="{{ path('paprec_postalCode_export') }}" class="btn btn-sm btn-primary ">
                             <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.PostalCode.Export'|trans }}
                         </a>
+
+                        <form method="post" enctype="multipart/form-data"
+                              action="{{ path('paprec_postalCode_import') }}"
+                              style="display: inline-block">
+                            <input type="file" name="file" accept=".xlsx" id="postalCodeInputFile">
+
+                            <button class="btn btn-sm btn-secondary import-button"><i
+                                        class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.PostalCode.Import'|trans }}
+                            </button>
+                        </form>
+
                     </div>
                 </div>
 
@@ -58,6 +69,16 @@
 {% block javascripts %}
     <script>
         $(function () {
+
+            $('.import-button').hide();
+
+            $('#postalCodeInputFile').on('change', function (e) {
+                if ( $('.import-button').css('display') == 'none' || $('.import-button').css("visibility") == "hidden"){
+                    $('.import-button').show();
+                } else {
+                    $('.import-button').hide();
+                }
+            });
 
             $('#postalCodesListDatatable').EgdDatatable({
                 url: "{{ path('paprec_postalCode_loadList') }}",
