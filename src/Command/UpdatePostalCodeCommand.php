@@ -50,10 +50,6 @@ class UpdatePostalCodeCommand extends Command
         $reader->setLoadAllSheets();
         $excelObject = $reader->load($filePath);
 
-        $postalCodes = [];
-
-        $cpt = 0;
-
         /**
          * Importation des postalCodes
          */

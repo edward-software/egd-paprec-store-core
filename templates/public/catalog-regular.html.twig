@@ -46,7 +46,9 @@
 
             {% for range in ranges %}
                 <div class="range-container">
-                    <h2><a data-toggle="collapse" href="#rangeProductCollapse__{{ range.id }}">{{ range|rangeLabelTranslation(locale) }}</a></h2>
+                    <h2><a data-toggle="collapse"
+                           href="#rangeProductCollapse__{{ range.id }}">{{ range|rangeLabelTranslation(locale) }}</a>
+                    </h2>
                     <div id="rangeContentContainer__{{ range.id }}">
                         <div class="row m-b-15 m-t-1">
                             <div class="col-md-1 range__image">
@@ -58,7 +60,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row product-container collapse multi-collapse" id="rangeProductCollapse__{{ range.id }}">
+                    <div class="row product-container collapse multi-collapse"
+                         id="rangeProductCollapse__{{ range.id }}">
                         {% for product in range.products %}
                             <div class="col-md-4 product" id="productContainer_{{ product.id }}">
                                 <div class="row product__block">
@@ -129,7 +132,9 @@
                                             </div>
                                         </div>
                                         <div class="product__frequency paprec-flex">
-                                            <div class="no-wrap">{{ 'Public.Catalog.Frequency'| trans({}, "messages", locale) }} :</div>
+                                            <div class="no-wrap">{{ 'Public.Catalog.Frequency'| trans({}, "messages", locale) }}
+                                                :
+                                            </div>
                                             <div class="paprec-flex product__frequency__container">
                                                 {% set frequency = '' %}
                                                 {% set frequencyTimes = '0' %}
@@ -184,7 +189,6 @@
                                                 </div>
 
 
-
                                             </div>
                                         </div>
 
@@ -198,7 +202,8 @@
                                                    data-url="{{ path('paprec_public_catalog_editProductFrequency', {locale: locale, cartUuid: cart.id, productId: product.id}) }}"
                                                    id="productFrequencyTimesInput__{{ product.id }}"
                                                    value="{{ frequencyTimes }}"/>
-                                            <span class="devis__frequence__times no-wrap" id="textFrequencyTimes__{{ product.id }}"
+                                            <span class="devis__frequence__times no-wrap"
+                                                  id="textFrequencyTimes__{{ product.id }}"
                                                   {% if frequency != 'regular' %}hidden{% endif %}>{{ 'Public.Catalog.Times'| trans({}, "messages", locale) }}</span>
                                             <select class="catalog-frequency-select ml-2"
                                                     {% if frequency != 'regular' %}hidden{% endif %}
@@ -278,18 +283,14 @@
 
                 <div class="items-list collapse" id="ViewCart">
 
-                    <div class="devis-recap">
+                    <div class="devis__recap devis-recap">
                         {% for range in ranges %}
                             {% for product in range.products %}
                                 {% for item in cart.content %}
                                     {% if item['pId'] == product.id %}
                                         <div class="devis__recap__item"
-                                             id="devis-recap-item-{{ product.id }}">
-                                            <p><b>{{ item['qtty'] }}x</b> {{ product|productLabelTranslation(locale) }} | {{ ('Public.Catalog.' ~ (item['frequency']|capitalize))|trans({}, "messages", locale)|capitalize }} {% if item['frequency'] == 'regular' %}
-                                            <p>{{ item['frequencyTimes'] }} {{ 'Public.Catalog.Times'| trans({}, "messages", locale) }} {{ ('Public.Catalog.' ~ item['frequencyInterval']|capitalize)| trans({}, "messages", locale) }}
-
-                                            {% endif %}</p>
-
+                                             id="devis-sticky-recap-item-{{ product.id }}">
+                                            <p>{{ item['qtty'] }}x {{ product|productLabelTranslation(locale) }}</p>
                                         </div>
                                     {% endif %}
                                 {% endfor %}
@@ -299,8 +300,8 @@
 
                 </div>
 
-                <label data-toggle="collapse" data-target="#ViewCart" class="m-b-10" style="cursor: pointer">
-                    {{ 'Public.Catalog.MoreProducts'| trans({}, "messages", locale) }}
+                <label data-toggle="collapse" data-target="#ViewCart" class="m-b-10 label-more-products" style="cursor: pointer">
+                    {{ 'Public.Catalog.SeeMoreProducts'| trans({}, "messages", locale) }}
                 </label>
 
                 <button type="button"
@@ -310,35 +311,35 @@
                     {{ 'Public.Catalog.NextStep'| trans({}, "messages", locale) }}
                 </button>
 
-                <a href="{{ path('paprec_public_contact_request_index', {locale: locale, cartUuid: cart.id}) }}" type="button"
+                <a href="{{ path('paprec_public_contact_request_index', {locale: locale, cartUuid: cart.id}) }}"
                    class="btn btn-call">
                     {{ 'Public.Catalog.ToBeCall'| trans({}, "messages", locale) }}
                 </a>
 
             </div>
-{#            <div class="">#}
-{#                <div class="row">#}
-{#                    <div class="col-md-12 col-lg-6 col-12">#}
-{#                        <h2>{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }} </h2>#}
-{#                        <div style="font-style: italic">{{ 'Public.Catalog.Other-Needs-Info'| trans({}, "messages", locale) }} </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row other-needs-container mb-4">#}
-{#                    {% for otherNeed in otherNeeds %}#}
-{#                        {% if otherNeed.pictures and otherNeed.pictures|length > 0 %}#}
-{#                            <div class="col other-needs-image {% for cartOtherNeed in cart.otherNeeds %}{% if cartOtherNeed.id == otherNeed.id %}active{% endif %}{% endfor %}"#}
-{#                                 id="otherNeedImage{{ otherNeed.id }}"#}
-{#                                 data-url="{{ path('paprec_public_catalog_addRemoveOtherNeed', {locale: locale, cartUuid: cart.id, otherNeedId: otherNeed.id}) }}">#}
-{#                                <img src="{{ asset('/uploads/pictos/' ~ otherNeed.pictures[0].path) }}">#}
-{#                                <div class="other-needs-image__title">#}
-{#                                    {{ otherNeed.name }}#}
-{#                                </div>#}
-{#                                <i class="fas fa-check"></i>#}
-{#                            </div>#}
-{#                        {% endif %}#}
-{#                    {% endfor %}#}
-{#                </div>#}
-{#            </div>#}
+            {# <div class=""> #}
+            {# <div class="row"> #}
+            {# <div class="col-md-12 col-lg-6 col-12"> #}
+            {# <h2>{{ 'Public.Catalog.Other-Needs'| trans({}, "messages", locale) }} </h2> #}
+            {# <div style="font-style: italic">{{ 'Public.Catalog.Other-Needs-Info'| trans({}, "messages", locale) }} </div> #}
+            {# </div> #}
+            {# </div> #}
+            {# <div class="row other-needs-container mb-4"> #}
+            {# {% for otherNeed in otherNeeds %} #}
+            {# {% if otherNeed.pictures and otherNeed.pictures|length > 0 %} #}
+            {# <div class="col other-needs-image {% for cartOtherNeed in cart.otherNeeds %}{% if cartOtherNeed.id == otherNeed.id %}active{% endif %}{% endfor %}" #}
+            {# id="otherNeedImage{{ otherNeed.id }}" #}
+            {# data-url="{{ path('paprec_public_catalog_addRemoveOtherNeed', {locale: locale, cartUuid: cart.id, otherNeedId: otherNeed.id}) }}"> #}
+            {# <img src="{{ asset('/uploads/pictos/' ~ otherNeed.pictures[0].path) }}"> #}
+            {# <div class="other-needs-image__title"> #}
+            {# {{ otherNeed.name }} #}
+            {# </div> #}
+            {# <i class="fas fa-check"></i> #}
+            {# </div> #}
+            {# {% endif %} #}
+            {# {% endfor %} #}
+            {# </div> #}
+            {# </div> #}
         </div>
     </section>
     <div id="define-need-button"
@@ -354,8 +355,7 @@
 
             $(window).scroll(function () {
                 var Bottom = $(window).height() + $(window).scrollTop() >= $(document).height();
-                if(Bottom )
-                {
+                if (Bottom) {
                     $('.showHide').fadeOut();
                 } else {
                     $('.showHide').fadeIn();

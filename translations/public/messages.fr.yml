@@ -61,7 +61,8 @@ Public:
         AddToQuote: Ajouter au devis
         NextStep: Étape suivante
         ToBeCall: Être appelé
-        MoreProducts: Voir plus
+        SeeMoreProducts: Voir plus
+        NoProducts: Aucun article
         Quote: Panier
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
