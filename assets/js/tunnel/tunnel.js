@@ -187,17 +187,10 @@ $(function () {
             success: function (response) {
                 // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
                 var htmlToDisplay = response.trim();
-                console.log('TEST', htmlToDisplay);
                 $(".devis-recap-item-" + productId).remove();
-
-                /**
-                 * TODO à revoir
-                 */
-                $("#devis-sticky-recap-item-" + productId).remove();
-
                 $(".devis-recap").append(htmlToDisplay);
                 // On met à jour la valeur du <select> de qtty du produit
-                $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));
+                $('#quantityProductSelect_' + productId).val($('.devis-recap-item-' + productId).data('qtty'));
                 disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
 
             }
@@ -214,12 +207,7 @@ $(function () {
             type: "POST",
             url: url,
             success: function (response) {
-                $("#devis-recap-item-" + productId).remove();
-
-                /**
-                 * TODO à revoir
-                 */
-                $("#devis-sticky-recap-item-" + productId).remove();
+                $(".devis-recap-item-" + productId).remove();
 
                 if (JSON.stringify(response) !== '{}') {
                     // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
@@ -227,7 +215,7 @@ $(function () {
                     $(".devis-recap").append(htmlToDisplay);
                 }
                 // On met à jour la valeur du <select> de qtty du produit
-                $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));
+                $('#quantityProductSelect_' + productId).val($('.devis-recap-item-' + productId).data('qtty'));
                 disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
             }
         })

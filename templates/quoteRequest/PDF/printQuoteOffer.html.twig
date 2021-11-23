@@ -177,11 +177,12 @@
         }
 
         .offer__ref-items > div:first-child {
-            width: 60%;
+            width: 50%;
         }
 
         .offer__ref-items > div:last-child {
-            width: 40%;
+            width: 50%;
+            margin-left: 70px;
             padding-right: 15px;
         }
 
@@ -324,6 +325,10 @@
             page-break-before: always;
         }
 
+        .other {
+            page-break-inside: avoid;
+        }
+
     </style>
 
 </head>
@@ -400,9 +405,9 @@
                 <table style="width: 95%; margin-left: 20px; margin-top: 10px">
                     <tbody>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>{{ 'Commercial.PDF.ContractProduct'|trans({}, "messages", app.request.locale) }}</th>
+                        <th>{{ 'Commercial.PDF.RegularPrestation'|trans({}, "messages", app.request.locale) }}</th>
+                        <th>{{ 'Commercial.PDF.RegularFrequency'|trans({}, "messages", app.request.locale) }}</th>
                         <th>{{ 'Commercial.PDF.ContractQuantity'|trans({}, "messages", app.request.locale) }}</th>
                         <th>{{ 'Commercial.PDF.ContractTreatmentPrice'|trans({}, "messages", app.request.locale) }}</th>
                         <th>{{ 'Commercial.PDF.ContractMensuelEstimation'|trans({}, "messages", app.request.locale) }}</th>
@@ -433,7 +438,7 @@
                                 <p>{{ line.product|productLabelTranslation(app.request.locale) }}</p>
                             </td>
                             <td>{{ 'Commercial.PDF.ContractLocation'|trans({}, "messages", app.request.locale) }}</td>
-                            <td></td>
+                            <td>{{ 'Commercial.PDF.MonthlyPrestation'|trans({}, "messages", app.request.locale) }}</td>
                             <td>{{ quantity }}</td>
                             <td>{{ rentalUnitPrice|formatAmount('EUR', app.request.locale) }}</td>
                             <td>{{ totalRentalPrice|formatAmount('EUR', app.request.locale) }}</td>
@@ -443,13 +448,20 @@
                             <td>
                                 {% if line.frequency == 'unknown' %}
                                     {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                {% elseif line.frequency == 'ponctual' %}
+                                    {{ 'General.Frequency.Ponctual'|trans({}, "messages", app.request.locale) }}
                                 {% else %}
                                     {% set frequencyIntervalName = 'General.Frequency.' ~ line.frequencyInterval|capitalize %}
                                     {{ line.frequencyTimes }}
                                     x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
                                 {% endif %}
                             </td>
-                            <td>{{ line.frequencyTimes }}</td>
+                            {% set coefValue = 1 %}
+                            {% if line.frequency == 'regular' %}
+                                {% set frequencyInterval = line.frequencyInterval %}
+                                {% set coefValue = monthlyCoefValues[frequencyInterval] %}
+                            {% endif %}
+                            <td>{{ quantity * coefValue }}</td>
                             <td>{{ line.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}</td>
                             <td>{{ totalProduct|formatAmount('EUR', app.request.locale) }}</td>
                         </tr>
@@ -552,137 +564,189 @@
 
         {# partie 4 #}
 
-        <h2>4. {{ 'Commercial.PDF.CommentTitle'|trans({}, "messages", app.request.locale) }}</h2>
         <div>
-            {% if quoteRequest.comment %}
-                {{ quoteRequest.comment }}
-            {% else %}
-                {{ 'Commercial.PDF.NoComment'|trans({}, "messages", app.request.locale) }}
-            {% endif %}
+            <h2>4. {{ 'Commercial.PDF.CommentTitle'|trans({}, "messages", app.request.locale) }}</h2>
+            <div>
+                {% if quoteRequest.comment %}
+                    {{ quoteRequest.comment }}
+                {% else %}
+                    {{ 'Commercial.PDF.NoComment'|trans({}, "messages", app.request.locale) }}
+                {% endif %}
+            </div>
         </div>
+
 
         {# partie 5 #}
 
-        <h2>5. {{ 'Commercial.PDF.OtherContractualTitle'|trans({}, "messages", app.request.locale) }}</h2>
+        <div class="other">
 
-        <div class="flex offer__ref-items">
-            <div>
-                <p>
+            <h2>5. {{ 'Commercial.PDF.OtherContractualTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <div class="flex offer__ref-items">
+                <div>
+                    <p>
                     <span class="bold"
                           style="margin-left: 150px">{{ 'Commercial.PDF.BillingSubTitle'|trans({}, "messages", app.request.locale) }}</span>
-                </p>
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SiteSubTitle'|trans({}, "messages", app.request.locale) }} </span>
+                    </p>
+                </div>
             </div>
 
-            <div>
-                <p>
-                    <span class="bold">{{ 'Commercial.PDF.SiteSubTitle'|trans({}, "messages", app.request.locale) }} </span>
-                </p>
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 150px">{{ 'Commercial.PDF.CorporateName'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
             </div>
+
+            <div class="flex offer__ref-items" style="margin-bottom: 10px;">
+                <div class="flex">
+                    <p style="width: 150px">{{ 'Commercial.PDF.Address'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 280px; height: 60px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <input type="text" style="width: 280px; height: 60px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 150px">{{ 'Commercial.PDF.City'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 150px">{{ 'Commercial.PDF.PhoneNumber'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 150px">{{ 'Commercial.PDF.TVAIntracomNumber'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 150px">{{ 'Commercial.PDF.CommandNumber'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <input type="text" style="width: 280px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
         </div>
 
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.CorporateName'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.Address'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.City'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.PhoneNumber'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.TVAIntracomNumber'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.CommandNumber'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
 
         {# partie 6 #}
 
-        <h2>6. {{ 'Commercial.PDF.SignatureTitle'|trans({}, "messages", app.request.locale) }}</h2>
+        <div class="other">
 
-        <div class="flex offer__ref-items">
-            <div>
-                <p>
-                    <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle1'|trans({}, "messages", app.request.locale) }}</span>
-                </p>
+            <h2>6. {{ 'Commercial.PDF.SignatureTitle'|trans({}, "messages", app.request.locale) }}</h2>
+
+            <div class="flex offer__ref-items">
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle1'|trans({}, "messages", app.request.locale) }}</span>
+                    </p>
+                </div>
+
+                <div>
+                    <p>
+                        <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle2'|trans({}, "messages", app.request.locale) }} </span>
+                    </p>
+                </div>
             </div>
 
-            <div>
-                <p>
-                    <span class="bold">{{ 'Commercial.PDF.SignatureSubTitle2'|trans({}, "messages", app.request.locale) }} </span>
-                </p>
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+            </div>
+
+            <div class="flex offer__ref-items">
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
+
+                <div class="flex">
+                    <p style="width: 70px">{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
+                    <input type="text" style="width: 260px; height: 30px; background-color: #F2F2F2; border: 1px solid black;">
+                </div>
             </div>
         </div>
 
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureCity'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureDate'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureLastName'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureFirstName'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
-
-        <div class="flex offer__ref-items">
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-
-            <div>
-                <p>{{ 'Commercial.PDF.SignatureQuality'|trans({}, "messages", app.request.locale) }}</p>
-            </div>
-        </div>
 
         {# partie 7 #}
 

@@ -401,6 +401,7 @@ class QuoteRequestManager
      * @param QuoteRequestLine $quoteRequestLine
      * @param $user
      * @param bool $doFlush
+     * @param $overallDiscount
      * @throws Exception
      */
     public function editLine(
@@ -408,14 +409,40 @@ class QuoteRequestManager
         QuoteRequestLine $quoteRequestLine,
         $user,
         $doFlush = true,
-        $editQuoteRequest = true
+        $editQuoteRequest = true,
+        $overallDiscount = null
     ) {
         $now = new \DateTime();
 
-        $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getEditableTransportUnitPrice());
-        $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getEditableRentalUnitPrice());
-        $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getEditableTreatmentUnitPrice());
-        $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getEditableTraceabilityUnitPrice());
+        if ($overallDiscount !== null) {
+
+            $newTransportUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $newRentalUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $newTreatmentUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $newTraceabilityUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $quoteRequestLine->setEditableTransportUnitPrice($newTransportUnitPrice);
+            $quoteRequestLine->setEditableRentalUnitPrice($newRentalUnitPrice);
+            $quoteRequestLine->setEditableTreatmentUnitPrice($newTreatmentUnitPrice);
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($newTraceabilityUnitPrice);
+
+            $quoteRequest->setOverallDiscount( $this->numberManager->normalize($overallDiscount));
+        } else {
+
+            $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getEditableTransportUnitPrice());
+            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getEditableRentalUnitPrice());
+            $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getEditableTreatmentUnitPrice());
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getEditableTraceabilityUnitPrice());
+
+        }
+
         $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
         $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
         $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());
@@ -546,15 +573,15 @@ class QuoteRequestManager
      */
     public function calculateTreatmentCollectPrice(QuoteRequestLine $quoteRequestLine)
     {
-        $transportUnitPrice = ($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice());
+        $transportUnitPrice = ($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate()));
 
         $quantity = $quoteRequestLine->getQuantity();
 
-        $treatmentUnitPrice = ($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice());
+        $treatmentUnitPrice = ($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate()));
 
-        $tracaeabilityUnitPrice = ($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice());
+        $traceabilityUnitPrice = ($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()));
 
-        $treatmentCollectPrice = ($transportUnitPrice + $quantity * ($treatmentUnitPrice + $tracaeabilityUnitPrice)) / $quantity;
+        $treatmentCollectPrice = ($transportUnitPrice + $quantity * ($treatmentUnitPrice + $traceabilityUnitPrice)) / $quantity;
 
         return $this->numberManager->normalize($treatmentCollectPrice);
 
@@ -1061,7 +1088,7 @@ class QuoteRequestManager
             $snappy->setOption('javascript-delay', 3000);
             $snappy->setTimeout(600);
             $snappy->setOption('dpi', 72);
-            $snappy->setOption('zoom', 0.92);
+            $snappy->setOption('zoom', 1);
 
 //            $snappy->setOption('footer-html', $this->container->get('templating')->render('@PaprecCommercial/QuoteRequest/PDF/fr/_footer.html.twig'));
 
@@ -1076,6 +1103,8 @@ class QuoteRequestManager
 
             $products = $this->productManager->getAvailableProducts($quoteRequest->getType());
 
+            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
+
             /**
              * On génère la page d'offre
              */
@@ -1087,7 +1116,8 @@ class QuoteRequestManager
                             'quoteRequest' => $quoteRequest,
                             'date' => $today,
                             'locale' => $locale,
-                            'products' => $products
+                            'products' => $products,
+                            'monthlyCoefValues' => $monthlyCoefficientValues
                         )
                     )
                 ),

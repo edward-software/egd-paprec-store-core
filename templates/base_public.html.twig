@@ -253,40 +253,40 @@
 
             <div class="row">
                 {% if app.request.get('_route')|slice(0, 'paprec_public_devis_home'|length) == 'paprec_public_devis_home' %}
-                    <div class="col-md-4"><a class="item-active"
+                    <div class="col-md-4" style="margin-top: 10px"><a class="item-active" style="font-size: 15px;"
                                 href="{{ path('paprec_public_devis_home', {locale: locale}) }}">Définition du besoin</a>
                     </div>
                 {% else %}
-                    <div class="col-md-4"><a class="item" href="{{ path('paprec_public_devis_home', {locale: locale}) }}">Définition
+                    <div class="col-md-4" style="margin-top: 10px"><a class="item" style="font-size: 15px;" href="{{ path('paprec_public_devis_home', {locale: locale}) }}">Définition
                             du besoin</a></div>
                 {% endif %}
 
                 {% if app.request.get('_route')|slice(0, 'paprec_public_regular_'|length) == 'paprec_public_regular_' or app.request.get('_route')|slice(0, 'paprec_public_ponctual_'|length) == 'paprec_public_ponctual_' %}
-                    <div class="col-md-3 item-active">
+                    <div class="col-md-3 item-active" style="margin-top: 10px; font-size: 15px;">
                         Choix des produits
                     </div>
                 {% else %}
-                    <div class="col-md-3 item">
+                    <div class="col-md-3 item" style="margin-top: 10px; font-size: 15px;">
                         Choix des produits
                     </div>
                 {% endif %}
 
                 {% if app.request.get('_route')|slice(0, 'paprec_public_contact_'|length) == 'paprec_public_contact_' %}
-                    <div class="col-md-3 item-active">
+                    <div class="col-md-3 item-active" style="margin-top: 10px; font-size: 15px;">
                         Formulaire de contact
                     </div>
                 {% else %}
-                    <div class="col-md-3 item">
+                    <div class="col-md-3 item" style="margin-top: 10px; font-size: 15px;">
                         Formulaire de contact
                     </div>
                 {% endif %}
 
                 {% if app.request.get('_route')|slice(0, 'paprec_public_confirm_'|length) == 'paprec_public_confirm_' %}
-                    <div class="col-md-2 item-active">
+                    <div class="col-md-2 item-active" style="margin-top: 10px; font-size: 15px;">
                         Validation demande
                     </div>
                 {% else %}
-                    <div class="col-md-2 item">
+                    <div class="col-md-2 item" style="margin-top: 10px; font-size: 15px;">
                         Validation demande
                     </div>
                 {% endif %}

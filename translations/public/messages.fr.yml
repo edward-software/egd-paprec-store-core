@@ -37,7 +37,7 @@ Public:
     Type:
         BreadcrumbTitle: Définition des besoins
         BreadcrumbContent: Définition des besoins
-        Title: Les sociétés Privacia éliminent et détruisent les fichiers et supports de données confidentiels dans toute la France selon des critères de sécurité uniformes.
+        Title: La société PRIVACIA assure la gestion de vos déchets et la destruction de vos documents et supports de données confidentiels dans toute la France pour des opérations régulières mais également ponctuelles
         Solution1:
             Title: 'Solution 1 : SERVICE REGULIER'
             Message1: 'Notre offre de services comprend entre autres :'
@@ -56,7 +56,7 @@ Public:
 
     Catalog:
         BreadcrumbTitle: Offres de services
-        Title: Sélectionnez svp les conteneurs souhaités pour créer votre demande de devis en 3 étapes.
+        Title: Sélectionnez les produits souhaités et leurs quantités pour créer votre demande de devis en 3 étapes
         Quantity: Quantité
         AddToQuote: Ajouter au devis
         NextStep: Étape suivante

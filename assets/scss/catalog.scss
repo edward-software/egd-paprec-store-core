@@ -222,11 +222,22 @@ input:focus {
       flex-direction: column;
 
       button {
-        align-self: flex-start;
         margin-top: auto;
         text-transform: uppercase;
         font-family: $font-family-1;
         font-size: 16px;
+
+        &:hover {
+          background-color: $secondary;
+          color: $white;
+        }
+      }
+
+      .btn-call {
+        margin-top: 80px;
+        background-color: white;
+        color: $secondary;
+        text-transform: uppercase;
 
         &:hover {
           background-color: $secondary;
@@ -312,15 +323,15 @@ input:focus {
 
 .sticky-shop-cart-container {
   position: fixed;
-  bottom: 0;
-  right: 0;
+  top: 400px;
+  right: 30px;
   background-color: #004A8E;
   color: #fff;
   min-height: 150px;
+  width: 15%;
   padding-left: 25px;
   padding-right: 25px;
-  margin-bottom: 20px;
-  margin-right: 10px;
+  padding-bottom: 10px;
   z-index: 100;
 
   button, a {
@@ -339,11 +350,6 @@ input:focus {
     &__content {
       padding-left: 0px;
     }
-  }
-
-  .btn-call {
-    background-color: white;
-    color: $secondary;
   }
 }
 

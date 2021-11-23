@@ -267,6 +267,9 @@ Commercial:
         StartDateContract: Démarrage du contrat
         ContractProduct: Matériel
         ContractQuantity: Quantité
+        RegularFrequency: Fréquence
+        RegularPrestation: Prestation
+        MonthlyPrestation: mensuelle
         ContractLocation: Location
         ContractPrice: Prix (€ HT)
         ContractRangeProduct: Typologie

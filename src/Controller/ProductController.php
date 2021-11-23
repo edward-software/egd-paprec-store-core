@@ -101,7 +101,6 @@ class ProductController extends AbstractController
             ->leftJoin('r.rangeLabels', 'rL')
             ->where('p.deleted IS NULL')
             ->andWhere('pL.language = :language')
-            ->orderBy('p.position', 'ASC')
             ->setParameter('language', 'FR');
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
