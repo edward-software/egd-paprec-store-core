@@ -42,13 +42,9 @@ class PostalCodeManager
         $postalCode,
         $returnException = true
     ) {
-        $id = $postalCode;
-        if ($postalCode instanceof PostalCode) {
-            $id = $postalCode->getId();
-        }
         try {
 
-            $postalCode = $this->em->getRepository('App:PostalCode')->find($id);
+            $postalCode = $this->em->getRepository('App:PostalCode')->find($postalCode);
 
             if ($postalCode === null || $this->isDeleted($postalCode)) {
                 if ($returnException) {
@@ -58,6 +54,30 @@ class PostalCodeManager
             }
 
             return $postalCode;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function getList(
+        $returnException = true
+    ) {
+
+        try {
+
+            $postalCodes = $this->em->getRepository('App:PostalCode')->findBy([
+                'deleted' => null
+            ]);
+
+            if (empty($postalCodes)) {
+                if ($returnException) {
+                    throw new EntityNotFoundException('postalCodesNotFound');
+                }
+                return null;
+            }
+
+            return $postalCodes;
 
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -228,6 +248,7 @@ class PostalCodeManager
     /**
      * Modification d'un code postal
      *
+     * @param $postalCode
      * @param $code
      * @param $city
      * @param $agencyName
@@ -247,6 +268,7 @@ class PostalCodeManager
      * @throws Exception
      */
     public function update(
+        $postalCode,
         $code,
         $city,
         $agencyName,
@@ -264,7 +286,7 @@ class PostalCodeManager
         $doFlush = true
     ) {
         try {
-            $postalCode = $this->getByCodeAndCity($code, $city, false);
+            $postalCode = $this->get($postalCode);
 
             if ($postalCode !== null) {
                 $postalCode

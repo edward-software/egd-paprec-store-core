@@ -9,7 +9,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class UpdatePostalCodeCommand extends Command
 {
@@ -50,6 +49,16 @@ class UpdatePostalCodeCommand extends Command
         $reader->setLoadAllSheets();
         $excelObject = $reader->load($filePath);
 
+        $postalCodeList = $this->postalCodeManager->getList(true);
+
+        $postalCodes = [];
+
+        if (!empty($postalCodeList) && count($postalCodeList)) {
+            foreach ($postalCodeList as $postalCode) {
+                $postalCodes[$postalCode->getCode()][$postalCode->getCity()] = $postalCode;
+            }
+        }
+
         /**
          * Importation des postalCodes
          */
@@ -60,7 +69,7 @@ class UpdatePostalCodeCommand extends Command
             $code = $cellIterator->current()->getValue();
             $cellIterator->next();
 
-            $city = $cellIterator->current()->getValue();
+            $city = $cellIterator->current()->__toString();
             $cellIterator->next();
 
             $agencyName = $cellIterator->current()->getValue();
@@ -99,25 +108,26 @@ class UpdatePostalCodeCommand extends Command
             $traceabilityRate = $cellIterator->current()->getValue();
             $cellIterator->next();
 
-            $postalCode = $this->postalCodeManager->update(
-                $code,
-                $city,
-                $agencyName,
-                $commercialName,
-                $rentalRate,
-                $cbrRegTransportRate,
-                $cbrPonctTransportRate,
-                $vlPlCfsRegTransportRate,
-                $vlPlCfsPonctTransportRate,
-                $vlPlTransportRate,
-                $bomTransportRate,
-                $plPonctTransportRate,
-                $treatmentRate,
-                $traceabilityRate,
-                false
-            );
-
-            if ($postalCode === null) {
+            if (array_key_exists($code, $postalCodes) && array_key_exists((string)$city, $postalCodes[$code])) {
+                $this->postalCodeManager->update(
+                    $postalCodes[$code][$city],
+                    $code,
+                    $city,
+                    $agencyName,
+                    $commercialName,
+                    $rentalRate,
+                    $cbrRegTransportRate,
+                    $cbrPonctTransportRate,
+                    $vlPlCfsRegTransportRate,
+                    $vlPlCfsPonctTransportRate,
+                    $vlPlTransportRate,
+                    $bomTransportRate,
+                    $plPonctTransportRate,
+                    $treatmentRate,
+                    $traceabilityRate,
+                    false
+                );
+            } else {
                 $postalCode = $this->postalCodeManager->add(
                     $code,
                     $city,
