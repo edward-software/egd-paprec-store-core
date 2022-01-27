@@ -91,6 +91,14 @@ Commercial:
         CONTRACT_SIGNED: Contrat signé
         CONTRACT_LOST: Contact non gagné
 
+    QuoteRequestFile:
+        Path: Choisir un fichier
+        AddTitle: Ajout de fichier joint
+        BtnAddLabel: Ajouter des fichiers
+        MaxSize: (Taille maximale du fichier)
+        FileNameColumn: Nom
+        FileTypeColumn: Type
+
     StaffList:
         150: De 0 à 50 employés
         51100: De 51 à 100 employés

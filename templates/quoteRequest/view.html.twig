@@ -40,6 +40,10 @@
                                         class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
                             </a>
                         {% endif %}
+                        <button class="btn btn-sm btn-primary "
+                                data-target="#uploadQuoteRequestFileModal" data-toggle="modal"
+                                id="openModalUploadQuoteRequestFile"> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
+                        </button>
                         <a href="javascript:void(0);"
                            class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i
                                     class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}
@@ -50,6 +54,52 @@
                         <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
                            class="btn btn-sm btn-danger"><i
                                     class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
+
+                        <!-- Modal d'ajout de fichiers au mail -->
+                        <div class="modal fade" id="uploadQuoteRequestFileModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Upload Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formAddQuoteRequestFile" name="formAddQuoteRequestFile"
+                                          action="{{ path("paprec_quote_request_add_quote_request_file", {quoteRequestId: quoteRequest.id}) }}"
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">
+                                                {{ 'Commercial.QuoteRequestFile.AddTitle'| trans({}, "messages", app.request.locale) }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Commercial.QuoteRequestFile.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span>{{ 'Commercial.QuoteRequestFile.MaxSize'| trans({}, "messages", app.request.locale) }}</span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddQuoteRequestFile.systemPath, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddQuoteRequestFile.systemPath) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formAddQuoteRequestFileSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formAddQuoteRequestFile) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="float-left">
                         <a href="{{ path('paprec_quoteRequest_index') }}" class="btn btn-sm btn-default"><i
@@ -531,6 +581,62 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-12 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>
+                                    {{ 'Commercial.QuoteRequest.ProductsList'|trans }}
+                                </h5>
+                                <div class="float-right">
+
+                                    <a href="{{ path('paprec_quoteRequest_addLine', {id: quoteRequest.id}) }}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.AddLine'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="quoteRequestFileListDatatable"
+                                       class="table table-striped table-bordered table-hover"
+                                       cellpadding="0" cellspacing="0" border="0">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ 'Commercial.QuoteRequestFile.FileNameColumn'| trans({}, "messages", app.request.locale) }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestFile.FileTypeColumn'| trans({}, "messages", app.request.locale) }}</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    {% if quoteRequest.quoteRequestFiles is not null and quoteRequest.quoteRequestFiles|length > 0 %}
+                                        {% for quoteRequestFile in quoteRequest.quoteRequestFiles %}
+
+                                            <tr>
+                                                <td>
+                                                    {{ quoteRequestFile.originalFileName }}
+                                                </td>
+
+                                                <td>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <a href="#"
+                                                       class="btn btn-sm btn-danger btn-sm commercialQuoteRequestFileRemoveButton"
+                                                       data-id="{{ quoteRequestFile.id }}">
+                                                        <i class="fa fa-xs fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-12 mt-3">
                         <div class="card">
                             <div class="card-header">
@@ -627,6 +733,28 @@
                         }
                     });
                 }
+            });
+
+            $('#formAddQuoteRequestFileSubmitButton').on('click', function () {
+                $('#formAddQuoteRequestFile').submit();
+            });
+
+            $('.commercialQuoteRequestFileRemoveButton').on('click', function () {
+                var quoteRequestFileId = $(this).data('id');
+                var url = "{{ path("paprec_quote_request_remove_quote_request_file", {quoteRequestId: quoteRequest.id, quoteRequestFileId: '0000'}) }}".replace('0000', quoteRequestFileId);
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-remove'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
             });
 
         });

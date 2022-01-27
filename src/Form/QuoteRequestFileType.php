@@ -17,8 +17,9 @@ class QuoteRequestFileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('path', FileType::class, array(
-                'data_class' => null
+            ->add('systemPath', FileType::class, array(
+                'data_class' => null,
+                'required' => true
             ));
     }
 
