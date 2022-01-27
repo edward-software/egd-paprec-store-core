@@ -18,8 +18,7 @@ class QuoteRequestFileType extends AbstractType
     {
         $builder
             ->add('systemPath', FileType::class, array(
-                'data_class' => null,
-                'required' => true
+                'data_class' => null
             ));
     }
 
