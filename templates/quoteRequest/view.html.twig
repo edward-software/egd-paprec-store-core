@@ -40,9 +40,10 @@
                                         class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
                             </a>
                         {% endif %}
-                        <button class="btn btn-sm btn-primary "
+                        <button class="btn btn-sm btn-primary"
                                 data-target="#uploadQuoteRequestFileModal" data-toggle="modal"
-                                id="openModalUploadQuoteRequestFile"> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
+                                id="openModalUploadQuoteRequestFile"><i
+                                    class="fa fa-file"></i> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
                         </button>
                         <a href="javascript:void(0);"
                            class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i
@@ -75,7 +76,6 @@
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <div class="form-label">
-                                                    {{ 'Commercial.QuoteRequestFile.Path'| trans({}, "messages", app.request.locale) }}
                                                     <span>{{ 'Commercial.QuoteRequestFile.MaxSize'| trans({}, "messages", app.request.locale) }}</span>
                                                 </div>
                                                 <div class="form-content">
@@ -618,6 +618,7 @@
                                                 </td>
 
                                                 <td>
+                                                    {{ quoteRequestFile.originalFileName|split('.')|last|upper }}
                                                 </td>
 
                                                 <td class="text-center">

@@ -879,6 +879,8 @@ class QuoteRequestController extends AbstractController
             if ($quoteRequestFile->getSystemPath() instanceof UploadedFile) {
                 $quoteRequestFilePath = $quoteRequestFile->getSystemPath();
 
+                $quoteRequestFileSize = $quoteRequestFile->getSystemPath()->getClientSize();
+
                 $quoteRequestFileSystemName = md5(uniqid('', true)) . '.' . $quoteRequestFilePath->guessExtension();
 
                 $quoteRequestFilePath->move($this->getParameter('paprec.quote_request_file.directory'), $quoteRequestFileSystemName);
@@ -890,6 +892,7 @@ class QuoteRequestController extends AbstractController
                     ->setSystemName($quoteRequestFileSystemName)
                     ->setOriginalFileName($quoteRequestFileOriginalName)
                     ->setMimeType($quoteRequestFileMimeType)
+                    ->setSystemSize($quoteRequestFileSize)
                     ->setQuoteRequest($quoteRequest);
                 $quoteRequest->addQuoteRequestFile($quoteRequestFile);
                 $this->em->persist($quoteRequestFile);
