@@ -958,6 +958,22 @@ class QuoteRequestManager
                 )
                 ->attach($attachment);
 
+            if (!empty($quoteRequest->getQuoteRequestFiles()) && is_iterable($quoteRequest->getQuoteRequestFiles())) {
+
+                $quoteRequestFileDirectory = $this->container->getParameter('paprec.quote_request_file.directory');
+
+                foreach ($quoteRequest->getQuoteRequestFiles() as $quoteRequestFile) {
+
+                    $quoteRequestFilePath = $quoteRequestFileDirectory . '/' . $quoteRequestFile->getSystemName();
+
+                    if (file_exists($quoteRequestFilePath)) {
+                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath), $quoteRequestFile->getOriginalFileName(), $quoteRequestFile->getMimeType()));
+                    }
+
+                }
+
+            }
+
             if ($this->container->get('mailer')->send($message)) {
                 if (file_exists($pdfFile)) {
                     unlink($pdfFile);

@@ -884,7 +884,7 @@ class QuoteRequestController extends AbstractController
                 $quoteRequestFilePath->move($this->getParameter('paprec.quote_request_file.directory'), $quoteRequestFileSystemName);
 
                 $quoteRequestFileOriginalName = $quoteRequestFile->getSystemPath()->getClientOriginalName();
-                $quoteRequestFileMimeType = $quoteRequestFile->getSystemPath()->getClientOriginalExtension();
+                $quoteRequestFileMimeType = $quoteRequestFile->getSystemPath()->getClientMimeType();
 
                 $quoteRequestFile
                     ->setSystemName($quoteRequestFileSystemName)
