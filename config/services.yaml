@@ -99,6 +99,8 @@ parameters:
         bimestre: 0.54
         quarter: 0.36
 
+    paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
+
 services:
     # default configuration for services in *this* file
     _defaults:
