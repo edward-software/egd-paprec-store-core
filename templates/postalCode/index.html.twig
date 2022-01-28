@@ -29,15 +29,55 @@
                             <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.PostalCode.Export'|trans }}
                         </a>
 
-                        <form method="post" enctype="multipart/form-data"
-                              action="{{ path('paprec_postalCode_import') }}"
-                              style="display: inline-block">
-                            <input type="file" name="file" accept=".xlsx" id="postalCodeInputFile">
+                        <button class="btn btn-sm btn-secondary" data-target="#uploadPostalCodeFileModal" data-toggle="modal"
+                                id="openModalUploadPostalCodeFile"><i
+                                    class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.PostalCode.Import'|trans }}
+                        </button>
 
-                            <button class="btn btn-sm btn-secondary import-button"><i
-                                        class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.PostalCode.Import'|trans }}
-                            </button>
-                        </form>
+{#                        <form method="post" enctype="multipart/form-data"#}
+{#                              action="{{ path('paprec_postalCode_import') }}"#}
+{#                              style="display: inline-block">#}
+{#                            <input type="file" name="file" accept=".xlsx" id="postalCodeInputFile">#}
+
+{#                            <button class="btn btn-sm btn-secondary import-button"><i#}
+{#                                        class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.PostalCode.Import'|trans }}#}
+{#                            </button>#}
+{#                        </form>#}
+
+                        <!-- Modal d'import de fichier -->
+                        <div class="modal fade" id="uploadPostalCodeFileModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Upload file" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formAddPostalCodeFile" name="formAddPostalCodeFile"
+                                          action="{{ path("paprec_postalCode_import") }}"
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">
+                                                {{ 'Catalog.PostalCode.ImportModalTitle'| trans({}, "messages", app.request.locale) }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="file" name="file" accept=".xlsx" id="postalCodeInputFile">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button class="btn btn-sm btn-primary"
+                                                    id="formAddPostalCodeFileSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -70,14 +110,18 @@
     <script>
         $(function () {
 
-            $('.import-button').hide();
+            // $('.import-button').hide();
 
-            $('#postalCodeInputFile').on('change', function (e) {
-                if ( $('.import-button').css('display') == 'none' || $('.import-button').css("visibility") == "hidden"){
-                    $('.import-button').show();
-                } else {
-                    $('.import-button').hide();
-                }
+            // $('#postalCodeInputFile').on('change', function (e) {
+            //     if ( $('.import-button').css('display') == 'none' || $('.import-button').css("visibility") == "hidden"){
+            //         $('.import-button').show();
+            //     } else {
+            //         $('.import-button').hide();
+            //     }
+            // });
+
+            $('#formAddPostalCodeFileSubmitButton').on('click', function () {
+                $('#formAddPostalCodeFile').submit();
             });
 
             $('#postalCodesListDatatable').EgdDatatable({
