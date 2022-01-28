@@ -95,6 +95,7 @@ Commercial:
         AddTitle: Ajout d'un fichier joint
         BtnAddLabel: Ajouter un fichier
         MaxSize: '(Taille maximale du fichier : 5Mo)'
+        FileListTitle: Liste des fichiers
         FileNameColumn: Nom
         FileTypeColumn: Format
 

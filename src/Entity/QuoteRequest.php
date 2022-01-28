@@ -1438,11 +1438,7 @@ class QuoteRequest
         return $this->ponctualDate;
     }
 
-    /**
-     * @param \DateTime|null $ponctualDate
-     * @return QuoteRequest
-     */
-    public function setPonctualDate(?\DateTime $ponctualDate): self
+    public function setPonctualDate($ponctualDate): self
     {
         $this->ponctualDate = $ponctualDate;
         return $this;
