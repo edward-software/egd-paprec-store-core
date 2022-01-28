@@ -75,9 +75,9 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="form-group">
-{#                                                <div class="form-label">#}
-{#                                                    <span>{{ 'Commercial.QuoteRequestFile.MaxSize'| trans({}, "messages", app.request.locale) }}</span>#}
-{#                                                </div>#}
+                                                <div class="form-label">
+                                                    <span>{{ 'Commercial.QuoteRequestFile.MaxSize'| trans({}, "messages", app.request.locale) }}</span>
+                                                </div>
                                                 <div class="form-content">
                                                     {{ form_widget(formAddQuoteRequestFile.systemPath, {'attr': {'class': 'form-control'}}) }}
                                                     {{ form_errors(formAddQuoteRequestFile.systemPath) }}

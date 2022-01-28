@@ -881,6 +881,16 @@ class QuoteRequestController extends AbstractController
 
                 $quoteRequestFileSize = $quoteRequestFile->getSystemPath()->getClientSize();
 
+                $fileMaxSize = $this->getParameter('paprec.quote_request_file.max_file_size');
+
+                if ($quoteRequestFileSize > $fileMaxSize) {
+                    $this->get('session')->getFlashBag()->add('error', 'generatedQuoteRequestFileNotAdded');
+
+                    return $this->redirectToRoute('paprec_quoteRequest_view', array(
+                        'id' => $quoteRequest->getId()
+                    ));
+                }
+
                 $quoteRequestFileSystemName = md5(uniqid('', true)) . '.' . $quoteRequestFilePath->guessExtension();
 
                 $quoteRequestFilePath->move($this->getParameter('paprec.quote_request_file.directory'), $quoteRequestFileSystemName);

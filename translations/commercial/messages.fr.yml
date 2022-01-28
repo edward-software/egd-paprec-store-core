@@ -66,6 +66,7 @@ Commercial:
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
+            generatedQuoteRequestFileNotAdded: "Erreur lors de l'ajout du fichier : la taille est trop grande"
         Success:
             generatedQuoteSent: Le devis a bien été généré et envoyé au client.
             generatedContractSent: Le contrat a bien été généré et envoyé au client.
