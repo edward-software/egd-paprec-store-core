@@ -30,6 +30,18 @@
 
 {{ 'Commercial.GeneratedContractEmail.Message1'| trans({}, "messages", locale) }}
 <br><br>
+{{ 'Commercial.GeneratedContractEmail.MessageFile'| trans({}, "messages", locale) }} :
+{% if quoteRequest.quoteRequestFiles is not empty %}
+    {% for quoteRequestFile in quoteRequest.quoteRequestFiles %}
+        {{ quoteRequestFile.originalFileName }}
+        {% if not loop.last %}
+            ;
+        {% else %}
+            .
+        {% endif %}
+    {% endfor %}
+{% endif %}
+<br><br>
 {{ 'Commercial.GeneratedContractEmail.Message2'| trans({}, "messages", locale) }}
 <br><br>
 {{ 'Commercial.GeneratedContractEmail.Message3'| trans({}, "messages", locale) }}
