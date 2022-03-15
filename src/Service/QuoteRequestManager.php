@@ -619,7 +619,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/confirmQuoteEmail.html.twig',
+                        'public/emails/confirmQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
@@ -665,7 +665,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/confirmContactRequestEmail.html.twig',
+                        'public/emails/confirmContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
                             'quoteRequest' => $quoteRequest
@@ -716,7 +716,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/newContactRequestEmail.html.twig',
+                        'public/emails/newContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
                             'quoteRequest' => $quoteRequest
@@ -784,7 +784,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/newQuoteEmail.html.twig',
+                        'public/emails/newQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($locale)
@@ -881,7 +881,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/generatedQuoteEmail.html.twig',
+                        'public/emails/generatedQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -948,7 +948,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/generatedContractEmail.html.twig',
+                        'public/emails/generatedContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -1046,7 +1046,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'quoteRequest/emails/newContractEmail.html.twig',
+                        'public/emails/newContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -1108,7 +1108,7 @@ class QuoteRequestManager
 
 //            $snappy->setOption('footer-html', $this->container->get('templating')->render('@PaprecCommercial/QuoteRequest/PDF/fr/_footer.html.twig'));
 
-            $templateDir = 'quoteRequest/PDF';
+            $templateDir = 'public/PDF';
 
             $snappy->setOption('header-html', $this->container->get('templating')->render($templateDir . '/header.html.twig'));
             $snappy->setOption('footer-html', $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
