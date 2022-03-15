@@ -11,6 +11,10 @@
 /vendor/
 /public/build/
 /src/data
+/.DS_Store
+/public/.DS_Store
+/assets/.DS_Store
+/assets/static/.DS_Store
 
 ###< symfony/framework-bundle ###
 /.idea

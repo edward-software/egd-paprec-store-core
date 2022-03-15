@@ -231,8 +231,8 @@ class SubscriptionController extends AbstractController
         /**
          * TODO problème avec la clé du captcha
          */
-        //if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
+//        if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequest = $form->getData();
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
@@ -295,6 +295,10 @@ class SubscriptionController extends AbstractController
              * On envoie le mail de confirmation à l'utilisateur
              */
             $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
+
+            /**
+             * On envoie le mail de confirmation au commercial en charge (qui est donc lié au code postal)
+             */
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
             if ($quoteRequest->getType() === 'ponctual') {
@@ -353,7 +357,7 @@ class SubscriptionController extends AbstractController
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-            "secret" => $_ENV['RECAPTCHA_SECRET_KEY'],
+            "secret" => $_ENV['GOOGLE_RECAPTCHA_SECRET_KEY'],
             "response" => $recaptchaToken
         ));
         $response = curl_exec($ch);
