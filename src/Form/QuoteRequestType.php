@@ -15,19 +15,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuoteRequestType extends AbstractType
 {
 
     private $transformer;
+    private $translator;
 
     /**
      * QuoteRequestPublicType constructor.
      * @param $transformer
      */
-    public function __construct(PostalCodeToStringTransformer $transformer)
+    public function __construct(PostalCodeToStringTransformer $transformer, TranslatorInterface $translator)
     {
         $this->transformer = $transformer;
+        $this->translator = $translator;
     }
 
     /**
@@ -70,9 +73,11 @@ class QuoteRequestType extends AbstractType
                 },
             ))
             ->add('ponctualDate', DateType::class, array(
-                'widget' => 'single_text',
-                'html5' => false,
+                'widget' => 'single_text'
             ))
+//            ->add('ponctualDate', DateType::class, array(
+//                'widget' => 'choice'
+//            ))
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('email', TextType::class)
@@ -108,11 +113,11 @@ class QuoteRequestType extends AbstractType
             ->add('annualBudget')
             ->add('type', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
                 ),
-                'empty_data' => 'ponctual',
                 "choice_label" => function ($choiceValue, $key, $value) {
+                    $choiceValue = strtolower($choiceValue);
                     return 'Commercial.QuoteRequest.Type.' . ucfirst($choiceValue);
                 },
                 'required' => true,
@@ -139,7 +144,27 @@ class QuoteRequestType extends AbstractType
             ))
             ->add('signatoryFirstName1')
             ->add('signatoryLastName1')
-            ->add('signatoryTitle1');
+            ->add('signatoryTitle1')
+            ->add('duration', ChoiceType::class, array(
+                'choices' => array(
+                    '12' => '12',
+                    '24' => '24',
+                    '36' => '36',
+                    '48' => '48',
+                    '60' => '60'
+                ),
+                'choice_label' => function ($choiceValue, $key, $value) {
+                    return $choiceValue . ' ' . $this->translator->trans('Commercial.QuoteRequest.month');
+                },
+                'expanded' => false,
+                'multiple' => false
+            ))
+//            ->add('startDate', DateType::class, array(
+//                'widget' => 'choice'
+//            ))
+            ->add('startDate', DateType::class, array(
+                'widget' => 'single_text'
+            ));
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
 //        $builder->get('billingPostalCode')

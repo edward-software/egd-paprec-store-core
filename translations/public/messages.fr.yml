@@ -4,6 +4,10 @@ Public:
 
     Navbar:
         Home: Accueil
+        Link1: Définition du besoin
+        Link2: Choix des produits
+        Link3: Formulaire de contact
+        Link4: Validation demande
         Menu1:
             Title: Type de destruction
             SubMenu1: Destruction confidentielle documents
@@ -37,7 +41,7 @@ Public:
     Type:
         BreadcrumbTitle: Définition des besoins
         BreadcrumbContent: Définition des besoins
-        Title: Les sociétés Privacia éliminent et détruisent les fichiers et supports de données confidentiels dans toute la France selon des critères de sécurité uniformes.
+        Title: La société PRIVACIA assure la gestion de vos déchets et la destruction de vos documents et supports de données confidentiels dans toute la France pour des opérations régulières mais également ponctuelles
         Solution1:
             Title: 'Solution 1 : SERVICE REGULIER'
             Message1: 'Notre offre de services comprend entre autres :'
@@ -56,11 +60,14 @@ Public:
 
     Catalog:
         BreadcrumbTitle: Offres de services
-        Title: Sélectionnez svp les conteneurs souhaités pour créer votre demande de devis en 3 étapes.
+        Title: Sélectionnez les produits souhaités et leurs quantités pour créer votre demande de devis en 3 étapes
         Quantity: Quantité
         AddToQuote: Ajouter au devis
         NextStep: Étape suivante
-        Quote: Devis
+        ToBeCall: Être appelé
+        SeeMoreProducts: Voir plus
+        NoProducts: Aucun article
+        Quote: Panier
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
         Collect-date: Date de collecte souhaitée
@@ -81,7 +88,7 @@ Public:
 
     Contact:
         BreadcrumbTitle: Coordonnées du client
-        Title: Entrez vos coordonnées pour être contacté et recevoir votre devis.
+        Title: Entrez vos coordonnées pour être contacté et recevoir votre devis
         BusinessName: Nom société
         Civility: Civilité
         LastName: Nom
@@ -109,8 +116,11 @@ Public:
         SignatoryFirstName1: Prénom signataire
         SignatoryLastName1: Nom signataire
         SignatoryTitle1: Titre signataire
-        BillingAddress: Addresse de facturation
-        DeliveryAddress: Addresse de prestation
+        BillingAddress: Adresse de facturation
+        DeliveryAddress: Adresse de prestation
+
+    Request:
+        Title: Entrez vos coordonnées pour être contacté et accompagné dans la création de votre demande
 
     Signatory:
         BreadcrumbTitle:            Définition des signataires

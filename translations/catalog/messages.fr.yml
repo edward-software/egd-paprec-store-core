@@ -44,6 +44,8 @@ Catalog:
         List: Liste des codes postaux
         Add: Ajouter un code postal
         Export: Exporter les codes postaux
+        Import: Importer les codes postaux
+        ImportModalTitle: Ajout d'un fichier
         Code: Code Postal
         City: Commune
         Zone: Zone tarifaire

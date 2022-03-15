@@ -28,6 +28,8 @@ parameters:
     paprec.agency.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
     paprec.other_need.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
     paprec.custom_area.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
+    paprec.php_path: "%env(PAPREC_PHP_PATH)%"
+    paprec.project_path: "%env(PAPREC_PROJECT_PATH)%"
 
     paprec.product.catalog:
         - REGULAR
@@ -96,6 +98,9 @@ parameters:
         month: 1.08
         bimestre: 0.54
         quarter: 0.36
+
+    paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
+    paprec.quote_request_file.max_file_size: 5000000
 
 services:
     # default configuration for services in *this* file

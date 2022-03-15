@@ -117,7 +117,7 @@
     {# Navigation #}
     <nav class="navbar navbar-expand-md navbar-light static-top">
         <div class="container menu">
-            <a class="navbar-brand" href="{{ paprec_public_site_url }}">
+            <a class="navbar-brand" href="{{ path('paprec_public_devis_home', {locale: locale}) }}">
                 {# <img src="/build/static/privacia_logo.png" alt=""> #}
                 <img class="img-fluid" width="260" src="{{ asset('/build/static/logo-groupe.png') }}" alt="">
             </a>
@@ -132,7 +132,7 @@
                 <ul class="navbar-nav nav ml-5 mr-xl-auto">
                     <li class="nav-item active">
                         <a class="nav-link"
-                           href="{{ paprec_public_site_url }}">{{ 'Public.Navbar.Home'| trans({}, "messages", locale) }}
+                           href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Navbar.Home'| trans({}, "messages", locale) }}
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
@@ -240,11 +240,56 @@
             {% block breadcrumb_title %}{% endblock %}
         </div> #}
         <div class="breadcrumb__content">
-            <a class="breadcrumb__content__link"
-               href="{{ paprec_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>
-            > <a class="breadcrumb__content__link"
-                 href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Quote'| trans({}, "messages", locale) }}</a>
-            > <span class="breadcrumb__content__last">{% block breadcrumb_content %}{% endblock %}</span>
+{#            <a class="breadcrumb__content__link"#}
+{#               href="{{ paprec_public_site_url }}">{{ 'Public.Home'| trans({}, "messages", locale) }}</a>#}
+{#            > <a class="breadcrumb__content__link"#}
+{#                 href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Quote'| trans({}, "messages", locale) }}</a>#}
+{#            > <span class="breadcrumb__content__last">{% block breadcrumb_content %}{% endblock %}</span>#}
+
+            <div class="progress">
+                <div class="progress-bar pg-background" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                </div>
+            </div>
+
+            <div class="row">
+                {% if app.request.get('_route')|slice(0, 'paprec_public_devis_home'|length) == 'paprec_public_devis_home' %}
+                    <div class="col-md-4" style="margin-top: 10px"><a class="item-active" style="font-size: 15px;"
+                                href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Navbar.Link1'| trans({}, "messages", locale) }}</a>
+                    </div>
+                {% else %}
+                    <div class="col-md-4" style="margin-top: 10px"><a class="item" style="font-size: 15px;" href="{{ path('paprec_public_devis_home', {locale: locale}) }}">{{ 'Public.Navbar.Link1'| trans({}, "messages", locale) }}</a></div>
+                {% endif %}
+
+                {% if app.request.get('_route')|slice(0, 'paprec_public_regular_'|length) == 'paprec_public_regular_' or app.request.get('_route')|slice(0, 'paprec_public_ponctual_'|length) == 'paprec_public_ponctual_' %}
+                    <div class="col-md-3 item-active" style="margin-top: 10px; font-size: 15px;">
+                        {{ 'Public.Navbar.Link2'| trans({}, "messages", locale) }}
+                    </div>
+                {% else %}
+                    <div class="col-md-3 item" style="margin-top: 10px; font-size: 15px;">
+                        {{ 'Public.Navbar.Link2'| trans({}, "messages", locale) }}
+                    </div>
+                {% endif %}
+
+                {% if app.request.get('_route')|slice(0, 'paprec_public_contact_'|length) == 'paprec_public_contact_' %}
+                    <div class="col-md-3 item-active" style="margin-top: 10px; font-size: 15px;">
+                        {{ 'Public.Navbar.Link3'| trans({}, "messages", locale) }}
+                    </div>
+                {% else %}
+                    <div class="col-md-3 item" style="margin-top: 10px; font-size: 15px;">
+                        {{ 'Public.Navbar.Link3'| trans({}, "messages", locale) }}
+                    </div>
+                {% endif %}
+
+                {% if app.request.get('_route')|slice(0, 'paprec_public_confirm_'|length) == 'paprec_public_confirm_' %}
+                    <div class="col-md-2 item-active" style="margin-top: 10px; font-size: 15px;">
+                        {{ 'Public.Navbar.Link4'| trans({}, "messages", locale) }}
+                    </div>
+                {% else %}
+                    <div class="col-md-2 item" style="margin-top: 10px; font-size: 15px;">
+                        {{ 'Public.Navbar.Link4'| trans({}, "messages", locale) }}
+                    </div>
+                {% endif %}
+            </div>
 
         </div>
     </div>
@@ -255,7 +300,6 @@
 
     <!-- /section -->
 {% endblock %}
-</main>
 
 {# <footer> #}
 {# <div class="container"> #}

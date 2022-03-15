@@ -14,7 +14,9 @@ use iio\libmergepdf\Merger;
 use Knp\Snappy\Pdf;
 use Swift_Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use function PHPUnit\Framework\isEmpty;
 
 class QuoteRequestManager
 {
@@ -202,6 +204,29 @@ class QuoteRequestManager
         return false;
     }
 
+    /**
+     * Vérifie si un produit d'une quoteRequest à la fréquence unknown
+     * Si c'est le cas, alors il faut que le bouton pour envoyer un email avec le contrat au client soit désactivé
+     *
+     * @param QuoteRequest $quoteRequest
+     * @return bool
+     */
+    public function isAbleToSendContractEmail(QuoteRequest $quoteRequest)
+    {
+        $quoteRequestLines = $quoteRequest->getQuoteRequestLines();
+
+        if (!empty($quoteRequestLines) && count($quoteRequestLines)) {
+            foreach ($quoteRequestLines as $quoteRequestLine) {
+                if ($quoteRequestLine->getFrequency() === 'unknown') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
+    }
+
 
     /**
      * Ajoute une quoteRequestLine à un quoteRequest
@@ -234,6 +259,8 @@ class QuoteRequestManager
              */
             $totalLine = $this->calculateTotalLine($currentQuoteLine);
             $currentQuoteLine->setTotalAmount($totalLine);
+            $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
+            $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);
             $this->em->flush();
         } else {
             $quoteRequestLine->setQuoteRequest($quoteRequest);
@@ -243,11 +270,12 @@ class QuoteRequestManager
             $quoteRequestLine->setTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
             $quoteRequestLine->setTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
-            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
+
             $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getProduct()->getTransportUnitPrice());
+            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getProduct()->getRentalUnitPrice());
             $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getProduct()->getTreatmentUnitPrice());
             $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getProduct()->getTraceabilityUnitPrice());
-            $quoteRequestLine->setFrequency($quoteRequestLine->getProduct()->getFrequency());
+            $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
             $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
             $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());
             $quoteRequestLine->setProductName($quoteRequestLine->getProduct()->getId());
@@ -322,6 +350,9 @@ class QuoteRequestManager
              */
             $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
             $quoteRequestLine->setTotalAmount($totalLine);
+
+            $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
+            $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);
             $this->em->flush();
         }
 
@@ -341,7 +372,7 @@ class QuoteRequestManager
      * @param $qtty
      * @throws Exception
      */
-    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequencyTimes, $frequencyInterval, $doFlush = true)
+    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequency, $frequencyTimes, $frequencyInterval, $doFlush = true)
     {
         try {
             $product = $this->productManager->get($productId);
@@ -349,8 +380,13 @@ class QuoteRequestManager
 
             $quoteRequestLine->setProduct($product);
             $quoteRequestLine->setQuantity($qtty);
-            $quoteRequestLine->setFrequencyTimes($frequencyTimes);
-            $quoteRequestLine->setFrequencyInterval($frequencyInterval);
+            $quoteRequestLine->setFrequency($frequency);
+            if (!empty($frequencyTimes)) {
+                $quoteRequestLine->setFrequencyTimes($frequencyTimes);
+            }
+            if (!empty($frequencyInterval)) {
+                $quoteRequestLine->setFrequencyInterval($frequencyInterval);
+            }
             $this->addLine($quoteRequest, $quoteRequestLine, null, $doFlush);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -365,6 +401,7 @@ class QuoteRequestManager
      * @param QuoteRequestLine $quoteRequestLine
      * @param $user
      * @param bool $doFlush
+     * @param $overallDiscount
      * @throws Exception
      */
     public function editLine(
@@ -372,12 +409,99 @@ class QuoteRequestManager
         QuoteRequestLine $quoteRequestLine,
         $user,
         $doFlush = true,
-        $editQuoteRequest = true
+        $editQuoteRequest = true,
+        $overallDiscount = null
     ) {
         $now = new \DateTime();
 
+        if ($overallDiscount !== null) {
+
+            $newTransportUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $newRentalUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $newTreatmentUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $newTraceabilityUnitPrice = $this->numberManager->normalize((($overallDiscount * $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice())) / 100))
+                + $quoteRequestLine->getEditableTransportUnitPrice();
+
+            $quoteRequestLine->setEditableTransportUnitPrice($newTransportUnitPrice);
+            $quoteRequestLine->setEditableRentalUnitPrice($newRentalUnitPrice);
+            $quoteRequestLine->setEditableTreatmentUnitPrice($newTreatmentUnitPrice);
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($newTraceabilityUnitPrice);
+
+            $quoteRequest->setOverallDiscount( $this->numberManager->normalize($overallDiscount));
+        } else {
+
+            $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getEditableTransportUnitPrice());
+            $quoteRequestLine->setEditableRentalUnitPrice($quoteRequestLine->getEditableRentalUnitPrice());
+            $quoteRequestLine->setEditableTreatmentUnitPrice($quoteRequestLine->getEditableTreatmentUnitPrice());
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($quoteRequestLine->getEditableTraceabilityUnitPrice());
+
+        }
+
+        $quoteRequestLine->setFrequency($quoteRequestLine->getFrequency());
+        $quoteRequestLine->setFrequencyInterval($quoteRequestLine->getFrequencyInterval());
+        $quoteRequestLine->setFrequencyTimes($quoteRequestLine->getFrequencyTimes());
+
+        if ($quoteRequest->getPostalCode()) {
+            $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
+            switch($quoteRequestLine->getProduct()->getTransportType()) {
+                case 'CBR_REG' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
+                    break;
+                }
+                case 'CBR_PONCT' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
+                    break;
+                }
+                case 'VL_PL_CFS_REG' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
+                    break;
+                }
+                case 'VL_PL_CFS_PONCT' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
+                    break;
+                }
+                case 'VL_PL' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
+                    break;
+                }
+                case 'BOM' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
+                    break;
+                }
+                case 'PL_PONCT' : {
+                    $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
+                    break;
+                }
+                default : {
+                    $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
+                    break;
+                }
+            }
+            $quoteRequestLine->setTreatmentRate($quoteRequest->getPostalCode()->getTreatmentRate());
+            $quoteRequestLine->setTraceabilityRate($quoteRequest->getPostalCode()->getTraceabilityRate());
+        } else {
+            /**
+             * Si pas de code postal, on met tous les coefs à 1 par défaut
+             */
+            $quoteRequestLine->setRentalRate($this->numberManager->normalize15(1));
+            $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
+            $quoteRequestLine->setTreatmentRate($this->numberManager->normalize15(1));
+            $quoteRequestLine->setTraceabilityRate($this->numberManager->normalize15(1));
+        }
+
         $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
+        if ($quoteRequest->getOverallDiscount() !== null) {
+            $totalLine *= (1 + $quoteRequest->getOverallDiscount() / 10000);
+        }
         $quoteRequestLine->setTotalAmount($totalLine);
+        $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
+        $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);
         $quoteRequestLine->setDateUpdate($now);
 
         if ($editQuoteRequest) {
@@ -439,6 +563,30 @@ class QuoteRequestManager
         return $totalAmount;
     }
 
+    /**
+     * Fonction calculant le prix unitaire de collecte et traitement par contenant (PUct)
+     * Si le calcul est modifiée, il faudra donc le modifier uniquement ici
+     *
+     * @param QuoteRequestLine $quoteRequestLine
+     * @return float|int
+     * @throws Exception
+     */
+    public function calculateTreatmentCollectPrice(QuoteRequestLine $quoteRequestLine)
+    {
+        $transportUnitPrice = ($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate()));
+
+        $quantity = $quoteRequestLine->getQuantity();
+
+        $treatmentUnitPrice = ($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate()));
+
+        $traceabilityUnitPrice = ($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()));
+
+        $treatmentCollectPrice = ($transportUnitPrice + $quantity * ($treatmentUnitPrice + $traceabilityUnitPrice)) / $quantity;
+
+        return $this->numberManager->normalize($treatmentCollectPrice);
+
+    }
+
 
     /**
      * Envoie un mail à la personne ayant fait une demande de devis
@@ -471,9 +619,10 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'public/emails/confirmQuoteEmail.html.twig',
+                        'quoteRequest/emails/confirmQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
+                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                             'locale' => strtolower($locale),
                             'salesman' => $quoteRequest->getPostalCode()->getUserInCharge()
                         )
@@ -487,6 +636,101 @@ class QuoteRequestManager
 
         } catch (ORMException $e) {
             throw new Exception('unableToSendConfirmQuoteRequest', 500);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Envoie un mail à la personne ayant fait une demande d'aide pour la création d'un devis
+     * @throws Exception
+     */
+    public function sendConfirmContactRequestEmail(QuoteRequest $quoteRequest, $locale)
+    {
+
+        try {
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
+
+            $rcptTo = $quoteRequest->getEmail();
+
+            if ($rcptTo == null || $rcptTo == '') {
+                return false;
+            }
+
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.ConfirmContactRequestEmail.Object',
+                    array(), 'messages', strtolower($locale)))
+                ->setFrom($from)
+                ->setTo($rcptTo)
+                ->setBody(
+                    $this->container->get('templating')->render(
+                        'quoteRequest/emails/confirmContactRequestEmail.html.twig',
+                        array(
+                            'locale' => strtolower($locale),
+                            'quoteRequest' => $quoteRequest
+                        )
+                    ),
+                    'text/html'
+                );
+            if ($this->container->get('mailer')->send($message)) {
+                return true;
+            }
+            return false;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToSendConfirmContactRequest', Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Envoie un mail au service commercial suite à une demande d'aide d'un client pour la création d'un devis
+     * @throws Exception
+     */
+    public function sendNewContactRequestEmail(QuoteRequest $quoteRequest, $locale)
+    {
+
+        try {
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
+
+            /**
+             * Si la quoteRequest est associé à un commercial, on lui envoie le mail d'information de la création d'une nouvelle demande
+             * Sinon => à spécifier
+             */
+            $rcptTo = null;
+            if ($quoteRequest->getUserInCharge()) {
+                $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
+            }
+
+            if ($rcptTo === null || $rcptTo === '') {
+                return false;
+            }
+
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.NewContactRequestEmail.Object',
+                    array(), 'messages', strtolower($locale)))
+                ->setFrom($from)
+                ->setTo($rcptTo)
+                ->setBody(
+                    $this->container->get('templating')->render(
+                        'quoteRequest/emails/newContactRequestEmail.html.twig',
+                        array(
+                            'locale' => strtolower($locale),
+                            'quoteRequest' => $quoteRequest
+                        )
+                    ),
+                    'text/html'
+                );
+            if ($this->container->get('mailer')->send($message)) {
+                return true;
+            }
+            return false;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToSendNewContactRequest', Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -540,7 +784,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'public/emails/newQuoteEmail.html.twig',
+                        'quoteRequest/emails/newQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($locale)
@@ -637,7 +881,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'public/emails/generatedQuoteEmail.html.twig',
+                        'quoteRequest/emails/generatedQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -692,7 +936,7 @@ class QuoteRequestManager
                 return false;
             }
 
-            $attachment = new Swift_Message(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
+            $attachment = new \Swift_Attachment(file_get_contents($pdfFile), $pdfFilename, 'application/pdf');
 
             $translator = $this->container->get('translator');
 
@@ -704,7 +948,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'public/emails/generatedContractEmail.html.twig',
+                        'quoteRequest/emails/generatedContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -713,6 +957,22 @@ class QuoteRequestManager
                     'text/html'
                 )
                 ->attach($attachment);
+
+            if (!empty($quoteRequest->getQuoteRequestFiles()) && is_iterable($quoteRequest->getQuoteRequestFiles())) {
+
+                $quoteRequestFileDirectory = $this->container->getParameter('paprec.quote_request_file.directory');
+
+                foreach ($quoteRequest->getQuoteRequestFiles() as $quoteRequestFile) {
+
+                    $quoteRequestFilePath = $quoteRequestFileDirectory . '/' . $quoteRequestFile->getSystemName();
+
+                    if (file_exists($quoteRequestFilePath)) {
+                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath), $quoteRequestFile->getOriginalFileName(), $quoteRequestFile->getMimeType()));
+                    }
+
+                }
+
+            }
 
             if ($this->container->get('mailer')->send($message)) {
                 if (file_exists($pdfFile)) {
@@ -786,7 +1046,7 @@ class QuoteRequestManager
                 ->setTo($rcptTo)
                 ->setBody(
                     $this->container->get('templating')->render(
-                        'public/emails/newContractEmail.html.twig',
+                        'quoteRequest/emails/newContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
                             'locale' => strtolower($localeFilename)
@@ -833,8 +1093,6 @@ class QuoteRequestManager
 
             $filename = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
             $filenameOffer = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
-            $filenameContract = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
-
 
             $dateEndOffer = clone(($quoteRequest->getDateUpdate()) ?: $quoteRequest->getDateCreation());
             $dateEndOffer = $dateEndOffer->modify('+1 year');
@@ -846,25 +1104,22 @@ class QuoteRequestManager
             $snappy->setOption('javascript-delay', 3000);
             $snappy->setTimeout(600);
             $snappy->setOption('dpi', 72);
-            $snappy->setOption('zoom', 0.92);
+            $snappy->setOption('zoom', 1);
 
 //            $snappy->setOption('footer-html', $this->container->get('templating')->render('@PaprecCommercial/QuoteRequest/PDF/fr/_footer.html.twig'));
 
-            $templateDir = 'public/PDF/';
+            $templateDir = 'quoteRequest/PDF';
 
+            $snappy->setOption('header-html', $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html', $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
             }
 
-            print_r($quoteRequest->getType());
-            if (strtoupper($quoteRequest->getType()) === 'REGULAR') {
-                $templateDir .= 'regular/';
-            } else {
-                $templateDir .= 'ponctual/';
-            }
-
             $products = $this->productManager->getAvailableProducts($quoteRequest->getType());
+
+            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
 
             /**
              * On génère la page d'offre
@@ -877,7 +1132,8 @@ class QuoteRequestManager
                             'quoteRequest' => $quoteRequest,
                             'date' => $today,
                             'locale' => $locale,
-                            'products' => $products
+                            'products' => $products,
+                            'monthlyCoefValues' => $monthlyCoefficientValues
                         )
                     )
                 ),
@@ -920,38 +1176,10 @@ class QuoteRequestManager
                 }
             }
 
-            if ($addContract) {
-                /**
-                 * On génère la page de contract
-                 */
-                $snappy->generateFromHtml(
-                    array(
-                        $this->container->get('templating')->render(
-                            $templateDir . '/printQuoteContract.html.twig',
-                            array(
-                                'quoteRequest' => $quoteRequest,
-                                'date' => $today,
-                                'dateEndOffer' => $dateEndOffer,
-                                'products' => $products
-                            )
-                        )
-                    ),
-                    $filenameContract
-                );
-
-                $pdfArray[] = $filenameContract;
-
-            }
-
-
             if (count($pdfArray)) {
                 $merger = new Merger();
                 $merger->addIterator($pdfArray);
                 file_put_contents($filename, $merger->merge());
-            }
-
-            if (file_exists($filenameContract)) {
-                unlink($filenameContract);
             }
 
             if (!file_exists($filename)) {

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Form\ContactRequestPublicType;
 use App\Form\QuoteRequestPublicType;
 use App\Service\CartManager;
 use App\Service\OtherNeedManager;
@@ -161,7 +162,7 @@ class SubscriptionController extends AbstractController
             ));
         }
 
-        $products = $this->productManager->getAvailableProducts($cart->getType());
+//        $products = $this->productManager->getAvailableProducts($cart->getType());
         $rangesQb = $this->rangeManager->getAvailableRanges(false, $cart->getType());
         $ranges = $this->rangeManager->addAvailableProducts($rangesQb, true);
 
@@ -230,8 +231,8 @@ class SubscriptionController extends AbstractController
         /**
          * TODO problème avec la clé du captcha
          */
-        //if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
+//        if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequest = $form->getData();
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
@@ -285,7 +286,7 @@ class SubscriptionController extends AbstractController
              */
             if ($cart->getContent() !== null) {
                 foreach ($cart->getContent() as $item) {
-                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'], $item['frequencyTimes'], $item['frequencyInterval'], false);
+                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'], $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
                 }
             }
             $this->em->flush();
@@ -294,6 +295,10 @@ class SubscriptionController extends AbstractController
              * On envoie le mail de confirmation à l'utilisateur
              */
             $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
+
+            /**
+             * On envoie le mail de confirmation au commercial en charge (qui est donc lié au code postal)
+             */
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
             if ($quoteRequest->getType() === 'ponctual') {
@@ -352,7 +357,7 @@ class SubscriptionController extends AbstractController
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-            "secret" => $_ENV['RECAPTCHA_SECRET_KEY'],
+            "secret" => $_ENV['GOOGLE_RECAPTCHA_SECRET_KEY'],
             "response" => $recaptchaToken
         ));
         $response = curl_exec($ch);
@@ -400,6 +405,78 @@ class SubscriptionController extends AbstractController
             'locale' => $locale,
             'quoteRequest' => $quoteRequest,
             'cart' => $cart,
+        ));
+    }
+
+    /**
+     * @Route("/{locale}/contact/request/{cartUuid}", name="paprec_public_contact_request_index")
+     *
+     * @param Request $request
+     * @param $locale
+     * @param $cartUuid
+     */
+    public function contactRequestAction(Request $request, $locale, $cartUuid)
+    {
+        $cart = $this->cartManager->get($cartUuid);
+
+        $quoteRequest = $this->quoteRequestManager->add(false);
+
+        $form = $this->createForm(ContactRequestPublicType::class, $quoteRequest, array(
+            'locale' => $locale
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $quoteRequest = $form->getData();
+
+            $quoteRequest->setQuoteStatus('QUOTE_CREATED');
+            $quoteRequest->setOrigin('SHOP');
+            $quoteRequest->setLocale($locale);
+            $quoteRequest->setType($cart->getType());
+            $quoteRequest->setIsMultisite(false);
+            $quoteRequest->setAccess('ground');
+
+            if ($quoteRequest->getType() === 'PONCTUAL') {
+                $quoteRequest->setPonctualDate($cart->getPonctualDate());
+            }
+
+            $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
+
+            $reference = $this->quoteRequestManager->generateReference($quoteRequest);
+            $quoteRequest->setReference($reference);
+
+            $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+            $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
+
+            $this->em->persist($quoteRequest);
+            $this->em->flush();
+
+            $this->quoteRequestManager->sendConfirmContactRequestEmail($quoteRequest, $locale);
+            $this->quoteRequestManager->sendNewContactRequestEmail($quoteRequest, $locale);
+
+            return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
+                'locale' => $locale,
+                'cartUuid' => $cart->getId(),
+            ));
+        }
+
+        return $this->render('public/contact-request.html.twig', array(
+            'locale' => $locale,
+            'cart' => $cart,
+            'form' => $form->createView()
+        ));
+
+    }
+
+    /**
+     * @Route("/{locale}/contact/request/confirm/{cartUuid}", name="paprec_public_confirm_contact_request_index")
+     * @param Request $request
+     * @param $locale
+     */
+    public function confirmContactRequestAction(Request $request, $locale, $cartUuid) {
+        return $this->render('public/confirm-contact-request.html.twig', array(
+            'locale' => $locale
         ));
     }
 

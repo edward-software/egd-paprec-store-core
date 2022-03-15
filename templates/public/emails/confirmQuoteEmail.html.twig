@@ -29,6 +29,40 @@
 
 {{ 'Commercial.ConfirmEmail.Message1'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }}
 <br><br>
+{{ 'Commercial.ConfirmEmail.QuoteRequestRecap'| trans({'%date%': quoteRequest.dateCreation|localizeddate('short', 'medium', locale)}, "messages", locale) }}
+:
+<br><br>
+
+<table border="1" cellspacing="0" cellpadding="5">
+    <thead>
+    <tr>
+        <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
+        <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
+        <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for quoteRequestLine in quoteRequestLines %}
+        <tr>
+            <td>
+                {{ quoteRequestLine.product|productLabelTranslation(app.request.locale) }}
+            </td>
+            <td>{{ quoteRequestLine.quantity }}</td>
+            <td>
+                {% if quoteRequestLine.frequency == 'unknown' %}
+                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                {% else %}
+                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval|capitalize %}
+                    {{ quoteRequestLine.frequencyTimes }}
+                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<br><br>
 {{ 'Commercial.ConfirmEmail.Message2'| trans({}, "messages", locale) }}
 <br><br>
 {{ 'Commercial.ConfirmEmail.Regards'| trans({}, "messages", locale) }}
@@ -37,17 +71,17 @@
 <br><br>
 <i>{{ 'Commercial.ConfirmEmail.NoReply'| trans({}, "messages", locale) }}</i>
 <br><br>
-{% if salesman %}
-    <b>{{ salesman.firstName }} {{ salesman.lastName }}</b>
-    <br>
-    <u>Téléphone</u> :{{ salesman.phoneNumber }}
-    <br>
-    <u>Mobile</u> : {{ salesman.mobileNumber }}
-    <br>
-    <u>Email</u> : {{ salesman.email }}
-    <br>
-    <u>Titre</u> : {{ salesman.jobTitle }}
-{% endif %}
+{#{% if salesman %}#}
+{#    <b>{{ salesman.firstName }} {{ salesman.lastName }}</b>#}
+{#    <br>#}
+{#    <u>Téléphone</u> :{{ salesman.phoneNumber }}#}
+{#    <br>#}
+{#    <u>Mobile</u> : {{ salesman.mobileNumber }}#}
+{#    <br>#}
+{#    <u>Email</u> : {{ salesman.email }}#}
+{#    <br>#}
+{#    <u>Titre</u> : {{ salesman.jobTitle }}#}
+{#{% endif %}#}
 
 
 </body>

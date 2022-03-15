@@ -334,6 +334,20 @@ class QuoteRequest
      */
     private $signatoryTitle1;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="duration", type="integer", nullable=true)
+     */
+    private $duration;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="startDate", type="datetime", nullable=true)
+     */
+    private $startDate;
+
 
     /**
      * #################################
@@ -365,6 +379,11 @@ class QuoteRequest
     private $otherNeeds;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequestFile", mappedBy="quoteRequest")
+     */
+    private $quoteRequestFiles;
+
+    /**
      * Get id.
      *
      * @return int
@@ -385,6 +404,8 @@ class QuoteRequest
         $this->overallDiscount = 0;
         $this->isSameSignatory = false;
         $this->isSameAddress = false;
+        $this->duration = 0;
+        $this->quoteRequestFiles = new ArrayCollection();
     }
 
     /**
@@ -1417,13 +1438,63 @@ class QuoteRequest
         return $this->ponctualDate;
     }
 
-    /**
-     * @param \DateTime|null $ponctualDate
-     * @return QuoteRequest
-     */
-    public function setPonctualDate(?\DateTime $ponctualDate): self
+    public function setPonctualDate($ponctualDate): self
     {
         $this->ponctualDate = $ponctualDate;
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): self
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTime
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate): self
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|QuoteRequestFile[]
+     */
+    public function getQuoteRequestFiles(): Collection
+    {
+        return $this->quoteRequestFiles;
+    }
+
+    public function addQuoteRequestFile(QuoteRequestFile $quoteRequestFile): self
+    {
+        if (!$this->quoteRequestFiles->contains($quoteRequestFile)) {
+            $this->quoteRequestFiles[] = $quoteRequestFile;
+            $quoteRequestFile->setQuoteRequest($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuoteRequestFile(QuoteRequestFile $quoteRequestFile): self
+    {
+        if ($this->quoteRequestFiles->removeElement($quoteRequestFile)) {
+            // set the owning side to null (unless already changed)
+            if ($quoteRequestFile->getQuoteRequest() === $this) {
+                $quoteRequestFile->setQuoteRequest(null);
+            }
+        }
+
         return $this;
     }
 

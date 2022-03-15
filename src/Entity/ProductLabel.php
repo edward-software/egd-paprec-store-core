@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
  * @UniqueEntity(
  *     fields={"language", "product"},
- *     message="This language is already defined pour this product."
+ *     message="This language is already defined for this product."
  * )
  *
  */

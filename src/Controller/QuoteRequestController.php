@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\QuoteRequest;
+use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
+use App\Form\QuoteRequestFileType;
 use App\Form\QuoteRequestLineAddType;
 use App\Form\QuoteRequestLineEditType;
 use App\Form\QuoteRequestType;
@@ -22,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -412,9 +415,16 @@ class QuoteRequestController extends AbstractController
     {
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
+        $isAbleToSendContractEmail = $this->quoteRequestManager->isAbleToSendContractEmail($quoteRequest);
+
+        $quoteRequestFile = new QuoteRequestFile();
+
+        $formAddQuoteRequestFile = $this->createForm(QuoteRequestFileType::class, $quoteRequestFile, array());
 
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
+            'isAbleToSendContractEmail' => $isAbleToSendContractEmail,
+            'formAddQuoteRequestFile' => $formAddQuoteRequestFile->createView()
         ));
     }
 
@@ -543,14 +553,15 @@ class QuoteRequestController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
-            $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
+//            $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
             $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
 
             if ($quoteRequest->getQuoteRequestLines()) {
                 foreach ($quoteRequest->getQuoteRequestLines() as $line) {
-                    $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false);
+                    $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false, $quoteRequest->getOverallDiscount());
                 }
             }
             $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
@@ -616,7 +627,9 @@ class QuoteRequestController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_quoteRequest_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**
@@ -638,7 +651,10 @@ class QuoteRequestController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        /**
+         * TODO $form->isValid() ne fonctionne pas
+         */
+        if ($form->isSubmitted()) {
             $quoteRequestLine = $form->getData();
             $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
 
@@ -681,7 +697,7 @@ class QuoteRequestController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
             $quoteRequestLine = $form->getData();
 
@@ -841,5 +857,89 @@ class QuoteRequestController extends AbstractController
         );
 
         return $response;
+    }
+
+    /**
+     * @Route("/addQuoteRequestFile/{quoteRequestId}", name="paprec_quote_request_add_quote_request_file")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function addQuoteRequestFileAction(Request $request, $quoteRequestId)
+    {
+        $quoteRequest = $this->quoteRequestManager->get($quoteRequestId, true);
+
+        $quoteRequestFile = new QuoteRequestFile();
+
+        $form = $this->createForm(QuoteRequestFileType::class, $quoteRequestFile, array());
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $quoteRequest->setDateUpdate(new \DateTime());
+            $quoteRequestFile = $form->getData();
+
+            if ($quoteRequestFile->getSystemPath() instanceof UploadedFile) {
+                $quoteRequestFilePath = $quoteRequestFile->getSystemPath();
+
+                $quoteRequestFileSize = $quoteRequestFile->getSystemPath()->getClientSize();
+
+                $fileMaxSize = $this->getParameter('paprec.quote_request_file.max_file_size');
+
+                if ($quoteRequestFileSize > $fileMaxSize) {
+                    $this->get('session')->getFlashBag()->add('error', 'generatedQuoteRequestFileNotAdded');
+
+                    return $this->redirectToRoute('paprec_quoteRequest_view', array(
+                        'id' => $quoteRequest->getId()
+                    ));
+                }
+
+                $quoteRequestFileSystemName = md5(uniqid('', true)) . '.' . $quoteRequestFilePath->guessExtension();
+
+                $quoteRequestFilePath->move($this->getParameter('paprec.quote_request_file.directory'), $quoteRequestFileSystemName);
+
+                $quoteRequestFileOriginalName = $quoteRequestFile->getSystemPath()->getClientOriginalName();
+                $quoteRequestFileMimeType = $quoteRequestFile->getSystemPath()->getClientMimeType();
+
+                $quoteRequestFile
+                    ->setSystemName($quoteRequestFileSystemName)
+                    ->setOriginalFileName($quoteRequestFileOriginalName)
+                    ->setMimeType($quoteRequestFileMimeType)
+                    ->setSystemSize($quoteRequestFileSize)
+                    ->setQuoteRequest($quoteRequest);
+                $quoteRequest->addQuoteRequestFile($quoteRequestFile);
+                $this->em->persist($quoteRequestFile);
+                $this->em->flush();
+            }
+
+            return $this->redirectToRoute('paprec_quoteRequest_view', array(
+                'id' => $quoteRequest->getId()
+            ));
+        }
+
+        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            'id' => $quoteRequest->getId()
+        ));
+    }
+
+    /**
+     * @Route("removeQuoteRequestFile/{quoteRequestId}/{quoteRequestFileId}", name="paprec_quote_request_remove_quote_request_file")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @ParamConverter("quoteRequestFile", options={"id" = "quoteRequestFileId"})
+     */
+    public function removeQuoteRequestFileAction(Request $request, $quoteRequestId, QuoteRequestFile $quoteRequestFile)
+    {
+        $quoteRequest = $this->quoteRequestManager->get($quoteRequestId, true);
+
+        $this->em->remove($quoteRequestFile);
+        $this->em->flush();
+
+        $quoteRequestFileFolder = $this->getParameter('paprec.quote_request_file.directory');
+        $quoteRequestFilePath = $quoteRequestFileFolder . '/' . $quoteRequestFile->getSystemName();
+
+        if (file_exists($quoteRequestFilePath)) {
+            unlink($quoteRequestFilePath);
+        }
+
+        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            'id' => $quoteRequest->getId()
+        ));
     }
 }

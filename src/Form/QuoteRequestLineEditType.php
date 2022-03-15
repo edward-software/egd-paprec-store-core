@@ -31,14 +31,11 @@ class QuoteRequestLineEditType extends AbstractType
             ->add('frequency', ChoiceType::class, array(
                 'choices' => array(
                     'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                    'Unknown' => 'unknown'
+                    'Ponctual' => 'ponctual'
                 ),
-                'empty_data' => 'ponctual',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.QuoteRequest.' . ucfirst($choiceValue);
                 },
-                'required' => true,
                 'expanded' => true
             ))
             ->add('frequencyTimes', ChoiceType::class, array(

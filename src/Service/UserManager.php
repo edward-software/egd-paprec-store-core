@@ -120,6 +120,58 @@ class UserManager
         }
     }
 
+    public function getByFirstNameAndLastName(
+        $firstName,
+        $lastName,
+        $returnException = true
+    ) {
+        try {
+
+            $user = $this->em->getRepository(User::class)->findOneBy([
+                'firstName' => $firstName,
+                'lastName' => $lastName
+            ]);
+
+            if ($user === null || $this->isDeleted($user)) {
+                if ($returnException) {
+                    throw new EntityNotFoundException('userNotFound');
+                }
+                return null;
+            }
+
+            return $user;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+
+    }
+
+    public function getByUsername(
+        $username,
+        $returnException = true
+    ) {
+        try {
+
+            $user = $this->em->getRepository(User::class)->findOneBy([
+                'username' => $username
+            ]);
+
+            if ($user === null || $this->isDeleted($user)) {
+                if ($returnException) {
+                    throw new EntityNotFoundException('userNotFound');
+                }
+                return null;
+            }
+
+            return $user;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+
+    }
+
 
     /**
      * Retourne les Commercials dont le manager est l'user passé en param

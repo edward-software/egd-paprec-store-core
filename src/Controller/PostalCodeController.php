@@ -73,7 +73,6 @@ class PostalCodeController extends AbstractController
         $cols['code'] = array('label' => 'code', 'id' => 'pC.code', 'method' => array('getCode'));
         $cols['city'] = array('label' => 'city', 'id' => 'pC.city', 'method' => array('getCity'));
         $cols['agency'] = array('label' => 'agency', 'id' => 'pC.agency', 'method' => array('getAgency', 'getName'));
-        $cols['zone'] = array('label' => 'zone', 'id' => 'pC.zone', 'method' => array('getZone'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(PostalCode::class)->createQueryBuilder('pC');
 
@@ -194,6 +193,37 @@ class PostalCodeController extends AbstractController
     }
 
     /**
+     * @Route("/import", name="paprec_postalCode_import")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function importAction(Request $request)
+    {
+        try {
+            $phpPath = $this->getParameter('paprec.php_path');
+            $projectPath = $this->getParameter('paprec.project_path');
+            $commandName = 'egd:update-postal-code';
+            $file = $request->files->get('file');
+            $filePath = $file->getPathName();
+
+            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath);
+
+//            return new JsonResponse([
+//                'resultCode' => 1,
+//                'resultMessage' => 'Success'
+//            ]);
+
+            return $this->redirectToRoute('paprec_postalCode_index');
+
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'resultCode' => 0,
+                'resultMessage' => $e->getCode() . ' : ' . $e->getMessage()
+            ]);
+        }
+
+    }
+
+    /**
      *@Route("/view/{id}", name="paprec_postalCode_view")
      * @Security("has_role('ROLE_ADMIN')")
      */
@@ -283,7 +313,6 @@ class PostalCodeController extends AbstractController
         $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
         $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
         $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
-        $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
         $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
 
         $form = $this->createForm(PostalCodeType::class, $postalCode);
@@ -295,17 +324,16 @@ class PostalCodeController extends AbstractController
             $postalCode = $form->getData();
 
             $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
-            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
             $postalCode->setTreatmentRate($this->numberManager->normalize15($postalCode->getTreatmentRate()));
             $postalCode->setTraceabilityRate($this->numberManager->normalize15($postalCode->getTraceabilityRate()));
 
-            $postalCode->setCbrRegTransportRate($this->numberManager->denormalize15($postalCode->getCbrRegTransportRate()));
-            $postalCode->setCbrPonctTransportRate($this->numberManager->denormalize15($postalCode->getCbrPonctTransportRate()));
-            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
-            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
-            $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
-            $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
-            $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
+            $postalCode->setCbrRegTransportRate($this->numberManager->normalize15($postalCode->getCbrRegTransportRate()));
+            $postalCode->setCbrPonctTransportRate($this->numberManager->normalize15($postalCode->getCbrPonctTransportRate()));
+            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->normalize15($postalCode->getVlPlCfsRegTransportRate()));
+            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->normalize15($postalCode->getVlPlCfsPonctTransportRate()));
+            $postalCode->setVlPlTransportRate($this->numberManager->normalize15($postalCode->getVlPlTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
+            $postalCode->setPlPonctTransportRate($this->numberManager->normalize15($postalCode->getPlPonctTransportRate()));
 
             $postalCode->setDateUpdate(new \DateTime);
             $postalCode->setUserUpdate($user);
@@ -363,7 +391,9 @@ class PostalCodeController extends AbstractController
             $em->flush();
         }
 
-        return $this->redirectToRoute('paprec_postalCode_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

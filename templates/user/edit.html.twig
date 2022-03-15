@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content_title %}
-    {{ 'User.User.Users'|trans }}
+    {{ 'User.User.Edit'|trans }}
 {% endblock %}
 
 {% block main_content %}
@@ -152,16 +152,16 @@
                     </div>
                     {{ form_rest(form) }}
                 </div>
-            </div>
-            <div class="card-footer">
-                <div class="float-right">
-                    <a href="javascript:void(0);" class="btn btn-success user-user-save-button"><i
-                                class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
-                    <a href="javascript:void(0);" class="btn btn-danger user-user-cancel-button"><i
-                                class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+
+                <div class="card-footer">
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-success user-user-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-danger user-user-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </form>
 {% endblock %}

@@ -333,7 +333,9 @@ class AgencyController extends AbstractController
             $em->flush();
         }
 
-        return $this->redirectToRoute('paprec_agency_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

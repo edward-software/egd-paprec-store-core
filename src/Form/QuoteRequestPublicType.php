@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\QuoteRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -109,7 +108,7 @@ class QuoteRequestPublicType extends AbstractType
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))
             ->add('billingCity', TextType::class)
-            ->add('comment', TextareaType::class)
+            ->add('comment', TextareaType::class, array('required' => false))
         ->add('signatoryFirstName1', TextType::class)
         ->add('signatoryLastName1', TextType::class)
         ->add('signatoryTitle1', TextType::class);

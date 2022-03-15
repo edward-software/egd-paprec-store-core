@@ -68,47 +68,47 @@ $(function () {
      *  Gestion du bouton flottant en bas de page
      *****************************/
 
-    if ($('.product-container').is('div')) {
-
-
-        var navbarOffset = $('.navbar')[0].getBoundingClientRect().top;
-        var productOffset = $('.product-container')[0].getBoundingClientRect().top;
-        var otherNeedsOffset = $('.other-needs-container')[0].getBoundingClientRect().top;
-        var otherNeedsHeight = $('.other-needs-container').height();
-        var duration = 350;
-
-        $(window).scroll(function () {
-                const scrollTop = $(this).scrollTop();
-                if (scrollTop <= navbarOffset) {
-                    $('#define-need-button').fadeOut(duration);
-                    $('#other-needs-button').fadeOut(duration);
-                } else if (scrollTop > navbarOffset && scrollTop < productOffset) {
-                    $('#define-need-button').fadeIn(duration);
-                    $('#other-needs-button').fadeOut(duration);
-
-                } else if (scrollTop >= productOffset && scrollTop <= ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
-                    $('#define-need-button').fadeOut(duration);
-                    $('#other-needs-button').fadeIn(duration);
-                } else if (scrollTop > ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
-                    $('#other-needs-button').fadeOut(duration);
-                }
-            }
-        );
-
-        $('#define-need-button').on('click', function (e) {
-            e.preventDefault();
-            $('html, body').animate({
-                scrollTop: productOffset
-            }, 750);
-        });
-
-        $('#other-needs-button').on('click', function (e) {
-            e.preventDefault();
-            $('html, body').animate({
-                scrollTop: otherNeedsOffset
-            }, 750);
-        });
-    }
+    // if ($('.product-container').is('div')) {
+    //
+    //
+    //     var navbarOffset = $('.navbar')[0].getBoundingClientRect().top;
+    //     var productOffset = $('.product-container')[0].getBoundingClientRect().top;
+    //     var otherNeedsOffset = $('.other-needs-container')[0].getBoundingClientRect().top;
+    //     var otherNeedsHeight = $('.other-needs-container').height();
+    //     var duration = 350;
+    //
+    //     $(window).scroll(function () {
+    //             const scrollTop = $(this).scrollTop();
+    //             if (scrollTop <= navbarOffset) {
+    //                 $('#define-need-button').fadeOut(duration);
+    //                 $('#other-needs-button').fadeOut(duration);
+    //             } else if (scrollTop > navbarOffset && scrollTop < productOffset) {
+    //                 $('#define-need-button').fadeIn(duration);
+    //                 $('#other-needs-button').fadeOut(duration);
+    //
+    //             } else if (scrollTop >= productOffset && scrollTop <= ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
+    //                 $('#define-need-button').fadeOut(duration);
+    //                 $('#other-needs-button').fadeIn(duration);
+    //             } else if (scrollTop > ($(document).height() - $(window).height() - (otherNeedsHeight / 2))) {
+    //                 $('#other-needs-button').fadeOut(duration);
+    //             }
+    //         }
+    //     );
+    //
+    //     $('#define-need-button').on('click', function (e) {
+    //         e.preventDefault();
+    //         $('html, body').animate({
+    //             scrollTop: productOffset
+    //         }, 750);
+    //     });
+    //
+    //     $('#other-needs-button').on('click', function (e) {
+    //         e.preventDefault();
+    //         $('html, body').animate({
+    //             scrollTop: otherNeedsOffset
+    //         }, 750);
+    //     });
+    // }
 
     /*****************************
      *  Gestion otherNeed
@@ -147,7 +147,7 @@ $(function () {
     /**
      * Lorsque l'on clique sur les autres fréquences, l'input et le select pour configurer la fréquence ne doivent plus s'affiche
      */
-    $('[id^=ponctualFrequencyButton__], [id^=unknownFrequencyButton__]').on('click', function () {
+    $('[id^=unknownFrequencyButton__]').on('click', function () {
         const productId = (this.name).replace('productFrequencyRadios__', '');
         $('#productFrequencyTimesInput__' + productId).prop('hidden', true);
         $('#textFrequencyTimes__' + productId).prop('hidden', true);
@@ -169,7 +169,7 @@ $(function () {
         }
     });
 
-    $('#catalog_next_step_button').on('click', function () {
+    $('.catalog_next_step_button').on('click', function () {
         const url = $(this).data('url');
         $(location).attr('href', url);
     });
@@ -187,10 +187,10 @@ $(function () {
             success: function (response) {
                 // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
                 var htmlToDisplay = response.trim();
-                $("#devis-recap-item-" + productId).remove();
-                $("#devis-recap").append(htmlToDisplay);
+                $(".devis-recap-item-" + productId).remove();
+                $(".devis-recap").append(htmlToDisplay);
                 // On met à jour la valeur du <select> de qtty du produit
-                $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));
+                $('#quantityProductSelect_' + productId).val($('.devis-recap-item-' + productId).data('qtty'));
                 disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
 
             }
@@ -207,14 +207,15 @@ $(function () {
             type: "POST",
             url: url,
             success: function (response) {
-                $("#devis-recap-item-" + productId).remove();
+                $(".devis-recap-item-" + productId).remove();
+
                 if (JSON.stringify(response) !== '{}') {
                     // On récupère l'HTML du du produit ajouté et on l'insère dans le récap du devis (=panier)
                     var htmlToDisplay = response.trim();
-                    $("#devis-recap").append(htmlToDisplay);
+                    $(".devis-recap").append(htmlToDisplay);
                 }
                 // On met à jour la valeur du <select> de qtty du produit
-                $('#quantityProductSelect_' + productId).val($('#devis-recap-item-' + productId).data('qtty'));
+                $('#quantityProductSelect_' + productId).val($('.devis-recap-item-' + productId).data('qtty'));
                 disableButtonsFromQuantity($('#quantityProductSelect_' + productId).val(), productId);
             }
         })
@@ -239,6 +240,22 @@ $(function () {
         var productId = (this.id).replace('productFrequencyIntervalSelect__', '');
         const url = $(this).data('url');
         editProductFrequency(url, productId);
+    });
+
+    /**
+     * Masque la description et l'image de la gamme lorsque les produits sont affichés
+     */
+    $('[id^=rangeProductCollapse__]').on('show.bs.collapse', function () {
+        const productId = (this.id).replace('rangeProductCollapse__', '');
+        $('#rangeContentContainer__' + productId).hide();
+    });
+
+    /**
+     * Affichage de la description et de l'image de la gamme lorsque les produits sont cachés
+     */
+    $('[id^=rangeProductCollapse__]').on('hide.bs.collapse', function () {
+        const productId = (this.id).replace('rangeProductCollapse__', '');
+        $('#rangeContentContainer__' + productId).show();
     });
 
     /****************************************
@@ -379,8 +396,12 @@ function disableButtonsFromQuantity(quantity, productId) {
 
 function editProductFrequency(url, productId) {
     const frequency = $('input[type=radio][name^="productFrequencyRadios__' + productId + '"]:checked').val();
-    const frequencyTimes = $("#productFrequencyTimesInput__" + productId).val();
-    const frequencyInterval = $("#productFrequencyIntervalSelect__" + productId).val();
+    let frequencyTimes = null;
+    let frequencyInterval = null;
+    if (frequency != 'unknown') {
+        frequencyTimes = $("#productFrequencyTimesInput__" + productId).val();
+        frequencyInterval = $("#productFrequencyIntervalSelect__" + productId).val();
+    }
 
     $.ajax({
         url: url,

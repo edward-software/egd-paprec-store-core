@@ -3,11 +3,6 @@ doctrine:
         url: '%env(resolve:DATABASE_URL)%'
         driver: pdo_mysql
         server_version: 5.7
-        host: '%env(DATABASE_HOST)%'
-        port: '%env(DATABASE_PORT)%'
-        dbname: '%env(DATABASE_NAME)%'
-        user: '%env(DATABASE_USER)%'
-        password: '%env(DATABASE_PASSWORD)%'
         charset: UTF8
 
         # IMPORTANT: You MUST configure your server version,

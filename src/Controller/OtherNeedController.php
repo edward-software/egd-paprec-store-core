@@ -291,7 +291,9 @@ class OtherNeedController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_other_need_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

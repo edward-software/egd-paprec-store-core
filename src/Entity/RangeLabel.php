@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\RangeRepository")
  * @UniqueEntity(
  *     fields={"language", "range"},
- *     message="This language is already defined pour this range."
+ *     message="This language is already defined for this range."
  * )
  *
  */

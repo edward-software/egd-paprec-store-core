@@ -48,6 +48,31 @@ class AgencyManager
         }
     }
 
+    public function getByName(
+        $name,
+        $returnException = true
+    ) {
+        try {
+
+            $agency = $this->em->getRepository(Agency::class)->findOneBy([
+                'name' => $name,
+            ]);
+
+            if ($agency === null || $this->isDeleted($agency)) {
+                if ($returnException) {
+                    throw new EntityNotFoundException('agencyNotFound');
+                }
+                return null;
+            }
+
+            return $agency;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+
+    }
+
     /**
      * Vérification qu'à ce jour le agency n'est pas supprimé
      *

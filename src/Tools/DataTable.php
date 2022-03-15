@@ -171,7 +171,13 @@ class DataTable
                                 /**
                                  * Utilisé pour les tables associative par exemple lorsque l'on veut faire ca : $item->getActivies()[0], on met donc un array avec getActivities en première case et 0 en deuxième case
                                  */
-                                $r = $r->{$method[0]}()[$method[1]];
+                                if (is_array($method[0])) {
+                                    $r = $r->{$method[0][0]}()[$method[0][1]];
+                                    $r = $r->{$method[1]}();
+                                } else {
+                                    $r = $r->{$method[0]}()[$method[1]];
+                                }
+
                             } else {
                                 $r = $r->$method();
                             }

@@ -36,7 +36,6 @@ class ProductType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
                 },
-                'data' => '1',
                 "expanded" => true,
             ))
             ->add('rentalUnitPrice', TextType::class)
@@ -82,7 +81,6 @@ class ProductType extends AbstractType
             ))
             ->add('frequencyTimes', ChoiceType::class, array(
                 'choices' => array(
-                    '0' => '0',
                     '1' => '1',
                     '2' => '2',
                     '3' => '3',

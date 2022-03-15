@@ -85,21 +85,22 @@ class ProductController extends AbstractController
             'id' => 'pL.name',
             'method' => array(array('getProductLabels', 0), 'getName')
         );
-        $cols['dimensions'] = array(
-            'label' => 'dimensions',
-            'id' => 'p.dimensions',
-            'method' => array('getDimensions')
+        $cols['range'] = array(
+            'label' => 'range',
+            'id' => 'p.range',
+            'method' => array('getRange', array(array('getRangeLabels', 0), 'getName'))
         );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
 
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Product::class)->createQueryBuilder('p');
 
-        $queryBuilder->select(array('p', 'pL'))
+        $queryBuilder->select(array('p', 'pL', 'r', 'rL'))
             ->leftJoin('p.productLabels', 'pL')
+            ->leftJoin('p.range', 'r')
+            ->leftJoin('r.rangeLabels', 'rL')
             ->where('p.deleted IS NULL')
             ->andWhere('pL.language = :language')
-            ->orderBy('p.position', 'ASC')
             ->setParameter('language', 'FR');
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
@@ -413,7 +414,8 @@ class ProductController extends AbstractController
         $form1->handleRequest($request);
         $form2->handleRequest($request);
 
-        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+//        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted()) {
 
             $product = $form1->getData();
 
@@ -495,7 +497,9 @@ class ProductController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_product_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**
@@ -621,7 +625,8 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
             $productLabel = $form->getData();
             $productLabel->setDateUpdate(new \DateTime);

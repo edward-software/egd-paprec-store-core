@@ -448,7 +448,9 @@ class RangeController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->redirectToRoute('paprec_range_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**
