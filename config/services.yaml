@@ -28,8 +28,8 @@ parameters:
     paprec.agency.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
     paprec.other_need.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
     paprec.custom_area.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
-    paprec.php_path: "%env(EGD_PHP_PATH)%"
-    paprec.project_path: "%env(EGD_PROJECT_PATH)%"
+    paprec.php_path: "%env(PAPREC_PHP_PATH)%"
+    paprec.project_path: "%env(PAPREC_PROJECT_PATH)%"
 
     paprec.product.catalog:
         - REGULAR

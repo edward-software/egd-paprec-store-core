@@ -4,6 +4,10 @@ Public:
 
     Navbar:
         Home: Accueil
+        Link1: Définition du besoin
+        Link2: Choix des produits
+        Link3: Formulaire de contact
+        Link4: Validation demande
         Menu1:
             Title: Type de destruction
             SubMenu1: Destruction confidentielle documents
