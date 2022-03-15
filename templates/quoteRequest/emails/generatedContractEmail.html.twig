@@ -29,9 +29,9 @@
 {% endif %} {{ quoteRequest.firstName }} {{ quoteRequest.lastName }},<br><br>
 
 {{ 'Commercial.GeneratedContractEmail.Message1'| trans({}, "messages", locale) }}
-<br><br>
-{{ 'Commercial.GeneratedContractEmail.MessageFile'| trans({}, "messages", locale) }} :
 {% if quoteRequest.quoteRequestFiles is not empty %}
+    <br><br>
+    {{ 'Commercial.GeneratedContractEmail.MessageFile'| trans({}, "messages", locale) }} :
     {% for quoteRequestFile in quoteRequest.quoteRequestFiles %}
         {{ quoteRequestFile.originalFileName }}
         {% if not loop.last %}
