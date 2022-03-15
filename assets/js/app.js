@@ -1,10 +1,10 @@
 'use strict';
 
-import '../scss/global.scss';
+import '../../templates/public/scss/global.scss';
 
 global.$ = global.jQuery = require('jquery');
-import '../js/plugins/egd-datatable';
-import '../js/plugins/egd-datatable-locales';
+import './plugins/egd-datatable';
+import './plugins/egd-datatable-locales';
 import 'datatables.net';
 import 'datatables.net-buttons';
 import 'datatables.net-buttons-bs4';

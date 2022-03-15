@@ -49,7 +49,6 @@ class Range
      * @var boolean
      *
      * @ORM\Column(name="isEnabled", type="boolean")
-     * @Assert\NotBlank()
      */
     private $isEnabled;
 
