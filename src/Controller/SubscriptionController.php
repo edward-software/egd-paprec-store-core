@@ -231,8 +231,8 @@ class SubscriptionController extends AbstractController
         /**
          * TODO problème avec la clé du captcha
          */
-        if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
-//        if ($form->isSubmitted() && $form->isValid()) {
+//        if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequest = $form->getData();
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
