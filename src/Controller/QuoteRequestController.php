@@ -811,6 +811,16 @@ class QuoteRequestController extends AbstractController
          * On commence par pdf générés (seulement ceux générés dans le BO  pour éviter de supprimer un PDF en cours d'envoi pour un utilisateur
          */
         $pdfFolder = $this->getParameter('paprec.data_tmp_directory');
+
+        /**
+         * Si le dossier n'existe pas, on le créé
+         */
+        if(!is_dir($pdfFolder)) {
+            if (!mkdir($pdfFolder, 0777, true)) {
+                return false;
+            }
+        }
+
         $finder = new Finder();
 
         $finder->files()->in($pdfFolder);

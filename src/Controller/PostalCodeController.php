@@ -250,19 +250,20 @@ class PostalCodeController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
             $postalCode = $form->getData();
 
             $postalCode->setRentalRate($this->numberManager->normalize15($postalCode->getRentalRate()));
 
-            $postalCode->setCbrRegTransportRate($this->numberManager->denormalize15($postalCode->getCbrRegTransportRate()));
-            $postalCode->setCbrPonctTransportRate($this->numberManager->denormalize15($postalCode->getCbrPonctTransportRate()));
-            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsRegTransportRate()));
-            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->denormalize15($postalCode->getVlPlCfsPonctTransportRate()));
-            $postalCode->setVlPlTransportRate($this->numberManager->denormalize15($postalCode->getVlPlTransportRate()));
-            $postalCode->setBomTransportRate($this->numberManager->denormalize15($postalCode->getBomTransportRate()));
-            $postalCode->setPlPonctTransportRate($this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()));
+            $postalCode->setCbrRegTransportRate($this->numberManager->normalize15($postalCode->getCbrRegTransportRate()));
+            $postalCode->setCbrPonctTransportRate($this->numberManager->normalize15($postalCode->getCbrPonctTransportRate()));
+            $postalCode->setVlPlCfsRegTransportRate($this->numberManager->normalize15($postalCode->getVlPlCfsRegTransportRate()));
+            $postalCode->setVlPlCfsPonctTransportRate($this->numberManager->normalize15($postalCode->getVlPlCfsPonctTransportRate()));
+            $postalCode->setVlPlTransportRate($this->numberManager->normalize15($postalCode->getVlPlTransportRate()));
+            $postalCode->setBomTransportRate($this->numberManager->normalize15($postalCode->getBomTransportRate()));
+            $postalCode->setPlPonctTransportRate($this->numberManager->normalize15($postalCode->getPlPonctTransportRate()));
+            $postalCode->setZone(1);
 
 //            $postalCode->setCBroyeurTransportRate($this->numberManager->normalize15($postalCode->getCBroyeurTransportRate()));
 //            $postalCode->setFourgonPLTransportRate($this->numberManager->normalize15($postalCode->getFourgonPLTransportRate()));
