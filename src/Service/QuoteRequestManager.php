@@ -605,9 +605,9 @@ class QuoteRequestManager
                 return false;
             }
 
-            if (!$quoteRequest->getPostalCode()) {
-                return false;
-            }
+//            if (!$quoteRequest->getPostalCode()) {
+//                return false;
+//            }
 
             $locale = 'FR';
 
@@ -624,7 +624,7 @@ class QuoteRequestManager
                             'quoteRequest' => $quoteRequest,
                             'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                             'locale' => strtolower($locale),
-                            'salesman' => $quoteRequest->getPostalCode()->getUserInCharge()
+//                            'salesman' => $quoteRequest->getPostalCode()->getUserInCharge()
                         )
                     ),
                     'text/html'
