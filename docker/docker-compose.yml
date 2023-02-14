@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+    app_store_core_paprec:
+        build: .
+        container_name: store-core-paprec-app
+        volumes:
+            - ./php-ini-overrides.ini:/usr/local/etc/php/conf.d/php-ini-overrides.ini
+            - ../.:/var/www
+            - ../../egd-paprec-docker/logs/paprec-store-core/app:/var/www/var/log
+            - ../../egd-paprec-docker/logs/paprec-store-core/apache2/:/var/log/apache2
+        restart: always
+        networks:
+            - local
