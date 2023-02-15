@@ -179,9 +179,9 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="nickName", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nickname", type="string", length=255, nullable=true)
      */
-    private $nickName;
+    private $nickname;
 
     /**
      * #################################
@@ -632,17 +632,17 @@ class User implements UserInterface
     /**
      * @return string|null
      */
-    public function getNickName(): ?string
+    public function getNickname(): ?string
     {
-        return $this->nickName;
+        return $this->nickname;
     }
 
     /**
-     * @param string $firstName
+     * @param string $nickname
      */
-    public function setNickName(string $nickName): void
+    public function setNickname(string $nickname): void
     {
-        $this->nickName = $nickName;
+        $this->nickname = $nickname;
     }
 
 }

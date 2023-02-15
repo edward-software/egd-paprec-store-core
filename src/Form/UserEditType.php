@@ -31,6 +31,7 @@ class UserEditType extends AbstractType
             ->add('companyName', TextType::class)
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
+            ->add('nickname', TextType::class)
             ->add('email', EmailType::class, array(
                 "required" => true
             ))

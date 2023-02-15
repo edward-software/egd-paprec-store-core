@@ -68,6 +68,13 @@
                                             {{ form_errors(form.lastName) }}
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'User.User.Nickname'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.nickname, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.nickname) }}
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <div class="form-label">{{ 'User.User.Email'|trans }}</div>
