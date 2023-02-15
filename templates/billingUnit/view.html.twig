@@ -1,0 +1,116 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.BillingUnit.View'|trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.BillingUnit.BillingUnits'|trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block main_content %}
+
+
+    <div class="col-md-12">
+        <!-- CARD -->
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <i class="fa fa-xs fa-folder"></i> {{ 'Catalog.BillingUnit.View'|trans({}, "messages", app.request.locale) }}
+                </h4>
+                <div class="float-right">
+                    <a href="{{ path("paprec_billing_unit_edit", {id: billingUnit.id}) }}"
+                       class="btn btn-sm btn-warning"><i
+                                class="fa fa-xs fa-edit"></i> {{ 'Catalog.BillingUnit.Edit'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                    <a id="catalogBillingUnitRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
+                                class="fa fa-xs fa-trash"></i> {{ 'Catalog.BillingUnit.Remove'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+                <div class="float-left">
+                    <a href="{{ path('paprec_billing_unit_index') }}" class="btn btn-sm btn-default"><i
+                                class="fa fa-xs fa-chevron-left"></i> {{ 'Catalog.BillingUnit.List'|trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.Information'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.BillingUnit.Code'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ billingUnit.code }}
+                                </label>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'Catalog.BillingUnit.Name'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ billingUnit.name }}
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.System-information'|trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ billingUnit.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ billingUnit.dateUpdate is empty ? "" : billingUnit.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('#catalogBillingUnitRemoveButton').on('click', function () {
+
+                var url = "{{ path("paprec_billing_unit_remove", {id: billingUnit.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans({}, "messages", app.request.locale) }}",
+                    text: "{{ 'General.Confirm-remove'|trans({}, "messages", app.request.locale) }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans({}, "messages", app.request.locale) }}",
+                    cancelButtonText: "{{ 'General.No'|trans({}, "messages", app.request.locale) }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+        });
+    </script>
+{% endblock %}

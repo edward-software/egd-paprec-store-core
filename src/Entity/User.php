@@ -177,6 +177,13 @@ class User implements UserInterface
     private $jobTitle;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nickName", type="string", length=255, nullable=true)
+     */
+    private $nickName;
+
+    /**
      * #################################
      *              Relations
      * #################################
@@ -620,6 +627,22 @@ class User implements UserInterface
     {
         $this->subordinates = $subordinates;
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNickName(): ?string
+    {
+        return $this->nickName;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setNickName(string $nickName): void
+    {
+        $this->nickName = $nickName;
     }
 
 }

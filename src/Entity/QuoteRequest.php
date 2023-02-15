@@ -348,6 +348,13 @@ class QuoteRequest
      */
     private $startDate;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="serviceEndDate", type="datetime", nullable=true)
+     */
+    private $serviceEndDate;
+
 
     /**
      * #################################
@@ -1464,6 +1471,18 @@ class QuoteRequest
     public function setStartDate($startDate): self
     {
         $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    public function getServiceEndDate(): ?\DateTime
+    {
+        return $this->serviceEndDate;
+    }
+
+    public function setServiceEndDate($serviceEndDate): self
+    {
+        $this->serviceEndDate = $serviceEndDate;
 
         return $this;
     }

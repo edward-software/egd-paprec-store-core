@@ -177,6 +177,43 @@ class Product
      */
     private $position;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="wasteClassification", type="string", length=10)
+     * @Assert\NotBlank()
+     */
+    private $wasteClassification;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $code;
+
+//    /**
+//     * @var string
+//     *
+//     * @ORM\Column(name="billingUnit", type="string", length=255)
+//     * @Assert\NotBlank()
+//     */
+//    private $billingUnit;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="materialUnitPrice", type="integer", nullable=true)
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
+     *     match=true,
+     *     message="la valeur doit être un nombre entre 0 et 999 999,99 ('.' autorisé)"
+     * )
+     */
+    private $materialUnitPrice;
+
 
     /**
      * #################################
@@ -217,6 +254,12 @@ class Product
      * @ORM\JoinColumn(name="rangeId")
      */
     private $range;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\BillingUnit", inversedBy="products")
+     * @ORM\JoinColumn(name="billingUnitId")
+     */
+    private $billingUnit;
 
 
     /**
@@ -796,4 +839,97 @@ class Product
         $this->range = $range;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingUnit()
+    {
+        return $this->billingUnit;
+    }
+
+    /**
+     * @param mixed $billingUnit
+     * @return Product
+     */
+    public function setBillingUnit($billingUnit): self
+    {
+        $this->billingUnit = $billingUnit;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWasteClassification()
+    {
+        return $this->wasteClassification;
+    }
+
+    /**
+     * @param mixed $wasteClassification
+     * @return Product
+     */
+    public function setWasteClassification($wasteClassification): self
+    {
+        $this->wasteClassification = $wasteClassification;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param mixed $code
+     * @return Product
+     */
+    public function setCode($code): self
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getBillingUnit()
+//    {
+//        return $this->billingUnit;
+//    }
+//
+//    /**
+//     * @param mixed $billingUnit
+//     * @return Product
+//     */
+//    public function setBillingUnit($billingUnit): self
+//    {
+//        $this->billingUnit = $billingUnit;
+//        return $this;
+//    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaterialUnitPrice()
+    {
+        return $this->materialUnitPrice;
+    }
+
+    /**
+     * @param mixed $materialUnitPrice
+     * @return Product
+     */
+    public function setMaterialUnitPrice($materialUnitPrice): self
+    {
+        $this->materialUnitPrice = $materialUnitPrice;
+        return $this;
+    }
+
+
+
 }

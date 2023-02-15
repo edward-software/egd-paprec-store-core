@@ -2,11 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\Agency;
+use App\Entity\BillingUnit;
 use App\Entity\Product;
 use App\Entity\Range;
-use App\Repository\AgencyRepository;
-use App\Repository\ProductRepository;
+use App\Repository\BillingUnitRepository;
 use App\Repository\RangeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -124,7 +123,24 @@ class ProductType extends AbstractType
                 'choice_label' => 'rangeLabels[0].name',
                 'placeholder' => '',
                 'empty_data' => null,
-            ));
+            ))
+            ->add('billingUnit', EntityType::class, array(
+                'class' => BillingUnit::class,
+                'query_builder' => function (BillingUnitRepository $er) {
+                    return $er->createQueryBuilder('bU')
+                        ->select(array('bU'))
+                        ->where('bU.deleted IS NULL');
+                },
+                'choice_label' => function ($billingUnit) {
+                    return $billingUnit->getCode() . ' - ' .$billingUnit->getName();
+                },
+                'placeholder' => '',
+                'empty_data' => null,
+            ))
+            ->add('wasteClassification', TextType::class)
+            ->add('code', TextType::class)
+            ->add('materialUnitPrice', TextType::class)
+        ;
     }
 
     /**

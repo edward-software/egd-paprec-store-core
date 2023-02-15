@@ -138,6 +138,32 @@
                                     </label>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.WasteClassification'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ product.wasteClassification }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Code'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ product.code }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.BillingUnit'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if product.billingUnit %}
+                                            {{ product.billingUnit.code }} - {{ product.billingUnit.name }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.MaterialUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ product.materialUnitPrice }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.IsEnabled.IsEnabled'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
                                         {% if product.IsEnabled == 1 %}{{ 'Catalog.Product.IsEnabled.Yes'| trans({}, "messages", app.request.locale) }}{% else %}{{ 'Catalog.Product.IsEnabled.No'| trans({}, "messages", app.request.locale) }}{% endif %}

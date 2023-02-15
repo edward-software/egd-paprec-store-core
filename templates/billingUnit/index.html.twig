@@ -1,0 +1,114 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.BillingUnit.BillingUnits'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.BillingUnit.BillingUnits'|trans }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-list"></i> {{ 'Catalog.BillingUnit.List'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        <a href="{{ path('paprec_billing_unit_add') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.BillingUnit.Add'|trans }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table id="billingUnitsListDatatable" class="table table-striped table-bordered table-hover"
+                           cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ 'Catalog.BillingUnit.Code'|trans }}</th>
+                            <th>{{ 'Catalog.BillingUnit.Name'|trans }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+
+            $('#billingUnitsListDatatable').EgdDatatable({
+                url: "{{ path('paprec_billing_unit_loadList') }}",
+                columns: [
+                    {"data": "id"},
+                    {"data": "code"},
+                    {"data": "name"},
+                    {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
+                ],
+                rowDblclick: {
+                    type: 'open',
+                    url: "{{ path('paprec_billing_unit_view', {id: '__rowId__'}) }}"
+                },
+                buttons: [
+                    {
+                        label: '{{ "General.Remove"|trans }}',
+                        type: 'ajaxMany',
+                        url: "{{ path("paprec_billing_unit_removeMany", {ids: '__rowIds__', json: 1}) }}",
+                        confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
+                        className: 'btn-sm',
+                        buttons:
+                            {
+                                cancel: {
+                                    label: '{{ 'General.Cancel'|trans|e('js') }}'
+                                },
+                                confirm: {
+                                    label: '{{ 'General.Confirm'|trans|e('js') }}'
+                                }
+                            }
+                    }
+                ],
+                rowButtons: [
+                    {
+                        label: "{{ 'General.View'|trans }}",
+                        className: "btn btn-primary btn-sm",
+                        icon: "fa fa-eye",
+                        url: "{{ path('paprec_billing_unit_view', {id: '__rowId__'}) }}"
+                    },
+                    {
+                        label: "{{ 'General.Edit'|trans }}",
+                        className: "btn btn-warning btn-sm",
+                        icon: "fa fa-edit",
+                        url: "{{ path('paprec_billing_unit_edit', {id: '__rowId__'}) }}"
+                    },
+                    {
+                        label: '{{ "General.Remove"|trans }}',
+                        type: 'ajax',
+                        url: "{{ path("paprec_billing_unit_removeMany", {ids: '__rowId__', json: 1}) }}",
+                        confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
+                        className: 'btn btn-danger btn-sm',
+                        icon: "fa fa-times"
+                    }
+
+                ]
+            });
+
+        });
+    </script>
+{% endblock %}
