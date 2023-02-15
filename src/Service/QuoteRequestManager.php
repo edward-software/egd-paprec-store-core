@@ -285,36 +285,44 @@ class QuoteRequestManager
              */
             if ($quoteRequest->getPostalCode()) {
                 $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
-                switch($quoteRequestLine->getProduct()->getTransportType()) {
-                    case 'CBR_REG' : {
+                switch ($quoteRequestLine->getProduct()->getTransportType()) {
+                    case 'CBR_REG' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
                         break;
                     }
-                    case 'CBR_PONCT' : {
+                    case 'CBR_PONCT' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
                         break;
                     }
-                    case 'VL_PL_CFS_REG' : {
+                    case 'VL_PL_CFS_REG' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
                         break;
                     }
-                    case 'VL_PL_CFS_PONCT' : {
+                    case 'VL_PL_CFS_PONCT' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
                         break;
                     }
-                    case 'VL_PL' : {
+                    case 'VL_PL' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
                         break;
                     }
-                    case 'BOM' : {
+                    case 'BOM' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
                         break;
                     }
-                    case 'PL_PONCT' : {
+                    case 'PL_PONCT' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
                         break;
                     }
-                    default : {
+                    default :
+                    {
                         $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
                         break;
                     }
@@ -372,8 +380,15 @@ class QuoteRequestManager
      * @param $qtty
      * @throws Exception
      */
-    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequency, $frequencyTimes, $frequencyInterval, $doFlush = true)
-    {
+    public function addLineFromCart(
+        QuoteRequest $quoteRequest,
+        $productId,
+        $qtty,
+        $frequency,
+        $frequencyTimes,
+        $frequencyInterval,
+        $doFlush = true
+    ) {
         try {
             $product = $this->productManager->get($productId);
             $quoteRequestLine = new QuoteRequestLine();
@@ -433,7 +448,7 @@ class QuoteRequestManager
             $quoteRequestLine->setEditableTreatmentUnitPrice($newTreatmentUnitPrice);
             $quoteRequestLine->setEditableTraceabilityUnitPrice($newTraceabilityUnitPrice);
 
-            $quoteRequest->setOverallDiscount( $this->numberManager->normalize($overallDiscount));
+            $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
         } else {
 
             $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getEditableTransportUnitPrice());
@@ -449,36 +464,44 @@ class QuoteRequestManager
 
         if ($quoteRequest->getPostalCode()) {
             $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
-            switch($quoteRequestLine->getProduct()->getTransportType()) {
-                case 'CBR_REG' : {
+            switch ($quoteRequestLine->getProduct()->getTransportType()) {
+                case 'CBR_REG' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
                     break;
                 }
-                case 'CBR_PONCT' : {
+                case 'CBR_PONCT' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
                     break;
                 }
-                case 'VL_PL_CFS_REG' : {
+                case 'VL_PL_CFS_REG' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
                     break;
                 }
-                case 'VL_PL_CFS_PONCT' : {
+                case 'VL_PL_CFS_PONCT' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
                     break;
                 }
-                case 'VL_PL' : {
+                case 'VL_PL' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
                     break;
                 }
-                case 'BOM' : {
+                case 'BOM' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
                     break;
                 }
-                case 'PL_PONCT' : {
+                case 'PL_PONCT' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
                     break;
                 }
-                default : {
+                default :
+                {
                     $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
                     break;
                 }
@@ -967,7 +990,8 @@ class QuoteRequestManager
                     $quoteRequestFilePath = $quoteRequestFileDirectory . '/' . $quoteRequestFile->getSystemName();
 
                     if (file_exists($quoteRequestFilePath)) {
-                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath), $quoteRequestFile->getOriginalFileName(), $quoteRequestFile->getMimeType()));
+                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath),
+                            $quoteRequestFile->getOriginalFileName(), $quoteRequestFile->getMimeType()));
                     }
 
                 }
@@ -1110,8 +1134,14 @@ class QuoteRequestManager
 
             $templateDir = 'public/PDF';
 
-            $snappy->setOption('header-html', $this->container->get('templating')->render($templateDir . '/header.html.twig'));
-            $snappy->setOption('footer-html', $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
+            if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/' . strtolower($quoteRequest->getPostalCode()->getAgency()->getName()))) {
+                $templateDir .= '/' . strtolower($quoteRequest->getPostalCode()->getAgency()->getName());
+            }
+
+            $snappy->setOption('header-html',
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html',
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
