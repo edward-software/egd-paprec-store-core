@@ -305,6 +305,13 @@
                                             {{ form_errors(form.salesmanComment) }}
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.ServiceEndDate'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form.serviceEndDate, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.serviceEndDate) }}
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>

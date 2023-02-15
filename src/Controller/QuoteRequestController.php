@@ -330,6 +330,7 @@ class QuoteRequestController extends AbstractController
             'Reference',
             'User in charge',
             'Postal Code',
+            'Service End Date',
         ];
 
         $xAxe = 'A';
@@ -374,6 +375,7 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->getReference(),
                 $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
                 $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
+                $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : '',
             ];
 
             $xAxe = 'A';

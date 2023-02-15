@@ -164,6 +164,9 @@ class QuoteRequestType extends AbstractType
 //            ))
             ->add('startDate', DateType::class, array(
                 'widget' => 'single_text'
+            ))
+            ->add('serviceEndDate', DateType::class, array(
+                'widget' => 'single_text'
             ));
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
