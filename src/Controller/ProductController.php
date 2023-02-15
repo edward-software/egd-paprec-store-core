@@ -9,6 +9,7 @@ use App\Form\PictureProductType;
 use App\Form\ProductLabelType;
 use App\Form\ProductType;
 use App\Service\NumberManager;
+use App\Service\PictureManager;
 use App\Service\ProductLabelManager;
 use App\Service\ProductManager;
 use App\Tools\DataTable;
@@ -39,19 +40,22 @@ class ProductController extends AbstractController
     private $productManager;
     private $productLabelManager;
     private $translator;
+    private $pictureManager;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         NumberManager $numberManager,
         ProductManager $productManager,
-        ProductLabelManager $productLabelManager
+        ProductLabelManager $productLabelManager,
+        PictureManager $pictureManager
     ) {
         $this->em = $em;
         $this->numberManager = $numberManager;
         $this->productManager = $productManager;
         $this->productLabelManager = $productLabelManager;
         $this->translator = $translator;
+        $this->pictureManager = $pictureManager;
     }
 
     /**
@@ -737,13 +741,12 @@ class ProductController extends AbstractController
      */
     public function editPictureAction(Request $request, Product $product)
     {
-        $pictureManager = $this->get('paprec_catalog.picture_manager');
 
         $pictureID = $request->get('pictureID');
-        $picture = $pictureManager->get($pictureID);
+        $picture = $this->pictureManager->get($pictureID);
         $oldPath = $picture->getPath();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         foreach ($this->getParameter('paprec_types_picture') as $type) {
             $types[$type] = $type;
