@@ -119,6 +119,13 @@ class SubscriptionController extends AbstractController
                 ));
             }
 
+            if ($type === 'MATERIAL') {
+                return $this->redirectToRoute('paprec_public_material_catalog_index', array(
+                    'locale' => 'fr',
+                    'cartUuid' => $cart->getId()
+                ));
+            }
+
             return $this->redirectToRoute('paprec_public_regular_catalog_index', array(
                 'locale' => 'fr',
                 'cartUuid' => $cart->getId()
@@ -133,6 +140,7 @@ class SubscriptionController extends AbstractController
     /**
      * @Route("/{locale}/regulier/catalogue/{cartUuid}", defaults={"cartUuid"=null}, name="paprec_public_regular_catalog_index")
      * @Route("/{locale}/ponctuel/catalogue/{cartUuid}", defaults={"cartUuid"=null}, name="paprec_public_ponctual_catalog_index")
+     * @Route("/{locale}/materiel/catalogue/{cartUuid}", defaults={"cartUuid"=null}, name="paprec_public_material_catalog_index")
      * @param Request $request
      * @param $locale
      * @param $cartUuid
@@ -173,6 +181,15 @@ class SubscriptionController extends AbstractController
 
 
             return $this->render('public/catalog-regular.html.twig', array(
+                'locale' => $locale,
+                'cart' => $cart,
+                'ranges' => $ranges,
+                'otherNeeds' => $otherNeeds
+            ));
+        } elseif ($cart->getType() === 'MATERIAL') {
+
+
+            return $this->render('public/catalog-material.html.twig', array(
                 'locale' => $locale,
                 'cart' => $cart,
                 'ranges' => $ranges,
@@ -286,7 +303,8 @@ class SubscriptionController extends AbstractController
              */
             if ($cart->getContent() !== null) {
                 foreach ($cart->getContent() as $item) {
-                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'], $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
+                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'],
+                        $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
                 }
             }
             $this->em->flush();
@@ -474,7 +492,8 @@ class SubscriptionController extends AbstractController
      * @param Request $request
      * @param $locale
      */
-    public function confirmContactRequestAction(Request $request, $locale, $cartUuid) {
+    public function confirmContactRequestAction(Request $request, $locale, $cartUuid)
+    {
         return $this->render('public/confirm-contact-request.html.twig', array(
             'locale' => $locale
         ));

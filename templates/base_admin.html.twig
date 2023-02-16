@@ -91,6 +91,10 @@
                                         <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_range'|length) == 'paprec_range' %} active{% endif %}"
                                            href="{{ path('paprec_range_index') }}">{{ 'Catalog.Range.List'|trans }}</a>
                                     {% endif %}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_follow_up'|length) == 'paprec_follow_up' %} active{% endif %}"
+                                           href="{{ path('paprec_follow_up_index') }}">{{ 'Catalog.FollowUp.List'|trans }}</a>
+                                    {% endif %}
                                 </div>
                             </div>
 

@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\FollowUp;
 use App\Entity\Picture;
 use App\Entity\Product;
 use App\Entity\ProductLabel;
+use App\Form\FollowUpType;
 use App\Form\PictureProductType;
 use App\Form\ProductLabelType;
 use App\Form\ProductType;
@@ -133,6 +135,63 @@ class ProductController extends AbstractController
         }
 
         $dt['data'] = $tmp;
+
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
+        $return['resultCode'] = 1;
+        $return['resultDescription'] = "success";
+
+        return new JsonResponse($return);
+
+    }
+
+    /**
+     * @Route("/{id}/followUpLoadList", name="paprec_product_follow_up_loadList")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function followUpLoadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator, Product $product)
+    {
+        $return = [];
+
+        $filters = $request->get('filters');
+        $pageSize = $request->get('length');
+        $start = $request->get('start');
+        $orders = $request->get('order');
+        $search = $request->get('search');
+        $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
+
+        $cols['id'] = array('label' => 'id', 'id' => 'fU.id', 'method' => array('getId'));
+        $cols['status'] = array('label' => 'status', 'id' => 'fU.status', 'method' => array('getStatus'));
+        $cols['content'] = array('label' => 'content', 'id' => 'fU.content', 'method' => array('getContent'));
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(FollowUp::class)->createQueryBuilder('fU');
+
+        $queryBuilder->select(array('fU'))
+            ->select(array('fU', 'p'))
+            ->where('fU.deleted is NULL')
+            ->leftJoin('fU.product', 'p')
+            ->andWhere('p.deleted is NULL')
+            ->andWhere('p.id = :productId')
+            ->setParameter('productId', $product->getId())
+        ;
+
+        if (is_array($search) && isset($search['value']) && $search['value'] != '') {
+            if (substr($search['value'], 0, 1) === '#') {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->eq('fU.id', '?1')
+                ))->setParameter(1, substr($search['value'], 1));
+            } else {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->like('fU.content', '?1'),
+                    $queryBuilder->expr()->like('fU.status', '?1')
+                ))->setParameter(1, '%' . $search['value'] . '%');
+            }
+        }
+
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
 
         $return['recordsTotal'] = $dt['recordsTotal'];
         $return['recordsFiltered'] = $dt['recordsTotal'];
@@ -471,6 +530,46 @@ class ProductController extends AbstractController
         $this->em->flush();
 
         return $this->redirectToRoute('paprec_product_index');
+    }
+
+    /**
+     * @Route("/{id}/addFollowUp", name="paprec_product_follow_up_add")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addFollowUpAction(Request $request, Product $product)
+    {
+        $user = $this->getUser();
+
+        $followUp = new FollowUp();
+        $followUp->setProduct($product);
+
+        $form = $this->createForm(FollowUpType::class, $followUp, [
+            'productId' => $product->getId()
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $followUp = $form->getData();
+
+            $followUp->setDateCreation(new \DateTime());
+            $followUp->setUserCreation($user);
+            $followUp->setProduct($product);
+
+            $this->em->persist($followUp);
+            $this->em->flush();
+
+            return $this->redirectToRoute('paprec_product_view', array(
+                'id' => $product->getId()
+            ));
+
+        }
+
+        return $this->render('followUp/add.html.twig', array(
+            'form' => $form->createView(),
+            'product' => $product
+        ));
     }
 
     /**

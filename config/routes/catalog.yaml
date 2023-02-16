@@ -33,3 +33,8 @@ catalog_billing_unit:
     resource: App\Controller\BillingUnitController
     type:     annotation
     prefix:   billingUnit
+
+catalog_follow_up:
+    resource: App\Controller\FollowUpController
+    type:     annotation
+    prefix:   followUp

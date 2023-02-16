@@ -1,0 +1,122 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+  {{ 'Catalog.FollowUp.Edit'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content_title %}
+  {{ 'Catalog.FollowUp.Agencies'|trans }}
+{% endblock %}
+
+{% block main_content %}
+
+  <form id="catalogFollowUpForm" action="" method="post">
+
+    <div class="col-md-12">
+      <!-- BOX -->
+      <div class="card">
+        <div class="card-header">
+          <h4>
+            <i class="fa fa-xs fa-pencil-alt"></i> {{ 'Catalog.FollowUp.Edit'|trans }}
+            #{{ followUp.id|formatId(6) }}
+          </h4>
+          <div class="float-right">
+
+            <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-followUp-save-button"><i
+                      class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-followUp-cancel-button"><i
+                      class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="col-md-7">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <div class="form-label">{{ 'Catalog.FollowUp.Date'|trans }}</div>
+                  <div class="form-content">
+                    {{ form_widget(form.date, {'attr': {'class': 'form-control datepicker'}}) }}
+                    {{ form_errors(form.date) }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-label">{{ 'Catalog.FollowUp.Status.Status'|trans }}</div>
+                  <div class="form-content">
+                    {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.status) }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-label">{{ 'Catalog.FollowUp.Content'|trans }}</div>
+                  <div class="form-content">
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.content) }}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="form-label">{{ 'Catalog.FollowUp.Product'|trans }}</div>
+                  <div class="form-content">
+                    {{ form_widget(form.product, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.product) }}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            {{ form_rest(form) }}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="float-right">
+            <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-followUp-save-button"><i
+                      class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+            <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-followUp-cancel-button"><i
+                      class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+  <script>
+    $(function () {
+
+      $('.catalog-followUp-save-button').on('click', function () {
+
+        $('#catalogFollowUpForm').submit();
+
+      });
+
+
+      $('.catalog-followUp-cancel-button').on('click', function () {
+
+        var url = "{{ path("paprec_follow_up_view", {id: followUp.id}) }}";
+
+        Swal.fire({
+          title: "{{ 'General.Confirm'|trans }}",
+          text: "{{ 'General.Confirm-cancel'|trans }}",
+          showCancelButton: true,
+          confirmButtonText: "{{ 'General.Yes'|trans }}",
+          cancelButtonText: "{{ 'General.No'|trans }}"
+        }).then(function (result) {
+          if (result.value) {
+            $(location).attr('href', url);
+          }
+        });
+      });
+
+    });
+  </script>
+{% endblock %}
