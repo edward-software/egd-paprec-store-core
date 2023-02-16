@@ -82,7 +82,6 @@ class Product
      * @var int
      *
      * @ORM\Column(name="rentalUnitPrice", type="integer", nullable=true)
-     * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
      *     match=true,
@@ -95,7 +94,6 @@ class Product
      * @var int
      *
      * @ORM\Column(name="transportUnitPrice", type="integer", nullable=true)
-     * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
      *     match=true,
@@ -108,7 +106,6 @@ class Product
      * @var int
      *
      * @ORM\Column(name="treatmentUnitPrice", type="integer", nullable=true)
-     * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
      *     match=true,
@@ -121,7 +118,6 @@ class Product
      * @var int
      *
      * @ORM\Column(name="traceabilityUnitPrice", type="integer", nullable=true)
-     * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
      *     match=true,
@@ -149,24 +145,21 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="frequency", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="frequency", type="string", length=255, nullable=true)
      */
     private $frequency;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="frequencyTimes", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="frequencyTimes", type="string", length=255, nullable=true)
      */
     private $frequencyTimes;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="frequencyInterval", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="frequencyInterval", type="string", length=255, nullable=true)
      */
     private $frequencyInterval;
 

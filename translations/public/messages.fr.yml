@@ -57,6 +57,13 @@ Public:
             Message3: 'Transport avec des véhicules spéciaux'
             Message4: 'Destruction des données'
             Message5: 'Nous offrons également un service complet allant du déblaiement à la destruction finale (emballage, tri, destruction par broyage).'
+        Solution3:
+            Title: 'Solution 3 : Matériel'
+            Message1: 'à faire'
+            Message2: "à faire"
+            Message3: 'à faire'
+            Message4: 'à faire'
+            Message5: 'à faire'
 
     Catalog:
         BreadcrumbTitle: Offres de services

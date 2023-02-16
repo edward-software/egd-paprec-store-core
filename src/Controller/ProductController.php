@@ -9,6 +9,7 @@ use App\Entity\ProductLabel;
 use App\Form\FollowUpType;
 use App\Form\PictureProductType;
 use App\Form\ProductLabelType;
+use App\Form\ProductMaterialType;
 use App\Form\ProductType;
 use App\Service\NumberManager;
 use App\Service\PictureManager;
@@ -431,6 +432,74 @@ class ProductController extends AbstractController
         }
 
         return $this->render('product/add.html.twig', array(
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView()
+        ));
+    }
+
+    /**
+     * @Route("/addMaterial",  name="paprec_product_material_add")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addMaterialAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        $languages = array();
+        foreach ($this->getParameter('paprec_languages') as $language) {
+            $languages[$language] = $language;
+        }
+
+        $transportTypes = array();
+        foreach ($this->getParameter('paprec_transport_types') as $transportType) {
+            $transportTypes[$transportType] = $transportType;
+        }
+        $transportTypes['MATERIAL'] = 'MATERIAL';
+
+        $product = new Product();
+        $productLabel = new ProductLabel();
+
+        $form1 = $this->createForm(ProductMaterialType::class, $product, array(
+            'transportTypes' => $transportTypes
+        ));
+        $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
+            'languages' => $languages,
+            'language' => 'FR'
+        ));
+
+        $form1->handleRequest($request);
+        $form2->handleRequest($request);
+
+        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+
+            $product = $form1->getData();
+
+            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+
+            $product->setDateCreation(new \DateTime);
+            $product->setUserCreation($user);
+
+            $this->em->persist($product);
+            $this->em->flush();
+
+            $productLabel = $form2->getData();
+            $productLabel->setDateCreation(new \DateTime);
+            $productLabel->setUserCreation($user);
+            $productLabel->setProduct($product);
+
+            $this->em->persist($productLabel);
+            $this->em->flush();
+
+            return $this->redirectToRoute('paprec_product_view', array(
+                'id' => $product->getId()
+            ));
+
+        }
+
+        return $this->render('product/addMaterial.html.twig', array(
             'form1' => $form1->createView(),
             'form2' => $form2->createView()
         ));

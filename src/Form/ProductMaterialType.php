@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ProductType extends AbstractType
+class ProductMaterialType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -37,18 +37,6 @@ class ProductType extends AbstractType
                 },
                 "expanded" => true,
             ))
-            ->add('rentalUnitPrice', TextType::class, [
-                "required" => true
-            ])
-            ->add('transportUnitPrice', TextType::class, [
-                "required" => true
-            ])
-            ->add('treatmentUnitPrice', TextType::class, [
-                "required" => true
-            ])
-            ->add('traceabilityUnitPrice', TextType::class, [
-                "required" => true
-            ])
             ->add('position')
             ->add('transportType', ChoiceType::class, array(
                 "choices" => $options['transportTypes'],
@@ -73,52 +61,6 @@ class ProductType extends AbstractType
                 'required' => true,
                 'expanded' => true
             ))
-            ->add('frequency', ChoiceType::class, array(
-                'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                    'Unknown' => 'unknown'
-                ),
-                'empty_data' => 'unknown',
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.Frequency.' . ucfirst($choiceValue);
-                },
-                'required' => true,
-                'expanded' => true
-            ))
-            ->add('frequencyTimes', ChoiceType::class, array(
-                'choices' => array(
-                    '1' => '1',
-                    '2' => '2',
-                    '3' => '3',
-                    '4' => '4',
-                    '5' => '5',
-                    '6' => '6',
-                    '7' => '7',
-                    '8' => '8',
-                    '9' => '9',
-                    '10' => '10',
-                    '11' => '11',
-                    '12' => '12'
-                ),
-                'expanded' => false,
-                'multiple' => false,
-                'required' => true
-            ))
-            ->add('frequencyInterval', ChoiceType::class, array(
-                'choices' => array(
-                    'week' => 'week',
-                    'month' => 'month',
-                    'bimestre' => 'bimestre',
-                    'quarter' => 'quarter'
-                ),
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return ($choiceValue) ? 'General.Frequency.' . ucfirst($choiceValue) : '';
-                },
-                'expanded' => false,
-                'multiple' => false,
-                'required' => true
-            ))
             ->add('range', EntityType::class, array(
                 'class' => Range::class,
                 'query_builder' => function (RangeRepository $er) {
@@ -129,7 +71,7 @@ class ProductType extends AbstractType
                         ->andWhere('rL.language = :language')
                         ->orderBy('r.position', 'ASC')
                         ->setParameter('language', 'FR')
-                        ->andWhere('r.catalog != :catalog')
+                        ->andWhere('r.catalog = :catalog')
                         ->setParameter('catalog', 'MATERIAL');
                 },
                 'choice_label' => 'rangeLabels[0].name',

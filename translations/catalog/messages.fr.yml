@@ -87,6 +87,7 @@ Catalog:
         View: Vue du produit
         Products: Liste des produits
         Add: Ajouter un produit
+        Add-material: Ajouter un matériel
         Edit: Editer un produit
         Remove: Supprimer
         List: Liste des produits
@@ -95,10 +96,15 @@ Catalog:
         Dimensions: Dimensions
         Range: Gamme
         TransportType: Type de transport
+        WasteClassification: Nomenclature déchet
+        Code: Code
+        BillingUnit: Unité de facturation
+        MaterialUnitPrice: Prix de Vente €HT/unité
         Catalog:
             Label: Catalogue
             Regular: Régulier
             Ponctual: Ponctuel
+            Material: Matériel
         Frequency: Fréquence
         PassingFrequency: Fréquence de passage (si régulier)
         FrequencyInterval: Fréquence
@@ -128,6 +134,8 @@ Catalog:
         TransportUnitPrice: PU Transport
         TreatmentUnitPrice: PU Traitement
         TraceabilityUnitPrice: PU Traçabilité
+        FollowUp:
+            Add: Ajouter un suivi
 
     ProductLabel:
         Add: Ajouter une traduction
@@ -221,3 +229,49 @@ Catalog:
         AddPicture: Photo
         Informations: Informations
         System-informations: Informations système
+
+    FollowUp:
+        FollowUps: Liste des suivis
+        View: Vue du suivi
+        Products: Liste des suivis
+        Add: Ajouter un suivi
+        Edit: Editer un suivi
+        Remove: Supprimer
+        List: Liste des suivis
+        Information: Information du suivi
+        Content: Contenu
+        Date: Date
+        Status:
+            Status: Statut
+            Pending: En cours
+        Product:
+            Product: Produit
+            Code: Code
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Export: Exporter les suivis
+        Details: Details du suivi
+
+    FollowUpFile:
+        AddTitle: Ajout d'un fichier joint
+        BtnAddLabel: Ajouter un fichier
+        MaxSize: '(Taille maximale du fichier : 5Mo)'
+        FileListTitle: Liste des fichiers
+        FileNameColumn: Nom
+        FileTypeColumn: Format
+
+    BillingUnit:
+        View: Vue du suivi
+        BillingUnits: Unités de facturation
+        Add: Ajouter une unité de facturation
+        Edit: Modifier l'unité de facturation
+        Remove: Supprimer
+        List: Liste des unités de facturation
+        Code: Code
+        Name: Name
+        Informations: Informations
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Details: Details de l'unité de facturation
