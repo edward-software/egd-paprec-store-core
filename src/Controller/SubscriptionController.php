@@ -427,15 +427,18 @@ class SubscriptionController extends AbstractController
     }
 
     /**
-     * @Route("/{locale}/contact/request/{cartUuid}", name="paprec_public_contact_request_index")
+     * @Route("/{locale}/contact/request", name="paprec_public_contact_request_index")
      *
      * @param Request $request
      * @param $locale
-     * @param $cartUuid
      */
-    public function contactRequestAction(Request $request, $locale, $cartUuid)
+    public function contactRequestAction(Request $request, $locale)
     {
-        $cart = $this->cartManager->get($cartUuid);
+        $cartUuid = $request->get('cartUuid');
+        $cart = null;
+        if ($cartUuid) {
+            $cart = $this->cartManager->get($cartUuid);
+        }
 
         $quoteRequest = $this->quoteRequestManager->add(false);
 
@@ -451,7 +454,11 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
-            $quoteRequest->setType($cart->getType());
+            if ($cart) {
+                $quoteRequest->setType($cart->getType());
+            } else {
+                $quoteRequest->setType('NOT_DEFINED');
+            }
             $quoteRequest->setIsMultisite(false);
             $quoteRequest->setAccess('ground');
 
@@ -475,7 +482,7 @@ class SubscriptionController extends AbstractController
 
             return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
                 'locale' => $locale,
-                'cartUuid' => $cart->getId(),
+                'cartUuid' => $cartUuid
             ));
         }
 
@@ -488,11 +495,11 @@ class SubscriptionController extends AbstractController
     }
 
     /**
-     * @Route("/{locale}/contact/request/confirm/{cartUuid}", name="paprec_public_confirm_contact_request_index")
+     * @Route("/{locale}/contact/request/confirm", name="paprec_public_confirm_contact_request_index")
      * @param Request $request
      * @param $locale
      */
-    public function confirmContactRequestAction(Request $request, $locale, $cartUuid)
+    public function confirmContactRequestAction(Request $request, $locale)
     {
         return $this->render('public/confirm-contact-request.html.twig', array(
             'locale' => $locale

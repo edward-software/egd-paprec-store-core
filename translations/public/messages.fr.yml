@@ -4,10 +4,10 @@ Public:
 
     Navbar:
         Home: Accueil
-        Link1: Définition du besoin
+        Link1: Construisez votre solution
         Link2: Choix des produits
         Link3: Formulaire de contact
-        Link4: Validation demande
+        Link4: Demande validée
         Menu1:
             Title: Type de destruction
             SubMenu1: Destruction confidentielle documents
@@ -41,24 +41,20 @@ Public:
     Type:
         BreadcrumbTitle: Définition des besoins
         BreadcrumbContent: Définition des besoins
-        Title: La société PRIVACIA assure la gestion de vos déchets et la destruction de vos documents et supports de données confidentiels dans toute la France pour des opérations régulières mais également ponctuelles
+        Title: La Corbeille Bleue assure la gestion de vos déchets et la destruction de vos documents confidentiels dans toute la France pour des opérations régulières ou ponctuelles
         Solution1:
-            Title: 'Solution 1 : SERVICE REGULIER'
-            Message1: 'Notre offre de services comprend entre autres :'
-            Message2: 'Mise à disposition de conteneurs de collecte verrouillables'
-            Message3: 'Remplacement ou vidange sur place à la demande ou de manière régulière'
-            Message4: 'Transport avec des véhicules spéciaux'
-            Message5: 'Destruction des données'
-            Message6: 'Nous offrons un service régulier qui peut être adapté avec souplesse en cours de contrat.'
+            Title: 'OPERATIONS REGULIERES'
+            Message1: 'Nous vous proposons :'
+            Message2: 'Un grand choix de matériels de stockage'
+            Message3: 'La détermination des fréquences des interventions'
+            Message4: 'Notre service pourra être adapté tout au long du contrat'
         Solution2:
-            Title: 'Solution 2 : Désarchivage unique'
-            Message1: 'Notre offre de services comprend entre autres :'
-            Message2: "Élimination des fichiers et des supports de données conformément à votre politique d'archivage"
-            Message3: 'Transport avec des véhicules spéciaux'
-            Message4: 'Destruction des données'
-            Message5: 'Nous offrons également un service complet allant du déblaiement à la destruction finale (emballage, tri, destruction par broyage).'
+            Title: 'OPERATIONS PONCTUELLES'
+            Message1: 'Nous vous proposons :'
+            Message2: "Une gamme complète de matériel pour organiser le tri dans vos bureaux"
+            Message3: 'Des interventions ponctuelles de désarchivage ou de désencombrement'
         Solution3:
-            Title: 'Solution 3 : Matériel'
+            Title: 'Matériel'
             Message1: 'à faire'
             Message2: "à faire"
             Message3: 'à faire'
@@ -67,10 +63,11 @@ Public:
 
     Catalog:
         BreadcrumbTitle: Offres de services
-        Title: Sélectionnez les produits souhaités et leurs quantités pour créer votre demande de devis en 3 étapes
+        Title: Sélectionnez les produits souhaités et leurs quantités puis passez à l'étape suivante
         Quantity: Quantité
         AddToQuote: Ajouter au devis
         NextStep: Étape suivante
+        BuildSolution: Construisez votre solution
         ToBeCall: Être appelé
         SeeMoreProducts: Voir plus
         NoProducts: Aucun article
