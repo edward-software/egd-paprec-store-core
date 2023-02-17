@@ -64,6 +64,8 @@ Commercial:
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
+        FollowUp:
+            Add: Ajouter un suivi
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.

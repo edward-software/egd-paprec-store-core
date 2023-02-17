@@ -70,11 +70,11 @@ class FollowUp
      * RELATIONS
      */
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="followUps")
-     * @ORM\JoinColumn(name="productId", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\QuoteRequest", inversedBy="followUps")
+     * @ORM\JoinColumn(name="quoteRequestId", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank()
      */
-    private $product;
+    private $quoteRequest;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -262,12 +262,12 @@ class FollowUp
     }
 
     /**
-     * @param Product $product
+     * @param QuoteRequest $quoteRequest
      * @return $this
      */
-    public function setProduct(Product $product)
+    public function setQuoteRequest(QuoteRequest $quoteRequest)
     {
-        $this->product = $product;
+        $this->quoteRequest = $quoteRequest;
 
         return $this;
     }
@@ -275,9 +275,9 @@ class FollowUp
     /**
      * @return mixed
      */
-    public function getProduct()
+    public function getQuoteRequest()
     {
-        return $this->product;
+        return $this->quoteRequest;
     }
 
     /**

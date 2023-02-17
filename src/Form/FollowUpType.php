@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\FollowUp;
-use App\Entity\Product;
+use App\Entity\QuoteRequest;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -44,24 +44,26 @@ class FollowUpType extends AbstractType
             ->add('content', TextareaType::class)
         ;
 
-        if (!$this->options['productId']) {
-            $builder->add('product', EntityType::class, array(
-                    'class' => Product::class,
+        if (!$this->options['quoteRequestId']) {
+            $builder->add('quoteRequest', EntityType::class, array(
+                    'class' => QuoteRequest::class,
                     'query_builder' => function (EntityRepository $er) {
 
                         $qb = $er->createQueryBuilder('p')
                             ->select('p')
                             ->where('p.deleted is NULL');
 
-                        if ($this->options['productId']) {
+                        if ($this->options['quoteRequestId']) {
                             $qb
-                                ->andWhere('p.id = :productId')
-                                ->setParameter('productId', $this->options['productId']);
+                                ->andWhere('p.id = :quoteRequestId')
+                                ->setParameter('quoteRequestId', $this->options['quoteRequestId']);
                         }
 
                         return $qb;
                     },
-                    'choice_label' => 'code',
+                    'choice_label' => function (QuoteRequest $quoteRequest) {
+                        return $quoteRequest->getOrigin() . ' - ' . $quoteRequest->getNumber();
+                    },
                 )
             );
         }
@@ -74,7 +76,7 @@ class FollowUpType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => FollowUp::class,
-            'productId' => null
+            'quoteRequestId' => null
         ));
     }
 

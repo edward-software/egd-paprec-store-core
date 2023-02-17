@@ -71,16 +71,17 @@ class FollowUpController extends AbstractController
         $cols['id'] = array('label' => 'id', 'id' => 'fU.id', 'method' => array('getId'));
         $cols['status'] = array('label' => 'status', 'id' => 'fU.status', 'method' => array('getStatus'));
         $cols['content'] = array('label' => 'content', 'id' => 'fU.content', 'method' => array('getContent'));
-        $cols['productCode'] = array('label' => 'productCode', 'id' => 'p.code', 'method' => array('getProduct', 'getCode'));
+        $cols['quoteRequestOrigin'] = array('label' => 'quoteRequestOrigin', 'id' => 'p.origin', 'method' => array('getQuoteRequest', 'getOrigin'));
+        $cols['quoteRequestNumber'] = array('label' => 'quoteRequestNumber', 'id' => 'p.number', 'method' => array('getQuoteRequest', 'getNumber'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(FollowUp::class)->createQueryBuilder('fU');
 
 
         $queryBuilder->select(array('fU'))
-            ->select(array('fU', 'p'))
+            ->select(array('fU', 'qR'))
             ->where('fU.deleted is NULL')
-            ->leftJoin('fU.product', 'p')
-            ->andWhere('p.deleted is NULL');
+            ->leftJoin('fU.quoteRequest', 'qR')
+            ->andWhere('qR.deleted is NULL');
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
             if (substr($search['value'], 0, 1) === '#') {
@@ -91,7 +92,8 @@ class FollowUpController extends AbstractController
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
                     $queryBuilder->expr()->like('fU.content', '?1'),
                     $queryBuilder->expr()->like('fU.status', '?1'),
-                    $queryBuilder->expr()->like('p.code', '?1')
+                    $queryBuilder->expr()->like('qR.origin', '?1'),
+                    $queryBuilder->expr()->like('qR.number', '?1')
                 ))->setParameter(1, '%' . $search['value'] . '%');
             }
         }

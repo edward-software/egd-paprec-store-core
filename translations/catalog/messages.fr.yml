@@ -134,8 +134,6 @@ Catalog:
         TransportUnitPrice: PU Transport
         TreatmentUnitPrice: PU Traitement
         TraceabilityUnitPrice: PU Traçabilité
-        FollowUp:
-            Add: Ajouter un suivi
 
     ProductLabel:
         Add: Ajouter une traduction
@@ -244,9 +242,10 @@ Catalog:
         Status:
             Status: Statut
             Pending: En cours
-        Product:
-            Product: Produit
-            Code: Code
+        QuoteRequest:
+            QuoteRequest: Devis
+            Origin: Origin du devis
+            Number: Numéro offre du devis
         System-information: Informations système
         Date-creation: Date de création
         Date-update: Date dernière modification

@@ -363,6 +363,11 @@ class QuoteRequest
      */
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FollowUp", mappedBy="quoteRequest", cascade={"all"})
+     */
+    private $followUps;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="quoteRequests")
      * @ORM\JoinColumn(name="userInChargeId")
      */
@@ -413,6 +418,7 @@ class QuoteRequest
         $this->isSameAddress = false;
         $this->duration = 0;
         $this->quoteRequestFiles = new ArrayCollection();
+        $this->followUps = new ArrayCollection();
     }
 
     /**
@@ -1515,6 +1521,42 @@ class QuoteRequest
         }
 
         return $this;
+    }
+
+    /**
+     * Add followUp.
+     *
+     * @param FollowUp $followUp
+     *
+     * @return QuoteRequest
+     */
+    public function addFollowUp(FollowUp $followUp)
+    {
+        $this->followUps[] = $followUp;
+
+        return $this;
+    }
+
+    /**
+     * Remove followUp.
+     *
+     * @param FollowUp $followUp
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeFollowUp(FollowUp $followUp)
+    {
+        return $this->followUps->removeElement($followUp);
+    }
+
+    /**
+     * Get followUps.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFollowUps()
+    {
+        return $this->followUps;
     }
 
 

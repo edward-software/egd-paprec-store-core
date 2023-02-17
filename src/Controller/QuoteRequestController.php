@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\FollowUp;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
+use App\Form\FollowUpType;
 use App\Form\QuoteRequestFileType;
 use App\Form\QuoteRequestLineAddType;
 use App\Form\QuoteRequestLineEditType;
@@ -606,6 +608,104 @@ class QuoteRequestController extends AbstractController
 
         return $this->redirectToRoute('paprec_quoteRequest_index');
     }
+
+    /**
+     * @Route("/{id}/addFollowUp", name="paprec_quote_request_follow_up_add")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addFollowUpAction(Request $request, QuoteRequest $quoteRequest)
+    {
+        $user = $this->getUser();
+
+        $followUp = new FollowUp();
+        $followUp->setQuoteRequest($quoteRequest);
+
+        $form = $this->createForm(FollowUpType::class, $followUp, [
+            'quoteRequestId' => $quoteRequest->getId()
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $followUp = $form->getData();
+
+            $followUp->setDateCreation(new \DateTime());
+            $followUp->setUserCreation($user);
+            $followUp->setQuoteRequest($quoteRequest);
+
+            $this->em->persist($followUp);
+            $this->em->flush();
+
+            return $this->redirectToRoute('paprec_quote_request_view', array(
+                'id' => $quoteRequest->getId()
+            ));
+
+        }
+
+        return $this->render('followUp/add.html.twig', array(
+            'form' => $form->createView(),
+            'quoteRequest' => $quoteRequest
+        ));
+    }
+
+    /**
+     * @Route("/{id}/followUpLoadList", name="paprec_quote_request_follow_up_loadList")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function followUpLoadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator, QuoteRequest $quoteRequest)
+    {
+        $return = [];
+
+        $filters = $request->get('filters');
+        $pageSize = $request->get('length');
+        $start = $request->get('start');
+        $orders = $request->get('order');
+        $search = $request->get('search');
+        $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
+
+        $cols['id'] = array('label' => 'id', 'id' => 'fU.id', 'method' => array('getId'));
+        $cols['status'] = array('label' => 'status', 'id' => 'fU.status', 'method' => array('getStatus'));
+        $cols['content'] = array('label' => 'content', 'id' => 'fU.content', 'method' => array('getContent'));
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(FollowUp::class)->createQueryBuilder('fU');
+
+        $queryBuilder->select(array('fU'))
+            ->select(array('fU', 'qR'))
+            ->where('fU.deleted is NULL')
+            ->leftJoin('fU.quoteRequest', 'qR')
+            ->andWhere('qR.deleted is NULL')
+            ->andWhere('qR.id = :quoteRequestId')
+            ->setParameter('quoteRequestId', $quoteRequest->getId())
+        ;
+
+        if (is_array($search) && isset($search['value']) && $search['value'] != '') {
+            if (substr($search['value'], 0, 1) === '#') {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->eq('fU.id', '?1')
+                ))->setParameter(1, substr($search['value'], 1));
+            } else {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->like('fU.content', '?1'),
+                    $queryBuilder->expr()->like('fU.status', '?1')
+                ))->setParameter(1, '%' . $search['value'] . '%');
+            }
+        }
+
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
+
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
+        $return['resultCode'] = 1;
+        $return['resultDescription'] = "success";
+
+        return new JsonResponse($return);
+
+    }
+
 
     /**
      * @Route("/removeMany/{ids}", name="paprec_quoteRequest_removeMany")

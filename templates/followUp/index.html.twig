@@ -36,7 +36,8 @@
               <th>#</th>
               <th>{{ 'Catalog.FollowUp.Status.Status'|trans }}</th>
               <th>{{ 'Catalog.FollowUp.Content'|trans }}</th>
-              <th>{{ 'Catalog.FollowUp.Product.Code'|trans }}</th>
+              <th>{{ 'Catalog.FollowUp.QuoteRequest.Origin'|trans }}</th>
+              <th>{{ 'Catalog.FollowUp.QuoteRequest.Number'|trans }}</th>
               <th></th>
             </tr>
             </thead>
@@ -63,7 +64,8 @@
           {"data": "id"},
           {"data": "status"},
           {"data": "content"},
-          {"data": "productCode"},
+          {"data": "quoteRequestOrigin"},
+          {"data": "quoteRequestNumber"},
           {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
         ],
         rowDblclick: {

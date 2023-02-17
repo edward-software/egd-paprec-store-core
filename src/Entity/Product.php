@@ -233,11 +233,6 @@ class Product
      */
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FollowUp", mappedBy="product", cascade={"all"})
-     */
-    private $followUps;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="product", cascade={"all"})
      */
     private $pictures;
@@ -267,7 +262,6 @@ class Product
     {
         $this->dateCreation = new \DateTime();
         $this->pictures = new ArrayCollection();
-        $this->followUps = new ArrayCollection();
         $this->productLabels = new ArrayCollection();
         $this->transportType = 'LIVRAISON';
         $this->catalog = 'REGULAR';
@@ -928,43 +922,4 @@ class Product
         $this->materialUnitPrice = $materialUnitPrice;
         return $this;
     }
-
-
-    /**
-     * Add followUp.
-     *
-     * @param FollowUp $followUp
-     *
-     * @return Product
-     */
-    public function addFollowUp(FollowUp $followUp)
-    {
-        $this->followUps[] = $followUp;
-
-        return $this;
-    }
-
-    /**
-     * Remove followUp.
-     *
-     * @param FollowUp $followUp
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeFollowUp(FollowUp $followUp)
-    {
-        return $this->followUps->removeElement($followUp);
-    }
-
-    /**
-     * Get followUps.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFollowUps()
-    {
-        return $this->followUps;
-    }
-
-
 }
