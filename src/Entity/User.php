@@ -207,6 +207,12 @@ class User implements UserInterface
     private $manager;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Agency", inversedBy="users")
+     * @ORM\JoinColumn(name="agencyId")
+     */
+    private $agency;
+
+    /**
      * type User
      * @ORM\OneToMany (targetEntity="App\Entity\User", mappedBy="manager")
      */
@@ -643,6 +649,24 @@ class User implements UserInterface
     public function setNickname(string $nickname): void
     {
         $this->nickname = $nickname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAgency()
+    {
+        return $this->agency;
+    }
+
+    /**
+     * @param mixed $agency
+     * @return User
+     */
+    public function setAgency($agency): self
+    {
+        $this->agency = $agency;
+        return $this;
     }
 
 }

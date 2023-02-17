@@ -126,12 +126,18 @@ class Agency
     private $pictures;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="agency", cascade={"all"})
+     */
+    private $users;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->dateCreation = new \DateTime();
         $this->postalCodes = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -296,7 +302,7 @@ class Agency
      *
      * @return PostalCode
      */
-    public function addQuoteRequest(PostalCode $postalCode)
+    public function addPostalCode(PostalCode $postalCode)
     {
         $this->postalCodes[] = $postalCode;
 
@@ -446,6 +452,42 @@ class Agency
             }
         }
         return $pictures;
+    }
+
+    /**
+     * Add user.
+     *
+     * @param User $user
+     *
+     * @return User
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user.
+     *
+     * @param User $user
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeUser(User $user)
+    {
+        return $this->users->removeElement($user);
+    }
+
+    /**
+     * Get users.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 
 }

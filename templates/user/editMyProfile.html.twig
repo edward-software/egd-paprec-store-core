@@ -38,6 +38,14 @@
                             <div class="card-body">
 
                                 <div class="form-group">
+                                    <div class="form-label">{{ 'User.User.Agency'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.agency, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                                        {{ form_errors(form.agency) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <div class="form-label">{{ 'User.User.Company-name'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form.companyName, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
