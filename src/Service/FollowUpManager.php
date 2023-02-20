@@ -126,6 +126,7 @@ class FollowUpManager
             $followUps = $query->getQuery()->getResult();
 
             $locale = 'FR';
+            $followUpByQuoteRequest = [];
             $quoteRequestByUser = [];
             $usersById = [];
             if (is_array($followUps) && count($followUps)) {
@@ -139,6 +140,7 @@ class FollowUpManager
                             $quoteRequestByUser[$userInCharge->getId()] = [];
                         }
                         $quoteRequestByUser[$userInCharge->getId()][] = $followUp->getQuoteRequest();
+                        $followUpByQuoteRequest[$followUp->getQuoteRequest()->getId()] = $followUp;
                     }
                 }
 
@@ -156,7 +158,8 @@ class FollowUpManager
                                     'public/emails/relaunchFollowUpEmail.html.twig',
                                     [
                                         'quoteRequests' => $quoteRequests,
-                                        'user' => $usersById[$userId]
+                                        'user' => $usersById[$userId],
+                                        'followUpByQuoteRequest' => $followUpByQuoteRequest
                                     ]
                                 ),
                                 'text/html'
