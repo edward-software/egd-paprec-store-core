@@ -69,6 +69,8 @@ Public:
         NextStep: Étape suivante
         BuildSolution: Construisez votre solution
         ToBeCall: Être appelé
+        Previous-step: Étape précédente
+        Next-step: Étape suivante
         SeeMoreProducts: Voir plus
         NoProducts: Aucun article
         Quote: Panier

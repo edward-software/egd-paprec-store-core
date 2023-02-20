@@ -239,6 +239,8 @@ Catalog:
         Information: Information du suivi
         Content: Contenu
         Date: Date
+        Email:
+            Title: Relance des suivis
         Status:
             Status: Statut
             Pending: En cours
