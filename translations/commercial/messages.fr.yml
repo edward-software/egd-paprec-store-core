@@ -4,7 +4,50 @@ Commercial:
     Bundle-name: Gestion commerciale
     QuoteRequests: Demandes de devis
     Settings: Paramétrage
+    FollowUp:
+        FollowUps: Suivis
+        View: Vue du suivi
+        Add: Ajouter un suivi
+        Edit: Editer un suivi
+        Remove: Supprimer
+        List: Suivis
+        Information: Information du suivi
+        Content: Contenu
+        Date: Date
+        Email:
+            Title: Relance des suivis
+        Status:
+            Status: Statut
+            Pending: En cours
+        QuoteRequest:
+            QuoteRequest: Devis
+            Origin: Origin du devis
+            Number: Numéro offre du devis
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Export: Exporter les suivis
+        Details: Details du suivi
 
+    FollowUpFile:
+        AddTitle: Ajout d'un fichier joint
+        BtnAddLabel: Ajouter un fichier
+        MaxSize: '(Taille maximale du fichier : 5Mo)'
+        FileListTitle: Liste des fichiers
+        FileNameColumn: Nom
+        FileTypeColumn: Format
+
+    Setting:
+        Settings: Paramètrages
+        List: Paramètrages
+        Add: Ajout d'un paramètre
+        Edit: Edition du paramètre
+        Remove: Supprimer
+        View: Vue du paramètre
+        KeyName:
+            KeyName: Clé
+            FOLLOW_UP_RELAUNCHED_DAYS: Nombre de jours à partir duquel le suivi est relancé
+        Value: Valeur
     QuoteRequest:
         QuoteRequests: Demandes de devis
         List: Liste des demandes de devis

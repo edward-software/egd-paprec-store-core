@@ -1,14 +1,14 @@
 {% extends "base_admin.html.twig" %}
 
 {% block title %}
-  {{ 'Catalog.FollowUp.Edit'|trans }}
+  {{ 'Commercial.FollowUp.Edit'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
 {% endblock %}
 
 {% block content_title %}
-  {{ 'Catalog.FollowUp.Agencies'|trans }}
+  {{ 'Commercial.FollowUp.Agencies'|trans }}
 {% endblock %}
 
 {% block main_content %}
@@ -20,7 +20,7 @@
       <div class="card">
         <div class="card-header">
           <h4>
-            <i class="fa fa-xs fa-pencil-alt"></i> {{ 'Catalog.FollowUp.Edit'|trans }}
+            <i class="fa fa-xs fa-pencil-alt"></i> {{ 'Commercial.FollowUp.Edit'|trans }}
             #{{ followUp.id|formatId(6) }}
           </h4>
           <div class="float-right">
@@ -39,28 +39,28 @@
               </div>
               <div class="card-body">
                 <div class="form-group">
-                  <div class="form-label">{{ 'Catalog.FollowUp.Date'|trans }}</div>
+                  <div class="form-label">{{ 'Commercial.FollowUp.Date'|trans }}</div>
                   <div class="form-content">
                     {{ form_widget(form.date, {'attr': {'class': 'form-control datepicker'}}) }}
                     {{ form_errors(form.date) }}
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="form-label">{{ 'Catalog.FollowUp.Status.Status'|trans }}</div>
+                  <div class="form-label">{{ 'Commercial.FollowUp.Status.Status'|trans }}</div>
                   <div class="form-content">
                     {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
                     {{ form_errors(form.status) }}
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="form-label">{{ 'Catalog.FollowUp.Content'|trans }}</div>
+                  <div class="form-label">{{ 'Commercial.FollowUp.Content'|trans }}</div>
                   <div class="form-content">
                     {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
                     {{ form_errors(form.content) }}
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="form-label">{{ 'Catalog.FollowUp.QuoteRequest.QuoteRequest'|trans }}</div>
+                  <div class="form-label">{{ 'Commercial.FollowUp.QuoteRequest.QuoteRequest'|trans }}</div>
                   <div class="form-content">
                     {{ form_widget(form.quoteRequest, {'attr': {'class': 'form-control'}}) }}
                     {{ form_errors(form.quoteRequest) }}

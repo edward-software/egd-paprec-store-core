@@ -99,6 +99,9 @@ parameters:
         bimestre: 0.54
         quarter: 0.36
 
+    paprec.setting.keys:
+        - FOLLOW_UP_RELAUNCHED_DAYS
+
     paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
     paprec.quote_request_file.max_file_size: 5000000
     paprec.follow_up_file.directory: "%kernel.root_dir%/data/follow-up/file"

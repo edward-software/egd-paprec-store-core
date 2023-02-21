@@ -91,10 +91,6 @@
                                         <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_range'|length) == 'paprec_range' %} active{% endif %}"
                                            href="{{ path('paprec_range_index') }}">{{ 'Catalog.Range.List'|trans }}</a>
                                     {% endif %}
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_follow_up'|length) == 'paprec_follow_up' %} active{% endif %}"
-                                           href="{{ path('paprec_follow_up_index') }}">{{ 'Catalog.FollowUp.List'|trans }}</a>
-                                    {% endif %}
                                 </div>
                             </div>
 
@@ -109,8 +105,8 @@
                                        href="{{ path('paprec_custom_area_index') }}">{{ 'Catalog.CustomArea.CustomAreas'|trans }}</a>
                                     <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_billing_unit'|length) == 'paprec_billing_unit' %} active{% endif %}"
                                        href="{{ path('paprec_billing_unit_index') }}">{{ 'Catalog.BillingUnit.BillingUnits'|trans }}</a>
-{#                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_other_need'|length) == 'paprec_other_need' %} active{% endif %}"#}
-{#                                       href="{{ path('paprec_other_need_index') }}">{{ 'Catalog.OtherNeed.OtherNeeds'|trans }}</a>#}
+                                    {#                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_other_need'|length) == 'paprec_other_need' %} active{% endif %}" #}
+                                    {#                                       href="{{ path('paprec_other_need_index') }}">{{ 'Catalog.OtherNeed.OtherNeeds'|trans }}</a> #}
                                 </div>
                             </div>
                         </div>
@@ -126,6 +122,10 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownCommercial">
                             <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_user_quoteRequest'|length) == 'paprec_user_quoteRequest' %} active{% endif %}"
                                href="{{ path('paprec_quoteRequest_index') }}">{{ 'Commercial.QuoteRequests'|trans }}</a>
+                            <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_follow_up'|length) == 'paprec_follow_up' %} active{% endif %}"
+                               href="{{ path('paprec_follow_up_index') }}">{{ 'Commercial.FollowUp.List'|trans }}</a>
+                        <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_setting'|length) == 'paprec_setting' %} active{% endif %}"
+                               href="{{ path('paprec_setting_index') }}">{{ 'Commercial.Setting.List'|trans }}</a>
                         </div>
                     </li>
                 {% endif %}

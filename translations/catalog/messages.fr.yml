@@ -228,40 +228,6 @@ Catalog:
         Informations: Informations
         System-informations: Informations système
 
-    FollowUp:
-        FollowUps: Liste des suivis
-        View: Vue du suivi
-        Products: Liste des suivis
-        Add: Ajouter un suivi
-        Edit: Editer un suivi
-        Remove: Supprimer
-        List: Liste des suivis
-        Information: Information du suivi
-        Content: Contenu
-        Date: Date
-        Email:
-            Title: Relance des suivis
-        Status:
-            Status: Statut
-            Pending: En cours
-        QuoteRequest:
-            QuoteRequest: Devis
-            Origin: Origin du devis
-            Number: Numéro offre du devis
-        System-information: Informations système
-        Date-creation: Date de création
-        Date-update: Date dernière modification
-        Export: Exporter les suivis
-        Details: Details du suivi
-
-    FollowUpFile:
-        AddTitle: Ajout d'un fichier joint
-        BtnAddLabel: Ajouter un fichier
-        MaxSize: '(Taille maximale du fichier : 5Mo)'
-        FileListTitle: Liste des fichiers
-        FileNameColumn: Nom
-        FileTypeColumn: Format
-
     BillingUnit:
         View: Vue du suivi
         BillingUnits: Unités de facturation

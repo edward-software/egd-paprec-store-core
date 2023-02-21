@@ -45,7 +45,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("", name="paprec_follow_up_index")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function indexAction()
     {
@@ -54,7 +54,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/loadList", name="paprec_follow_up_loadList")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
@@ -113,7 +113,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/view/{id}", name="paprec_follow_up_view")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @param Request $request
      * @param FollowUp $followUp
      * @return Response
@@ -135,7 +135,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/add", name="paprec_follow_up_add")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function addAction(Request $request)
     {
@@ -170,7 +170,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="paprec_follow_up_edit")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @param Request $request
      * @param FollowUp $followUp
      * @return RedirectResponse|Response
@@ -209,7 +209,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/remove/{id}", name="paprec_follow_up_remove")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function removeAction(Request $request, FollowUp $followUp): RedirectResponse
     {
@@ -222,7 +222,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/removeMany/{ids}", name="paprec_follow_up_removeMany")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function removeManyAction(Request $request)
     {
@@ -249,7 +249,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("/addFollowUpFile/{followUpId}", name="paprec_follow_up_add_follow_up_file")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function addFollowUpFileAction(Request $request, $followUpId)
     {
@@ -308,7 +308,7 @@ class FollowUpController extends AbstractController
 
     /**
      * @Route("removeFollowUpFile/{followUpId}/{followUpFileId}", name="paprec_follow_up_remove_follow_up_file")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @ParamConverter("followUpFile", options={"id" = "followUpFileId"})
      */
     public function removeFollowUpFileAction(Request $request, FollowUp $followUpId, FollowUpFile $followUpFile)

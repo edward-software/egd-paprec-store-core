@@ -9,6 +9,7 @@
 namespace App\Service;
 
 
+use App\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\ORMException;
@@ -110,8 +111,23 @@ class FollowUpManager
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
+            $query = $this->em
+                ->getRepository(Setting::class)
+                ->createQueryBuilder('s')
+                ->select('s')
+                ->where('s.deleted IS NULL')
+                ->andWhere('s.keyName = :key')
+                ->setParameter('key', 'FOLLOW_UP_RELAUNCHED_DAYS');
+
+            $setting = $query->getQuery()->getOneOrNullResult();
+
+            $interval = 'P7D';
+            if ($setting) {
+                $interval = 'P' . $setting->getValue() . 'D';
+            }
+
             $date = new \DateTime();
-            $date->sub(new \DateInterval('P7D'));
+            $date->sub(new \DateInterval($interval));
             $query = $this->em
                 ->getRepository(FollowUp::class)
                 ->createQueryBuilder('fU')
@@ -149,7 +165,7 @@ class FollowUpManager
 
                         $message = new \Swift_Message();
                         $message
-                            ->setSubject($this->translator->trans('Catalog.FollowUp.Email.Title',
+                            ->setSubject($this->translator->trans('Commercial.FollowUp.Email.Title',
                                 array(), 'messages', strtolower($locale)))
                             ->setFrom($from)
                             ->setTo($usersById[$userId]->getEmail())

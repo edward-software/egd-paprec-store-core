@@ -1,14 +1,14 @@
 {% extends "base_admin.html.twig" %}
 
 {% block title %}
-    {{ 'Catalog.FollowUp.Add'|trans }}
+    {{ 'Commercial.FollowUp.Add'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
 {% endblock %}
 
 {% block content_title %}
-    {{ 'Catalog.FollowUp.Add'|trans }}
+    {{ 'Commercial.FollowUp.Add'|trans }}
 {% endblock %}
 
 {% block main_content %}
@@ -20,7 +20,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4>
-                        <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.FollowUp.Add'|trans }}
+                        <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.FollowUp.Add'|trans }}
                     </h4>
                     <div class="float-right">
                         <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-followUp-save-button"><i
@@ -37,21 +37,21 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.FollowUp.Date'|trans }}</div>
+                                    <div class="form-label">{{ 'Commercial.FollowUp.Date'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form.date, {'attr': {'class': 'form-control datepicker'}}) }}
                                         {{ form_errors(form.date) }}
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.FollowUp.Status.Status'|trans }}</div>
+                                    <div class="form-label">{{ 'Commercial.FollowUp.Status.Status'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
                                         {{ form_errors(form.status) }}
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.FollowUp.Content'|trans }}</div>
+                                    <div class="form-label">{{ 'Commercial.FollowUp.Content'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
                                         {{ form_errors(form.content) }}
@@ -59,7 +59,7 @@
                                 </div>
                                 {% if quoteRequest is not defined %}
                                     <div class="form-group">
-                                        <div class="form-label">{{ 'Catalog.FollowUp.QuoteRequest.QuoteRequest'|trans }}</div>
+                                        <div class="form-label">{{ 'Commercial.FollowUp.QuoteRequest.QuoteRequest'|trans }}</div>
                                         <div class="form-content">
                                             {{ form_widget(form.quoteRequest, {'attr': {'class': 'form-control'}}) }}
                                             {{ form_errors(form.quoteRequest) }}

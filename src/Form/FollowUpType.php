@@ -36,7 +36,7 @@ class FollowUpType extends AbstractType
                 ),
                 'empty_data' => 'pending',
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Catalog.FollowUp.Status.' . ucfirst($choiceValue);
+                    return 'Commercial.FollowUp.Status.' . ucfirst($choiceValue);
                 },
                 'required' => true,
                 'expanded' => true
