@@ -155,9 +155,9 @@ class RangeController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Ranges")
+            ->getProperties()->setCreator("EasyRecyclageShop")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("EasyRecyclageShop - Ranges")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -223,7 +223,7 @@ class RangeController extends AbstractController
             $sheet->getColumnDimension($i)->setAutoSize(true);
         }
 
-        $fileName = 'PrivaciaShop-Extraction-Ranges-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extraction-Ranges-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {

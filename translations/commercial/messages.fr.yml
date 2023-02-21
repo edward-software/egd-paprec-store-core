@@ -93,7 +93,7 @@ Commercial:
         AnnualBudget: Budget annuel
         View: Vue du devis
         Download-quote: Télécharger PDF
-        DownloadedQuoteName: Contrat Privacia
+        DownloadedQuoteName: Contrat Easy Recyclage
         Send-quote: Envoyer devis au client
         Send-contract: Envoyer contrat au client
         ProductsList: Liste des produits
@@ -206,11 +206,11 @@ Commercial:
 
     NewQuoteEmail:
         Object: Voici une nouvelle demande client N°%number%
-        Dear: Cher(ère) Collègue Privacia
+        Dear: Cher(ère) Collègue Easy Recyclage
         Message1: Tu trouveras ci-joint une demande de vérification de l'offre pour la zone géographique ainsi que du contrat prévu.
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
         Message2: Nous t’en remercions par avance.
-        Partner: Ton partenaire Privacia
+        Partner: Ton partenaire Easy Recyclage
 
     ConfirmEmail:
         Object: Nous vous remercions pour votre demande
@@ -218,12 +218,12 @@ Commercial:
             M: Cher Monsieur
             Mrs: Chère Madame
         Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
-        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Easy Recyclage.
         QuoteRequestRecap: Voici le récapitulatif de votre demande
         TechnicalService: service technique
-        Message2: Nous vous enverrons notre offre pour les services PRIVACIA dans les 24 heures.
+        Message2: Nous vous enverrons notre offre pour les services EASY RECYCLAGE dans les 24 heures.
         Regards: Bien cordialement
-        Partner: Votre partenaire Privacia
+        Partner: Votre partenaire Easy Recyclage
         NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
         Disclaimer:
             Message1: Vous avez reçu cet e-mail pour vous informer des modifications importantes apportées aux services
@@ -233,58 +233,58 @@ Commercial:
         Object: Accompagnement dans la création de votre demande
         Dear: Cher
         Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
-        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Privacia.
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Easy Recyclage.
         TechnicalService: service technique
         Message2: Nous vous contacterons dans les 24 heures afin de vous aider dans la création de votre demande.
         Regards: Bien cordialement
-        Partner: Votre partenaire Privacia
+        Partner: Votre partenaire Easy Recyclage
         NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
 
     NewContactRequestEmail:
         Object: Voici une nouvelle demande d'accompagnement pour un client
-        Dear: Cher(ère) Collègue Privacia
+        Dear: Cher(ère) Collègue Easy Recyclage
         Message1: Tu trouveras ci-joint une demande d'accompagnement d'un client.
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
         Message2: Nous t’en remercions par avance.
         Regards: Bien cordialement
-        Partner: Ton partenaire Privacia
+        Partner: Ton partenaire Easy Recyclage
 
     GeneratedQuoteEmail:
-        FileName: Offre Privacia
-        Object: Offre de services Privacia
+        FileName: Offre Easy Recyclage
+        Object: Offre de services Easy Recyclage
         Dear:
             M: Cher Monsieur
             Mrs: Chère Madame
-        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services PRIVACIA.
-        Message2: Vous trouverez en annexe notre offre pour les services PRIVACIA. Ceux-ci peuvent être adaptés à vos besoins actuels à tout moment, rapidement et simplement. Nous garantissons toujours un service impeccable et la destruction quotidienne de vos fichiers et supports de données.
+        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services EASY RECYCLAGE.
+        Message2: Vous trouverez en annexe notre offre pour les services EASY RECYCLAGE. Ceux-ci peuvent être adaptés à vos besoins actuels à tout moment, rapidement et simplement. Nous garantissons toujours un service impeccable et la destruction quotidienne de vos fichiers et supports de données.
         Message3: N'hésitez pas à nous contacter si vous avez d'autres questions. Nous nous réjouissons de travailler bientôt avec vous.
         Message4: Si vous êtes d'accord,
         Message5: cliquer ici sur le lien pour renseigner les signataires du contrat de service
         ReplySubject: Demande contrat / ID Devis N°%id%
         Regards: Bien cordialement
-        Partner: Votre partenaire Privacia
+        Partner: Votre partenaire Easy Recyclage
 
     GeneratedContractEmail:
-        FileName: Contrat Privacia
-        Object: Contrat de services Privacia
+        FileName: Contrat Easy Recyclage
+        Object: Contrat de services Easy Recyclage
         Dear:
             M: Cher Monsieur
             Mrs: Chère Madame
-        Message1: Nous vous remercions d’avoir choisi les services de PRIVACIA SA.
+        Message1: Nous vous remercions d’avoir choisi les services de EASY RECYCLAGE SA.
         MessageFile: Vous trouverez en PJ
-        Message2: Vous trouverez en annexe notre contrat pour les services de PRIVACIA SA.
-        Message3: Nous vous prions de bien vouloir imprimer 2 exemplaires, les signer et les envoyer à l’adresse Privacia en haut du contrat.
+        Message2: Vous trouverez en annexe notre contrat pour les services de EASY RECYCLAGE SA.
+        Message3: Nous vous prions de bien vouloir imprimer 2 exemplaires, les signer et les envoyer à l’adresse Easy Recyclage en haut du contrat.
         Message4: Dès réception, vous recevrez quelques jours plus tard une version signée par nos soins.
         Message5: N'hésitez pas à nous contacter si vous avez d'autres questions. Nous nous réjouissons de travailler bientôt avec vous.
         Regards: Bien cordialement
-        Partner: Votre partenaire Privacia
+        Partner: Votre partenaire Easy Recyclage
 
     NewContractEmail:
-        FileName: Contrat Privacia
-        Object: Contrat Privacia N°%number%
-        Dear: Cher (ère) Collègue Privacia,
+        FileName: Contrat Easy Recyclage
+        Object: Contrat Easy Recyclage N°%number%
+        Dear: Cher (ère) Collègue Easy Recyclage,
         Message1: Pour information, tu trouveras ci-joint un contrat que le client devrait rapidement nous renvoyer signé.
-        Partner: Ton partenaire Privacia
+        Partner: Ton partenaire Easy Recyclage
 
     PDF:
         Title: Devis de Prestation

@@ -131,9 +131,9 @@ class AgencyController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Agencies")
+            ->getProperties()->setCreator("Easy Recyclage Shop")
+            ->setLastModifiedBy("Easy Recyclage Shop")
+            ->setTitle("Easy Recyclage Shop - Agencies")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -164,7 +164,7 @@ class AgencyController extends AbstractController
         }
 
 
-        $fileName = 'PrivaciaShop-Extract-Agencies-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extract-Agencies-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {

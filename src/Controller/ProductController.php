@@ -167,9 +167,9 @@ class ProductController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Products")
+            ->getProperties()->setCreator("EasyRecyclageShop")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("EasyRecyclageShop - Products")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -249,7 +249,7 @@ class ProductController extends AbstractController
             $sheet->getColumnDimension($i)->setAutoSize(true);
         }
 
-        $fileName = 'PrivaciaShop-Extraction-Products-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extraction-Products-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {

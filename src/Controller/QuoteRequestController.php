@@ -290,9 +290,9 @@ class QuoteRequestController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Paprec Privacia")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Paprec Privacia - Devis")
+            ->getProperties()->setCreator("Paprec Easy Recyclage")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("Paprec Easy Recyclage- Devis")
             ->setSubject("Extraction");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -394,7 +394,7 @@ class QuoteRequestController extends AbstractController
             $sheet->getColumnDimension($i)->setAutoSize(true);
         }
 
-        $fileName = 'PrivaciaShop-Extraction-Devis--' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extraction-Devis--' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {
