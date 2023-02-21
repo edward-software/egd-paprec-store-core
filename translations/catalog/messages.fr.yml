@@ -8,6 +8,9 @@ Catalog:
         Agencies: Agences
         Name: Nom de l'agence
         BusinessName: Raison sociale
+        EntityName: Nom d’entité
+        LegalInfoTemplate: Informations legales
+        DestinationEmailMission: Adresse mail de destination pour les feuilles de mission
         BusinessId: Identification société
         Address: Adresse l'agence
         City: Ville
