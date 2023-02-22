@@ -1229,11 +1229,12 @@ class QuoteRequestManager
     /**
      * Génère le devis au format PDF et retoune le nom du fichier généré (placé dans /data/tmp)
      *
+     * @param QuoteRequest $quoteRequest
      * @param MissionSheet $missionSheet
      * @return bool|string
      * @throws Exception
      */
-    public function generateMissionSheetPDF(MissionSheet $missionSheet, $locale)
+    public function generateMissionSheetPDF(QuoteRequest $quoteRequest, MissionSheet $missionSheet, $locale)
     {
         try {
 
@@ -1251,10 +1252,7 @@ class QuoteRequestManager
             $today = new \DateTime();
 
             $snappy = new Pdf($_ENV['WKHTMLTOPDF_PATH']);
-            $snappy->setOption('javascript-delay', 3000);
-            $snappy->setTimeout(600);
-            $snappy->setOption('dpi', 72);
-            $snappy->setOption('zoom', 1);
+            $snappy->setOption('zoom', 0.78);
 
             $templateDir = 'public/PDF/missionSheet';
 
@@ -1275,6 +1273,7 @@ class QuoteRequestManager
                     $this->container->get('templating')->render(
                         $templateDir . '/printMissionSheet.html.twig',
                         array(
+                            'quoteRequest' => $quoteRequest,
                             'missionSheet' => $missionSheet,
                             'date' => $today,
                             'locale' => $locale

@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\FollowUp;
 use App\Entity\MissionSheet;
 use App\Entity\QuoteRequest;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -78,6 +80,24 @@ class MissionSheetType extends AbstractType
                 }
             ))
             ->add('comment', TextareaType::class)
+            ->add('secondUserInCharge', EntityType::class, array(
+                'class' => User::class,
+                'multiple' => false,
+                'expanded' => false,
+                'placeholder' => '',
+                'empty_data' => null,
+                'choice_label' => function (User $user) {
+                    return $user->getFirstName() . ' ' . $user->getLastName();
+                },
+                'required' => false,
+                'query_builder' => function (UserRepository $ur) {
+                    return $ur->createQueryBuilder('u')
+                        ->where('u.deleted IS NULL')
+                        ->andWhere('u.roles LIKE \'%ROLE_COMMERCIAL%\'')
+                        ->andWhere('u.enabled = 1')
+                        ->orderBy('u.firstName');
+                }
+            ))
         ;
 
     }

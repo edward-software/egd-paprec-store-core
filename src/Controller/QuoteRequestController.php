@@ -1255,7 +1255,7 @@ class QuoteRequestController extends AbstractController
 
         $locale = 'fr';
 
-        $file = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest->getMissionSheet(), $locale);
+        $file = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(), $locale);
 
         $filename = substr($file, strrpos($file, '/') + 1);
 

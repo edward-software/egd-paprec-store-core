@@ -21,6 +21,7 @@ Commercial:
             Global: Globale
         OrderNumber: N° de commande
         ContractNumber: N° de contrat
+        SecondUserInCharge: Assistant
         Comment: Commentaire et imperatifs de facturation
         MyPaprecAccess: MyPaprec
         WasteTrackingRegisterAccess: Registre
