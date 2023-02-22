@@ -204,6 +204,12 @@ class QuoteRequestLine
      */
     private $product;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Agency")
+     * @ORM\JoinColumn(name="agencyId", referencedColumnName="id", nullable=true)
+     */
+    private $agency;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\QuoteRequest", inversedBy="quoteRequestLines")
@@ -420,6 +426,30 @@ class QuoteRequestLine
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * Set agency.
+     *
+     * @param Agency $agency
+     *
+     * @return QuoteRequestLine
+     */
+    public function setAgency(Agency $agency)
+    {
+        $this->agency = $agency;
+
+        return $this;
+    }
+
+    /**
+     * Get product.
+     *
+     * @return Agency
+     */
+    public function getAgency()
+    {
+        return $this->agency;
     }
 
     /**

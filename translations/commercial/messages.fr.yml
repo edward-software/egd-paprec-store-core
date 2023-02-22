@@ -4,6 +4,32 @@ Commercial:
     Bundle-name: Gestion commerciale
     QuoteRequests: Demandes de devis
     Settings: Paramétrage
+    MissionSheet:
+        View: Vue de la feuille de mission
+        Add: Ajouter une feuille de mission
+        Edit: Editer une feuille de mission
+        Remove: Supprimer
+        List: Feuilles de mission
+        ContractType:
+            ContractType: Type de contrat
+            Modification: Modification
+            Creation: Creation
+        MnemonicNumber: N° mnemonique
+        BillingType:
+            BillingType: Facturation
+            Per_site: Par site
+            Global: Globale
+        OrderNumber: N° de commande
+        ContractNumber: N° de contrat
+        Comment: Commentaire et imperatifs de facturation
+        MyPaprecAccess: MyPaprec
+        WasteTrackingRegisterAccess: Registre
+        ReportingAccess: Reporting
+        Information: Information du feuille de mission
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Details: Details de la feuille de mission
     FollowUp:
         FollowUps: Suivis
         View: Vue du suivi
@@ -109,6 +135,9 @@ Commercial:
         StartDate: Date de démarrage
         FollowUp:
             Add: Ajouter un suivi
+        MissionSheet:
+            Add: Ajouter une feuille de mission
+            GeneratePdf: Générer le pdf de la feuille de mission
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
@@ -195,6 +224,7 @@ Commercial:
         TreatmentCollect: PU Collecte et traitement/contenant
         Access: Accès
         TotalAmount: Montant total
+        SelectAgency: Choisir l'agence
         Add: Ajout d'un produit
         Product: Produit
 

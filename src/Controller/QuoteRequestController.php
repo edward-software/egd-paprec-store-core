@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Agency;
 use App\Entity\FollowUp;
+use App\Entity\MissionSheet;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
 use App\Form\FollowUpType;
+use App\Form\MissionSheetType;
 use App\Form\QuoteRequestFileType;
 use App\Form\QuoteRequestLineAddType;
 use App\Form\QuoteRequestLineEditType;
@@ -20,10 +23,12 @@ use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Respect\Validation\Validator as V;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -411,7 +416,7 @@ class QuoteRequestController extends AbstractController
     }
 
     /**
-     * @Route("/view/{id}", name="paprec_quoteRequest_view")
+     * @Route("/view/{id}", name="paprec_quote_request_view")
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
@@ -494,7 +499,7 @@ class QuoteRequestController extends AbstractController
             $this->em->persist($quoteRequest);
             $this->em->flush();
 
-            return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            return $this->redirectToRoute('paprec_quote_request_view', array(
                 'id' => $quoteRequest->getId()
             ));
 
@@ -565,7 +570,8 @@ class QuoteRequestController extends AbstractController
 
             if ($quoteRequest->getQuoteRequestLines()) {
                 foreach ($quoteRequest->getQuoteRequestLines() as $line) {
-                    $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false, $quoteRequest->getOverallDiscount());
+                    $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false,
+                        $quoteRequest->getOverallDiscount());
                 }
             }
             $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
@@ -585,7 +591,7 @@ class QuoteRequestController extends AbstractController
 
             $this->em->flush();
 
-            return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            return $this->redirectToRoute('paprec_quote_request_view', array(
                 'id' => $quoteRequest->getId()
             ));
 
@@ -653,8 +659,12 @@ class QuoteRequestController extends AbstractController
      * @Route("/{id}/followUpLoadList", name="paprec_quote_request_follow_up_loadList")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function followUpLoadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator, QuoteRequest $quoteRequest)
-    {
+    public function followUpLoadListAction(
+        Request $request,
+        DataTable $dataTable,
+        PaginatorInterface $paginator,
+        QuoteRequest $quoteRequest
+    ) {
         $return = [];
 
         $filters = $request->get('filters');
@@ -677,8 +687,7 @@ class QuoteRequestController extends AbstractController
             ->leftJoin('fU.quoteRequest', 'qR')
             ->andWhere('qR.deleted is NULL')
             ->andWhere('qR.id = :quoteRequestId')
-            ->setParameter('quoteRequestId', $quoteRequest->getId())
-        ;
+            ->setParameter('quoteRequestId', $quoteRequest->getId());
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
             if (substr($search['value'], 0, 1) === '#') {
@@ -760,7 +769,7 @@ class QuoteRequestController extends AbstractController
             $quoteRequestLine = $form->getData();
             $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
 
-            return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            return $this->redirectToRoute('paprec_quote_request_view', array(
                 'id' => $quoteRequest->getId()
             ));
 
@@ -810,7 +819,7 @@ class QuoteRequestController extends AbstractController
 
             $this->quoteRequestManager->editLine($quoteRequest, $quoteRequestLine, $user);
 
-            return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            return $this->redirectToRoute('paprec_quote_request_view', array(
                 'id' => $quoteRequest->getId()
             ));
         }
@@ -846,7 +855,7 @@ class QuoteRequestController extends AbstractController
         $this->em->flush();
 
 
-        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+        return $this->redirectToRoute('paprec_quote_request_view', array(
             'id' => $quoteRequest->getId()
         ));
     }
@@ -873,7 +882,7 @@ class QuoteRequestController extends AbstractController
         $quoteRequest->setQuoteStatus('QUOTE_SENT');
         $this->em->flush();
 
-        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+        return $this->redirectToRoute('paprec_quote_request_view', array(
             'id' => $quoteRequest->getId()
         ));
     }
@@ -897,7 +906,7 @@ class QuoteRequestController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+        return $this->redirectToRoute('paprec_quote_request_view', array(
             'id' => $quoteRequest->getId()
         ));
     }
@@ -917,7 +926,7 @@ class QuoteRequestController extends AbstractController
         /**
          * Si le dossier n'existe pas, on le créé
          */
-        if(!is_dir($pdfFolder)) {
+        if (!is_dir($pdfFolder)) {
             if (!mkdir($pdfFolder, 0777, true)) {
                 return false;
             }
@@ -998,14 +1007,15 @@ class QuoteRequestController extends AbstractController
                 if ($quoteRequestFileSize > $fileMaxSize) {
                     $this->get('session')->getFlashBag()->add('error', 'generatedQuoteRequestFileNotAdded');
 
-                    return $this->redirectToRoute('paprec_quoteRequest_view', array(
+                    return $this->redirectToRoute('paprec_quote_request_view', array(
                         'id' => $quoteRequest->getId()
                     ));
                 }
 
                 $quoteRequestFileSystemName = md5(uniqid('', true)) . '.' . $quoteRequestFilePath->guessExtension();
 
-                $quoteRequestFilePath->move($this->getParameter('paprec.quote_request_file.directory'), $quoteRequestFileSystemName);
+                $quoteRequestFilePath->move($this->getParameter('paprec.quote_request_file.directory'),
+                    $quoteRequestFileSystemName);
 
                 $quoteRequestFileOriginalName = $quoteRequestFile->getSystemPath()->getClientOriginalName();
                 $quoteRequestFileMimeType = $quoteRequestFile->getSystemPath()->getClientMimeType();
@@ -1021,12 +1031,12 @@ class QuoteRequestController extends AbstractController
                 $this->em->flush();
             }
 
-            return $this->redirectToRoute('paprec_quoteRequest_view', array(
+            return $this->redirectToRoute('paprec_quote_request_view', array(
                 'id' => $quoteRequest->getId()
             ));
         }
 
-        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+        return $this->redirectToRoute('paprec_quote_request_view', array(
             'id' => $quoteRequest->getId()
         ));
     }
@@ -1050,8 +1060,227 @@ class QuoteRequestController extends AbstractController
             unlink($quoteRequestFilePath);
         }
 
-        return $this->redirectToRoute('paprec_quoteRequest_view', array(
+        return $this->redirectToRoute('paprec_quote_request_view', array(
             'id' => $quoteRequest->getId()
         ));
+    }
+
+    /**
+     * @Route("/downloadQuoteRequestFile/{id}", name="paprec_quote_request_download_quote_request_file")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
+    public function downloadQuoteRequestFileAction(Request $request, QuoteRequestFile $quoteRequestFile)
+    {
+        $quoteRequestFileFolder = $this->getParameter('paprec.quote_request_file.directory');
+        $quoteRequestFilePath = $quoteRequestFileFolder . '/' . $quoteRequestFile->getSystemName();
+        if (file_exists($quoteRequestFilePath)) {
+            $response = new BinaryFileResponse($quoteRequestFilePath);
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $quoteRequestFile->getOriginalFileName());
+
+            return $response;
+        }
+
+        return $this->redirectToRoute('paprec_quote_request_view', array(
+            'id' => $quoteRequestFile->getQuoteRequest()->getId()
+        ));
+
+    }
+
+    /**
+     * @Route("/{id}/addMissionSheet", name="paprec_quote_request_mission_sheet_add")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addMissionSheetAction(Request $request, QuoteRequest $quoteRequest)
+    {
+        $user = $this->getUser();
+
+        $agencies = $this->getDoctrine()->getManager()->getRepository(Agency::class)->findBy([
+            'deleted' => null
+        ]);
+        $agencyById = [];
+        if(is_array($agencies) && count($agencies)){
+            foreach ($agencies as $a){
+                $agencyById[$a->getId()] = $a;
+            }
+        }
+
+        $missionSheet = new MissionSheet();
+        $missionSheet->addQuoteRequest($quoteRequest);
+        $quoteRequest->setMissionSheet($missionSheet);
+
+        $missionSheet->setMyPaprecAccess(0);
+        $missionSheet->setWasteTrackingRegisterAccess(0);
+        $missionSheet->setReportingAccess(0);
+        $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $formData = $form->all();
+            if (is_array($formData) && count($formData)) {
+                foreach ($formData as $key => $value) {
+                    $parameters[$key] = $value->getData();
+                }
+            }
+
+            $contractType = null;
+            $mnemonicNumber = null;
+            $contractNumber = null;
+            if (is_array($parameters) && count($parameters)) {
+                foreach ($parameters as $key => $value) {
+                    $$key = $value;
+                }
+            }
+
+            $errors = [];
+            if (isset($contractType) && $contractType === 'modification') {
+                if (!$mnemonicNumber) {
+                    $errors['mnemonicNumber'] = array(
+                        'code' => 400,
+                        'message' => 'La valeur ne doit pas être nulle'
+                    );
+                }
+                if (!$contractNumber) {
+                    $errors['contractNumber'] = array(
+                        'code' => 400,
+                        'message' => 'La valeur ne doit pas être nulle'
+                    );
+                }
+            }
+
+            if ($errors && count($errors)) {
+                $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+                ]);
+
+                if ($errors['contractNumber']) {
+                    $form->get('contractNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+                }
+
+                if ($errors['mnemonicNumber']) {
+                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+                }
+
+                return $this->render('quoteRequest/missionSheet/add.html.twig', array(
+                    'form' => $form->createView(),
+                    'quoteRequest' => $quoteRequest,
+                    'errors' => $errors,
+                    'agencies' => $agencies
+                ));
+            }
+
+            if ($form->isValid()) {
+
+                $missionSheet = $form->getData();
+
+                $missionSheet->setDateCreation(new \DateTime());
+                $missionSheet->setUserCreation($user);
+
+                if ($missionSheet->getContractType() === 'creation') {
+                    $missionSheet->setMnemonicNumber(null);
+                    $missionSheet->setContractNumber(null);
+                }
+
+                $this->em->persist($missionSheet);
+
+                /**
+                 * On ajoute l'agence dans les quoteRequestLine
+                 */
+                $quoteRequestLineAgencies = $request->get('quoteRequestLineAgency');
+
+                if (count($quoteRequest->getQuoteRequestLines())) {
+                    foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
+                        if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
+                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()], $agencyById)) {
+                            $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
+                        }
+                    }
+                }
+
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_quote_request_view', array(
+                    'id' => $quoteRequest->getId()
+                ));
+
+            }
+        }
+
+        return $this->render('quoteRequest/missionSheet/add.html.twig', array(
+            'form' => $form->createView(),
+            'quoteRequest' => $quoteRequest,
+            'agencies' => $agencies
+        ));
+    }
+
+    /**
+     * @Route("/{id}/downloadMissionSheet", name="paprec_quote_request_mission_sheet_download")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @throws \Exception
+     */
+    public function downloadMissionSheetAction(QuoteRequest $quoteRequest)
+    {
+        /**
+         * On commence par pdf générés (seulement ceux générés dans le BO  pour éviter de supprimer un PDF en cours d'envoi pour un utilisateur
+         */
+        $pdfFolder = $this->getParameter('paprec.data_tmp_directory');
+
+        /**
+         * Si le dossier n'existe pas, on le créé
+         */
+        if (!is_dir($pdfFolder)) {
+            if (!mkdir($pdfFolder, 0777, true)) {
+                return false;
+            }
+        }
+
+        $finder = new Finder();
+
+        $finder->files()->in($pdfFolder);
+
+        if ($finder->hasResults()) {
+            foreach ($finder as $file) {
+                $absoluteFilePath = $file->getRealPath();
+//                $fileNameWithExtension = $file->getRelativePathname();
+                if (file_exists($absoluteFilePath)) {
+                    unlink($absoluteFilePath);
+                }
+            }
+        }
+
+        $user = $this->getUser();
+        $pdfTmpFolder = $pdfFolder . '/';
+
+        $locale = 'fr';
+
+        $file = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest->getMissionSheet(), $locale);
+
+        $filename = substr($file, strrpos($file, '/') + 1);
+
+        // This should return the file to the browser as response
+        $response = new BinaryFileResponse($pdfTmpFolder . $filename);
+
+        // To generate a file download, you need the mimetype of the file
+        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
+
+        // Set the mimetype with the guesser or manually
+        if ($mimeTypeGuesser->isSupported()) {
+            // Guess the mimetype of the file according to the extension of the file
+            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($pdfTmpFolder . $filename));
+        } else {
+            // Set the mimetype of the file manually, in this case for a text file is text/plain
+            $response->headers->set('Content-Type', 'application/pdf');
+        }
+
+        // Set content disposition inline of the file
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
+                array(), 'messages', $locale) . '-' . $quoteRequest->getBusinessName() . '.pdf'
+        );
+
+        return $response;
     }
 }

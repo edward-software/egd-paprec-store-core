@@ -160,7 +160,7 @@
 
             $('.catalog-quoteRequestLine-cancel-button').on('click', function () {
 
-                var url = "{{ path("paprec_quoteRequest_view", { id: quoteRequest.id }) }}";
+                var url = "{{ path("paprec_quote_request_view", { id: quoteRequest.id }) }}";
 
                 Swal.fire({
                     title: "{{ 'General.Confirm'|trans }}",

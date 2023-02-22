@@ -3,6 +3,7 @@
 namespace App\Service;
 
 
+use App\Entity\MissionSheet;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestLine;
 use Doctrine\ORM\EntityManagerInterface;
@@ -1164,6 +1165,119 @@ class QuoteRequestManager
                             'locale' => $locale,
                             'products' => $products,
                             'monthlyCoefValues' => $monthlyCoefficientValues
+                        )
+                    )
+                ),
+                $filenameOffer
+            );
+
+            /**
+             * Concaténation des fichiers
+             */
+            $pdfArray = array();
+
+            $ponctualFileNames = $this->container->getParameter('paprec.file_names');
+            $ponctualFileCovers = $this->container->getParameter('paprec.cover_file_names');
+            $ponctualFileDirectory = $this->container->getParameter('paprec.files_directory');
+
+            /**
+             * Ajout de(s) page(s) de garde
+             */
+            if (is_array($ponctualFileCovers) && count($ponctualFileCovers)) {
+                foreach ($ponctualFileCovers as $ponctualFileCover) {
+                    $noticeFilename = $ponctualFileDirectory . '/' . $ponctualFileCover . '.pdf';
+                    if (file_exists($noticeFilename)) {
+                        $pdfArray[] = $noticeFilename;
+                    }
+                }
+            }
+
+            /**
+             * Ajout de l'offre généré
+             */
+            $pdfArray[] = $filenameOffer;
+
+
+            if (is_array($ponctualFileNames) && count($ponctualFileNames)) {
+                foreach ($ponctualFileNames as $ponctualFileName) {
+                    $noticeFilename = $ponctualFileDirectory . '/' . $ponctualFileName . '.pdf';
+                    if (file_exists($noticeFilename)) {
+                        $pdfArray[] = $noticeFilename;
+                    }
+                }
+            }
+
+            if (count($pdfArray)) {
+                $merger = new Merger();
+                $merger->addIterator($pdfArray);
+                file_put_contents($filename, $merger->merge());
+            }
+
+            if (!file_exists($filename)) {
+                return false;
+            }
+
+            return $filename;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToGenerateProductQuote', 500);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Génère le devis au format PDF et retoune le nom du fichier généré (placé dans /data/tmp)
+     *
+     * @param MissionSheet $missionSheet
+     * @return bool|string
+     * @throws Exception
+     */
+    public function generateMissionSheetPDF(MissionSheet $missionSheet, $locale)
+    {
+        try {
+
+            $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
+
+            if (!is_dir($pdfTmpFolder)) {
+                if (!mkdir($pdfTmpFolder, 0755, true) && !is_dir($pdfTmpFolder)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $pdfTmpFolder));
+                }
+            }
+
+            $filename = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
+            $filenameOffer = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
+
+            $today = new \DateTime();
+
+            $snappy = new Pdf($_ENV['WKHTMLTOPDF_PATH']);
+            $snappy->setOption('javascript-delay', 3000);
+            $snappy->setTimeout(600);
+            $snappy->setOption('dpi', 72);
+            $snappy->setOption('zoom', 1);
+
+            $templateDir = 'public/PDF/missionSheet';
+
+            $snappy->setOption('header-html',
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html',
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
+
+            if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
+                return false;
+            }
+
+            /**
+             * On génère la page d'offre
+             */
+            $snappy->generateFromHtml(
+                array(
+                    $this->container->get('templating')->render(
+                        $templateDir . '/printMissionSheet.html.twig',
+                        array(
+                            'missionSheet' => $missionSheet,
+                            'date' => $today,
+                            'locale' => $locale
                         )
                     )
                 ),

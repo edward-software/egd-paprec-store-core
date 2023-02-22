@@ -374,6 +374,12 @@ class QuoteRequest
     private $userInCharge;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\MissionSheet", inversedBy="quoteRequests")
+     * @ORM\JoinColumn(name="missionSheetId")
+     */
+    private $missionSheet;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PostalCode", inversedBy="quoteRequests")
      * @ORM\JoinColumn(name="postalCodeId")
      * @Assert\NotBlank(groups={"public_multisite"})
@@ -1558,6 +1564,24 @@ class QuoteRequest
     {
         return $this->followUps;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMissionSheet()
+    {
+        return $this->missionSheet;
+    }
+
+    /**
+     * @param mixed $missionSheet
+     */
+    public function setMissionSheet($missionSheet)
+    {
+        $this->missionSheet = $missionSheet;
+    }
+
+
 
 
 }
