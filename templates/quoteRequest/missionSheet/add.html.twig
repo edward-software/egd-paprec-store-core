@@ -217,7 +217,7 @@
                                             <td class="text-center">
                                                 <select name="quoteRequestLineAgency[{{ quoteRequestLine.id }}]" class="form-control">
                                                     {% for agency in agencies %}
-                                                        <option value="{{ agency.id }}">{{ agency.name }}</option>
+                                                        <option value="{{ agency.id }}"{% if quoteRequest.userInCharge and quoteRequest.userInCharge.agency and quoteRequest.userInCharge.agency.id == agency.id %} selected{% endif %}>{{ agency.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </td>
