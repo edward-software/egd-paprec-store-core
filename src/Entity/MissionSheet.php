@@ -114,6 +114,13 @@ class MissionSheet
      */
     private $reportingAccess;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=255)
+     */
+    private $status;
+
 
     
     /**
@@ -458,5 +465,24 @@ class MissionSheet
         }
 
         return $this;
+    }
+
+    /**
+     * @param $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

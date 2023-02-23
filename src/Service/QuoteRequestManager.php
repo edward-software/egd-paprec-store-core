@@ -1339,6 +1339,7 @@ class QuoteRequestManager
                             ),
                             $actualFilename
                         );
+
                         $pdfArray[] = $actualFilename;
                     }
                 }

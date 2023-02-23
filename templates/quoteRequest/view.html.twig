@@ -51,10 +51,18 @@
                                 </a>
                             {% endif %}
 
+                            {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
+                                <a id="commmecialQuoteRequestMissionSheetValidateButton" href="javascript:void(0);"
+                                   class="btn btn-sm btn-danger"><i
+                                            class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
+                                </a>
+                            {% endif %}
+                        {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
                             <a href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
                                class="btn btn-sm btn-secondary"><i
                                         class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.GeneratePdf'| trans({}, "messages", app.request.locale) }}
                             </a>
+                            {% endif %}
                         {% endif %}
                         <a href="{{ path("paprec_quote_request_follow_up_add", {id: quoteRequest.id}) }}"
                            class="btn btn-sm btn-success"><i
@@ -82,7 +90,6 @@
                         <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
                            class="btn btn-sm btn-danger"><i
                                     class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
-
                         <!-- Modal d'ajout de fichiers au mail -->
                         <div class="modal fade" id="uploadQuoteRequestFileModal" tabindex="-1" role="dialog"
                              aria-labelledby="Upload Picture" aria-hidden="true">
@@ -812,6 +819,23 @@
                 });
                 {% endif %}
 
+
+            });
+            $('#commmecialQuoteRequestMissionSheetValidateButton').on('click', function () {
+
+                var url = "{{ path("paprec_quote_request_mission_sheet_validate", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "Confirmez-vous la validation ?",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
 
             });
             $('.commercialQuoteRequestLineRemoveButton').on('click', function () {

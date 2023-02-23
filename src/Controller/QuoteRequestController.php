@@ -1187,6 +1187,7 @@ class QuoteRequestController extends AbstractController
 
                 $missionSheet->setDateCreation(new \DateTime());
                 $missionSheet->setUserCreation($user);
+                $missionSheet->setStatus('NOT_VALIDATED');
 
                 if ($missionSheet->getContractType() === 'creation') {
                     $missionSheet->setMnemonicNumber(null);
@@ -1311,6 +1312,7 @@ class QuoteRequestController extends AbstractController
 
                 $missionSheet->setDateUpdate(new \DateTime());
                 $missionSheet->setUserUpdate($user);
+                $missionSheet->setStatus('NOT_VALIDATED');
 
                 if ($missionSheet->getContractType() === 'creation') {
                     $missionSheet->setMnemonicNumber(null);
@@ -1347,6 +1349,21 @@ class QuoteRequestController extends AbstractController
             'missionSheet' => $missionSheet,
             'agencies' => $agencies
         ));
+    }
+
+    /**
+     * @Route("/{id}/validateMissionSheet/{missionSheetId}", name="paprec_quote_request_mission_sheet_validate")
+     * @Security("has_role('ROLE_MANAGER_COMMERCIAL')")
+     */
+    public function validateMissionSheetAction(Request $request, QuoteRequest $quoteRequest, $missionSheetId)
+    {
+        $missionSheet = $this->quoteRequestManager->getMissionSheet($missionSheetId, true);
+        $missionSheet->setStatus('VALIDATED');
+        $this->em->flush();
+
+        return $this->redirectToRoute('paprec_quote_request_view', [
+            'id' => $quoteRequest->getId()
+        ]);
     }
 
     /**
@@ -1418,11 +1435,11 @@ class QuoteRequestController extends AbstractController
         if ($quoteRequest->getUserInCharge()) {
             $pdfName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
         }
-        if($quoteRequest->getMissionSheet()){
-            if($quoteRequest->getMissionSheet()->getMnemonicNumber()){
+        if ($quoteRequest->getMissionSheet()) {
+            if ($quoteRequest->getMissionSheet()->getMnemonicNumber()) {
                 $pdfName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
             }
-            if($quoteRequest->getMissionSheet()->getContractNumber()){
+            if ($quoteRequest->getMissionSheet()->getContractNumber()) {
                 $pdfName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
             }
         }

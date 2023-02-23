@@ -5,6 +5,7 @@ Commercial:
     QuoteRequests: Demandes de devis
     Settings: Paramétrage
     MissionSheet:
+        Validate: Valider la feuille de mission
         View: Vue de la feuille de mission
         Add: Ajouter une feuille de mission
         Edit: Editer une feuille de mission
