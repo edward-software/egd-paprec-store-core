@@ -1246,8 +1246,10 @@ class QuoteRequestManager
                 }
             }
 
+            $pdfTmpFolder .= '/' . 'missionSheet';
+
             $filename = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
-            $filenameOffer = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
+            $filenameMissionSheet = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
 
             $today = new \DateTime();
 
@@ -1266,6 +1268,11 @@ class QuoteRequestManager
             }
 
             /**
+             * Concaténation des fichiers
+             */
+            $pdfArray = [];
+
+            /**
              * On génère la page d'offre
              */
             $snappy->generateFromHtml(
@@ -1274,47 +1281,65 @@ class QuoteRequestManager
                         $templateDir . '/printMissionSheet.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
+                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                             'missionSheet' => $missionSheet,
                             'date' => $today,
                             'locale' => $locale
                         )
                     )
                 ),
-                $filenameOffer
+                $filenameMissionSheet
             );
+            $pdfArray[] = $filenameMissionSheet;
 
-            /**
-             * Concaténation des fichiers
-             */
-            $pdfArray = array();
-
-            $ponctualFileNames = $this->container->getParameter('paprec.file_names');
-            $ponctualFileCovers = $this->container->getParameter('paprec.cover_file_names');
-            $ponctualFileDirectory = $this->container->getParameter('paprec.files_directory');
-
-            /**
-             * Ajout de(s) page(s) de garde
-             */
-            if (is_array($ponctualFileCovers) && count($ponctualFileCovers)) {
-                foreach ($ponctualFileCovers as $ponctualFileCover) {
-                    $noticeFilename = $ponctualFileDirectory . '/' . $ponctualFileCover . '.pdf';
-                    if (file_exists($noticeFilename)) {
-                        $pdfArray[] = $noticeFilename;
+            $quoteRequestLinesByAgency = [];
+            $agenciesById = [];
+            if (count($quoteRequest->getQuoteRequestLines())) {
+                foreach ($quoteRequest->getQuoteRequestLines() as $qRL) {
+                    if (!array_key_exists($qRL->getAgency()->getId(), $quoteRequestLinesByAgency)) {
+                        $quoteRequestLinesByAgency[$qRL->getAgency()->getId()] = [];
+                        $agenciesById[$qRL->getAgency()->getId()] = $qRL->getAgency();
                     }
+                    $quoteRequestLinesByAgency[$qRL->getAgency()->getId()][] = $qRL;
                 }
-            }
 
-            /**
-             * Ajout de l'offre généré
-             */
-            $pdfArray[] = $filenameOffer;
+                foreach ($quoteRequestLinesByAgency as $agencyId => $quoteRequestLines) {
+                    $agency = $agenciesById[$agencyId];
+                    if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
 
+                        $dir = $templateDir . '/exploitation';
+                        $actualFilename = $pdfTmpFolder . '/exploitation/' . md5(uniqid('', true)) . '.pdf';
 
-            if (is_array($ponctualFileNames) && count($ponctualFileNames)) {
-                foreach ($ponctualFileNames as $ponctualFileName) {
-                    $noticeFilename = $ponctualFileDirectory . '/' . $ponctualFileName . '.pdf';
-                    if (file_exists($noticeFilename)) {
-                        $pdfArray[] = $noticeFilename;
+                        $sheetName = '';
+                        if (strtolower($agency->getName()) === 'lcb93') {
+                            $sheetName = 'Exploitation LCB';
+                        } elseif (strtolower($agency->getName()) === 'cfs') {
+                            $sheetName = 'Exploitation CFS';
+                        } elseif (strtolower($agency->getName()) === 'lpp') {
+                            $sheetName = 'Navette LPP';
+                        } elseif (strtolower($agency->getName()) === 'paprec') {
+                            $sheetName = 'Navette IDF';
+                        } elseif (strtolower($agency->getName()) === 'in situ') {
+                            $sheetName = 'Navette In Situ';
+                        }
+
+                        $snappy->generateFromHtml(
+                            array(
+                                $this->container->get('templating')->render(
+                                    $dir . '/printMissionSheet.html.twig',
+                                    array(
+                                        'quoteRequest' => $quoteRequest,
+                                        'sheetName' => $sheetName,
+                                        'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                                        'missionSheet' => $missionSheet,
+                                        'date' => $today,
+                                        'locale' => $locale
+                                    )
+                                )
+                            ),
+                            $actualFilename
+                        );
+                        $pdfArray[] = $actualFilename;
                     }
                 }
             }
@@ -1336,6 +1361,60 @@ class QuoteRequestManager
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
+    }
+
+    public function getMissionSheet($missionSheet, $throwException = true)
+    {
+        $id = $missionSheet;
+        if ($missionSheet instanceof MissionSheet) {
+            $id = $missionSheet->getId();
+        }
+        try {
+
+            $missionSheet = $this->em->getRepository('App:MissionSheet')->find($id);
+
+            /**
+             * Vérification que le quoteRequest existe ou ne soit pas supprimé
+             */
+            if ($missionSheet === null || $this->missionSheetIsDeleted($missionSheet)) {
+                throw new EntityNotFoundException('missionSheetNotFound');
+            }
+
+
+            return $missionSheet;
+
+        } catch (Exception $e) {
+            if ($throwException) {
+                throw new Exception($e->getMessage(), $e->getCode());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Vérifie qu'à ce jour, le missionSheet ce soit pas supprimée
+     *
+     * @param MissionSheet $missionSheet
+     * @param bool $throwException
+     * @return bool
+     * @throws EntityNotFoundException
+     * @throws Exception
+     */
+    public function missionSheetIsDeleted(MissionSheet $missionSheet, $throwException = false)
+    {
+        $now = new \DateTime();
+
+        if ($missionSheet->getDeleted() !== null && $missionSheet->getDeleted() instanceof \DateTime && $missionSheet->getDeleted() < $now) {
+
+            if ($throwException) {
+                throw new EntityNotFoundException('missionSheetNotFound');
+            }
+
+            return true;
+
+        }
+        return false;
     }
 
 }

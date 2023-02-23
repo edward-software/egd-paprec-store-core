@@ -430,8 +430,18 @@ class QuoteRequestController extends AbstractController
 
         $formAddQuoteRequestFile = $this->createForm(QuoteRequestFileType::class, $quoteRequestFile, array());
 
+        $hasContract = false;
+        if (count($quoteRequest->getQuoteRequestFiles())) {
+            foreach ($quoteRequest->getQuoteRequestFiles() as $qRF) {
+                if ($qRF->getType() === 'contract') {
+                    $hasContract = true;
+                }
+            }
+        }
+
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
+            'hasContract' => $hasContract,
             'isAbleToSendContractEmail' => $isAbleToSendContractEmail,
             'formAddQuoteRequestFile' => $formAddQuoteRequestFile->createView()
         ));
@@ -1090,7 +1100,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/addMissionSheet", name="paprec_quote_request_mission_sheet_add")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function addMissionSheetAction(Request $request, QuoteRequest $quoteRequest)
     {
@@ -1100,8 +1110,8 @@ class QuoteRequestController extends AbstractController
             'deleted' => null
         ]);
         $agencyById = [];
-        if(is_array($agencies) && count($agencies)){
-            foreach ($agencies as $a){
+        if (is_array($agencies) && count($agencies)) {
+            foreach ($agencies as $a) {
                 $agencyById[$a->getId()] = $a;
             }
         }
@@ -1193,7 +1203,8 @@ class QuoteRequestController extends AbstractController
                 if (count($quoteRequest->getQuoteRequestLines())) {
                     foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
                         if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
-                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()], $agencyById)) {
+                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()],
+                                $agencyById)) {
                             $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
                         }
                     }
@@ -1211,6 +1222,129 @@ class QuoteRequestController extends AbstractController
         return $this->render('quoteRequest/missionSheet/add.html.twig', array(
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
+            'agencies' => $agencies
+        ));
+    }
+
+    /**
+     * @Route("/{id}/editMissionSheet/{missionSheetId}", name="paprec_quote_request_mission_sheet_edit")
+     * @Security("has_role('ROLE_MANAGER_COMMERCIAL')")
+     */
+    public function editMissionSheetAction(Request $request, QuoteRequest $quoteRequest, $missionSheetId)
+    {
+        $missionSheet = $this->quoteRequestManager->getMissionSheet($missionSheetId, true);
+
+        $user = $this->getUser();
+
+        $agencies = $this->getDoctrine()->getManager()->getRepository(Agency::class)->findBy([
+            'deleted' => null
+        ]);
+        $agencyById = [];
+        if (is_array($agencies) && count($agencies)) {
+            foreach ($agencies as $a) {
+                $agencyById[$a->getId()] = $a;
+            }
+        }
+
+        $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $formData = $form->all();
+            if (is_array($formData) && count($formData)) {
+                foreach ($formData as $key => $value) {
+                    $parameters[$key] = $value->getData();
+                }
+            }
+
+            $contractType = null;
+            $mnemonicNumber = null;
+            $contractNumber = null;
+            if (is_array($parameters) && count($parameters)) {
+                foreach ($parameters as $key => $value) {
+                    $$key = $value;
+                }
+            }
+
+            $errors = [];
+            if (isset($contractType) && $contractType === 'modification') {
+                if (!$mnemonicNumber) {
+                    $errors['mnemonicNumber'] = array(
+                        'code' => 400,
+                        'message' => 'La valeur ne doit pas être nulle'
+                    );
+                }
+                if (!$contractNumber) {
+                    $errors['contractNumber'] = array(
+                        'code' => 400,
+                        'message' => 'La valeur ne doit pas être nulle'
+                    );
+                }
+            }
+
+            if ($errors && count($errors)) {
+                $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+                ]);
+
+                if ($errors['contractNumber']) {
+                    $form->get('contractNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+                }
+
+                if ($errors['mnemonicNumber']) {
+                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+                }
+
+                return $this->render('quoteRequest/missionSheet/edit.html.twig', array(
+                    'form' => $form->createView(),
+                    'quoteRequest' => $quoteRequest,
+                    'missionSheet' => $missionSheet,
+                    'errors' => $errors,
+                    'agencies' => $agencies
+                ));
+            }
+
+            if ($form->isValid()) {
+
+                $missionSheet = $form->getData();
+
+                $missionSheet->setDateUpdate(new \DateTime());
+                $missionSheet->setUserUpdate($user);
+
+                if ($missionSheet->getContractType() === 'creation') {
+                    $missionSheet->setMnemonicNumber(null);
+                    $missionSheet->setContractNumber(null);
+                }
+
+                /**
+                 * On ajoute l'agence dans les quoteRequestLine
+                 */
+                $quoteRequestLineAgencies = $request->get('quoteRequestLineAgency');
+
+                if (count($quoteRequest->getQuoteRequestLines())) {
+                    foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
+                        if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
+                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()],
+                                $agencyById)) {
+                            $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
+                        }
+                    }
+                }
+
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_quote_request_view', array(
+                    'id' => $quoteRequest->getId()
+                ));
+
+            }
+        }
+
+        return $this->render('quoteRequest/missionSheet/edit.html.twig', array(
+            'form' => $form->createView(),
+            'quoteRequest' => $quoteRequest,
+            'missionSheet' => $missionSheet,
             'agencies' => $agencies
         ));
     }
@@ -1251,11 +1385,12 @@ class QuoteRequestController extends AbstractController
         }
 
         $user = $this->getUser();
-        $pdfTmpFolder = $pdfFolder . '/';
+        $pdfTmpFolder = $pdfFolder . '/missionSheet/';
 
         $locale = 'fr';
 
-        $file = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(), $locale);
+        $file = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
+            $locale);
 
         $filename = substr($file, strrpos($file, '/') + 1);
 
@@ -1274,11 +1409,28 @@ class QuoteRequestController extends AbstractController
             $response->headers->set('Content-Type', 'application/pdf');
         }
 
+        $today = new \DateTime();
+
+        $pdfName = 'FM';
+        $pdfName .= ' ' . $today->format('o');
+        $pdfName .= ' ' . $today->format('m');
+        $pdfName .= ' ' . $today->format('d');
+        if ($quoteRequest->getUserInCharge()) {
+            $pdfName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
+        }
+        if($quoteRequest->getMissionSheet()){
+            if($quoteRequest->getMissionSheet()->getMnemonicNumber()){
+                $pdfName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
+            }
+            if($quoteRequest->getMissionSheet()->getContractNumber()){
+                $pdfName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
+            }
+        }
+        $pdfName .= '.pdf';
         // Set content disposition inline of the file
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
-                array(), 'messages', $locale) . '-' . $quoteRequest->getBusinessName() . '.pdf'
+            $pdfName
         );
 
         return $response;

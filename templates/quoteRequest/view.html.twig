@@ -34,13 +34,25 @@
                     </h4>
                     <div class="float-right">
                         {% if not quoteRequest.missionSheet %}
-                            <a href="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
-                               class="btn btn-sm btn-success"><i
-                                        class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
-                            </a>
+                            {% if is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_COMMERCIAL_MULTISITES') %}
+                                {% if hasContract and quoteRequest.quoteStatus == 'CONTRACT_SIGNED' %}
+                                    <a href="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
+                                       class="btn btn-sm btn-success"><i
+                                                class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         {% else %}
+
+                            {% if is_granted('ROLE_MANAGER_COMMERCIAL') %}
+                                <a href="{{ path("paprec_quote_request_mission_sheet_edit", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}"
+                                   class="btn btn-sm btn-warning"><i
+                                            class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Edit'| trans({}, "messages", app.request.locale) }}
+                                </a>
+                            {% endif %}
+
                             <a href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
-                               class="btn btn-sm btn-success"><i
+                               class="btn btn-sm btn-secondary"><i
                                         class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.GeneratePdf'| trans({}, "messages", app.request.locale) }}
                             </a>
                         {% endif %}
@@ -96,6 +108,15 @@
                                                 <div class="form-content">
                                                     {{ form_widget(formAddQuoteRequestFile.systemPath, {'attr': {'class': 'form-control'}}) }}
                                                     {{ form_errors(formAddQuoteRequestFile.systemPath) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    <span>{{ 'Commercial.QuoteRequestFile.Type.Type'| trans({}, "messages", app.request.locale) }}</span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddQuoteRequestFile.type, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddQuoteRequestFile.type) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -619,6 +640,7 @@
                                     <thead>
                                     <tr>
                                         <th>{{ 'Commercial.QuoteRequestFile.FileNameColumn'| trans({}, "messages", app.request.locale) }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestFile.Type.Type'| trans({}, "messages", app.request.locale) }}</th>
                                         <th>{{ 'Commercial.QuoteRequestFile.FileTypeColumn'| trans({}, "messages", app.request.locale) }}</th>
                                         <th></th>
                                     </tr>
@@ -631,6 +653,10 @@
                                             <tr>
                                                 <td>
                                                     {{ quoteRequestFile.originalFileName }}
+                                                </td>
+
+                                                <td>
+                                                    {{ ('Commercial.QuoteRequestFile.Type.'~quoteRequestFile.type|capitalize)|trans }}
                                                 </td>
 
                                                 <td>

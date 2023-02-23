@@ -138,6 +138,7 @@ Commercial:
             Add: Ajouter un suivi
         MissionSheet:
             Add: Ajouter une feuille de mission
+            Edit: Edition de la feuille de mission
             GeneratePdf: Générer le pdf de la feuille de mission
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
@@ -175,6 +176,10 @@ Commercial:
         FileListTitle: Liste des fichiers
         FileNameColumn: Nom
         FileTypeColumn: Format
+        Type:
+            Type: Type
+            Contract: Contrat
+            Other: Autre
 
     StaffList:
         150: De 0 à 50 employés

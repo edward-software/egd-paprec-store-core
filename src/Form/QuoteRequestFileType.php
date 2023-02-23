@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Picture;
 use App\Entity\QuoteRequestFile;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +20,21 @@ class QuoteRequestFileType extends AbstractType
         $builder
             ->add('systemPath', FileType::class, array(
                 'data_class' => null
-            ));
+            ))
+            ->add('type', ChoiceType::class, array(
+                'choices' => array(
+                    'Contract' => 'contract',
+                    'Other' => 'other',
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    $choiceValue = strtolower($choiceValue);
+                    return 'Commercial.QuoteRequestFile.Type.' . ucfirst($choiceValue);
+                },
+                'data' => 'other',
+                'required' => true,
+                'expanded' => true
+            ))
+        ;
     }
 
     /**
