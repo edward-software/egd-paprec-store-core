@@ -46,6 +46,26 @@ class Agency
     private $deleted;
 
     /**
+     * @ORM\Column(name="legalInfoTemplate", type="text")
+     */
+    private $legalInfoTemplate;
+
+    /**
+     * @ORM\Column(name="destinationEmailMission", type="string", length=255, nullable=true)
+     * @Assert\Email(
+     *     groups={"public"},
+     *      message = "email_error"
+     * )
+     */
+    private $destinationEmailMission;
+
+    /**
+     * @var string
+     * @ORM\Column(name="entityName", type="string")
+     */
+    private $entityName;
+
+    /**
      * @var string
      * Le nom de l'agence
      * @ORM\Column(name="name", type="string")
@@ -240,7 +260,6 @@ class Agency
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -256,6 +275,60 @@ class Agency
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+    /**
+     * @param string $entityName
+     * @return Agency
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestinationEmailMission()
+    {
+        return $this->destinationEmailMission;
+    }
+
+    /**
+     * @param string $destinationEmailMission
+     * @return Agency
+     */
+    public function setDestinationEmailMission($destinationEmailMission)
+    {
+        $this->destinationEmailMission = $destinationEmailMission;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLegalInfoTemplate()
+    {
+        return $this->legalInfoTemplate;
+    }
+
+    /**
+     * @param string $legalInfoTemplate
+     * @return Agency
+     */
+    public function setLegalInfoTemplate($legalInfoTemplate)
+    {
+        $this->legalInfoTemplate = $legalInfoTemplate;
         return $this;
     }
 
