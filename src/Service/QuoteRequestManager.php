@@ -1275,22 +1275,22 @@ class QuoteRequestManager
             /**
              * On génère la page d'offre
              */
-//            $snappy->generateFromHtml(
-//                array(
-//                    $this->container->get('templating')->render(
-//                        $templateDir . '/printMissionSheet.html.twig',
-//                        array(
-//                            'quoteRequest' => $quoteRequest,
-//                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
-//                            'missionSheet' => $missionSheet,
-//                            'date' => $today,
-//                            'locale' => $locale
-//                        )
-//                    )
-//                ),
-//                $filenameMissionSheet
-//            );
-//            $pdfArray[] = $filenameMissionSheet;
+            $snappy->generateFromHtml(
+                array(
+                    $this->container->get('templating')->render(
+                        $templateDir . '/printMissionSheet.html.twig',
+                        array(
+                            'quoteRequest' => $quoteRequest,
+                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                            'missionSheet' => $missionSheet,
+                            'date' => $today,
+                            'locale' => $locale
+                        )
+                    )
+                ),
+                $filenameMissionSheet
+            );
+            $pdfArray[] = $filenameMissionSheet;
 
             $quoteRequestLinesByAgency = [];
             $agenciesById = [];
@@ -1323,33 +1323,21 @@ class QuoteRequestManager
                             $sheetName = 'Navette In Situ';
                         }
 
-//                        $snappy->generateFromHtml(
-//                            array(
-//                                $this->container->get('templating')->render(
-//                                    $dir . '/printMissionSheet.html.twig',
-//                                    array(
-//                                        'quoteRequest' => $quoteRequest,
-//                                        'sheetName' => $sheetName,
-//                                        'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
-//                                        'missionSheet' => $missionSheet,
-//                                        'date' => $today,
-//                                        'locale' => $locale
-//                                    )
-//                                )
-//                            ),
-//                            $actualFilename
-//                        );
-
-                        echo $this->container->get('templating')->render(
-                            $dir . '/printMissionSheet.html.twig',
+                        $snappy->generateFromHtml(
                             array(
-                                'quoteRequest' => $quoteRequest,
-                                'sheetName' => $sheetName,
-                                'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
-                                'missionSheet' => $missionSheet,
-                                'date' => $today,
-                                'locale' => $locale
-                            )
+                                $this->container->get('templating')->render(
+                                    $dir . '/printMissionSheet.html.twig',
+                                    array(
+                                        'quoteRequest' => $quoteRequest,
+                                        'sheetName' => $sheetName,
+                                        'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                                        'missionSheet' => $missionSheet,
+                                        'date' => $today,
+                                        'locale' => $locale
+                                    )
+                                )
+                            ),
+                            $actualFilename
                         );
 
                         $pdfArray[] = $actualFilename;
