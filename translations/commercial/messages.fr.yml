@@ -144,10 +144,12 @@ Commercial:
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
+            generatedMissionSheetNotSent: Erreur lors de la génération et l'envoi de la feuille de mission.
             generatedQuoteRequestFileNotAdded: "Erreur lors de l'ajout du fichier : la taille est trop grande"
         Success:
             generatedQuoteSent: Le devis a bien été généré et envoyé au client.
             generatedContractSent: Le contrat a bien été généré et envoyé au client.
+            generatedMissionSheetSent: La feuille de mission a bien été généré et envoyé au commercial en charge.
             newUserInChargeWarned: Un mail a été envoyé au nouveau commercial en charge
         Locale: Langue
         Number: Numéro offre
@@ -313,6 +315,16 @@ Commercial:
         Message3: Nous vous prions de bien vouloir imprimer 2 exemplaires, les signer et les envoyer à l’adresse Easy Recyclage en haut du contrat.
         Message4: Dès réception, vous recevrez quelques jours plus tard une version signée par nos soins.
         Message5: N'hésitez pas à nous contacter si vous avez d'autres questions. Nous nous réjouissons de travailler bientôt avec vous.
+        Regards: Bien cordialement
+        Partner: Votre partenaire Easy Recyclage
+
+    GeneratedMissionSheetEmail:
+        FileName: Feuille de mission Easy Recyclage
+        Object: Feuille de mission Easy Recyclage
+        Dear:
+            M: Cher Monsieur
+            Mrs: Chère Madame
+        Message1: Voici les feuilles de missions du devis n° %number%.
         Regards: Bien cordialement
         Partner: Votre partenaire Easy Recyclage
 

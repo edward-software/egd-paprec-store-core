@@ -94,7 +94,9 @@ Public:
 
     Contact:
         BreadcrumbTitle: Coordonnées du client
-        Title: Entrez vos coordonnées pour être contacté et recevoir votre devis
+        Title: VOUS Y ÊTES PRESQUE !
+        SubTitle: Afin de vous adresser votre devis, merci de préciser les éléments suivants.
+        ThirdTitle: Les champs marqués d'une astérisque (*) sont obligatoires.
         BusinessName: Nom société
         Civility: Civilité
         LastName: Nom

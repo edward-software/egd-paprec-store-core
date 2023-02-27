@@ -1234,9 +1234,38 @@ class QuoteRequestManager
      * @return bool|string
      * @throws Exception
      */
-    public function generateMissionSheetPDF(QuoteRequest $quoteRequest, MissionSheet $missionSheet, $locale)
+    public function sendGenerateMissionSheetPDF(QuoteRequest $quoteRequest, MissionSheet $missionSheet, $locale)
     {
         try {
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
+
+            if ($quoteRequest->getUserInCharge()) {
+                $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
+            } else {
+                return false;
+            }
+
+            if ($rcptTo == null || $rcptTo == '') {
+                return false;
+            }
+
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
+                    array(), 'messages', strtolower($locale)))
+                ->setFrom($from)
+                ->setTo($rcptTo)
+                ->setBody(
+                    $this->container->get('templating')->render(
+                        'public/emails/generatedMissionSheetEmail.html.twig',
+                        array(
+                            'quoteRequest' => $quoteRequest,
+                            'locale' => strtolower($locale)
+                        )
+                    ),
+                    'text/html'
+                );
+
 
             $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
 
@@ -1290,7 +1319,25 @@ class QuoteRequestManager
                 ),
                 $filenameMissionSheet
             );
-            $pdfArray[] = $filenameMissionSheet;
+            $downloadedFileName = 'FM';
+            $downloadedFileName .= ' ' . $today->format('o');
+            $downloadedFileName .= ' ' . $today->format('m');
+            $downloadedFileName .= ' ' . $today->format('d');
+            if ($quoteRequest->getUserInCharge()) {
+                $downloadedFileName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
+            }
+            if ($quoteRequest->getMissionSheet()) {
+                if ($quoteRequest->getMissionSheet()->getMnemonicNumber()) {
+                    $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
+                }
+                if ($quoteRequest->getMissionSheet()->getContractNumber()) {
+                    $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
+                }
+            }
+            $downloadedFileName .= '.pdf';
+
+            $message->attach(new \Swift_Attachment(file_get_contents($filenameMissionSheet), $downloadedFileName,
+                'application/pdf'));
 
             $quoteRequestLinesByAgency = [];
             $agenciesById = [];
@@ -1311,16 +1358,20 @@ class QuoteRequestManager
                         $actualFilename = $pdfTmpFolder . '/exploitation/' . md5(uniqid('', true)) . '.pdf';
 
                         $sheetName = '';
+                        $pdfExploitName = 'Exploitation';
                         if (strtolower($agency->getName()) === 'lcb93') {
                             $sheetName = 'Exploitation LCB';
                         } elseif (strtolower($agency->getName()) === 'cfs') {
                             $sheetName = 'Exploitation CFS';
                         } elseif (strtolower($agency->getName()) === 'lpp') {
                             $sheetName = 'Navette LPP';
+                            $pdfExploitName = 'Navette';
                         } elseif (strtolower($agency->getName()) === 'paprec') {
                             $sheetName = 'Navette IDF';
+                            $pdfExploitName = 'Navette';
                         } elseif (strtolower($agency->getName()) === 'in situ') {
                             $sheetName = 'Navette In Situ';
+                            $pdfExploitName = 'Navette';
                         }
 
                         $snappy->generateFromHtml(
@@ -1339,23 +1390,36 @@ class QuoteRequestManager
                             ),
                             $actualFilename
                         );
+                        $downloadedFileName = 'FM';
+                        $downloadedFileName .= ' ' . $today->format('o');
+                        $downloadedFileName .= ' ' . $today->format('m');
+                        $downloadedFileName .= ' ' . $today->format('d');
+                        if ($quoteRequest->getUserInCharge()) {
+                            $downloadedFileName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
+                        }
+                        if ($quoteRequest->getMissionSheet()) {
+                            if ($quoteRequest->getMissionSheet()->getMnemonicNumber()) {
+                                $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
+                            }
+                            if ($quoteRequest->getMissionSheet()->getContractNumber()) {
+                                $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
+                            }
+                        }
+                        $downloadedFileName .= ' ' . $pdfExploitName;
+                        $downloadedFileName .= ' ' . $agency->getName();
+                        $downloadedFileName .= '.pdf';
 
-                        $pdfArray[] = $actualFilename;
+                        $message->attach(new \Swift_Attachment(file_get_contents($actualFilename), $downloadedFileName,
+                            'application/pdf'));
                     }
                 }
             }
 
-            if (count($pdfArray)) {
-                $merger = new Merger();
-                $merger->addIterator($pdfArray);
-                file_put_contents($filename, $merger->merge());
-            }
 
-            if (!file_exists($filename)) {
-                return false;
+            if ($this->container->get('mailer')->send($message)) {
+                return true;
             }
-
-            return $filename;
+            return false;
 
         } catch (ORMException $e) {
             throw new Exception('unableToGenerateProductQuote', 500);

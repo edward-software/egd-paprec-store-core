@@ -1401,55 +1401,19 @@ class QuoteRequestController extends AbstractController
             }
         }
 
-        $user = $this->getUser();
-        $pdfTmpFolder = $pdfFolder . '/missionSheet/';
-
         $locale = 'fr';
 
-        $file = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
+        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
             $locale);
-
-        $filename = substr($file, strrpos($file, '/') + 1);
-
-        // This should return the file to the browser as response
-        $response = new BinaryFileResponse($pdfTmpFolder . $filename);
-
-        // To generate a file download, you need the mimetype of the file
-        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
-
-        // Set the mimetype with the guesser or manually
-        if ($mimeTypeGuesser->isSupported()) {
-            // Guess the mimetype of the file according to the extension of the file
-            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($pdfTmpFolder . $filename));
+        if ($wasSent) {
+            $this->get('session')->getFlashBag()->add('success', 'generatedMissionSheetSent');
         } else {
-            // Set the mimetype of the file manually, in this case for a text file is text/plain
-            $response->headers->set('Content-Type', 'application/pdf');
+            $this->get('session')->getFlashBag()->add('error', 'generatedMissionSheetNotSent');
         }
 
-        $today = new \DateTime();
+        return $this->redirectToRoute('paprec_quote_request_view', [
+            'id' => $quoteRequest->getId()
+        ]);
 
-        $pdfName = 'FM';
-        $pdfName .= ' ' . $today->format('o');
-        $pdfName .= ' ' . $today->format('m');
-        $pdfName .= ' ' . $today->format('d');
-        if ($quoteRequest->getUserInCharge()) {
-            $pdfName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
-        }
-        if ($quoteRequest->getMissionSheet()) {
-            if ($quoteRequest->getMissionSheet()->getMnemonicNumber()) {
-                $pdfName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
-            }
-            if ($quoteRequest->getMissionSheet()->getContractNumber()) {
-                $pdfName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
-            }
-        }
-        $pdfName .= '.pdf';
-        // Set content disposition inline of the file
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $pdfName
-        );
-
-        return $response;
     }
 }
