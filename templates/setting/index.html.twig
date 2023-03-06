@@ -1,0 +1,106 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+  {{ 'Commercial.Setting.Settings'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+  {{ 'Commercial.Setting.Settings'|trans }}
+{% endblock %}
+
+{% block main_content %}
+  <div class="row">
+    <div class="col-md-12">
+      <!-- BOX -->
+      <div class="card">
+        <div class="card-header">
+          <h4>
+            <i class="fa fa-xs fa-list"></i> {{ 'Commercial.Setting.List'|trans }}
+          </h4>
+          <div class="float-right">
+            <a href="{{ path('paprec_setting_add') }}" class="btn btn-sm btn-outline-primary">
+              <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.Setting.Add'|trans }}
+            </a>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <table id="settingsListDatatable" class="table table-striped table-bordered table-hover"
+                 cellpadding="0" cellspacing="0" border="0" width="100%">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>{{ 'Commercial.Setting.KeyName.KeyName'|trans }}</th>
+              <th>{{ 'Commercial.Setting.Value'|trans }}</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+      <!-- /BOX -->
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    $(function () {
+
+      $('#settingsListDatatable').EgdDatatable({
+        url: "{{ path('paprec_setting_loadList') }}",
+        columns: [
+          {"data": "id"},
+          {"data": "keyName"},
+          {"data": "value"},
+          {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
+        ],
+        rowDblclick: {
+          type: 'open',
+          url: "{{ path('paprec_setting_view', {id: '__rowId__'}) }}"
+        },
+        buttons: [
+          {
+            label: '{{ "General.Remove"|trans }}',
+            type: 'ajaxMany',
+            url: "{{ path("paprec_setting_removeMany", {ids: '__rowIds__', json: 1}) }}",
+            confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
+            className: 'btn-sm'
+          }
+        ],
+        rowButtons: [
+          {
+            label: "{{ 'General.View'|trans }}",
+            className: "btn btn-primary btn-sm",
+            icon: "fa fa-eye",
+            url: "{{ path('paprec_setting_view', {id: '__rowId__'}) }}"
+          },
+          {
+            label: "{{ 'General.Edit'|trans }}",
+            className: "btn btn-warning btn-sm",
+            icon: "fa fa-edit",
+            url: "{{ path('paprec_setting_edit', {id: '__rowId__'}) }}"
+          },
+          {
+            label: '{{ "General.Remove"|trans }}',
+            type: 'ajax',
+            url: "{{ path("paprec_setting_removeMany", {ids: '__rowId__', json: 1}) }}",
+            confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
+            className: 'btn btn-danger btn-sm',
+            icon: "fa fa-times"
+          }
+
+        ]
+      });
+    });
+  </script>
+{% endblock %}

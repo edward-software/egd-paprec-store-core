@@ -34,6 +34,7 @@ parameters:
     paprec.product.catalog:
         - REGULAR
         - PONCTUAL
+        - MATERIAL
 
     paprec_transport_types:
         - CBR_REG
@@ -59,18 +60,26 @@ parameters:
         - CONTRACT_LOST
 
     paprec_quote_access:
-        - stairs
-        - elevator
-        - ground
+        - STAIRS
+        - ELEVATOR
+        - GROUND
 
-    paprec_quote_type:
+    paprec_quote_catalog:
         - REGULAR
         - PONCTUAL
+        - MATERIAL
+
+    paprec_agency_template:
+        - LCB
+        - CFS
+        - LPP
+        - IDF
+        - IN_SITU
 
     paprec_quote_access_price:
-        stairs: 20
-        elevator: 10
-        ground: 0
+        STAIRS: 20
+        ELEVATOR: 10
+        GROUND: 0
 
     tmp_lock_prog: 20
 
@@ -99,8 +108,16 @@ parameters:
         bimestre: 0.54
         quarter: 0.36
 
+    paprec.setting.keys:
+        - FOLLOW_UP_RELAUNCHED_DAYS
+
+    paprec.setting.max_by_key:
+        FOLLOW_UP_RELAUNCHED_DAYS: 1
+
     paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
     paprec.quote_request_file.max_file_size: 5000000
+    paprec.follow_up_file.directory: "%kernel.root_dir%/data/follow-up/file"
+    paprec.follow_up_file.max_file_size: 5000000
 
 services:
     # default configuration for services in *this* file
@@ -131,3 +148,4 @@ services:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
+

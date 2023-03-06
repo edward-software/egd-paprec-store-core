@@ -46,7 +46,7 @@ class QuoteRequestType extends AbstractType
             ->add('civility', ChoiceType::class, array(
                 'choices' => array(
                     'M',
-                    'Mme'
+                    'MME'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
@@ -111,14 +111,15 @@ class QuoteRequestType extends AbstractType
             ->add('overallDiscount')
             ->add('salesmanComment', TextareaType::class)
             ->add('annualBudget')
-            ->add('type', ChoiceType::class, array(
+            ->add('catalog', ChoiceType::class, array(
                 'choices' => array(
                     'REGULAR' => 'REGULAR',
                     'PONCTUAL' => 'PONCTUAL',
+                    'MATERIAL' => 'MATERIAL',
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    $choiceValue = strtolower($choiceValue);
-                    return 'Commercial.QuoteRequest.Type.' . ucfirst($choiceValue);
+                    $choiceValue = strtoupper($choiceValue);
+                    return 'Commercial.QuoteRequest.Catalog.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true
@@ -154,7 +155,7 @@ class QuoteRequestType extends AbstractType
                     '60' => '60'
                 ),
                 'choice_label' => function ($choiceValue, $key, $value) {
-                    return $choiceValue . ' ' . $this->translator->trans('Commercial.QuoteRequest.month');
+                    return $choiceValue . ' ' . $this->translator->trans('Commercial.QuoteRequest.MONTH');
                 },
                 'expanded' => false,
                 'multiple' => false
@@ -163,6 +164,9 @@ class QuoteRequestType extends AbstractType
 //                'widget' => 'choice'
 //            ))
             ->add('startDate', DateType::class, array(
+                'widget' => 'single_text'
+            ))
+            ->add('serviceEndDate', DateType::class, array(
                 'widget' => 'single_text'
             ));
         $builder->get('postalCode')

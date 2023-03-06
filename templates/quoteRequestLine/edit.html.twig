@@ -103,7 +103,7 @@
                                     <div class="form-group col-6">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.PassingFrequency'|trans }}</label>
                                         <div class="form-content">
-                                            {% if quoteRequestLine.frequency != 'regular' %}
+                                            {% if quoteRequestLine.frequency != 'REGULAR' %}
                                                 {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
                                             {% else %}
                                                 {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
@@ -114,7 +114,7 @@
                                     <div class="form-group col-6">
                                         <label class="form-label">&nbsp;</label>
                                         <div class="form-content">
-                                            {% if quoteRequestLine.frequency != 'regular' %}
+                                            {% if quoteRequestLine.frequency != 'REGULAR' %}
                                                 {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
                                             {% else %}
                                                 {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
@@ -160,7 +160,7 @@
 
             $('.catalog-quoteRequestLine-cancel-button').on('click', function () {
 
-                var url = "{{ path("paprec_quoteRequest_view", { id: quoteRequest.id }) }}";
+                var url = "{{ path("paprec_quote_request_view", { id: quoteRequest.id }) }}";
 
                 Swal.fire({
                     title: "{{ 'General.Confirm'|trans }}",
@@ -180,11 +180,11 @@
 * Désactivation ou activation du choix de fréquence en fonction de si c'est Régulier ou A la demande
 */
             $('input[name*="quote_request_line_edit[frequency]"]').change(function () {
-                if (this.value === 'ponctual') {
+                if (this.value === 'PONCTUAL') {
                     $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", true);
                     $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", true);
 
-                } else if (this.value === 'regular') {
+                } else if (this.value === 'REGULAR') {
                     $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", false);
                     $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", false)
                 }

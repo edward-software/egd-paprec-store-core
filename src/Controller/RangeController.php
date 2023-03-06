@@ -86,6 +86,11 @@ class RangeController extends AbstractController
             'id' => 'pL.name',
             'method' => array(array('getRangeLabels', 0), 'getName')
         );
+        $cols['catalog'] = array(
+            'label' => 'catalog',
+            'id' => 'p.catalog',
+            'method' => ['getCatalog']
+        );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
 
 
@@ -119,6 +124,9 @@ class RangeController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
             $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
+            if($line['catalog']){
+                $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . strtoupper($line['catalog']));
+            }
             $tmp[] = $line;
         }
 
@@ -155,9 +163,9 @@ class RangeController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Ranges")
+            ->getProperties()->setCreator("EasyRecyclageShop")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("EasyRecyclageShop - Ranges")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -223,7 +231,7 @@ class RangeController extends AbstractController
             $sheet->getColumnDimension($i)->setAutoSize(true);
         }
 
-        $fileName = 'PrivaciaShop-Extraction-Ranges-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extraction-Ranges-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {

@@ -262,7 +262,7 @@ class QuoteRequest
     /**
      * @var int
      *
-     * @ORM\Column(name="totalAmount", type="integer", nullable=true)
+     * @ORM\Column(name="totalAmount", type="bigint", nullable=true)
      */
     private $totalAmount;
 
@@ -292,9 +292,9 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     * @ORM\Column(name="catalog", type="string", length=255, nullable=true)
      */
-    private $type;
+    private $catalog;
 
     /**
      * @var string
@@ -348,6 +348,13 @@ class QuoteRequest
      */
     private $startDate;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="serviceEndDate", type="datetime", nullable=true)
+     */
+    private $serviceEndDate;
+
 
     /**
      * #################################
@@ -356,10 +363,21 @@ class QuoteRequest
      */
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FollowUp", mappedBy="quoteRequest", cascade={"all"})
+     */
+    private $followUps;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="quoteRequests")
      * @ORM\JoinColumn(name="userInChargeId")
      */
     private $userInCharge;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\MissionSheet", inversedBy="quoteRequests")
+     * @ORM\JoinColumn(name="missionSheetId")
+     */
+    private $missionSheet;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PostalCode", inversedBy="quoteRequests")
@@ -406,6 +424,7 @@ class QuoteRequest
         $this->isSameAddress = false;
         $this->duration = 0;
         $this->quoteRequestFiles = new ArrayCollection();
+        $this->followUps = new ArrayCollection();
     }
 
     /**
@@ -1022,18 +1041,18 @@ class QuoteRequest
     /**
      * @return string
      */
-    public function getType()
+    public function getCatalog()
     {
-        return $this->type;
+        return $this->catalog;
     }
 
     /**
-     * @param string $type
+     * @param string $catalog
      * @return QuoteRequest
      */
-    public function setType($type)
+    public function setCatalog($catalog)
     {
-        $this->type = $type;
+        $this->catalog = $catalog;
         return $this;
     }
 
@@ -1468,6 +1487,18 @@ class QuoteRequest
         return $this;
     }
 
+    public function getServiceEndDate(): ?\DateTime
+    {
+        return $this->serviceEndDate;
+    }
+
+    public function setServiceEndDate($serviceEndDate): self
+    {
+        $this->serviceEndDate = $serviceEndDate;
+
+        return $this;
+    }
+
     /**
      * @return Collection|QuoteRequestFile[]
      */
@@ -1497,6 +1528,60 @@ class QuoteRequest
 
         return $this;
     }
+
+    /**
+     * Add followUp.
+     *
+     * @param FollowUp $followUp
+     *
+     * @return QuoteRequest
+     */
+    public function addFollowUp(FollowUp $followUp)
+    {
+        $this->followUps[] = $followUp;
+
+        return $this;
+    }
+
+    /**
+     * Remove followUp.
+     *
+     * @param FollowUp $followUp
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeFollowUp(FollowUp $followUp)
+    {
+        return $this->followUps->removeElement($followUp);
+    }
+
+    /**
+     * Get followUps.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFollowUps()
+    {
+        return $this->followUps;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMissionSheet()
+    {
+        return $this->missionSheet;
+    }
+
+    /**
+     * @param mixed $missionSheet
+     */
+    public function setMissionSheet($missionSheet)
+    {
+        $this->missionSheet = $missionSheet;
+    }
+
+
 
 
 }

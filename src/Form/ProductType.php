@@ -2,11 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\Agency;
+use App\Entity\BillingUnit;
 use App\Entity\Product;
 use App\Entity\Range;
-use App\Repository\AgencyRepository;
-use App\Repository\ProductRepository;
+use App\Repository\BillingUnitRepository;
 use App\Repository\RangeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -38,15 +37,23 @@ class ProductType extends AbstractType
                 },
                 "expanded" => true,
             ))
-            ->add('rentalUnitPrice', TextType::class)
-            ->add('transportUnitPrice', TextType::class)
-            ->add('treatmentUnitPrice', TextType::class)
-            ->add('traceabilityUnitPrice', TextType::class)
+            ->add('rentalUnitPrice', TextType::class, [
+                "required" => true
+            ])
+            ->add('transportUnitPrice', TextType::class, [
+                "required" => true
+            ])
+            ->add('treatmentUnitPrice', TextType::class, [
+                "required" => true
+            ])
+            ->add('traceabilityUnitPrice', TextType::class, [
+                "required" => true
+            ])
             ->add('position')
             ->add('transportType', ChoiceType::class, array(
                 "choices" => $options['transportTypes'],
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.TransportType.' . ucfirst($choiceValue);
+                    return 'General.TransportType.' . $choiceValue;
                 },
                 "required" => true,
                 "invalid_message" => 'Cannot be null',
@@ -56,25 +63,25 @@ class ProductType extends AbstractType
             ))
             ->add('catalog', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
                 ),
-                'empty_data' => 'ponctual',
+                'empty_data' => 'PONCTUAL',
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Catalog.Product.Catalog.' . ucfirst($choiceValue);
+                    return 'Catalog.Product.Catalog.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true
             ))
             ->add('frequency', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                    'Unknown' => 'unknown'
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
+                    'UNKNOWN' => 'UNKNOWN'
                 ),
-                'empty_data' => 'unknown',
+                'empty_data' => 'UNKNOWN',
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.Frequency.' . ucfirst($choiceValue);
+                    return 'General.Frequency.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true
@@ -95,20 +102,22 @@ class ProductType extends AbstractType
                     '12' => '12'
                 ),
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
+                'required' => true
             ))
             ->add('frequencyInterval', ChoiceType::class, array(
                 'choices' => array(
-                    'week' => 'week',
-                    'month' => 'month',
-                    'bimestre' => 'bimestre',
-                    'quarter' => 'quarter'
+                    'WEEK' => 'WEEK',
+                    'MONTH' => 'MONTH',
+                    'BIMESTRE' => 'BIMESTRE',
+                    'QUARTER' => 'QUARTER'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return ($choiceValue) ? 'General.Frequency.' . ucfirst($choiceValue) : '';
+                    return ($choiceValue) ? 'General.Frequency.' . $choiceValue : '';
                 },
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => false,
+                'required' => true
             ))
             ->add('range', EntityType::class, array(
                 'class' => Range::class,
@@ -119,12 +128,31 @@ class ProductType extends AbstractType
                         ->where('r.deleted IS NULL')
                         ->andWhere('rL.language = :language')
                         ->orderBy('r.position', 'ASC')
-                        ->setParameter('language', 'FR');
+                        ->setParameter('language', 'FR')
+                        ->andWhere('r.catalog != :catalog')
+                        ->setParameter('catalog', 'MATERIAL');
                 },
                 'choice_label' => 'rangeLabels[0].name',
                 'placeholder' => '',
                 'empty_data' => null,
-            ));
+            ))
+            ->add('billingUnit', EntityType::class, array(
+                'class' => BillingUnit::class,
+                'query_builder' => function (BillingUnitRepository $er) {
+                    return $er->createQueryBuilder('bU')
+                        ->select(array('bU'))
+                        ->where('bU.deleted IS NULL');
+                },
+                'choice_label' => function ($billingUnit) {
+                    return $billingUnit->getCode() . ' - ' .$billingUnit->getName();
+                },
+                'placeholder' => '',
+                'empty_data' => null,
+            ))
+            ->add('wasteClassification', TextType::class)
+            ->add('code', TextType::class)
+            ->add('materialUnitPrice', TextType::class)
+        ;
     }
 
     /**

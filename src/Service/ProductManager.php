@@ -152,7 +152,7 @@ class ProductManager
         $numberManager = $this->numberManager;
 
         $frequencyIntervalValue = 1;
-        if ($quoteRequestLine->getFrequency() === 'regular') {
+        if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
             $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
             $frequencyInterval = $quoteRequestLine->getFrequencyInterval();
             if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
@@ -188,14 +188,14 @@ class ProductManager
                 $prices[$p] = $value;
             }
             switch ($quoteRequest->getAccess()) {
-                case 'stairs':
-                    return $prices['stairs'];
+                case 'STAIRS':
+                    return $prices['STAIRS'];
                     break;
-                case 'elevator':
-                    return $prices['elevator'];
+                case 'ELEVATOR':
+                    return $prices['ELEVATOR'];
                     break;
-                case 'ground':
-                    return $prices['ground'];
+                case 'GROUND':
+                    return $prices['GROUND'];
                     break;
                 default:
                     return 0;

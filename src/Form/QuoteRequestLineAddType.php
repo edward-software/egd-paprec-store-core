@@ -40,11 +40,12 @@ class QuoteRequestLineAddType extends AbstractType
             ))
             ->add('frequency', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual'
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
+                    'MATERIAL' => 'MATERIAL'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.Frequency.' . ucfirst($choiceValue);
+                    return 'General.Frequency.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true
@@ -69,13 +70,13 @@ class QuoteRequestLineAddType extends AbstractType
             ))
             ->add('frequencyInterval', ChoiceType::class, array(
                 'choices' => array(
-                    'week' => 'week',
-                    'month' => 'month',
-                    'bimestre' => 'bimestre',
-                    'quarter' => 'quarter'
+                    'WEEK' => 'WEEK',
+                    'MONTH' => 'MONTH',
+                    'BIMESTRE' => 'BIMESTRE',
+                    'QUARTER' => 'QUARTER'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return ($choiceValue) ? 'General.Frequency.' . ucfirst($choiceValue) : '';
+                    return ($choiceValue) ? 'General.Frequency.' . $choiceValue : '';
                 },
                 'expanded' => false,
                 'multiple' => false

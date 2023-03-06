@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Entity\Agency;
 use App\Entity\User;
+use App\Repository\AgencyRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -28,6 +31,7 @@ class UserMyProfileType extends AbstractType
             ->add('companyName', TextType::class)
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
+            ->add('nickname', TextType::class)
             ->add('email', TextType::class, [
                 'required' => true
             ])
@@ -42,6 +46,21 @@ class UserMyProfileType extends AbstractType
                 'first_options'  => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
             ])
+            ->add('agency', EntityType::class, array(
+                'class' => Agency::class,
+                'multiple' => false,
+                'expanded' => false,
+                'placeholder' => '',
+                'empty_data' => null,
+                'choice_label' => function (Agency $agency) {
+                    return $agency->getName();
+                },
+                'required' => false,
+                'query_builder' => function (AgencyRepository $ar) {
+                    return $ar->createQueryBuilder('a')
+                        ->where('a.deleted IS NULL');
+                }
+            ))
         ;
     }
 

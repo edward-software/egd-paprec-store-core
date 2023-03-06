@@ -55,6 +55,13 @@ class QuoteRequestFile
     private $systemPath;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
+
+    /**
      * #################################
      *              Relations
      * #################################
@@ -140,6 +147,24 @@ class QuoteRequestFile
     {
         $this->systemPath = $systemPath;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Cart
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
         return $this;
     }
 }

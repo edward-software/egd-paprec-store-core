@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\FollowUp;
 use App\Entity\Picture;
 use App\Entity\Product;
 use App\Entity\ProductLabel;
 use App\Form\PictureProductType;
 use App\Form\ProductLabelType;
+use App\Form\ProductMaterialType;
 use App\Form\ProductType;
 use App\Service\NumberManager;
+use App\Service\PictureManager;
 use App\Service\ProductLabelManager;
 use App\Service\ProductManager;
 use App\Tools\DataTable;
@@ -39,19 +42,22 @@ class ProductController extends AbstractController
     private $productManager;
     private $productLabelManager;
     private $translator;
+    private $pictureManager;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         NumberManager $numberManager,
         ProductManager $productManager,
-        ProductLabelManager $productLabelManager
+        ProductLabelManager $productLabelManager,
+        PictureManager $pictureManager
     ) {
         $this->em = $em;
         $this->numberManager = $numberManager;
         $this->productManager = $productManager;
         $this->productLabelManager = $productLabelManager;
         $this->translator = $translator;
+        $this->pictureManager = $pictureManager;
     }
 
     /**
@@ -90,6 +96,11 @@ class ProductController extends AbstractController
             'id' => 'p.range',
             'method' => array('getRange', array(array('getRangeLabels', 0), 'getName'))
         );
+        $cols['catalog'] = array(
+            'label' => 'catalog',
+            'id' => 'p.catalog',
+            'method' => ['getCatalog']
+        );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
 
 
@@ -125,6 +136,9 @@ class ProductController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
             $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
+            if($line['catalog']){
+                $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . strtoupper($line['catalog']));
+            }
             $tmp[] = $line;
         }
 
@@ -161,9 +175,9 @@ class ProductController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Products")
+            ->getProperties()->setCreator("EasyRecyclageShop")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("EasyRecyclageShop - Products")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -243,7 +257,7 @@ class ProductController extends AbstractController
             $sheet->getColumnDimension($i)->setAutoSize(true);
         }
 
-        $fileName = 'PrivaciaShop-Extraction-Products-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extraction-Products-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {
@@ -368,6 +382,74 @@ class ProductController extends AbstractController
         }
 
         return $this->render('product/add.html.twig', array(
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView()
+        ));
+    }
+
+    /**
+     * @Route("/addMaterial",  name="paprec_product_material_add")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addMaterialAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        $languages = array();
+        foreach ($this->getParameter('paprec_languages') as $language) {
+            $languages[$language] = $language;
+        }
+
+        $transportTypes = array();
+        foreach ($this->getParameter('paprec_transport_types') as $transportType) {
+            $transportTypes[$transportType] = $transportType;
+        }
+        $transportTypes['MATERIAL'] = 'MATERIAL';
+
+        $product = new Product();
+        $productLabel = new ProductLabel();
+
+        $form1 = $this->createForm(ProductMaterialType::class, $product, array(
+            'transportTypes' => $transportTypes
+        ));
+        $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
+            'languages' => $languages,
+            'language' => 'FR'
+        ));
+
+        $form1->handleRequest($request);
+        $form2->handleRequest($request);
+
+        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+
+            $product = $form1->getData();
+
+            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+
+            $product->setDateCreation(new \DateTime);
+            $product->setUserCreation($user);
+
+            $this->em->persist($product);
+            $this->em->flush();
+
+            $productLabel = $form2->getData();
+            $productLabel->setDateCreation(new \DateTime);
+            $productLabel->setUserCreation($user);
+            $productLabel->setProduct($product);
+
+            $this->em->persist($productLabel);
+            $this->em->flush();
+
+            return $this->redirectToRoute('paprec_product_view', array(
+                'id' => $product->getId()
+            ));
+
+        }
+
+        return $this->render('product/addMaterial.html.twig', array(
             'form1' => $form1->createView(),
             'form2' => $form2->createView()
         ));
@@ -737,13 +819,12 @@ class ProductController extends AbstractController
      */
     public function editPictureAction(Request $request, Product $product)
     {
-        $pictureManager = $this->get('paprec_catalog.picture_manager');
 
         $pictureID = $request->get('pictureID');
-        $picture = $pictureManager->get($pictureID);
+        $picture = $this->pictureManager->get($pictureID);
         $oldPath = $picture->getPath();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         foreach ($this->getParameter('paprec_types_picture') as $type) {
             $types[$type] = $type;

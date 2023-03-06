@@ -24,6 +24,9 @@
                         <a href="{{ path('paprec_product_add') }}" class="btn btn-sm btn-outline-primary">
                             <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Product.Add'|trans }}
                         </a>
+                        <a href="{{ path('paprec_product_material_add') }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.Product.Add-material'|trans }}
+                        </a>
                         <a href="{{ path('paprec_product_export') }}" class="btn btn-sm btn-primary ">
                             <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.Product.Export'|trans }}
                         </a>
@@ -38,6 +41,7 @@
                             <th>#</th>
                             <th>{{ 'Catalog.ProductLabel.Name'|trans }}</th>
                             <th>{{ 'Catalog.Product.Range'|trans }}</th>
+                            <th>{{ 'Catalog.Product.Catalog.Label'|trans }}</th>
                             <th>{{ 'Catalog.Product.IsEnabled.IsEnabled'|trans }}</th>
                             <th></th>
                         </tr>
@@ -64,6 +68,7 @@
                     {"data": "id"},
                     {"data": "name"},
                     {"data": "range"},
+                    {"data": "catalog"},
                     {"data": "isEnabled"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],

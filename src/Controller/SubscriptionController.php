@@ -119,6 +119,13 @@ class SubscriptionController extends AbstractController
                 ));
             }
 
+            if ($type === 'MATERIAL') {
+                return $this->redirectToRoute('paprec_public_material_catalog_index', array(
+                    'locale' => 'fr',
+                    'cartUuid' => $cart->getId()
+                ));
+            }
+
             return $this->redirectToRoute('paprec_public_regular_catalog_index', array(
                 'locale' => 'fr',
                 'cartUuid' => $cart->getId()
@@ -133,6 +140,7 @@ class SubscriptionController extends AbstractController
     /**
      * @Route("/{locale}/regulier/catalogue/{cartUuid}", defaults={"cartUuid"=null}, name="paprec_public_regular_catalog_index")
      * @Route("/{locale}/ponctuel/catalogue/{cartUuid}", defaults={"cartUuid"=null}, name="paprec_public_ponctual_catalog_index")
+     * @Route("/{locale}/materiel/catalogue/{cartUuid}", defaults={"cartUuid"=null}, name="paprec_public_material_catalog_index")
      * @param Request $request
      * @param $locale
      * @param $cartUuid
@@ -173,6 +181,15 @@ class SubscriptionController extends AbstractController
 
 
             return $this->render('public/catalog-regular.html.twig', array(
+                'locale' => $locale,
+                'cart' => $cart,
+                'ranges' => $ranges,
+                'otherNeeds' => $otherNeeds
+            ));
+        } elseif ($cart->getType() === 'MATERIAL') {
+
+
+            return $this->render('public/catalog-material.html.twig', array(
                 'locale' => $locale,
                 'cart' => $cart,
                 'ranges' => $ranges,
@@ -237,7 +254,7 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
-            $quoteRequest->setType($cart->getType());
+            $quoteRequest->setCatalog($cart->getType());
             $quoteRequest->setPonctualDate($cart->getPonctualDate());
             $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
             /**
@@ -286,7 +303,8 @@ class SubscriptionController extends AbstractController
              */
             if ($cart->getContent() !== null) {
                 foreach ($cart->getContent() as $item) {
-                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'], $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
+                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'],
+                        $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
                 }
             }
             $this->em->flush();
@@ -301,7 +319,7 @@ class SubscriptionController extends AbstractController
              */
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
-            if ($quoteRequest->getType() === 'ponctual') {
+            if (strtoupper($quoteRequest->getCatalog()) === 'PONCTUAL') {
                 return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
                     'locale' => $locale,
                     'cartUuid' => $cart->getId(),
@@ -317,7 +335,7 @@ class SubscriptionController extends AbstractController
 
 
 //            if ($sendConfirmEmail && $sendNewRequestEmail) {
-//                if ($quoteRequest->getType() === 'ponctual') {
+//                if ($quoteRequest->getCatalog() === 'ponctual') {
 //                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
 //                        'locale' => $locale,
 //                        'cartUuid' => $cart->getId(),
@@ -409,15 +427,18 @@ class SubscriptionController extends AbstractController
     }
 
     /**
-     * @Route("/{locale}/contact/request/{cartUuid}", name="paprec_public_contact_request_index")
+     * @Route("/{locale}/contact/request", name="paprec_public_contact_request_index")
      *
      * @param Request $request
      * @param $locale
-     * @param $cartUuid
      */
-    public function contactRequestAction(Request $request, $locale, $cartUuid)
+    public function contactRequestAction(Request $request, $locale)
     {
-        $cart = $this->cartManager->get($cartUuid);
+        $cartUuid = $request->get('cartUuid');
+        $cart = null;
+        if ($cartUuid) {
+            $cart = $this->cartManager->get($cartUuid);
+        }
 
         $quoteRequest = $this->quoteRequestManager->add(false);
 
@@ -433,11 +454,15 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
-            $quoteRequest->setType($cart->getType());
+            if ($cart) {
+                $quoteRequest->setCatalog($cart->getType());
+            } else {
+                $quoteRequest->setCatalog('NOT_DEFINED');
+            }
             $quoteRequest->setIsMultisite(false);
-            $quoteRequest->setAccess('ground');
+            $quoteRequest->setAccess('GROUND');
 
-            if ($quoteRequest->getType() === 'PONCTUAL') {
+            if (strtoupper($quoteRequest->getCatalog()) === 'PONCTUAL') {
                 $quoteRequest->setPonctualDate($cart->getPonctualDate());
             }
 
@@ -457,7 +482,7 @@ class SubscriptionController extends AbstractController
 
             return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
                 'locale' => $locale,
-                'cartUuid' => $cart->getId(),
+                'cartUuid' => $cartUuid
             ));
         }
 
@@ -470,11 +495,12 @@ class SubscriptionController extends AbstractController
     }
 
     /**
-     * @Route("/{locale}/contact/request/confirm/{cartUuid}", name="paprec_public_confirm_contact_request_index")
+     * @Route("/{locale}/contact/request/confirm", name="paprec_public_confirm_contact_request_index")
      * @param Request $request
      * @param $locale
      */
-    public function confirmContactRequestAction(Request $request, $locale, $cartUuid) {
+    public function confirmContactRequestAction(Request $request, $locale)
+    {
         return $this->render('public/confirm-contact-request.html.twig', array(
             'locale' => $locale
         ));

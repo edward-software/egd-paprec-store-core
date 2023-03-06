@@ -3,6 +3,7 @@
 namespace App\Service;
 
 
+use App\Entity\MissionSheet;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestLine;
 use Doctrine\ORM\EntityManagerInterface;
@@ -217,7 +218,7 @@ class QuoteRequestManager
 
         if (!empty($quoteRequestLines) && count($quoteRequestLines)) {
             foreach ($quoteRequestLines as $quoteRequestLine) {
-                if ($quoteRequestLine->getFrequency() === 'unknown') {
+                if (strtoupper($quoteRequestLine->getFrequency()) === 'UNKNOWN') {
                     return false;
                 }
             }
@@ -285,36 +286,44 @@ class QuoteRequestManager
              */
             if ($quoteRequest->getPostalCode()) {
                 $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
-                switch($quoteRequestLine->getProduct()->getTransportType()) {
-                    case 'CBR_REG' : {
+                switch ($quoteRequestLine->getProduct()->getTransportType()) {
+                    case 'CBR_REG' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
                         break;
                     }
-                    case 'CBR_PONCT' : {
+                    case 'CBR_PONCT' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
                         break;
                     }
-                    case 'VL_PL_CFS_REG' : {
+                    case 'VL_PL_CFS_REG' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
                         break;
                     }
-                    case 'VL_PL_CFS_PONCT' : {
+                    case 'VL_PL_CFS_PONCT' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
                         break;
                     }
-                    case 'VL_PL' : {
+                    case 'VL_PL' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
                         break;
                     }
-                    case 'BOM' : {
+                    case 'BOM' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
                         break;
                     }
-                    case 'PL_PONCT' : {
+                    case 'PL_PONCT' :
+                    {
                         $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
                         break;
                     }
-                    default : {
+                    default :
+                    {
                         $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
                         break;
                     }
@@ -372,8 +381,15 @@ class QuoteRequestManager
      * @param $qtty
      * @throws Exception
      */
-    public function addLineFromCart(QuoteRequest $quoteRequest, $productId, $qtty, $frequency, $frequencyTimes, $frequencyInterval, $doFlush = true)
-    {
+    public function addLineFromCart(
+        QuoteRequest $quoteRequest,
+        $productId,
+        $qtty,
+        $frequency,
+        $frequencyTimes,
+        $frequencyInterval,
+        $doFlush = true
+    ) {
         try {
             $product = $this->productManager->get($productId);
             $quoteRequestLine = new QuoteRequestLine();
@@ -433,7 +449,7 @@ class QuoteRequestManager
             $quoteRequestLine->setEditableTreatmentUnitPrice($newTreatmentUnitPrice);
             $quoteRequestLine->setEditableTraceabilityUnitPrice($newTraceabilityUnitPrice);
 
-            $quoteRequest->setOverallDiscount( $this->numberManager->normalize($overallDiscount));
+            $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
         } else {
 
             $quoteRequestLine->setEditableTransportUnitPrice($quoteRequestLine->getEditableTransportUnitPrice());
@@ -449,36 +465,44 @@ class QuoteRequestManager
 
         if ($quoteRequest->getPostalCode()) {
             $quoteRequestLine->setRentalRate($quoteRequest->getPostalCode()->getRentalRate());
-            switch($quoteRequestLine->getProduct()->getTransportType()) {
-                case 'CBR_REG' : {
+            switch ($quoteRequestLine->getProduct()->getTransportType()) {
+                case 'CBR_REG' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrRegTransportRate());
                     break;
                 }
-                case 'CBR_PONCT' : {
+                case 'CBR_PONCT' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getCbrPonctTransportRate());
                     break;
                 }
-                case 'VL_PL_CFS_REG' : {
+                case 'VL_PL_CFS_REG' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsRegTransportRate());
                     break;
                 }
-                case 'VL_PL_CFS_PONCT' : {
+                case 'VL_PL_CFS_PONCT' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlCfsPonctTransportRate());
                     break;
                 }
-                case 'VL_PL' : {
+                case 'VL_PL' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getVlPlTransportRate());
                     break;
                 }
-                case 'BOM' : {
+                case 'BOM' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getBomTransportRate());
                     break;
                 }
-                case 'PL_PONCT' : {
+                case 'PL_PONCT' :
+                {
                     $quoteRequestLine->setTransportRate($quoteRequest->getPostalCode()->getPlPonctTransportRate());
                     break;
                 }
-                default : {
+                default :
+                {
                     $quoteRequestLine->setTransportRate($this->numberManager->normalize15(1));
                     break;
                 }
@@ -967,7 +991,8 @@ class QuoteRequestManager
                     $quoteRequestFilePath = $quoteRequestFileDirectory . '/' . $quoteRequestFile->getSystemName();
 
                     if (file_exists($quoteRequestFilePath)) {
-                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath), $quoteRequestFile->getOriginalFileName(), $quoteRequestFile->getMimeType()));
+                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath),
+                            $quoteRequestFile->getOriginalFileName(), $quoteRequestFile->getMimeType()));
                     }
 
                 }
@@ -1110,14 +1135,20 @@ class QuoteRequestManager
 
             $templateDir = 'public/PDF';
 
-            $snappy->setOption('header-html', $this->container->get('templating')->render($templateDir . '/header.html.twig'));
-            $snappy->setOption('footer-html', $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
+            if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/' . strtolower($quoteRequest->getPostalCode()->getAgency()->getName()))) {
+                $templateDir .= '/' . strtolower($quoteRequest->getPostalCode()->getAgency()->getName());
+            }
+
+            $snappy->setOption('header-html',
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html',
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
             }
 
-            $products = $this->productManager->getAvailableProducts($quoteRequest->getType());
+            $products = $this->productManager->getAvailableProducts($quoteRequest->getCatalog());
 
             $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
 
@@ -1193,6 +1224,261 @@ class QuoteRequestManager
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
+    }
+
+    /**
+     * Génère la feuille de mission et l'envoi
+     *
+     * @param QuoteRequest $quoteRequest
+     * @param MissionSheet $missionSheet
+     * @return bool|string
+     * @throws Exception
+     */
+    public function sendGenerateMissionSheetPDF(QuoteRequest $quoteRequest, MissionSheet $missionSheet, $locale)
+    {
+        try {
+            $from = $_ENV['PAPREC_EMAIL_SENDER'];
+
+            if ($quoteRequest->getUserInCharge()) {
+                $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
+            } else {
+                return false;
+            }
+
+            if ($rcptTo == null || $rcptTo == '') {
+                return false;
+            }
+
+            $message = new Swift_Message();
+            $message
+                ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
+                    array(), 'messages', strtolower($locale)))
+                ->setFrom($from)
+                ->setTo($rcptTo)
+                ->setBody(
+                    $this->container->get('templating')->render(
+                        'public/emails/generatedMissionSheetEmail.html.twig',
+                        array(
+                            'quoteRequest' => $quoteRequest,
+                            'locale' => strtolower($locale)
+                        )
+                    ),
+                    'text/html'
+                );
+
+            $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
+
+            if (!is_dir($pdfTmpFolder)) {
+                if (!mkdir($pdfTmpFolder, 0755, true) && !is_dir($pdfTmpFolder)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $pdfTmpFolder));
+                }
+            }
+
+            $pdfTmpFolder .= '/' . 'missionSheet';
+
+            $filename = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
+            $filenameMissionSheet = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
+
+            $today = new \DateTime();
+
+            $snappy = new Pdf($_ENV['WKHTMLTOPDF_PATH']);
+            $snappy->setOption('zoom', 0.78);
+
+            $templateDir = 'public/PDF/missionSheet';
+
+            $snappy->setOption('header-html',
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html',
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
+
+            if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
+                return false;
+            }
+
+            /**
+             * Concaténation des fichiers
+             */
+            $pdfArray = [];
+
+            /**
+             * On génère la page d'offre
+             */
+            $snappy->generateFromHtml(
+                array(
+                    $this->container->get('templating')->render(
+                        $templateDir . '/printMissionSheet.html.twig',
+                        array(
+                            'quoteRequest' => $quoteRequest,
+                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                            'missionSheet' => $missionSheet,
+                            'date' => $today,
+                            'locale' => $locale
+                        )
+                    )
+                ),
+                $filenameMissionSheet
+            );
+            $downloadedFileName = 'FM';
+            $downloadedFileName .= ' ' . $today->format('o');
+            $downloadedFileName .= ' ' . $today->format('m');
+            $downloadedFileName .= ' ' . $today->format('d');
+            if ($quoteRequest->getUserInCharge()) {
+                $downloadedFileName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
+            }
+            if ($quoteRequest->getMissionSheet()) {
+                if ($quoteRequest->getMissionSheet()->getMnemonicNumber()) {
+                    $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
+                }
+                if ($quoteRequest->getMissionSheet()->getContractNumber()) {
+                    $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
+                }
+            }
+            $downloadedFileName .= '.pdf';
+
+            $message->attach(new \Swift_Attachment(file_get_contents($filenameMissionSheet), $downloadedFileName,
+                'application/pdf'));
+
+            $quoteRequestLinesByAgency = [];
+            $agenciesById = [];
+            if (count($quoteRequest->getQuoteRequestLines())) {
+                foreach ($quoteRequest->getQuoteRequestLines() as $qRL) {
+                    if (!array_key_exists($qRL->getAgency()->getId(), $quoteRequestLinesByAgency)) {
+                        $quoteRequestLinesByAgency[$qRL->getAgency()->getId()] = [];
+                        $agenciesById[$qRL->getAgency()->getId()] = $qRL->getAgency();
+                    }
+                    $quoteRequestLinesByAgency[$qRL->getAgency()->getId()][] = $qRL;
+                }
+
+                foreach ($quoteRequestLinesByAgency as $agencyId => $quoteRequestLines) {
+                    $agency = $agenciesById[$agencyId];
+                    if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
+
+                        $dir = $templateDir . '/exploitation';
+                        $actualFilename = $pdfTmpFolder . '/exploitation/' . md5(uniqid('', true)) . '.pdf';
+
+                        $sheetName = '';
+                        $pdfExploitName = 'Exploitation';
+                        if ($agency->getTemplate() === 'LCB') {
+                            $sheetName = 'Exploitation LCB';
+                        } elseif ($agency->getTemplate() === 'CFS') {
+                            $sheetName = 'Exploitation CFS';
+                        } elseif ($agency->getTemplate() === 'LPP') {
+                            $sheetName = 'Navette LPP';
+                            $pdfExploitName = 'Navette';
+                        } elseif ($agency->getTemplate() === 'PAPREC') {
+                            $sheetName = 'Navette IDF';
+                            $pdfExploitName = 'Navette';
+                        } elseif ($agency->getTemplate() === 'IN_SITU') {
+                            $sheetName = 'Navette In Situ';
+                            $pdfExploitName = 'Navette';
+                        }
+
+                        $snappy->generateFromHtml(
+                            array(
+                                $this->container->get('templating')->render(
+                                    $dir . '/printMissionSheet.html.twig',
+                                    array(
+                                        'quoteRequest' => $quoteRequest,
+                                        'sheetName' => $sheetName,
+                                        'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                                        'missionSheet' => $missionSheet,
+                                        'date' => $today,
+                                        'locale' => $locale
+                                    )
+                                )
+                            ),
+                            $actualFilename
+                        );
+                        $downloadedFileName = 'FM';
+                        $downloadedFileName .= ' ' . $today->format('o');
+                        $downloadedFileName .= ' ' . $today->format('m');
+                        $downloadedFileName .= ' ' . $today->format('d');
+                        if ($quoteRequest->getUserInCharge()) {
+                            $downloadedFileName .= ' ' . $quoteRequest->getUserInCharge()->getNickname();
+                        }
+                        if ($quoteRequest->getMissionSheet()) {
+                            if ($quoteRequest->getMissionSheet()->getMnemonicNumber()) {
+                                $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getMnemonicNumber();
+                            }
+                            if ($quoteRequest->getMissionSheet()->getContractNumber()) {
+                                $downloadedFileName .= ' ' . $quoteRequest->getMissionSheet()->getContractNumber();
+                            }
+                        }
+                        $downloadedFileName .= ' ' . $pdfExploitName;
+                        $downloadedFileName .= ' ' . $agency->getName();
+                        $downloadedFileName .= '.pdf';
+
+                        $message->attach(new \Swift_Attachment(file_get_contents($actualFilename), $downloadedFileName,
+                            'application/pdf'));
+                    }
+                }
+            }
+
+
+            if ($this->container->get('mailer')->send($message)) {
+                return true;
+            }
+            return false;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToGenerateProductQuote', 500);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function getMissionSheet($missionSheet, $throwException = true)
+    {
+        $id = $missionSheet;
+        if ($missionSheet instanceof MissionSheet) {
+            $id = $missionSheet->getId();
+        }
+        try {
+
+            $missionSheet = $this->em->getRepository('App:MissionSheet')->find($id);
+
+            /**
+             * Vérification que le quoteRequest existe ou ne soit pas supprimé
+             */
+            if ($missionSheet === null || $this->missionSheetIsDeleted($missionSheet)) {
+                throw new EntityNotFoundException('missionSheetNotFound');
+            }
+
+
+            return $missionSheet;
+
+        } catch (Exception $e) {
+            if ($throwException) {
+                throw new Exception($e->getMessage(), $e->getCode());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Vérifie qu'à ce jour, le missionSheet ce soit pas supprimée
+     *
+     * @param MissionSheet $missionSheet
+     * @param bool $throwException
+     * @return bool
+     * @throws EntityNotFoundException
+     * @throws Exception
+     */
+    public function missionSheetIsDeleted(MissionSheet $missionSheet, $throwException = false)
+    {
+        $now = new \DateTime();
+
+        if ($missionSheet->getDeleted() !== null && $missionSheet->getDeleted() instanceof \DateTime && $missionSheet->getDeleted() < $now) {
+
+            if ($throwException) {
+                throw new EntityNotFoundException('missionSheetNotFound');
+            }
+
+            return true;
+
+        }
+        return false;
     }
 
 }

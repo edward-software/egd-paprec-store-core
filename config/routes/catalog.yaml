@@ -28,3 +28,9 @@ catalog_other_need:
     resource: App\Controller\OtherNeedController
     type:     annotation
     prefix:   otherNeed
+
+catalog_billing_unit:
+    resource: App\Controller\BillingUnitController
+    type:     annotation
+    prefix:   billingUnit
+

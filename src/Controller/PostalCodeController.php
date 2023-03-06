@@ -129,9 +129,9 @@ class PostalCodeController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Postal codes")
+            ->getProperties()->setCreator("EasyRecyclageShop")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("EasyRecyclageShop - Postal codes")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -175,7 +175,7 @@ class PostalCodeController extends AbstractController
         }
 
 
-        $fileName = 'PrivaciaShop-Extract-Postal-Codes-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extract-Postal-Codes-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {

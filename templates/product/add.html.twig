@@ -67,6 +67,13 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <div class="form-label">{{ 'Catalog.Product.Code'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.code, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.code) }}
+                                        </div>
+                                    </div>
                                     <div class="form-group col-md-6">
                                         <div class="form-label">{{ 'Catalog.Product.Capacity'|trans }}</div>
                                         <div class="form-content">
@@ -166,6 +173,27 @@
                                     <div class="form-content">
                                         {{ form_widget(form1.traceabilityUnitPrice, {'attr': {'class': 'form-control'}}) }}
                                         {{ form_errors(form1.traceabilityUnitPrice) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.WasteClassification'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.wasteClassification, {'attr': {'class': 'form-control', 'maxlength': '10'}}) }}
+                                        {{ form_errors(form1.wasteClassification) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.BillingUnit'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.billingUnit, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.billingUnit) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.MaterialUnitPrice'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.materialUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.materialUnitPrice) }}
                                     </div>
                                 </div>
                                 <div class="form-group">

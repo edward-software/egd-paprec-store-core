@@ -53,6 +53,27 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Agency.EntityName'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.entityName, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.entityName) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Agency.DestinationEmailMission'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.destinationEmailMission, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.destinationEmailMission) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Agency.LegalInfoTemplate'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.legalInfoTemplate, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.legalInfoTemplate) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Agency.BusinessId'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form.businessId, {'attr': {'class': 'form-control'}}) }}
@@ -78,6 +99,13 @@
                                     <div class="form-content">
                                         {{ form_widget(form.postalCode, {'attr': {'class': 'form-control'}}) }}
                                         {{ form_errors(form.postalCode) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Agency.Template.Template'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.template, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.template) }}
                                     </div>
                                 </div>
                             </div>

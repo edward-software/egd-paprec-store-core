@@ -80,6 +80,7 @@ class AgencyController extends AbstractController
         $cols['name'] = array('label' => 'name', 'id' => 'a.name', 'method' => array('getName'));
         $cols['businessName'] = array('label' => 'businessName', 'id' => 'a.businessName', 'method' => array('getBusinessName'));
         $cols['businessId'] = array('label' => 'businessId', 'id' => 'a.businessId', 'method' => array('getBusinessId'));
+        $cols['template'] = array('label' => 'template', 'id' => 'a.template', 'method' => array('getTemplate'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Agency::class)->createQueryBuilder('a');
 
@@ -131,9 +132,9 @@ class AgencyController extends AbstractController
         $spreadsheet = new Spreadsheet();
 
         $spreadsheet
-            ->getProperties()->setCreator("Privacia Shop")
-            ->setLastModifiedBy("Privacia Shop")
-            ->setTitle("Privacia Shop - Agencies")
+            ->getProperties()->setCreator("Easy Recyclage Shop")
+            ->setLastModifiedBy("Easy Recyclage Shop")
+            ->setTitle("Easy Recyclage Shop - Agencies")
             ->setSubject("Extract");
 
         $sheet = $spreadsheet->setActiveSheetIndex(0);
@@ -164,7 +165,7 @@ class AgencyController extends AbstractController
         }
 
 
-        $fileName = 'PrivaciaShop-Extract-Agencies-' . date('Y-m-d') . '.xlsx';
+        $fileName = 'EasyRecyclageShop-Extract-Agencies-' . date('Y-m-d') . '.xlsx';
 
         $streamedResponse = new StreamedResponse();
         $streamedResponse->setCallback(function () use ($spreadsheet) {
@@ -218,9 +219,16 @@ class AgencyController extends AbstractController
     {
         $user = $this->getUser();
 
+        $templates = [];
+        foreach ($this->getParameter('paprec_agency_template') as $template) {
+            $templates[$template] = $this->translator->trans('Catalog.Agency.Template.' . $template);
+        }
+
         $agency = new Agency();
 
-        $form = $this->createForm(AgencyType::class, $agency);
+        $form = $this->createForm(AgencyType::class, $agency, [
+            'templates' => $templates
+        ]);
 
         $form->handleRequest($request);
 
@@ -257,7 +265,14 @@ class AgencyController extends AbstractController
 
         $this->agencyManager->isDeleted($agency, true);
 
-        $form = $this->createForm(AgencyType::class, $agency);
+        $templates = [];
+        foreach ($this->getParameter('paprec_agency_template') as $template) {
+            $templates[$template] = $this->translator->trans('Catalog.Agency.Template.' . $template);
+        }
+
+        $form = $this->createForm(AgencyType::class, $agency, [
+            'templates' => $templates
+        ]);
 
         $form->handleRequest($request);
 

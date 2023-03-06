@@ -46,6 +46,7 @@
                             <option value="#">Sélectionner catalogue</option>
                             <option value="regular">{{ 'Commercial.QuoteRequest.Regular'|trans }}</option>
                             <option value="ponctual">{{ 'Commercial.QuoteRequest.Ponctual'|trans }}</option>
+                            <option value="material">{{ 'Commercial.QuoteRequest.Material'|trans }}</option>
                         </select>
                         <select id="selectedStatus" class="form-control mr-2 input-sm">
                             <option value="#">Sélectionner un statut</option>
@@ -74,7 +75,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ 'Commercial.QuoteRequest.Reference'|trans }}</th>
-                            <th>{{ 'Commercial.QuoteRequest.Type.Type'|trans }}</th>
+                            <th>{{ 'Commercial.QuoteRequest.Catalog.Catalog'|trans }}</th>
                             <th>{{ 'Commercial.QuoteRequest.BusinessName'|trans }}</th>
                             <th>{{ 'Commercial.QuoteRequest.IsMultisite'|trans }}</th>
                             <th>{{ 'Commercial.QuoteRequest.TotalAmount'|trans }}</th>
@@ -106,7 +107,7 @@
                 columns: [
                     {"data": "id"},
                     {"data": "reference"},
-                    {"data": "type"},
+                    {"data": "catalog"},
                     {"data": "businessName"},
                     {"data": "isMultisite"},
                     {"data": "totalAmount"},
@@ -117,7 +118,7 @@
                 ],
                 rowDblclick: {
                     type: 'open',
-                    url: "{{ path('paprec_quoteRequest_view', {id: '__rowId__'}) }}"
+                    url: "{{ path('paprec_quote_request_view', {id: '__rowId__'}) }}"
                 },
                 buttons: [
                     {
@@ -133,7 +134,7 @@
                         label: "{{ 'General.View'|trans }}",
                         className: "btn btn-primary btn-sm",
                         icon: "fa fa-eye",
-                        url: "{{ path('paprec_quoteRequest_view', {id: '__rowId__'}) }}"
+                        url: "{{ path('paprec_quote_request_view', {id: '__rowId__'}) }}"
                     },
                     {
                         label: "{{ 'General.Edit'|trans }}",

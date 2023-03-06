@@ -46,6 +46,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <div class="form-label">{{ 'User.User.Agency'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.agency, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.agency) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <div class="form-label">{{ 'User.User.Company-name'|trans }}</div>
                                         <div class="form-content">
                                             {{ form_widget(form.companyName, {'attr': {'class': 'form-control'}}) }}
@@ -66,6 +73,13 @@
                                         <div class="form-content">
                                             {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
                                             {{ form_errors(form.lastName) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'User.User.Nickname'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.nickname, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.nickname) }}
                                         </div>
                                     </div>
 

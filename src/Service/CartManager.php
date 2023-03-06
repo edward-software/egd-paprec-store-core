@@ -187,8 +187,8 @@ class CartManager
     {
         $cart = $this->get($id);
 
-        if ($frequency === 'regular' || $frequency === 'ponctual') {
-            $cart->setFrequency($frequency);
+        if (strtoupper($frequency) === 'REGULAR' || strtoupper($frequency) === 'PONCTUAL') {
+            $cart->setFrequency(strtoupper($frequency));
             $cart->setFrequencyTimes($frequencyTimes);
             $cart->setFrequencyInterval($frequencyInterval);
             $this->em->flush();

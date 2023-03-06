@@ -8,6 +8,9 @@ Catalog:
         Agencies: Agences
         Name: Nom de l'agence
         BusinessName: Raison sociale
+        EntityName: Nom d’entité
+        LegalInfoTemplate: Informations legales
+        DestinationEmailMission: Adresse mail de destination pour les feuilles de mission
         BusinessId: Identification société
         Address: Adresse l'agence
         City: Ville
@@ -32,6 +35,13 @@ Catalog:
         DisabledUser: (Compte non actif)
         DeletedUser: (Compte supprimé)
         System-information: Informations système
+        Template:
+            Template: Template
+            LCB: La Corbeille Bleue
+            CFS: Confidentialys
+            LPP: Le Petit ???
+            IDF: Paprec
+            IN_SITU: In Situ
 
     PostalCode:
         PostalCodes: Code postaux
@@ -87,6 +97,7 @@ Catalog:
         View: Vue du produit
         Products: Liste des produits
         Add: Ajouter un produit
+        Add-material: Ajouter un matériel
         Edit: Editer un produit
         Remove: Supprimer
         List: Liste des produits
@@ -95,10 +106,15 @@ Catalog:
         Dimensions: Dimensions
         Range: Gamme
         TransportType: Type de transport
+        WasteClassification: Nomenclature déchet
+        Code: Code
+        BillingUnit: Unité de facturation
+        MaterialUnitPrice: Prix de Vente €HT/unité
         Catalog:
             Label: Catalogue
-            Regular: Régulier
-            Ponctual: Ponctuel
+            REGULAR: Régulier
+            PONCTUAL: Ponctuel
+            MATERIAL: Matériel
         Frequency: Fréquence
         PassingFrequency: Fréquence de passage (si régulier)
         FrequencyInterval: Fréquence
@@ -210,8 +226,9 @@ Catalog:
         Name: Titre
         Catalog:
             Label: Catalogue
-            Regular: Régulier
-            Ponctual: Ponctuel
+            REGULAR: Régulier
+            PONCTUAL: Ponctuel
+            MATERIAL: Matériel
         Language: Langue
         IsDisplayed: Affiché
         Add: Ajouter un autre produit
@@ -221,3 +238,18 @@ Catalog:
         AddPicture: Photo
         Informations: Informations
         System-informations: Informations système
+
+    BillingUnit:
+        View: Vue du suivi
+        BillingUnits: Unités de facturation
+        Add: Ajouter une unité de facturation
+        Edit: Modifier l'unité de facturation
+        Remove: Supprimer
+        List: Liste des unités de facturation
+        Code: Code
+        Name: Name
+        Informations: Informations
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Details: Details de l'unité de facturation

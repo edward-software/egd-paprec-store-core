@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Agency;
 use App\Entity\User;
+use App\Repository\AgencyRepository;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -31,6 +33,7 @@ class UserEditType extends AbstractType
             ->add('companyName', TextType::class)
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
+            ->add('nickname', TextType::class)
             ->add('email', EmailType::class, array(
                 "required" => true
             ))
@@ -54,7 +57,7 @@ class UserEditType extends AbstractType
                 "expanded" => true,
                 "multiple" => true,
                 'constraints' => new NotBlank(),
-                'data' => ['ROLE_COMMERCIAL']
+                'empty_data' => ['ROLE_COMMERCIAL']
             ))
             ->add('manager', EntityType::class, array(
                 'class' => User::class,
@@ -72,6 +75,21 @@ class UserEditType extends AbstractType
                         ->andWhere('u.roles LIKE \'%ROLE_MANAGER%\'')
                         ->andWhere('u.enabled = 1')
                         ->orderBy('u.username');
+                }
+            ))
+            ->add('agency', EntityType::class, array(
+                'class' => Agency::class,
+                'multiple' => false,
+                'expanded' => false,
+                'placeholder' => '',
+                'empty_data' => null,
+                'choice_label' => function (Agency $agency) {
+                    return $agency->getName();
+                },
+                'required' => false,
+                'query_builder' => function (AgencyRepository $ar) {
+                    return $ar->createQueryBuilder('a')
+                        ->where('a.deleted IS NULL');
                 }
             ));
     }

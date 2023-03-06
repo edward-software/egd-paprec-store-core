@@ -1,0 +1,309 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Commercial.MissionSheet.Add'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Commercial.MissionSheet.Add'|trans }}
+{% endblock %}
+
+{% block main_content %}
+
+    <form id="commercialMissionSheetForm" action="" method="post">
+
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.MissionSheet.Add'|trans }}
+                    </h4>
+                    <div class="float-right">
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-success commercial-missionSheet-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-danger commercial-missionSheet-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.ContractType.ContractType'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.contractType, {'attr': {'class': 'form-control contract-type-input'}}) }}
+                                            {{ form_errors(form.contractType) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4 mnemonic-number-input" style="display: none;">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.MnemonicNumber'|trans }}</div>
+                                        <div class="form-content{% if form_errors(form.mnemonicNumber) %} has-error{% endif %}">
+                                            {{ form_widget(form.mnemonicNumber, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.mnemonicNumber) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-4 contract-number-input" style="display: none;">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.ContractNumber'|trans }}</div>
+                                        <div class="form-content{% if form_errors(form.contractNumber) %} has-error{% endif %}">
+                                            {{ form_widget(form.contractNumber, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.contractNumber) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.SecondUserInCharge'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.secondUserInCharge, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.secondUserInCharge) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.OrderNumber'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.orderNumber, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.orderNumber) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.BillingType.BillingType'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.billingType, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.billingType) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.MyPaprecAccess'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.myPaprecAccess, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.myPaprecAccess) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.WasteTrackingRegisterAccess'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.wasteTrackingRegisterAccess, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.wasteTrackingRegisterAccess) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.ReportingAccess'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.reportingAccess, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.reportingAccess) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="form-label">{{ 'Commercial.MissionSheet.Comment'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.comment, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.comment) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>
+                                    {{ 'Commercial.QuoteRequest.ProductsList'|trans }}
+                                </h5>
+                                <div class="float-right">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="quoteRequestLinesDatatable"
+                                       class="table table-striped table-bordered table-hover"
+                                       cellpadding="0" cellspacing="0" border="0">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Transport'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Traceability'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.TotalAmount'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.SelectAgency'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set color = null %}
+                                    {% if quoteRequest.overallDiscount == 0 %}
+                                        {% set color = 'black' %}
+                                    {% elseif quoteRequest.overallDiscount > 0 %}
+                                        {% set color = 'green' %}
+                                    {% elseif quoteRequest.overallDiscount < 0 %}
+                                        {% set color = 'red' %}
+                                    {% endif %}
+                                    {% for quoteRequestLine in quoteRequest.quoteRequestLines %}
+                                        <tr>
+                                            <td>{{ quoteRequestLine.id|formatId(6) }}</td>
+                                            <td>
+                                                <a href="{{ path('paprec_product_view', {id: quoteRequestLine.product.id}) }}">
+                                                    {{ quoteRequestLine.product|productLabelTranslation(app.user.lang) }}
+                                                </a>
+                                            </td>
+                                            <td>{{ quoteRequestLine.quantity }}</td>
+                                            <td>
+                                                {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small"
+                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small"
+                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.frequency == 'UNKNOWN' %}
+                                                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                                {% else %}
+                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
+                                                    {{ quoteRequestLine.frequencyTimes }}
+                                                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.editableTreatmentUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small"
+                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if quoteRequestLine.editableTraceabilityUnitPrice == 0 %}
+                                                    0
+                                                {% else %}
+                                                    {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.editableTraceabilityUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                                    <span class="small"
+                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                                {% endif %}
+                                            </td>
+
+                                            <td>{{ quoteRequestLine.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }}
+                                                <span class="small"
+                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                            </td>
+                                            <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}
+                                                <span class="small"
+                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <select name="quoteRequestLineAgency[{{ quoteRequestLine.id }}]" class="form-control">
+                                                    {% for agency in agencies %}
+                                                        <option value="{{ agency.id }}"{% if quoteRequest.userInCharge and quoteRequest.userInCharge.agency and quoteRequest.userInCharge.agency.id == agency.id %} selected{% endif %}>{{ agency.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="float-right">
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-success commercial-missionSheet-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);"
+                           class="btn btn-sm btn-danger commercial-missionSheet-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_rest(form) }}
+    </form>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            if ($('.contract-type-input').val() === 'MODIFICATION') {
+                $('.mnemonic-number-input').css('display', 'block');
+                $('.contract-number-input').css('display', 'block');
+                $('.mnemonic-number-input input').attr('required', 'true');
+                $('.contract-number-input input').attr('required', 'true');
+            } else {
+                $('.mnemonic-number-input').css('display', 'none');
+                $('.contract-number-input').css('display', 'none');
+                $('.mnemonic-number-input input').attr('required', 'false');
+                $('.contract-number-input input').attr('required', 'false');
+            }
+
+
+            $('.contract-type-input').on('change', function () {
+                if ($(this).val() === 'MODIFICATION') {
+                    $('.mnemonic-number-input').css('display', 'block');
+                    $('.contract-number-input').css('display', 'block');
+                    $('.mnemonic-number-input input').attr('required', 'true');
+                    $('.contract-number-input input').attr('required', 'true');
+                } else {
+                    $('.mnemonic-number-input').css('display', 'none');
+                    $('.contract-number-input').css('display', 'none');
+                    $('.mnemonic-number-input input').attr('required', 'false');
+                    $('.contract-number-input input').attr('required', 'false');
+                }
+            });
+
+            $('.commercial-missionSheet-save-button').on('click', function () {
+                $('#commercialMissionSheetForm').submit();
+            });
+
+
+            $('.commercial-missionSheet-cancel-button').on('click', function () {
+
+                var url = "{{ path("paprec_quote_request_view", {id: quoteRequest.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-cancel'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+        });
+    </script>
+{% endblock %}

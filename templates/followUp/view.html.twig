@@ -1,0 +1,247 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+  {{ 'Commercial.FollowUp.View'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+  {{ 'Commercial.FollowUp.Agencies'|trans }}
+{% endblock %}
+
+{% block main_content %}
+
+
+  <div class="col-md-12">
+    <!-- CARD -->
+    <div class="card">
+      <div class="card-header">
+        <h4>
+          <i class="fa fa-xs fa-folder"></i> {{ 'Commercial.FollowUp.View'|trans }}
+        </h4>
+        <div class="float-right">
+          <button class="btn btn-sm btn-primary"
+                  data-target="#uploadFollowUpFileModal" data-toggle="modal"
+                  id="openModalUploadFollowUpFile"><i
+                    class="fa fa-file"></i> {{ 'Commercial.FollowUpFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
+          </button>
+          <a href="{{ path("paprec_follow_up_edit", {id: followUp.id}) }}"
+             class="btn btn-sm btn-warning"><i
+                    class="fa fa-xs fa-edit"></i> {{ 'Commercial.FollowUp.Edit'|trans }}</a>
+          <a id="catalogFollowUpRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
+                    class="fa fa-xs fa-trash"></i> {{ 'Commercial.FollowUp.Remove'|trans }}</a>
+
+          <!-- Modal d'ajout de fichiers au mail -->
+          <div class="modal fade" id="uploadFollowUpFileModal" tabindex="-1" role="dialog"
+               aria-labelledby="Upload Picture" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <form id="formAddFollowUpFile" name="formAddFollowUpFile"
+                      action="{{ path("paprec_follow_up_add_follow_up_file", {followUpId: followUp.id}) }}"
+                      method="post" enctype="multipart/form-data">
+                  <div class="modal-header">
+                    <h5 class="modal-title">
+                      {{ 'Commercial.FollowUpFile.AddTitle'| trans({}, "messages", app.request.locale) }}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <div class="form-label">
+                        <span>{{ 'Commercial.FollowUpFile.MaxSize'| trans({}, "messages", app.request.locale) }}</span>
+                      </div>
+                      <div class="form-content">
+                        {{ form_widget(formAddFollowUpFile.systemPath, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(formAddFollowUpFile.systemPath) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary"
+                            data-dismiss="modal">
+                      {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary"
+                            id="formAddFollowUpFileSubmitButton">
+                      {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                    </button>
+                  </div>
+                  {{ form_rest(formAddFollowUpFile) }}
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="float-left">
+          <a href="{{ path('paprec_follow_up_index') }}" class="btn btn-sm btn-default"><i
+                    class="fa fa-xs fa-chevron-left"></i> {{ 'Commercial.FollowUp.List'|trans }}</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+            </div>
+            <div class="card-body row">
+              <div class="col-md-12">
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label">{{ 'Commercial.FollowUp.QuoteRequest.QuoteRequest'|trans }}</label>
+                  <label class="col-form-label col-md-8">
+                    <a href="{{ path('paprec_quote_request_view', {id: followUp.quoteRequest.id}) }}">{{ followUp.quoteRequest.origin }} - {{ followUp.quoteRequest.number }}</a>
+                  </label>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label">{{ 'Commercial.FollowUp.Date'|trans }}</label>
+                  <label class="col-form-label col-md-8">
+                    {{ followUp.date|localizeddate('short', 'none', app.request.locale) }}
+                  </label>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label">{{ 'Commercial.FollowUp.Status.Status'|trans }}</label>
+                  <label class="col-form-label col-md-8">
+                    {{ followUp.status }}
+                  </label>
+                </div>
+                <div class="form-group row">
+                  <label class="col-md-4 col-form-label">{{ 'Commercial.FollowUp.Content'|trans }}</label>
+                  <label class="col-form-label col-md-8">
+                    {{ followUp.content }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-3">
+          <div class="card">
+            <div class="card-header">
+              <h5>
+                {{ 'Commercial.FollowUpFile.FileListTitle'|trans }}
+              </h5>
+            </div>
+            <div class="card-body">
+              <table id="followUpFileListDatatable"
+                     class="table table-striped table-bordered table-hover"
+                     cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <tr>
+                  <th>{{ 'Commercial.FollowUpFile.FileNameColumn'| trans({}, "messages", app.request.locale) }}</th>
+                  <th>{{ 'Commercial.FollowUpFile.FileTypeColumn'| trans({}, "messages", app.request.locale) }}</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% if followUp.followUpFiles is not null and followUp.followUpFiles|length > 0 %}
+                  {% for followUpFile in followUp.followUpFiles %}
+
+                    <tr>
+                      <td>
+                        {{ followUpFile.originalFileName }}
+                      </td>
+
+                      <td>
+                        {{ followUpFile.originalFileName|split('.')|last|upper }}
+                      </td>
+
+                      <td class="text-center">
+                        <a href="#"
+                           class="btn btn-sm btn-danger btn-sm commercialFollowUpFileRemoveButton"
+                           data-id="{{ followUpFile.id }}">
+                          <i class="fa fa-xs fa-trash"></i>
+                        </a>
+                      </td>
+                    </tr>
+
+                  {% endfor %}
+                {% endif %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-3">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">{{ 'General.System-information'|trans }}</h5>
+            </div>
+            <div class="card-body">
+
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans }}</label>
+                <label class="col-form-label col-md-8">
+                  {{ followUp.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                </label>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans }}</label>
+                <label class="col-form-label col-md-8">
+                  {{ followUp.dateUpdate is empty ? "" : followUp.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+  <script>
+    $(function () {
+
+      $('#catalogFollowUpRemoveButton').on('click', function () {
+
+        var url = "{{ path("paprec_follow_up_remove", {id: followUp.id}) }}";
+
+        Swal.fire({
+          title: "{{ 'General.Confirm'|trans }}",
+          text: "{{ 'General.Confirm-remove'|trans }}",
+          showCancelButton: true,
+          confirmButtonText: "{{ 'General.Yes'|trans }}",
+          cancelButtonText: "{{ 'General.No'|trans }}"
+        }).then(function (result) {
+          if (result.value) {
+            $(location).attr('href', url);
+          }
+        });
+
+      });
+
+      $('#formAddFollowUpFileSubmitButton').on('click', function () {
+        $('#formAddFollowUpFile').submit();
+      });
+
+      $('.commercialFollowUpFileRemoveButton').on('click', function () {
+        var followUpFileId = $(this).data('id');
+        var url = "{{ path("paprec_follow_up_remove_follow_up_file", {followUpId: followUp.id, followUpFileId: '0000'}) }}".replace('0000', followUpFileId);
+
+        Swal.fire({
+          title: "{{ 'General.Confirm'|trans }}",
+          text: "{{ 'General.Confirm-remove'|trans }}",
+          showCancelButton: true,
+          confirmButtonText: "{{ 'General.Yes'|trans }}",
+          cancelButtonText: "{{ 'General.No'|trans }}"
+        }).then(function (result) {
+          if (result.value) {
+            $(location).attr('href', url);
+          }
+        });
+
+      });
+      
+    });
+  </script>
+{% endblock %}

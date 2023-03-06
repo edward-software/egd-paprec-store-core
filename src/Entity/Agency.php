@@ -46,6 +46,26 @@ class Agency
     private $deleted;
 
     /**
+     * @ORM\Column(name="legalInfoTemplate", type="text", nullable=true)
+     */
+    private $legalInfoTemplate;
+
+    /**
+     * @ORM\Column(name="destinationEmailMission", type="string", length=255, nullable=true)
+     * @Assert\Email(
+     *     groups={"public"},
+     *      message = "email_error"
+     * )
+     */
+    private $destinationEmailMission;
+
+    /**
+     * @var string
+     * @ORM\Column(name="entityName", type="string", nullable=true)
+     */
+    private $entityName;
+
+    /**
      * @var string
      * Le nom de l'agence
      * @ORM\Column(name="name", type="string")
@@ -90,6 +110,14 @@ class Agency
      */
     private $postalCode;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="template", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $template;
+
 
     /**
      * #################################
@@ -126,12 +154,18 @@ class Agency
     private $pictures;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="agency", cascade={"all"})
+     */
+    private $users;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->dateCreation = new \DateTime();
         $this->postalCodes = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -234,7 +268,6 @@ class Agency
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -250,6 +283,60 @@ class Agency
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+    /**
+     * @param string $entityName
+     * @return Agency
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestinationEmailMission()
+    {
+        return $this->destinationEmailMission;
+    }
+
+    /**
+     * @param string $destinationEmailMission
+     * @return Agency
+     */
+    public function setDestinationEmailMission($destinationEmailMission)
+    {
+        $this->destinationEmailMission = $destinationEmailMission;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLegalInfoTemplate()
+    {
+        return $this->legalInfoTemplate;
+    }
+
+    /**
+     * @param string $legalInfoTemplate
+     * @return Agency
+     */
+    public function setLegalInfoTemplate($legalInfoTemplate)
+    {
+        $this->legalInfoTemplate = $legalInfoTemplate;
         return $this;
     }
 
@@ -296,7 +383,7 @@ class Agency
      *
      * @return PostalCode
      */
-    public function addQuoteRequest(PostalCode $postalCode)
+    public function addPostalCode(PostalCode $postalCode)
     {
         $this->postalCodes[] = $postalCode;
 
@@ -446,6 +533,60 @@ class Agency
             }
         }
         return $pictures;
+    }
+
+    /**
+     * Add user.
+     *
+     * @param User $user
+     *
+     * @return User
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user.
+     *
+     * @param User $user
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeUser(User $user)
+    {
+        return $this->users->removeElement($user);
+    }
+
+    /**
+     * Get users.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     * @return Agency
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
     }
 
 }

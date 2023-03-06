@@ -177,6 +177,13 @@ class User implements UserInterface
     private $jobTitle;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nickname", type="string", length=255, nullable=true)
+     */
+    private $nickname;
+
+    /**
      * #################################
      *              Relations
      * #################################
@@ -198,6 +205,12 @@ class User implements UserInterface
      * @ORM\JoinColumn(name="managerId")
      */
     private $manager;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Agency", inversedBy="users")
+     * @ORM\JoinColumn(name="agencyId")
+     */
+    private $agency;
 
     /**
      * type User
@@ -619,6 +632,40 @@ class User implements UserInterface
     public function setSubordinates($subordinates): self
     {
         $this->subordinates = $subordinates;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    /**
+     * @param string $nickname
+     */
+    public function setNickname(string $nickname): void
+    {
+        $this->nickname = $nickname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAgency()
+    {
+        return $this->agency;
+    }
+
+    /**
+     * @param mixed $agency
+     * @return User
+     */
+    public function setAgency($agency): self
+    {
+        $this->agency = $agency;
         return $this;
     }
 

@@ -2,3 +2,13 @@ commercial_quote_request:
     resource: App\Controller\QuoteRequestController
     type:     annotation
     prefix:   quoteRequest
+
+commercial_follow_up:
+    resource: App\Controller\FollowUpController
+    type:     annotation
+    prefix:   followUp
+
+commercial_setting:
+    resource: App\Controller\SettingController
+    type:     annotation
+    prefix:   setting
