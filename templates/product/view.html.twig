@@ -105,11 +105,11 @@
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Frequency'|trans }}</label>
                                     <label class="col-form-label col-md-8">
                                         {% if product.frequency == 'PONCTUAL' %}
-                                            {{ 'General.Frequency.Ponctual'|trans }}
+                                            {{ 'General.Frequency.PONCTUAL'|trans }}
                                         {% elseif product.frequency == 'REGULAR' %}
                                             {{ product.frequencyTimes }} / {{ ('General.Frequency.' ~ product.frequencyInterval)|trans }}
                                         {% elseif product.frequency == 'UNKNOWN' %}
-                                            {{ 'General.Frequency.Unknown'|trans }}
+                                            {{ 'General.Frequency.UNKNOWN'|trans }}
                                         {% endif %}
                                     </label>
                                 </div>
