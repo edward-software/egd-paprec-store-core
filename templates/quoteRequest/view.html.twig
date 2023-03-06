@@ -823,6 +823,7 @@
             });
             $('#commmecialQuoteRequestMissionSheetValidateButton').on('click', function () {
 
+                {% if quoteRequest and quoteRequest.missionSheet %}
                 var url = "{{ path("paprec_quote_request_mission_sheet_validate", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}";
 
                 Swal.fire({
@@ -836,6 +837,7 @@
                         $(location).attr('href', url);
                     }
                 });
+                {% endif %}
 
             });
             $('.commercialQuoteRequestLineRemoveButton').on('click', function () {
