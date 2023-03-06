@@ -1227,7 +1227,7 @@ class QuoteRequestManager
     }
 
     /**
-     * Génère le devis au format PDF et retoune le nom du fichier généré (placé dans /data/tmp)
+     * Génère la feuille de mission et l'envoi
      *
      * @param QuoteRequest $quoteRequest
      * @param MissionSheet $missionSheet

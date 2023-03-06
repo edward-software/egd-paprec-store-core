@@ -324,13 +324,13 @@ Commercial:
         Dear:
             M: Cher Monsieur
             Mrs: Chère Madame
-        Message1: Voici les feuilles de missions du devis n° %number%.
+        Message1: Voici les feuilles de missions du devis n° METTRE NUM DU DEVIS.
         Regards: Bien cordialement
         Partner: Votre partenaire Easy Recyclage
 
     NewContractEmail:
         FileName: Contrat Easy Recyclage
-        Object: Contrat Easy Recyclage N°%number%
+        Object: Contrat Easy Recyclage N°METTRE NUM DU DEVIS
         Dear: Cher (ère) Collègue Easy Recyclage,
         Message1: Pour information, tu trouveras ci-joint un contrat que le client devrait rapidement nous renvoyer signé.
         Partner: Ton partenaire Easy Recyclage
