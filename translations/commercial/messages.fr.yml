@@ -244,7 +244,7 @@ Commercial:
         Address4: ROMANDIE, Rue de la Bergère 26, CH-1242 Satigny, +41 22 552 62 62
 
     NewQuoteEmail:
-        Object: Voici une nouvelle demande client N°%number%
+        Object: Voici une nouvelle demande client N°METTRE NUMERO CLIENT
         Dear: Cher(ère) Collègue Easy Recyclage
         Message1: Tu trouveras ci-joint une demande de vérification de l'offre pour la zone géographique ainsi que du contrat prévu.
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
