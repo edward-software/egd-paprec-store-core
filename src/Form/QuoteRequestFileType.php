@@ -23,14 +23,14 @@ class QuoteRequestFileType extends AbstractType
             ))
             ->add('type', ChoiceType::class, array(
                 'choices' => array(
-                    'Contract' => 'contract',
-                    'Other' => 'other',
+                    'CONTRACT' => 'CONTRACT',
+                    'OTHER' => 'OTHER',
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
                     $choiceValue = strtolower($choiceValue);
-                    return 'Commercial.QuoteRequestFile.Type.' . ucfirst($choiceValue);
+                    return 'Commercial.QuoteRequestFile.Type.' . $choiceValue;
                 },
-                'data' => 'other',
+                'data' => 'OTHER',
                 'required' => true,
                 'expanded' => true
             ))

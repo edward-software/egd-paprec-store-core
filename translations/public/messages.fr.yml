@@ -77,17 +77,17 @@ Public:
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
         Collect-date: Date de collecte souhaitée
-        Regular: Régulier
-        Ponctual: Ponctuel
-        Material: Matériel
-        Unknown: je ne sais pas
-        Week: semaine
+        REGULAR: Régulier
+        PONCTUAL: Ponctuel
+        MATERIAL: Matériel
+        UNKNOWN: je ne sais pas
+        WEEK: semaine
         Times: fois par
-        Month: mois
-        Quarter: trimestre
-        Year: an
-        Bimestre: bimestre
-        Quadrimestre: quadrimestre
+        MONTH: mois
+        QUARTER: trimestre
+        YEAR: an
+        BIMESTRE: bimestre
+        QUADRIMESTRE: quadrimestre
         BreadcrumbContent: Offres de services
         Define-Need: Définir son besoin
         Other-Needs: Autres besoins

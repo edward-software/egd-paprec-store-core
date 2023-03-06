@@ -34,13 +34,13 @@ class OtherNeedType extends AbstractType
             ->add('name')
             ->add('catalog', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                    'Material' => 'material',
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
+                    'MATERIAL' => 'MATERIAL',
                 ),
-                'empty_data' => 'ponctual',
+                'empty_data' => 'PONCTUAL',
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Catalog.OtherNeed.Catalog.' . ucfirst($choiceValue);
+                    return 'Catalog.OtherNeed.Catalog.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true

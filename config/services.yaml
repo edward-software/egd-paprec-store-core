@@ -59,9 +59,9 @@ parameters:
         - CONTRACT_LOST
 
     paprec_quote_access:
-        - stairs
-        - elevator
-        - ground
+        - STAIRS
+        - ELEVATOR
+        - GROUND
 
     paprec_quote_catalog:
         - REGULAR
@@ -76,9 +76,9 @@ parameters:
         - IN_SITU
 
     paprec_quote_access_price:
-        stairs: 20
-        elevator: 10
-        ground: 0
+        STAIRS: 20
+        ELEVATOR: 10
+        GROUND: 0
 
     tmp_lock_prog: 20
 

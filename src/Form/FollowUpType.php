@@ -32,11 +32,11 @@ class FollowUpType extends AbstractType
             ))
             ->add('status', ChoiceType::class, array(
                 'choices' => array(
-                    'Pending' => 'pending'
+                    'PENDING' => 'PENDING'
                 ),
-                'empty_data' => 'pending',
+                'empty_data' => 'PENDING',
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Commercial.FollowUp.Status.' . ucfirst($choiceValue);
+                    return 'Commercial.FollowUp.Status.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true

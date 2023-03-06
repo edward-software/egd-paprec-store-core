@@ -37,7 +37,7 @@ class QuoteRequestPublicType extends AbstractType
             ->add('civility', ChoiceType::class, array(
                 'choices' => array(
                     'M',
-                    'Mme'
+                    'MME'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
@@ -50,7 +50,7 @@ class QuoteRequestPublicType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.AccessList.' . $choiceValue;
                 },
-                'data' => 'ground',
+                'data' => 'GROUND',
                 'required' => true
             ))
             ->add('floorNumber', ChoiceType::class, array(

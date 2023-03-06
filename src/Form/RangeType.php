@@ -29,11 +29,11 @@ class RangeType extends AbstractType
             ))
             ->add('catalog', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                    'Material' => 'material',
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
+                    'MATERIAL' => 'MATERIAL',
                 ),
-                'empty_data' => 'ponctual',
+                'empty_data' => 'PONCTUAL',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Catalog.Product.Catalog.' . ucfirst($choiceValue);
                 },

@@ -97,18 +97,18 @@
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Catalog.Label'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
                                         {% if product.catalog %}
-                                            {{ ('Catalog.Product.Catalog.' ~ product.catalog|capitalize) |trans }}
+                                            {{ ('Catalog.Product.Catalog.' ~ product.catalog) |trans }}
                                         {% endif %}
                                     </label>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Frequency'|trans }}</label>
                                     <label class="col-form-label col-md-8">
-                                        {% if product.frequency == 'ponctual' %}
+                                        {% if product.frequency == 'PONCTUAL' %}
                                             {{ 'General.Frequency.Ponctual'|trans }}
-                                        {% elseif product.frequency == 'regular' %}
-                                            {{ product.frequencyTimes }} / {{ ('General.Frequency.' ~ product.frequencyInterval|capitalize)|trans }}
-                                        {% elseif product.frequency == 'unknown' %}
+                                        {% elseif product.frequency == 'REGULAR' %}
+                                            {{ product.frequencyTimes }} / {{ ('General.Frequency.' ~ product.frequencyInterval)|trans }}
+                                        {% elseif product.frequency == 'UNKNOWN' %}
                                             {{ 'General.Frequency.Unknown'|trans }}
                                         {% endif %}
                                     </label>

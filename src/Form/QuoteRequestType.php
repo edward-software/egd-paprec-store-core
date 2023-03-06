@@ -46,7 +46,7 @@ class QuoteRequestType extends AbstractType
             ->add('civility', ChoiceType::class, array(
                 'choices' => array(
                     'M',
-                    'Mme'
+                    'MME'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;

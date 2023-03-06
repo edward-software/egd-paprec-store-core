@@ -179,10 +179,10 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if quoteRequestLine.frequency == 'unknown' %}
+                                                {% if quoteRequestLine.frequency == 'UNKNOWN' %}
                                                     {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
                                                 {% else %}
-                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval|capitalize %}
+                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
                                                     {{ quoteRequestLine.frequencyTimes }}
                                                     x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
                                                 {% endif %}
@@ -254,7 +254,7 @@
     <script>
         $(function () {
 
-            if ($('.contract-type-input').val() === 'modification') {
+            if ($('.contract-type-input').val() === 'MODIFICATION') {
                 $('.mnemonic-number-input').css('display', 'block');
                 $('.contract-number-input').css('display', 'block');
                 $('.mnemonic-number-input input').attr('required', 'true');
@@ -268,7 +268,7 @@
 
 
             $('.contract-type-input').on('change', function () {
-                if ($(this).val() === 'modification') {
+                if ($(this).val() === 'MODIFICATION') {
                     $('.mnemonic-number-input').css('display', 'block');
                     $('.contract-number-input').css('display', 'block');
                     $('.mnemonic-number-input input').attr('required', 'true');

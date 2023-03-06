@@ -69,7 +69,7 @@
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Catalog.Label'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
                                         {% if range.catalog %}
-                                            {{ ('Catalog.Product.Catalog.' ~ range.catalog|capitalize) |trans }}
+                                            {{ ('Catalog.Product.Catalog.' ~ range.catalog) |trans }}
                                         {% endif %}
                                     </label>
                                 </div>

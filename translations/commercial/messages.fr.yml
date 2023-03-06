@@ -102,12 +102,12 @@ Commercial:
         Frequency: Fréquence
         PassingFrequency: Fréquence de passage (si régulier)
         FrequencyTimes: Nb de passages (si régulier)
-        month: mois
-        bimestre: bimestre
-        quarter: trimestre
-        quadrimestre: quadrimestre
-        year: an
-        week: semaine
+        MONTH: mois
+        BIMESTRE: bimestre
+        QUARTER: trimestre
+        QUADRIMESTRE: quadrimestre
+        YEAR: an
+        WEEK: semaine
         CoworkerNumber: Effectif
         UserInCharge: Commercial en charge
         Reference: Référence de l'offre
@@ -129,10 +129,10 @@ Commercial:
         Confirm-send-quote: Êtes-vous sûr de vouloir envoyer le devis au client ?
         Confirm-send-contract: Êtes-vous sûr de vouloir envoyer le contrat au client ?
         Edit: Edition du devis
-        Regular: Régulier
-        Ponctual: Ponctuel
-        Material: Matériel
-        Unknown: Ne sais pas
+        REGULAR: Régulier
+        PONCTUAL: Ponctuel
+        MATERIAL: Matériel
+        UNKNOWN: Ne sais pas
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
@@ -156,9 +156,9 @@ Commercial:
         Number: Numéro offre
         Catalog:
             Catalog: Catalogue
-            Regular: Régulier
-            Ponctual: Ponctuel
-            Material: Matériel
+            REGULAR: Régulier
+            PONCTUAL: Ponctuel
+            MATERIAL: Matériel
         Origin:
             Origin: Origine
             Shop: Tunnel de vente
@@ -212,9 +212,9 @@ Commercial:
         RADIOGRAPHIC_FILM_DESTRUCTION: Destruction des radiographies
 
     AccessList:
-        stairs: Par escalier
-        elevator: Par ascenseur
-        ground: Niveau rue sans marche
+        STAIRS: Par escalier
+        ELEVATOR: Par ascenseur
+        GROUND: Niveau rue sans marche
 
     QuoteRequestLine:
         ProductName: Nom du produit

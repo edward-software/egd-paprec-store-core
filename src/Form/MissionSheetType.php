@@ -35,8 +35,8 @@ class MissionSheetType extends AbstractType
             ->add('contractNumber', TextType::class)
             ->add('myPaprecAccess', ChoiceType::class, array(
                 "choices" => array(
-                    'No' => 0,
-                    'Yes' => 1
+                    'NO' => 0,
+                    'YES' => 1
                 ),
                 "expanded" => true,
                 "required" => true,
@@ -44,8 +44,8 @@ class MissionSheetType extends AbstractType
             ))
             ->add('wasteTrackingRegisterAccess', ChoiceType::class, array(
                 "choices" => array(
-                    'No' => 0,
-                    'Yes' => 1
+                    'NO' => 0,
+                    'YES' => 1
                 ),
                 "expanded" => true,
                 "required" => true,
@@ -53,8 +53,8 @@ class MissionSheetType extends AbstractType
             ))
             ->add('reportingAccess', ChoiceType::class, array(
                 "choices" => array(
-                    'No' => 0,
-                    'Yes' => 1
+                    'NO' => 0,
+                    'YES' => 1
                 ),
                 "expanded" => true,
                 "required" => true,
@@ -62,19 +62,19 @@ class MissionSheetType extends AbstractType
             ))
             ->add('contractType', ChoiceType::class, array(
                 'choices' => array(
-                    'Creation' => 'creation',
-                    'Modification' => 'modification'
+                    'CREATION' => 'CREATION',
+                    'MODIFICATION' => 'MODIFICATION'
                 ),
-                'empty_data' => 'creation',
+                'empty_data' => 'CREATION',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.MissionSheet.ContractType.' . ucfirst($choiceValue);
                 }
             ))->add('billingType', ChoiceType::class, array(
                 'choices' => array(
-                    'Global' => 'global',
-                    'Per_site' => 'per_site'
+                    'GLOBAL' => 'GLOBAL',
+                    'PER_SITE' => 'PER_SITE'
                 ),
-                'empty_data' => 'global',
+                'empty_data' => 'GLOBAL',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.MissionSheet.BillingType.' . ucfirst($choiceValue);
                 }

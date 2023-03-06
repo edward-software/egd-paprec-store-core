@@ -26,8 +26,8 @@ General:
     In-progress:              En cours
     Archiving:                Archivé
     M:                       Monsieur
-    Mr:                       Monsieur
-    Mme:                      Madame
+    MR:                       Monsieur
+    MME:                      Madame
     Date-update:              Date de mise à jour
     System-information:       Informations système
     Information:              Informations
@@ -89,14 +89,14 @@ General:
         Access-type:            Type d'accès
 
     Frequency:
-        Month: mois
-        Bimestre: bimestre
-        Quarter: trimestre
-        Week: semaine
-        Regular: Régulier
-        Ponctual: Ponctuel
-        Material: Matériel
-        Unknown: Je ne sais pas
+        MONTH: mois
+        BIMESTRE: bimestre
+        QUARTER: trimestre
+        WEEK: semaine
+        REGULAR: Régulier
+        PONCTUAL: Ponctuel
+        MATERIAL: Matériel
+        UNKNOWN: Je ne sais pas
 
     TransportType:
         CBR_REG: CBR régulier

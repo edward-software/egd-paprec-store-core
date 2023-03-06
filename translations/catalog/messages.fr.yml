@@ -112,9 +112,9 @@ Catalog:
         MaterialUnitPrice: Prix de Vente €HT/unité
         Catalog:
             Label: Catalogue
-            Regular: Régulier
-            Ponctual: Ponctuel
-            Material: Matériel
+            REGULAR: Régulier
+            PONCTUAL: Ponctuel
+            MATERIAL: Matériel
         Frequency: Fréquence
         PassingFrequency: Fréquence de passage (si régulier)
         FrequencyInterval: Fréquence
@@ -226,9 +226,9 @@ Catalog:
         Name: Titre
         Catalog:
             Label: Catalogue
-            Regular: Régulier
-            Ponctual: Ponctuel
-            Material: Matériel
+            REGULAR: Régulier
+            PONCTUAL: Ponctuel
+            MATERIAL: Matériel
         Language: Langue
         IsDisplayed: Affiché
         Add: Ajouter un autre produit

@@ -30,7 +30,7 @@ class SettingType extends AbstractType
         $builder
             ->add('keyName', ChoiceType::class, array(
                 'choice_label' => function ($choiceValue, $key, $value) {
-                    return 'Commercial.Setting.KeyName.' . ucfirst($choiceValue);
+                    return 'Commercial.Setting.KeyName.' . $choiceValue;
                 },
                 'choices' => $this->options['keys'],
                 'required' => true

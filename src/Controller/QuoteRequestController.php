@@ -434,7 +434,7 @@ class QuoteRequestController extends AbstractController
         $hasContract = false;
         if (count($quoteRequest->getQuoteRequestFiles())) {
             foreach ($quoteRequest->getQuoteRequestFiles() as $qRF) {
-                if ($qRF->getType() === 'contract') {
+                if (strtoupper($qRF->getType()) === 'CONTRACT') {
                     $hasContract = true;
                 }
             }
@@ -1147,7 +1147,7 @@ class QuoteRequestController extends AbstractController
             }
 
             $errors = [];
-            if (isset($contractType) && $contractType === 'modification') {
+            if (isset($contractType) && strtoupper($contractType) === 'MODIFICATION') {
                 if (!$mnemonicNumber) {
                     $errors['mnemonicNumber'] = array(
                         'code' => 400,
@@ -1190,7 +1190,7 @@ class QuoteRequestController extends AbstractController
                 $missionSheet->setUserCreation($user);
                 $missionSheet->setStatus('NOT_VALIDATED');
 
-                if ($missionSheet->getContractType() === 'creation') {
+                if (strtoupper($missionSheet->getContractType()) === 'CREATION') {
                     $missionSheet->setMnemonicNumber(null);
                     $missionSheet->setContractNumber(null);
                 }
@@ -1271,7 +1271,7 @@ class QuoteRequestController extends AbstractController
             }
 
             $errors = [];
-            if (isset($contractType) && $contractType === 'modification') {
+            if (isset($contractType) && strtoupper($contractType) === 'MODIFICATION') {
                 if (!$mnemonicNumber) {
                     $errors['mnemonicNumber'] = array(
                         'code' => 400,
@@ -1315,7 +1315,7 @@ class QuoteRequestController extends AbstractController
                 $missionSheet->setUserUpdate($user);
                 $missionSheet->setStatus('NOT_VALIDATED');
 
-                if ($missionSheet->getContractType() === 'creation') {
+                if (strtoupper($missionSheet->getContractType()) === 'CREATION') {
                     $missionSheet->setMnemonicNumber(null);
                     $missionSheet->setContractNumber(null);
                 }

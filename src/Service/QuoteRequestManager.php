@@ -218,7 +218,7 @@ class QuoteRequestManager
 
         if (!empty($quoteRequestLines) && count($quoteRequestLines)) {
             foreach ($quoteRequestLines as $quoteRequestLine) {
-                if ($quoteRequestLine->getFrequency() === 'unknown') {
+                if (strtoupper($quoteRequestLine->getFrequency()) === 'UNKNOWN') {
                     return false;
                 }
             }

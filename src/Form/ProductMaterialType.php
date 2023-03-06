@@ -41,7 +41,7 @@ class ProductMaterialType extends AbstractType
             ->add('transportType', ChoiceType::class, array(
                 "choices" => $options['transportTypes'],
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.TransportType.' . ucfirst($choiceValue);
+                    return 'General.TransportType.' . $choiceValue;
                 },
                 "required" => true,
                 "invalid_message" => 'Cannot be null',
@@ -51,13 +51,13 @@ class ProductMaterialType extends AbstractType
             ))
             ->add('catalog', ChoiceType::class, array(
                 'choices' => array(
-                    'Regular' => 'regular',
-                    'Ponctual' => 'ponctual',
-                    'Material' => 'material',
+                    'REGULAR' => 'REGULAR',
+                    'PONCTUAL' => 'PONCTUAL',
+                    'MATERIAL' => 'MATERIAL',
                 ),
-                'empty_data' => 'ponctual',
+                'empty_data' => 'PONCTUAL',
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Catalog.Product.Catalog.' . ucfirst($choiceValue);
+                    return 'Catalog.Product.Catalog.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true

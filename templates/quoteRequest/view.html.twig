@@ -160,13 +160,13 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Catalog.Catalog'|trans }}</label>
                                         <label class="col-form-label">
-                                            {% if quoteRequest.catalog %} {{ ('Commercial.QuoteRequest.Catalog.'~ quoteRequest.catalog|capitalize)|trans }}{% endif %}
+                                            {% if quoteRequest.catalog %} {{ ('Commercial.QuoteRequest.Catalog.'~ quoteRequest.catalog)|trans }}{% endif %}
                                         </label>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Origin.Origin'|trans }}</label>
                                         <label class="col-form-label">
-                                            {% if quoteRequest.origin %} {{ ('Commercial.QuoteRequest.Origin.'~ quoteRequest.origin|capitalize)|trans }}{% endif %}
+                                            {% if quoteRequest.origin %} {{ ('Commercial.QuoteRequest.Origin.'~ quoteRequest.origin)|trans }}{% endif %}
                                         </label>
                                     </div>
                                     <div class="form-group row">
@@ -543,10 +543,10 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if quoteRequestLine.frequency == 'unknown' %}
+                                                {% if quoteRequestLine.frequency == 'UNKNOWN' %}
                                                     {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
                                                 {% else %}
-                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval|capitalize %}
+                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
                                                     {{ quoteRequestLine.frequencyTimes }}
                                                     x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
                                                 {% endif %}
@@ -663,7 +663,7 @@
                                                 </td>
 
                                                 <td>
-                                                    {{ ('Commercial.QuoteRequestFile.Type.'~quoteRequestFile.type|capitalize)|trans }}
+                                                    {{ ('Commercial.QuoteRequestFile.Type.'~quoteRequestFile.type)|trans }}
                                                 </td>
 
                                                 <td>

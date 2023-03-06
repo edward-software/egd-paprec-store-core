@@ -57,7 +57,7 @@ class UserEditType extends AbstractType
                 "expanded" => true,
                 "multiple" => true,
                 'constraints' => new NotBlank(),
-                'data' => ['ROLE_COMMERCIAL']
+                'empty_data' => ['ROLE_COMMERCIAL']
             ))
             ->add('manager', EntityType::class, array(
                 'class' => User::class,

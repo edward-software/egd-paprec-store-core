@@ -319,7 +319,7 @@ class SubscriptionController extends AbstractController
              */
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
-            if ($quoteRequest->getCatalog() === 'ponctual') {
+            if (strtoupper($quoteRequest->getCatalog()) === 'PONCTUAL') {
                 return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
                     'locale' => $locale,
                     'cartUuid' => $cart->getId(),
@@ -460,9 +460,9 @@ class SubscriptionController extends AbstractController
                 $quoteRequest->setCatalog('NOT_DEFINED');
             }
             $quoteRequest->setIsMultisite(false);
-            $quoteRequest->setAccess('ground');
+            $quoteRequest->setAccess('GROUND');
 
-            if ($quoteRequest->getCatalog() === 'PONCTUAL') {
+            if (strtoupper($quoteRequest->getCatalog()) === 'PONCTUAL') {
                 $quoteRequest->setPonctualDate($cart->getPonctualDate());
             }
 
