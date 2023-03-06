@@ -113,10 +113,10 @@ class QuoteRequestController extends AbstractController
             'id' => 'q.reference',
             'method' => array('getReference')
         );
-        $cols['type'] = array(
-            'label' => 'type',
-            'id' => 'q.type',
-            'method' => array('getType')
+        $cols['catalog'] = array(
+            'label' => 'catalog',
+            'id' => 'q.catalog',
+            'method' => array('getCatalog')
         );
         $cols['businessName'] = array(
             'label' => 'businessName',
@@ -162,7 +162,7 @@ class QuoteRequestController extends AbstractController
          */
         if ($catalog !== null && $catalog !== '#') {
             $queryBuilder
-                ->andWhere('q.type = :catalog')
+                ->andWhere('q.catalog = :catalog')
                 ->setParameter('catalog', $catalog);
         }
         if ($status !== null && $status !== '#') {
@@ -229,7 +229,7 @@ class QuoteRequestController extends AbstractController
                     $queryBuilder->expr()->like('q.id', '?1'),
                     $queryBuilder->expr()->like('q.number', '?1'),
                     $queryBuilder->expr()->like('q.reference', '?1'),
-                    $queryBuilder->expr()->like('q.type', '?1'),
+                    $queryBuilder->expr()->like('q.catalog', '?1'),
                     $queryBuilder->expr()->like('q.businessName', '?1'),
                     $queryBuilder->expr()->like('q.totalAmount', '?1'),
                     $queryBuilder->expr()->like('q.quoteStatus', '?1'),
@@ -246,7 +246,8 @@ class QuoteRequestController extends AbstractController
         $tmp = array();
         foreach ($dt['data'] as $data) {
             $line = $data;
-            $line['type'] = $data['type'] ? $this->translator->trans('Commercial.QuoteRequest.Type.' . ucfirst(strtolower($line['type']))) : '';
+
+            $line['catalog'] = $data['catalog'] ? $this->translator->trans('Commercial.QuoteRequest.Catalog.' . ucfirst(strtolower($line['catalog']))) : '';
             $line['isMultisite'] = $data['isMultisite'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
             $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
                 $request->getLocale());

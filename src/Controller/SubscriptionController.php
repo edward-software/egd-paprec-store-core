@@ -254,7 +254,7 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
-            $quoteRequest->setType($cart->getType());
+            $quoteRequest->setCatalog($cart->getType());
             $quoteRequest->setPonctualDate($cart->getPonctualDate());
             $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
             /**
@@ -319,7 +319,7 @@ class SubscriptionController extends AbstractController
              */
             $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
-            if ($quoteRequest->getType() === 'ponctual') {
+            if ($quoteRequest->getCatalog() === 'ponctual') {
                 return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
                     'locale' => $locale,
                     'cartUuid' => $cart->getId(),
@@ -335,7 +335,7 @@ class SubscriptionController extends AbstractController
 
 
 //            if ($sendConfirmEmail && $sendNewRequestEmail) {
-//                if ($quoteRequest->getType() === 'ponctual') {
+//                if ($quoteRequest->getCatalog() === 'ponctual') {
 //                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
 //                        'locale' => $locale,
 //                        'cartUuid' => $cart->getId(),
@@ -455,14 +455,14 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setOrigin('SHOP');
             $quoteRequest->setLocale($locale);
             if ($cart) {
-                $quoteRequest->setType($cart->getType());
+                $quoteRequest->setCatalog($cart->getType());
             } else {
-                $quoteRequest->setType('NOT_DEFINED');
+                $quoteRequest->setCatalog('NOT_DEFINED');
             }
             $quoteRequest->setIsMultisite(false);
             $quoteRequest->setAccess('ground');
 
-            if ($quoteRequest->getType() === 'PONCTUAL') {
+            if ($quoteRequest->getCatalog() === 'PONCTUAL') {
                 $quoteRequest->setPonctualDate($cart->getPonctualDate());
             }
 

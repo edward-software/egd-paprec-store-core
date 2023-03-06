@@ -292,9 +292,9 @@ class QuoteRequest
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     * @ORM\Column(name="catalog", type="string", length=255, nullable=true)
      */
-    private $type;
+    private $catalog;
 
     /**
      * @var string
@@ -1041,18 +1041,18 @@ class QuoteRequest
     /**
      * @return string
      */
-    public function getType()
+    public function getCatalog()
     {
-        return $this->type;
+        return $this->catalog;
     }
 
     /**
-     * @param string $type
+     * @param string $catalog
      * @return QuoteRequest
      */
-    public function setType($type)
+    public function setCatalog($catalog)
     {
-        $this->type = $type;
+        $this->catalog = $catalog;
         return $this;
     }
 

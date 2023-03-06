@@ -129,8 +129,9 @@ Commercial:
         Confirm-send-quote: Êtes-vous sûr de vouloir envoyer le devis au client ?
         Confirm-send-contract: Êtes-vous sûr de vouloir envoyer le contrat au client ?
         Edit: Edition du devis
-        Ponctual: A la demande
-        Regular: Régulière
+        Regular: Régulier
+        Ponctual: Ponctuel
+        Material: Matériel
         Unknown: Ne sais pas
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
@@ -153,10 +154,11 @@ Commercial:
             newUserInChargeWarned: Un mail a été envoyé au nouveau commercial en charge
         Locale: Langue
         Number: Numéro offre
-        Type:
-            Type: Type
-            Ponctual: Désarchivage unique
-            Regular: Service régulier
+        Catalog:
+            Catalog: Catalogue
+            Regular: Régulier
+            Ponctual: Ponctuel
+            Material: Matériel
         Origin:
             Origin: Origine
             Shop: Tunnel de vente

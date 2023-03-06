@@ -36,6 +36,7 @@ class OtherNeedType extends AbstractType
                 'choices' => array(
                     'Regular' => 'regular',
                     'Ponctual' => 'ponctual',
+                    'Material' => 'material',
                 ),
                 'empty_data' => 'ponctual',
                 "choice_label" => function ($choiceValue, $key, $value) {

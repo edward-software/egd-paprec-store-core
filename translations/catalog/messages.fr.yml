@@ -221,6 +221,7 @@ Catalog:
             Label: Catalogue
             Regular: Régulier
             Ponctual: Ponctuel
+            Material: Matériel
         Language: Langue
         IsDisplayed: Affiché
         Add: Ajouter un autre produit

@@ -63,9 +63,10 @@ parameters:
         - elevator
         - ground
 
-    paprec_quote_type:
+    paprec_quote_catalog:
         - REGULAR
         - PONCTUAL
+        - MATERIAL
 
     paprec_quote_access_price:
         stairs: 20

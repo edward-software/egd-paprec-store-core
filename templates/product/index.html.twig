@@ -41,6 +41,7 @@
                             <th>#</th>
                             <th>{{ 'Catalog.ProductLabel.Name'|trans }}</th>
                             <th>{{ 'Catalog.Product.Range'|trans }}</th>
+                            <th>{{ 'Catalog.Product.Catalog.Label'|trans }}</th>
                             <th>{{ 'Catalog.Product.IsEnabled.IsEnabled'|trans }}</th>
                             <th></th>
                         </tr>
@@ -67,6 +68,7 @@
                     {"data": "id"},
                     {"data": "name"},
                     {"data": "range"},
+                    {"data": "catalog"},
                     {"data": "isEnabled"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],

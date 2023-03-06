@@ -1148,7 +1148,7 @@ class QuoteRequestManager
                 return false;
             }
 
-            $products = $this->productManager->getAvailableProducts($quoteRequest->getType());
+            $products = $this->productManager->getAvailableProducts($quoteRequest->getCatalog());
 
             $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
 

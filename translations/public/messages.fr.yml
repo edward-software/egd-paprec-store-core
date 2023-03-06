@@ -77,8 +77,9 @@ Public:
         Frequency: Fréquence
         Collect-frequency: Fréquence de collecte
         Collect-date: Date de collecte souhaitée
-        Ponctual: à la demande
-        Regular: régulière
+        Regular: Régulier
+        Ponctual: Ponctuel
+        Material: Matériel
         Unknown: je ne sais pas
         Week: semaine
         Times: fois par

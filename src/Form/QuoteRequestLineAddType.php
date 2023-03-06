@@ -41,7 +41,8 @@ class QuoteRequestLineAddType extends AbstractType
             ->add('frequency', ChoiceType::class, array(
                 'choices' => array(
                     'Regular' => 'regular',
-                    'Ponctual' => 'ponctual'
+                    'Ponctual' => 'ponctual',
+                    'Material' => 'material'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.Frequency.' . ucfirst($choiceValue);

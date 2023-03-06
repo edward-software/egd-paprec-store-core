@@ -96,6 +96,11 @@ class ProductController extends AbstractController
             'id' => 'p.range',
             'method' => array('getRange', array(array('getRangeLabels', 0), 'getName'))
         );
+        $cols['catalog'] = array(
+            'label' => 'catalog',
+            'id' => 'p.catalog',
+            'method' => ['getCatalog']
+        );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
 
 
@@ -131,6 +136,9 @@ class ProductController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
             $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
+            if($line['catalog']){
+                $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . ucfirst(strtolower($line['catalog'])));
+            }
             $tmp[] = $line;
         }
 

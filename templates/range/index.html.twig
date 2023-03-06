@@ -37,6 +37,7 @@
                         <tr>
                             <th>#</th>
                             <th>{{ 'Catalog.RangeLabel.Name'|trans }}</th>
+                            <th>{{ 'Catalog.Product.Catalog.Label'|trans }}</th>
                             <th>{{ 'Catalog.Range.IsEnabled.IsEnabled'|trans }}</th>
                             <th></th>
                         </tr>
@@ -62,6 +63,7 @@
                 columns: [
                     {"data": "id"},
                     {"data": "name"},
+                    {"data": "catalog"},
                     {"data": "isEnabled"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],

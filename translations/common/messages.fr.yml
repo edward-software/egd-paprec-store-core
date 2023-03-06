@@ -93,8 +93,9 @@ General:
         Bimestre: bimestre
         Quarter: trimestre
         Week: semaine
-        Ponctual: A la demande
-        Regular: Régulière
+        Regular: Régulier
+        Ponctual: Ponctuel
+        Material: Matériel
         Unknown: Je ne sais pas
 
     TransportType:

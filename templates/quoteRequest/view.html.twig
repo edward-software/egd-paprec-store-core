@@ -158,9 +158,9 @@
                             <div class="card-body row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Type.Type'|trans }}</label>
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Catalog.Catalog'|trans }}</label>
                                         <label class="col-form-label">
-                                            {% if quoteRequest.type %} {{ ('Commercial.QuoteRequest.Type.'~ quoteRequest.type|capitalize)|trans }}{% endif %}
+                                            {% if quoteRequest.catalog %} {{ ('Commercial.QuoteRequest.Catalog.'~ quoteRequest.catalog|capitalize)|trans }}{% endif %}
                                         </label>
                                     </div>
                                     <div class="form-group row">
@@ -248,7 +248,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PonctualDate'|trans }}</label>
-                                        {% if quoteRequest.ponctualDate is not null and quoteRequest.type == 'PONCTUAL' %}
+                                        {% if quoteRequest.ponctualDate is not null and quoteRequest.catalog == 'PONCTUAL' %}
                                             <label class="col-form-label">
                                                 {{ quoteRequest.ponctualDate|localizeddate('short', 'none', app.request.locale) }}
                                             </label>
