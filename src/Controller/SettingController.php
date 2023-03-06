@@ -13,6 +13,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -142,20 +143,66 @@ class SettingController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
-            $setting = $form->getData();
+            $formData = $form->all();
+            $keyName = null;
+            if (is_array($formData) && count($formData)) {
+                foreach ($formData as $key => $value) {
+                    $parameters[$key] = $value->getData();
+                }
+            }
 
-            $setting->setDateCreation(new DateTime);
-            $setting->setUserCreation($user);
+            if (is_array($parameters) && count($parameters)) {
+                foreach ($parameters as $key => $value) {
+                    $$key = $value;
+                }
+            }
 
-            $this->em->persist($setting);
-            $this->em->flush();
+            $errors = [];
+            if (isset($keyName)) {
+                $count = $this->getDoctrine()->getManager()->getRepository(Setting::class)->count([
+                    'keyName' => $keyName
+                ]);
 
-            return $this->redirectToRoute('paprec_setting_view', array(
-                'id' => $setting->getId()
-            ));
+                if ($count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
+                    $errors['keyName'] = array(
+                        'code' => 400,
+                        'message' => 'Le nombre de valeur max pour cette clé est atteinte.'
+                    );
+                }
+            }
 
+            if ($errors && count($errors)) {
+                $form = $this->createForm(SettingType::class, $setting, [
+                    'keys' => $this->getParameter('paprec.setting.keys')
+                ]);
+
+                if ($errors['keyName']) {
+                    $form->get('keyName')->addError(new FormError('Le nombre de valeur max pour cette clé est atteinte.'));
+                }
+
+                return $this->render('setting/add.html.twig', array(
+                    'form' => $form->createView(),
+                    'errors' => $errors,
+                ));
+            }
+
+            if ($form->isValid()) {
+
+                $setting = $form->getData();
+
+                $setting->setDateCreation(new DateTime);
+                $setting->setUserCreation($user);
+
+                $this->em->persist($setting);
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_setting_view', array(
+                    'id' => $setting->getId()
+                ));
+
+            }
         }
 
         return $this->render('setting/add.html.twig', array(

@@ -247,7 +247,7 @@ class QuoteRequestController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
 
-            $line['catalog'] = $data['catalog'] ? $this->translator->trans('Commercial.QuoteRequest.Catalog.' . ucfirst(strtolower($line['catalog']))) : '';
+            $line['catalog'] = $data['catalog'] ? $this->translator->trans('Commercial.QuoteRequest.Catalog.' . strtoupper($line['catalog'])) : '';
             $line['isMultisite'] = $data['isMultisite'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
             $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
                 $request->getLocale());

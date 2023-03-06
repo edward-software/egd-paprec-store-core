@@ -13,13 +13,13 @@ Commercial:
         List: Feuilles de mission
         ContractType:
             ContractType: Type de contrat
-            Modification: Modification
-            Creation: Creation
+            MODIFICATION: Modification
+            CREATION: Creation
         MnemonicNumber: N° mnemonique
         BillingType:
             BillingType: Facturation
-            Per_site: Par site
-            Global: Globale
+            PER_SITE: Par site
+            GLOBAL: Globale
         OrderNumber: N° de commande
         ContractNumber: N° de contrat
         SecondUserInCharge: Assistant
@@ -46,7 +46,7 @@ Commercial:
             Title: Relance des suivis
         Status:
             Status: Statut
-            Pending: En cours
+            PENDING: En cours
         QuoteRequest:
             QuoteRequest: Devis
             Origin: Origin du devis
@@ -155,14 +155,15 @@ Commercial:
         Locale: Langue
         Number: Numéro offre
         Catalog:
+            NOT_DEFINED: Non défini
             Catalog: Catalogue
             REGULAR: Régulier
             PONCTUAL: Ponctuel
             MATERIAL: Matériel
         Origin:
             Origin: Origine
-            Shop: Tunnel de vente
-            Bo: Back-office
+            SHOP: Tunnel de vente
+            BO: Back-office
         SignatoryFirstName1: Prénom signataire 1
         SignatoryLastName1: Nom signataire 1
         SignatoryTitle1: Titre signataire 1
@@ -183,8 +184,8 @@ Commercial:
         FileTypeColumn: Format
         Type:
             Type: Type
-            Contract: Contrat
-            Other: Autre
+            CONTRACT: Contrat
+            OTHER: Autre
 
     StaffList:
         150: De 0 à 50 employés

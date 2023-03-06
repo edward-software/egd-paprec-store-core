@@ -27,7 +27,7 @@ class QuoteRequestFileType extends AbstractType
                     'OTHER' => 'OTHER',
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    $choiceValue = strtolower($choiceValue);
+                    $choiceValue = strtoupper($choiceValue);
                     return 'Commercial.QuoteRequestFile.Type.' . $choiceValue;
                 },
                 'data' => 'OTHER',

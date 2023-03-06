@@ -118,8 +118,8 @@ class QuoteRequestType extends AbstractType
                     'MATERIAL' => 'MATERIAL',
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    $choiceValue = strtolower($choiceValue);
-                    return 'Commercial.QuoteRequest.Catalog.' . ucfirst($choiceValue);
+                    $choiceValue = strtoupper($choiceValue);
+                    return 'Commercial.QuoteRequest.Catalog.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true
@@ -155,7 +155,7 @@ class QuoteRequestType extends AbstractType
                     '60' => '60'
                 ),
                 'choice_label' => function ($choiceValue, $key, $value) {
-                    return $choiceValue . ' ' . $this->translator->trans('Commercial.QuoteRequest.month');
+                    return $choiceValue . ' ' . $this->translator->trans('Commercial.QuoteRequest.MONTH');
                 },
                 'expanded' => false,
                 'multiple' => false

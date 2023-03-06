@@ -38,6 +38,9 @@ class MissionSheetType extends AbstractType
                     'NO' => 0,
                     'YES' => 1
                 ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
                 "expanded" => true,
                 "required" => true,
                 'empty_data' => '0'
@@ -47,6 +50,9 @@ class MissionSheetType extends AbstractType
                     'NO' => 0,
                     'YES' => 1
                 ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
                 "expanded" => true,
                 "required" => true,
                 'empty_data' => '0'
@@ -56,6 +62,9 @@ class MissionSheetType extends AbstractType
                     'NO' => 0,
                     'YES' => 1
                 ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
                 "expanded" => true,
                 "required" => true,
                 'empty_data' => '0'

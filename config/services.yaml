@@ -34,6 +34,7 @@ parameters:
     paprec.product.catalog:
         - REGULAR
         - PONCTUAL
+        - MATERIAL
 
     paprec_transport_types:
         - CBR_REG
@@ -109,6 +110,9 @@ parameters:
 
     paprec.setting.keys:
         - FOLLOW_UP_RELAUNCHED_DAYS
+
+    paprec.setting.max_by_key:
+        FOLLOW_UP_RELAUNCHED_DAYS: 1
 
     paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
     paprec.quote_request_file.max_file_size: 5000000

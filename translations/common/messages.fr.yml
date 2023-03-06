@@ -7,8 +7,10 @@ General:
     Validate:                 Valider
     Close:                    Fermer
     View:                     Visualiser
+    YES:                      Oui
     Yes:                      Oui
     1:                        Oui
+    NO:                       Non
     No:                       Non
     0:                        Non
     Name:                     Nom

@@ -125,7 +125,7 @@ class RangeController extends AbstractController
             $line = $data;
             $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
             if($line['catalog']){
-                $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . ucfirst(strtolower($line['catalog'])));
+                $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . strtoupper($line['catalog']));
             }
             $tmp[] = $line;
         }
