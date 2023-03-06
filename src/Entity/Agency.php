@@ -46,7 +46,7 @@ class Agency
     private $deleted;
 
     /**
-     * @ORM\Column(name="legalInfoTemplate", type="text")
+     * @ORM\Column(name="legalInfoTemplate", type="text", nullable=true)
      */
     private $legalInfoTemplate;
 
@@ -61,7 +61,7 @@ class Agency
 
     /**
      * @var string
-     * @ORM\Column(name="entityName", type="string")
+     * @ORM\Column(name="entityName", type="string", nullable=true)
      */
     private $entityName;
 
@@ -109,6 +109,14 @@ class Agency
      * @ORM\Column(name="postalCode", type="string", length=255, nullable=true, nullable=true)
      */
     private $postalCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="template", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $template;
 
 
     /**
@@ -561,6 +569,24 @@ class Agency
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     * @return Agency
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
     }
 
 }

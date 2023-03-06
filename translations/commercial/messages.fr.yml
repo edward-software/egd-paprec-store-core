@@ -246,7 +246,7 @@ Commercial:
         Address4: ROMANDIE, Rue de la Bergère 26, CH-1242 Satigny, +41 22 552 62 62
 
     NewQuoteEmail:
-        Object: Voici une nouvelle demande client N°METTRE NUMERO CLIENT
+        Object: Voici une nouvelle demande client N°%number%
         Dear: Cher(ère) Collègue Easy Recyclage
         Message1: Tu trouveras ci-joint une demande de vérification de l'offre pour la zone géographique ainsi que du contrat prévu.
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
@@ -326,13 +326,13 @@ Commercial:
         Dear:
             M: Cher Monsieur
             Mrs: Chère Madame
-        Message1: Voici les feuilles de missions du devis n° METTRE NUM DU DEVIS.
+        Message1: Voici les feuilles de missions du devis n° %number%.
         Regards: Bien cordialement
         Partner: Votre partenaire Easy Recyclage
 
     NewContractEmail:
         FileName: Contrat Easy Recyclage
-        Object: Contrat Easy Recyclage N°METTRE NUM DU DEVIS
+        Object: Contrat Easy Recyclage N°%number%
         Dear: Cher (ère) Collègue Easy Recyclage,
         Message1: Pour information, tu trouveras ci-joint un contrat que le client devrait rapidement nous renvoyer signé.
         Partner: Ton partenaire Easy Recyclage

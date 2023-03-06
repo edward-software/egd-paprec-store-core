@@ -262,7 +262,7 @@ class QuoteRequest
     /**
      * @var int
      *
-     * @ORM\Column(name="totalAmount", type="integer", nullable=true)
+     * @ORM\Column(name="totalAmount", type="bigint", nullable=true)
      */
     private $totalAmount;
 

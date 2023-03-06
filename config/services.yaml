@@ -68,6 +68,13 @@ parameters:
         - PONCTUAL
         - MATERIAL
 
+    paprec_agency_template:
+        - LCB
+        - CFS
+        - LPP
+        - IDF
+        - IN_SITU
+
     paprec_quote_access_price:
         stairs: 20
         elevator: 10

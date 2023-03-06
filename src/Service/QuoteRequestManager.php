@@ -1266,7 +1266,6 @@ class QuoteRequestManager
                     'text/html'
                 );
 
-
             $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
 
             if (!is_dir($pdfTmpFolder)) {
@@ -1359,17 +1358,17 @@ class QuoteRequestManager
 
                         $sheetName = '';
                         $pdfExploitName = 'Exploitation';
-                        if (strtolower($agency->getName()) === 'lcb93') {
+                        if ($agency->getTemplate() === 'LCB') {
                             $sheetName = 'Exploitation LCB';
-                        } elseif (strtolower($agency->getName()) === 'cfs') {
+                        } elseif ($agency->getTemplate() === 'CFS') {
                             $sheetName = 'Exploitation CFS';
-                        } elseif (strtolower($agency->getName()) === 'lpp') {
+                        } elseif ($agency->getTemplate() === 'LPP') {
                             $sheetName = 'Navette LPP';
                             $pdfExploitName = 'Navette';
-                        } elseif (strtolower($agency->getName()) === 'paprec') {
+                        } elseif ($agency->getTemplate() === 'PAPREC') {
                             $sheetName = 'Navette IDF';
                             $pdfExploitName = 'Navette';
-                        } elseif (strtolower($agency->getName()) === 'in situ') {
+                        } elseif ($agency->getTemplate() === 'IN_SITU') {
                             $sheetName = 'Navette In Situ';
                             $pdfExploitName = 'Navette';
                         }

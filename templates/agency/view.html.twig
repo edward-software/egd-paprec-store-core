@@ -96,6 +96,12 @@
                                         {{ agency.postalCode }}
                                     </label>
                                 </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Agency.Template.Template'|trans }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ ('Catalog.Agency.Template.'~agency.template)| trans({}, "messages", app.request.locale) }}
+                                    </label>
+                                </div>
                             </div>
                             {#
                             Affichage des photos

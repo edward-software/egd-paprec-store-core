@@ -35,6 +35,13 @@ Catalog:
         DisabledUser: (Compte non actif)
         DeletedUser: (Compte supprimé)
         System-information: Informations système
+        Template:
+            Template: Template
+            LCB: La Corbeille Bleue
+            CFS: Confidentialys
+            LPP: Le Petit ???
+            IDF: Paprec
+            IN_SITU: In Situ
 
     PostalCode:
         PostalCodes: Code postaux

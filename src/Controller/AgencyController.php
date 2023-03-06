@@ -80,6 +80,7 @@ class AgencyController extends AbstractController
         $cols['name'] = array('label' => 'name', 'id' => 'a.name', 'method' => array('getName'));
         $cols['businessName'] = array('label' => 'businessName', 'id' => 'a.businessName', 'method' => array('getBusinessName'));
         $cols['businessId'] = array('label' => 'businessId', 'id' => 'a.businessId', 'method' => array('getBusinessId'));
+        $cols['template'] = array('label' => 'template', 'id' => 'a.template', 'method' => array('getTemplate'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Agency::class)->createQueryBuilder('a');
 
@@ -218,9 +219,16 @@ class AgencyController extends AbstractController
     {
         $user = $this->getUser();
 
+        $templates = [];
+        foreach ($this->getParameter('paprec_agency_template') as $template) {
+            $templates[$template] = $this->translator->trans('Catalog.Agency.Template.' . $template);
+        }
+
         $agency = new Agency();
 
-        $form = $this->createForm(AgencyType::class, $agency);
+        $form = $this->createForm(AgencyType::class, $agency, [
+            'templates' => $templates
+        ]);
 
         $form->handleRequest($request);
 
@@ -257,7 +265,14 @@ class AgencyController extends AbstractController
 
         $this->agencyManager->isDeleted($agency, true);
 
-        $form = $this->createForm(AgencyType::class, $agency);
+        $templates = [];
+        foreach ($this->getParameter('paprec_agency_template') as $template) {
+            $templates[$template] = $this->translator->trans('Catalog.Agency.Template.' . $template);
+        }
+
+        $form = $this->createForm(AgencyType::class, $agency, [
+            'templates' => $templates
+        ]);
 
         $form->handleRequest($request);
 
