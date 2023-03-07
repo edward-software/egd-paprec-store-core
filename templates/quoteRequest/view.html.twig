@@ -367,9 +367,9 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.RegularDuration'|trans }}</label>
                                         <label class="col-form-label">
                                             {% if quoteRequest.duration is null %}
-                                                0 {{ 'Commercial.QuoteRequest.month'|trans }}
+                                                0 {{ 'Commercial.QuoteRequest.MONTH'|trans }}
                                             {% else %}
-                                                {{ quoteRequest.duration }} {{ 'Commercial.QuoteRequest.month'|trans }}
+                                                {{ quoteRequest.duration }} {{ 'Commercial.QuoteRequest.MONTH'|trans }}
                                             {% endif %}
                                         </label>
                                     </div>
@@ -544,7 +544,7 @@
                                             </td>
                                             <td>
                                                 {% if quoteRequestLine.frequency == 'UNKNOWN' %}
-                                                    {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                                    {{ 'General.Frequency.UNKNOWN'|trans({}, "messages", app.request.locale) }}
                                                 {% else %}
                                                     {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
                                                     {{ quoteRequestLine.frequencyTimes }}

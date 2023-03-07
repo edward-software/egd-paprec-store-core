@@ -180,7 +180,7 @@
                                     </td>
                                     <td>
                                         {% if quoteRequestLine.frequency == 'UNKNOWN' %}
-                                            {{ 'General.Frequency.Unknown'|trans({}, "messages", app.request.locale) }}
+                                            {{ 'General.Frequency.UNKNOWN'|trans({}, "messages", app.request.locale) }}
                                         {% else %}
                                             {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
                                             {{ quoteRequestLine.frequencyTimes }}
