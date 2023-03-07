@@ -34,3 +34,8 @@ catalog_billing_unit:
     type:     annotation
     prefix:   billingUnit
 
+catalog_dashboard:
+    resource: App\Controller\DashboardController
+    type:     annotation
+    prefix:   dashboard
+

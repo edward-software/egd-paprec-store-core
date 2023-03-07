@@ -3,6 +3,7 @@ Catalog:
     Bundle-name: Gestion Catalogue
     Products: Produits
     Settings: Paramétrage
+    Dashboards: Tableau de bord
 
     Agency:
         Agencies: Agences
@@ -253,3 +254,9 @@ Catalog:
         Date-creation: Date de création
         Date-update: Date dernière modification
         Details: Details de l'unité de facturation
+
+    Dashboard:
+        Dashboard: Tableau de bord
+        Activities: Activité
+        Activity:
+            Activity: Tableau de bord Activité

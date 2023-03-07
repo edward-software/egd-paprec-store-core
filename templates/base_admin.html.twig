@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-{#    <link rel="icon" type="image/png" href="{{ asset('build/static/favicon.png') }}">#}
+    {#    <link rel="icon" type="image/png" href="{{ asset('build/static/favicon.png') }}"> #}
 
     <style>
         {# TODO AJOUTER DANS CUSTOMCSS CF CYRIL#}
@@ -72,14 +72,13 @@
         </button>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav w-100">
-
-                {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_catalog'|length) == 'paprec_catalog' %} active{% endif %}">
-                        <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownCatalog" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false">{{ 'Catalog.Bundle-name'|trans }}
-                            <span class="caret"></span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownCatalog">
+                <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_catalog'|length) == 'paprec_catalog' %} active{% endif %}">
+                    <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownCatalog" data-toggle="dropdown"
+                       role="button" aria-haspopup="true" aria-expanded="false">{{ 'Catalog.Bundle-name'|trans }}
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownCatalog">
+                        {% if is_granted('ROLE_ADMIN') %}
                             <div class="dropdown-submenu">
                                 <div tabindex="-1" class="dropdown-item">{{ 'Catalog.Products'|trans }}</div>
                                 <div class="dropdown-menu">
@@ -109,9 +108,16 @@
                                     {#                                       href="{{ path('paprec_other_need_index') }}">{{ 'Catalog.OtherNeed.OtherNeeds'|trans }}</a> #}
                                 </div>
                             </div>
+                        {% endif %}
+                        <div class="dropdown-submenu">
+                            <div tabindex="-1" class="dropdown-item">{{ 'Catalog.Dashboards'|trans }}</div>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_dashboard_activity'|length) == 'paprec_dashboard_activity' %} active{% endif %}"
+                                   href="{{ path('paprec_dashboard_activity_index') }}">{{ 'Catalog.Dashboard.Activities'|trans }}</a>
+                            </div>
                         </div>
-                    </li>
-                {% endif %}
+                    </div>
+                </li>
                 {% if is_granted('ROLE_USER') %}
                     <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_commercial'|length) == 'paprec_commercial' %} active{% endif %}">
                         <a href="#" class="dropdown-toggle nav-link" id="navbarDropdownCommercial"
@@ -124,7 +130,7 @@
                                href="{{ path('paprec_quoteRequest_index') }}">{{ 'Commercial.QuoteRequests'|trans }}</a>
                             <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_follow_up'|length) == 'paprec_follow_up' %} active{% endif %}"
                                href="{{ path('paprec_follow_up_index') }}">{{ 'Commercial.FollowUp.List'|trans }}</a>
-                        <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_setting'|length) == 'paprec_setting' %} active{% endif %}"
+                            <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_setting'|length) == 'paprec_setting' %} active{% endif %}"
                                href="{{ path('paprec_setting_index') }}">{{ 'Commercial.Setting.List'|trans }}</a>
                         </div>
                     </li>

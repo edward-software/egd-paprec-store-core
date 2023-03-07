@@ -1,0 +1,189 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.Dashboard.Activities'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.Dashboard.Activities'|trans }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-list"></i> {{ 'Catalog.Dashboard.Activity.Activity'|trans }}
+                    </h4>
+                </div>
+                <div class="card-body">
+
+                    <table id="quoteRequestsListDatatable" class="table table-striped table-bordered table-hover"
+                           cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Commercial</th>
+                            <th>Antérieur (M-4 à M-12)</th>
+                            <th>M-3</th>
+                            <th>M-2</th>
+                            <th>M-1</th>
+                            <th>M</th>
+                            <th>TOTAL À DATE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if datas|length > 0 %}
+                            {% for data in datas %}
+                                <tr>
+                                    <th class="commercial-name">{{ data['name'] }}</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre de nouvelles affaires</th>
+                                    <td>{{ data['qr_number']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_number']['M_3'] }}</td>
+                                    <td>{{ data['qr_number']['M_2'] }}</td>
+                                    <td>{{ data['qr_number']['M_1'] }}</td>
+                                    <td>{{ data['qr_number']['M'] }}</td>
+                                    <td>{{ data['qr_number']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>dont ouvertes à ce jour</th>
+                                    <td>{{ data['qr_number_opened']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_number_opened']['M_3'] }}</td>
+                                    <td>{{ data['qr_number_opened']['M_2'] }}</td>
+                                    <td>{{ data['qr_number_opened']['M_1'] }}</td>
+                                    <td>{{ data['qr_number_opened']['M'] }}</td>
+                                    <td>{{ data['qr_number_opened']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>dont clôturées gagnées</th>
+                                    <td>{{ data['qr_number_closed_won']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_3'] }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_2'] }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_1'] }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M'] }}</td>
+                                    <td>{{ data['qr_number_closed_won']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>dont clôturées non gagnées</th>
+                                    <td>{{ data['qr_number_closed_not_won']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_3'] }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_2'] }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_1'] }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M'] }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>soit total affaires générées (12 mois)</th>
+                                    <td>{{ data['qr_number_total']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_number_total']['M_3'] }}</td>
+                                    <td>{{ data['qr_number_total']['M_2'] }}</td>
+                                    <td>{{ data['qr_number_total']['M_1'] }}</td>
+                                    <td>{{ data['qr_number_total']['M'] }}</td>
+                                    <td>{{ data['qr_number_total']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Taux de signature</th>
+                                    <td>{{ data['qr_number_signature']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_number_signature']['M_3'] }}</td>
+                                    <td>{{ data['qr_number_signature']['M_2'] }}</td>
+                                    <td>{{ data['qr_number_signature']['M_1'] }}</td>
+                                    <td>{{ data['qr_number_signature']['M'] }}</td>
+                                    <td>{{ data['qr_number_signature']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th>CA des nouvelles affaires</th>
+                                    <td>{{ data['qr_turnover']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_turnover']['M_3'] }}</td>
+                                    <td>{{ data['qr_turnover']['M_2'] }}</td>
+                                    <td>{{ data['qr_turnover']['M_1'] }}</td>
+                                    <td>{{ data['qr_turnover']['M'] }}</td>
+                                    <td>{{ data['qr_turnover']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>dont ouverte à ce jour</th>
+                                    <td>{{ data['qr_turnover_opened']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_3'] }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_2'] }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_1'] }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M'] }}</td>
+                                    <td>{{ data['qr_turnover_opened']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>dont clôturées gagnées</th>
+                                    <td>{{ data['qr_turnover_closed_won']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_3'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_2'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_1'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>dont clôturées non gagnées</th>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_3'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_2'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_1'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>soit total affaires générées (12 mois)</th>
+                                    <td>{{ data['qr_turnover_total']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_3'] }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_2'] }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_1'] }}</td>
+                                    <td>{{ data['qr_turnover_total']['M'] }}</td>
+                                    <td>{{ data['qr_turnover_total']['TOTAL'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Taux de signature</th>
+                                    <td>{{ data['qr_turnover_signature']['M_4_12'] }}</td>
+                                    <td>{{ data['qr_turnover_signature']['M_3'] }}</td>
+                                    <td>{{ data['qr_turnover_signature']['M_2'] }}</td>
+                                    <td>{{ data['qr_turnover_signature']['M_1'] }}</td>
+                                    <td>{{ data['qr_turnover_signature']['M'] }}</td>
+                                    <td>{{ data['qr_turnover_signature']['TOTAL'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+
+
+        });
+    </script>
+{% endblock %}
