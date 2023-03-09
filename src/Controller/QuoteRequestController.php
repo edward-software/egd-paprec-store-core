@@ -576,16 +576,18 @@ class QuoteRequestController extends AbstractController
 //        if ($form->isSubmitted() && $form->isValid()) {
         if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
+
+            $overallDiscount = $quoteRequest->getOverallDiscount();
             $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
 
             if ($quoteRequest->getQuoteRequestLines()) {
                 foreach ($quoteRequest->getQuoteRequestLines() as $line) {
                     $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false,
-                        $quoteRequest->getOverallDiscount());
+                        $overallDiscount);
                 }
             }
             $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
-            $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
+            $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
 
             $quoteRequest->setDateUpdate(new \DateTime());
             $quoteRequest->setUserUpdate($user);
