@@ -143,7 +143,14 @@ class FollowUpController extends AbstractController
 
         $followUp = new FollowUp();
 
-        $form = $this->createForm(FollowUpType::class, $followUp, []);
+        $status = [];
+        foreach ($this->getParameter('paprec.follow_up.status') as $s) {
+            $status[$s] = $s;
+        }
+
+        $form = $this->createForm(FollowUpType::class, $followUp, [
+            'status' => $status
+        ]);
 
         $form->handleRequest($request);
 
@@ -182,7 +189,14 @@ class FollowUpController extends AbstractController
 
         $this->followUpManager->isDeleted($followUp, true);
 
-        $form = $this->createForm(FollowUpType::class, $followUp, []);
+        $status = [];
+        foreach ($this->getParameter('paprec.follow_up.status') as $s) {
+            $status[$s] = $s;
+        }
+
+        $form = $this->createForm(FollowUpType::class, $followUp, [
+            'status' => $status
+        ]);
 
         $form->handleRequest($request);
 

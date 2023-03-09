@@ -1,0 +1,100 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.Dashboard.FollowUps'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.Dashboard.FollowUps'|trans }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="row dashboard-page">
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-list"></i> {{ 'Catalog.Dashboard.FollowUp.FollowUp'|trans }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="paprec-flex mb-4">
+                        <select name="catalog" id="catalogInput" class="form-control mr-2 input-sm col-3">
+                            {% for catalog in catalogs %}
+                                <option value="{{ catalog }}"{% if catalog == choosedCatalog %} selected{% endif %}>{{ ('Commercial.QuoteRequest.'~ catalog)|trans() }}</option>
+                            {% endfor %}
+                        </select>
+                        <a href="javascript:void(0)" class="btn btn-outline-primary filter-button">Appliquer</a>
+                    </div>
+
+                    <table id="quoteRequestsListDatatable" class="table table-bordered table-hover"
+                           cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.Number'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.Agency.BusinessName'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.Date-creation'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.TotalAmount'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.Last-follow-up'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.Last-update'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.FollowUp.Content'|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+
+            $('#quoteRequestsListDatatable').EgdDatatable({
+                url: "{{ path('paprec_dashboard_follow_up_loadList') }}",
+                order: [[3, "desc"]],
+                columns: [
+                    // {"data": "id"},
+                    {"data": "number"},
+                    {"data": "businessName"},
+                    {"data": "dateCreation"},
+                    {"data": "totalAmount"},
+                    {"data": "followUpDate"},
+                    {"data": "followUpLastDate"},
+                    {"data": "followUpContent", "width": "40%"}
+                ]
+            });
+
+            $('.filter-button').on('click', function () {
+                var catalog = $('#catalogInput').val();
+                var url = '{{ path('paprec_dashboard_activity_index', {'catalog': '0000'}) }}'.replace('0000', catalog);
+
+                $(location).attr('href', url);
+
+
+                {# Swal.fire({ #}
+                {#    title: "{{ 'General.Confirm'|trans }}", #}
+                {#    text: "{{ 'General.Confirm-cancel'|trans }}", #}
+                {#    showCancelButton: true, #}
+                {#    confirmButtonText: "{{ 'General.Yes'|trans }}", #}
+                {#    cancelButtonText: "{{ 'General.No'|trans }}" #}
+                {# }).then(function (result) { #}
+                {#    if (result.value) { #}
+                {#
+                {#    } #}
+                {# }); #}
+
+            });
+
+        });
+    </script>
+{% endblock %}

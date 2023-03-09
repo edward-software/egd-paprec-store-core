@@ -47,6 +47,7 @@ Commercial:
         Status:
             Status: Statut
             PENDING: En cours
+            CLOSED: Fermé
         QuoteRequest:
             QuoteRequest: Devis
             Origin: Origin du devis
@@ -133,6 +134,7 @@ Commercial:
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
         UNKNOWN: Ne sais pas
+        ALL: Toutes les affaires
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
@@ -337,6 +339,18 @@ Commercial:
         Dear: Cher (ère) Collègue Easy Recyclage,
         Message1: Pour information, tu trouveras ci-joint un contrat que le client devrait rapidement nous renvoyer signé.
         Partner: Ton partenaire Easy Recyclage
+
+    Dashboard:
+        QuoteRequest:
+            Number: N°Offre
+            Date-creation: Date offre
+            TotalAmount: CA (décroissant)
+            Last-follow-up: Dernier suivi
+            Last-update: Depuis
+        Agency:
+            BusinessName: Raison sociale
+        FollowUp:
+            Content: Contenu
 
     PDF:
         Title: Devis de Prestation

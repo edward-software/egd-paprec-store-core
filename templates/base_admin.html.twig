@@ -114,6 +114,8 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_dashboard_activity'|length) == 'paprec_dashboard_activity' %} active{% endif %}"
                                    href="{{ path('paprec_dashboard_activity_index') }}">{{ 'Catalog.Dashboard.Activities'|trans }}</a>
+                                <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_dashboard_followUp'|length) == 'paprec_dashboard_followUp' %} active{% endif %}"
+                                   href="{{ path('paprec_dashboard_follow_up_index') }}">{{ 'Catalog.Dashboard.FollowUps'|trans }}</a>
                             </div>
                         </div>
                     </div>

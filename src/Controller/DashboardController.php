@@ -2,37 +2,16 @@
 
 namespace App\Controller;
 
-use App\Entity\FollowUp;
-use App\Entity\Picture;
-use App\Entity\Product;
-use App\Entity\ProductLabel;
 use App\Entity\QuoteRequest;
 use App\Entity\User;
-use App\Form\PictureProductType;
-use App\Form\ProductLabelType;
-use App\Form\ProductMaterialType;
-use App\Form\ProductType;
 use App\Service\NumberManager;
-use App\Service\PictureManager;
-use App\Service\ProductLabelManager;
-use App\Service\ProductManager;
 use App\Tools\DataTable;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -61,6 +40,14 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         $userIds = [];
+        $choosedCatalog = $request->get('catalog');
+        $session = $this->get('session');
+
+        if (!$choosedCatalog) {
+            $choosedCatalog = $session->get('activityDashboardFilterChoosedCatalog');
+        } else {
+            $session->set('activityDashboardFilterChoosedCatalog', $choosedCatalog);
+        }
 
         $columns = [
             'M_4_12',
@@ -203,6 +190,12 @@ class DashboardController extends AbstractController
             ->andWhere('qR.dateCreation > :date')
             ->setParameter('date', $startDateM12);
 
+        if ($choosedCatalog && $choosedCatalog !== 'ALL') {
+            $queryBuilder
+                ->andWhere('qR.catalog = :catalog')
+                ->setParameter('catalog', $choosedCatalog);
+        }
+
         $quoteRequests = $queryBuilder->getQuery()->getResult();
 
         if ($quoteRequests && count($quoteRequests)) {
@@ -272,8 +265,10 @@ class DashboardController extends AbstractController
                             /**
                              * Taux signature
                              */
-                            $datas[$key]['qr_number_signature'][$columnKeyName] = round(($datas[$key]['qr_number_closed_won'][$columnKeyName] * 100) / $datas[$key]['qr_number_total'][$columnKeyName], 1);
-                            $datas[$key]['qr_number_signature']['TOTAL'] = round(($datas[$key]['qr_number_closed_won']['TOTAL'] * 100) / $datas[$key]['qr_number_total']['TOTAL'], 1);
+                            $datas[$key]['qr_number_signature'][$columnKeyName] = round(($datas[$key]['qr_number_closed_won'][$columnKeyName] * 100) / $datas[$key]['qr_number_total'][$columnKeyName],
+                                1);
+                            $datas[$key]['qr_number_signature']['TOTAL'] = round(($datas[$key]['qr_number_closed_won']['TOTAL'] * 100) / $datas[$key]['qr_number_total']['TOTAL'],
+                                1);
 
                             /**
                              * CA cloturées gagnées
@@ -289,8 +284,10 @@ class DashboardController extends AbstractController
                              * Taux signature CA
                              */
                             if ($datas[$key]['qr_turnover_total'][$columnKeyName] > 0) {
-                                $datas[$key]['qr_turnover_signature'][$columnKeyName] = round(($datas[$key]['qr_turnover_closed_won'][$columnKeyName] * 100) / $datas[$key]['qr_turnover_total'][$columnKeyName], 1);
-                                $datas[$key]['qr_turnover_signature']['TOTAL'] = round(($datas[$key]['qr_turnover_closed_won']['TOTAL'] * 100) / $datas[$key]['qr_turnover_total']['TOTAL'], 1);
+                                $datas[$key]['qr_turnover_signature'][$columnKeyName] = round(($datas[$key]['qr_turnover_closed_won'][$columnKeyName] * 100) / $datas[$key]['qr_turnover_total'][$columnKeyName],
+                                    1);
+                                $datas[$key]['qr_turnover_signature']['TOTAL'] = round(($datas[$key]['qr_turnover_closed_won']['TOTAL'] * 100) / $datas[$key]['qr_turnover_total']['TOTAL'],
+                                    1);
                             }
 
                         } elseif ($quoteRequest->getQuoteStatus() === 'CONTRACT_LOST') {
@@ -357,17 +354,21 @@ class DashboardController extends AbstractController
                         }
 
                         if ($keyTeam >= 0) {
-                            if($datas[$keyTeam]['qr_number_total'][$columnKeyName] > 0){
-                                $datas[$keyTeam]['qr_number_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_number_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_number_total'][$columnKeyName], 1);
+                            if ($datas[$keyTeam]['qr_number_total'][$columnKeyName] > 0) {
+                                $datas[$keyTeam]['qr_number_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_number_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_number_total'][$columnKeyName],
+                                    1);
                             }
-                            if($datas[$keyTeam]['qr_number_total']['TOTAL'] > 0){
-                                $datas[$keyTeam]['qr_number_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_number_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_number_total']['TOTAL'], 1);
+                            if ($datas[$keyTeam]['qr_number_total']['TOTAL'] > 0) {
+                                $datas[$keyTeam]['qr_number_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_number_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_number_total']['TOTAL'],
+                                    1);
                             }
-                            if($datas[$keyTeam]['qr_turnover_total'][$columnKeyName] > 0){
-                                $datas[$keyTeam]['qr_turnover_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_turnover_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_turnover_total'][$columnKeyName], 1);
+                            if ($datas[$keyTeam]['qr_turnover_total'][$columnKeyName] > 0) {
+                                $datas[$keyTeam]['qr_turnover_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_turnover_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_turnover_total'][$columnKeyName],
+                                    1);
                             }
-                            if($datas[$keyTeam]['qr_turnover_total']['TOTAL'] > 0){
-                                $datas[$keyTeam]['qr_turnover_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_turnover_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_turnover_total']['TOTAL'], 1);
+                            if ($datas[$keyTeam]['qr_turnover_total']['TOTAL'] > 0) {
+                                $datas[$keyTeam]['qr_turnover_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_turnover_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_turnover_total']['TOTAL'],
+                                    1);
                             }
                         }
 
@@ -377,11 +378,194 @@ class DashboardController extends AbstractController
 
             }
         }
-//        exit;
+
         return $this->render('dashboard/activity/index.html.twig', [
             'quoteRequests' => $quoteRequests,
             'user' => $user,
-            'datas' => $datas
+            'datas' => $datas,
+            'catalogs' => [
+                'ALL',
+                'REGULAR',
+                'PONCTUAL'
+            ],
+            'choosedCatalog' => $choosedCatalog
         ]);
+    }
+
+    /**
+     * @Route("/followUp", name="paprec_dashboard_follow_up_index")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function followUpIndexAction(Request $request)
+    {
+        $user = $this->getUser();
+        $session = $this->get('session');
+        $choosedCatalog = $session->get('followUpDashboardFilterChoosedCatalog');
+
+        return $this->render('dashboard/followUp/index.html.twig', [
+            'user' => $user,
+            'choosedCatalog' => $choosedCatalog,
+            'catalogs' => [
+                'ALL',
+                'REGULAR',
+                'PONCTUAL'
+            ],
+//            'choosedCatalog' => $choosedCatalog
+        ]);
+    }
+
+    /**
+     * @Route("/loadList", name="paprec_dashboard_follow_up_loadList")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function followUpLoadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
+    {
+        $systemUser = $this->getUser();
+        $session = $this->get('session');
+        $userIds = [];
+        $choosedCatalog = $request->get('catalog');
+
+        if (!$choosedCatalog) {
+            $choosedCatalog = $session->get('followUpDashboardFilterChoosedCatalog');
+        } else {
+            $session->set('followUpDashboardFilterChoosedCatalog', $choosedCatalog);
+        }
+
+        if ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
+            $queryBuilder = $this->em->getRepository(User::class)->createQueryBuilder('u');
+
+            $queryBuilder->select(['u'])
+                ->where('u.deleted IS NULL')
+                ->andWhere('u.manager = :userId')
+                ->setParameter('userId', $systemUser->getId());
+
+            $users = $queryBuilder->getQuery()->getResult();
+
+            if ($users && count($users)) {
+                foreach ($users as $u) {
+                    $userIds[] = $u->getId();
+                }
+            }
+
+        } elseif ($this->isGranted('ROLE_COMMERCIAL') || $this->isGranted('ROLE_COMMERCIAL_MULTISITES')) {
+            $userIds[] = $systemUser->getId();
+        }
+
+        $return = [];
+
+        $filters = $request->get('filters');
+        $pageSize = $request->get('length');
+        $start = $request->get('start');
+        $orders = $request->get('order');
+        $search = $request->get('search');
+        $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
+
+        $cols['number'] = array(
+            'label' => 'number',
+            'id' => 'q.number',
+            'method' => array('getNumber')
+        );
+        $cols['businessName'] = array(
+            'label' => 'businessName',
+            'id' => 'q.businessName',
+            'method' => array('getBusinessName')
+        );
+        $cols['dateCreation'] = array(
+            'label' => 'dateCreation',
+            'id' => 'q.dateCreation',
+            'method' => array('getDateCreation'),
+            'filter' => array(array('name' => 'format', 'args' => array('d/m/Y')))
+        );
+        $cols['totalAmount'] = array(
+            'label' => 'totalAmount',
+            'id' => 'q.totalAmount',
+            'method' => array('getTotalAmount')
+        );
+        $cols['followUpDate'] = array(
+            'label' => 'followUpDate',
+            'id' => 'q.followUps',
+            'method' => [['getFollowUps', 0]]
+        );
+        $cols['followUpLastDate'] = array(
+            'label' => 'followUpLastDate',
+            'id' => 'q.followUps',
+            'method' => [['getFollowUps', 0]]
+        );
+        $cols['followUpContent'] = array(
+            'label' => 'followUpContent',
+            'id' => 'q.followUps',
+            'method' => [['getFollowUps', 0]]
+        );
+        $cols['followUps'] = array(
+            'label' => 'followUps',
+            'id' => 'q.followUps',
+            'method' => [['getFollowUps', 0]]
+        );
+        $cols['id'] = array('label' => 'id', 'id' => 'q.id', 'method' => array('getId'));
+
+
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        $queryBuilder->select(array('q'))
+            ->from('App:QuoteRequest', 'q')
+            ->addSelect('fU')
+            ->leftJoin('q.followUps', 'fU')
+            ->where('q.deleted IS NULL')
+            ->andWhere('q.userInCharge IN (:userIds)')
+            ->setParameter('userIds', $userIds);
+
+
+        if (is_array($search) && isset($search['value']) && $search['value'] != '') {
+            if (substr($search['value'], 0, 1) === '#') {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->eq('q.id', '?1')
+                ))->setParameter(1, substr($search['value'], 1));
+            } else {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->like('q.id', '?1'),
+                    $queryBuilder->expr()->like('q.number', '?1'),
+                    $queryBuilder->expr()->like('q.businessName', '?1'),
+                    $queryBuilder->expr()->like('q.totalAmount', '?1'),
+                    $queryBuilder->expr()->like('q.dateCreation', '?1')
+                ))->setParameter(1, '%' . $search['value'] . '%');
+            }
+        }
+
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
+
+        // Reformatage de certaines données
+        $tmp = [];
+        foreach ($dt['data'] as $data) {
+            $line = $data;
+
+            $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
+                $request->getLocale());
+
+            if($line['followUps']){
+                $line['followUpDate']  = null;
+                $line['followUpLastDate']  = null;
+                if($line['followUps']->getDate()){
+                    $line['followUpDate'] = $line['followUps']->getDate()->format('d/m/Y');
+                }
+                if($line['followUps']->getDateUpdate()){
+                    $line['followUpLastDate'] = $line['followUps']->getDateUpdate()->format('d/m/Y');
+                }
+                $line['followUpContent'] = $line['followUps']->getContent();
+            }
+
+            $tmp[] = $line;
+        }
+        $dt['data'] = $tmp;
+
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
+        $return['resultCode'] = 1;
+        $return['resultDescription'] = "success";
+
+        return new JsonResponse($return);
+
     }
 }

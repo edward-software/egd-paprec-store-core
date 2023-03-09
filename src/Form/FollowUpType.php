@@ -31,9 +31,7 @@ class FollowUpType extends AbstractType
                 'widget' => 'single_text'
             ))
             ->add('status', ChoiceType::class, array(
-                'choices' => array(
-                    'PENDING' => 'PENDING'
-                ),
+                'choices' => $this->options['status'],
                 'empty_data' => 'PENDING',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.FollowUp.Status.' . $choiceValue;
@@ -76,7 +74,8 @@ class FollowUpType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => FollowUp::class,
-            'quoteRequestId' => null
+            'quoteRequestId' => null,
+            'status' => null
         ));
     }
 

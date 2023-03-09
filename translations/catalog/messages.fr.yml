@@ -258,5 +258,8 @@ Catalog:
     Dashboard:
         Dashboard: Tableau de bord
         Activities: Activité
+        FollowUps: Relances
         Activity:
             Activity: Tableau de bord Activité
+        FollowUp:
+            FollowUp: Tableau de bord Relance

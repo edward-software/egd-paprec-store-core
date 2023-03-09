@@ -137,7 +137,9 @@ class FollowUpManager
                 ->where('fU.deleted IS NULL')
                 ->andWhere('qR.deleted IS NULL')
                 ->andWhere('fU.dateUpdate < :date')
-                ->setParameter('date', $date);
+                ->setParameter('date', $date)
+                ->andWhere('fU.status = :status')
+                ->setParameter('status', 'PENDING');
 
             $followUps = $query->getQuery()->getResult();
 
