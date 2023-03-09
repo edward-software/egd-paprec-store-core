@@ -572,7 +572,6 @@ class DashboardController extends AbstractController
         );
         $cols['id'] = array('label' => 'id', 'id' => 'q.id', 'method' => array('getId'));
 
-
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
         $queryBuilder->select(array('q'))
@@ -582,8 +581,6 @@ class DashboardController extends AbstractController
             ->where('q.deleted IS NULL')
             ->andWhere('q.userInCharge IN (:userIds)')
             ->setParameter('userIds', $userIds);
-
-
 
         if($selectedCatalog){
             $queryBuilder
@@ -598,7 +595,7 @@ class DashboardController extends AbstractController
         }
 
         if($selectedPrice1 !== null && $selectedPrice1 >= 0){
-            $selectedPrice1 = $this->numberManager->normalize($selectedPrice1);
+            $selectedPrice1 = $this->numberManager->normalize((int)$selectedPrice1);
 
             $queryBuilder
                 ->andWhere('q.totalAmount >= :price1')
@@ -606,7 +603,7 @@ class DashboardController extends AbstractController
         }
 
         if($selectedPrice2 !== null && $selectedPrice2 >= 0){
-            $selectedPrice2 = $this->numberManager->normalize($selectedPrice2);
+            $selectedPrice2 = $this->numberManager->normalize((int)$selectedPrice2);
 
             $queryBuilder
                 ->andWhere('q.totalAmount <= :price2')
