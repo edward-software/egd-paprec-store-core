@@ -412,7 +412,9 @@ class DashboardController extends AbstractController
             ->select('s')
             ->where('s.deleted IS NULL')
             ->andWhere('s.keyName = :key')
-            ->setParameter('key', 'DASHBOARD_FOLLOW_UP_FILTER_PRICE');
+            ->setParameter('key', 'DASHBOARD_FOLLOW_UP_FILTER_PRICE')
+            ->orderBy('s.value + 0', 'ASC')
+        ;
 
         $prices = $query->getQuery()->getResult();
 
