@@ -38,30 +38,6 @@ class ProductMaterialType extends AbstractType
                 "expanded" => true,
             ))
             ->add('position')
-            ->add('transportType', ChoiceType::class, array(
-                "choices" => $options['transportTypes'],
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.TransportType.' . $choiceValue;
-                },
-                "required" => true,
-                "invalid_message" => 'Cannot be null',
-                "expanded" => false,
-                "multiple" => false,
-                'constraints' => new NotBlank()
-            ))
-            ->add('catalog', ChoiceType::class, array(
-                'choices' => array(
-                    'REGULAR' => 'REGULAR',
-                    'PONCTUAL' => 'PONCTUAL',
-                    'MATERIAL' => 'MATERIAL',
-                ),
-                'empty_data' => 'PONCTUAL',
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'Catalog.Product.Catalog.' . $choiceValue;
-                },
-                'required' => true,
-                'expanded' => true
-            ))
             ->add('range', EntityType::class, array(
                 'class' => Range::class,
                 'query_builder' => function (RangeRepository $er) {

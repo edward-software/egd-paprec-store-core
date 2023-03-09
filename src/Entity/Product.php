@@ -129,8 +129,7 @@ class Product
     /**
      * @var string
      * Le coefficient de transport à utiliser
-     * @ORM\Column(name="transportType", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="transportType", type="string", length=255, nullable=true)
      */
     private $transportType;
 
@@ -710,10 +709,10 @@ class Product
     }
 
     /**
-     * @param string $transportType
+     * @param string|null $transportType
      * @return Product
      */
-    public function setTransportType(string $transportType): self
+    public function setTransportType($transportType = null)
     {
         $this->transportType = $transportType;
         return $this;

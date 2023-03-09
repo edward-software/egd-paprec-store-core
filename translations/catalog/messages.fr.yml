@@ -107,7 +107,7 @@ Catalog:
         Dimensions: Dimensions
         Range: Gamme
         TransportType: Type de transport
-        WasteClassification: Nomenclature déchet
+        WasteClassification: Qualité
         Code: Code
         BillingUnit: Unité de facturation
         MaterialUnitPrice: Prix de Vente €HT/unité

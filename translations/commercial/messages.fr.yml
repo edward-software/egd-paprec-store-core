@@ -20,7 +20,7 @@ Commercial:
             BillingType: Facturation
             PER_SITE: Par site
             GLOBAL: Globale
-        OrderNumber: N° de commande
+        OrderNumber: N° de site
         ContractNumber: N° de contrat
         SecondUserInCharge: Assistant
         Comment: Commentaire et imperatifs de facturation

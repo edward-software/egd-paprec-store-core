@@ -25,10 +25,17 @@
                        class="btn btn-sm btn-success"><i
                                 class="fa fa-xs fa-plus"></i> {{ 'Catalog.ProductLabel.Add'| trans({}, "messages", app.request.locale) }}
                     </a>
-                    <a href="{{ path("paprec_product_edit", {id: product.id}) }}"
-                       class="btn btn-sm btn-warning"><i
-                                class="fa fa-xs fa-edit"></i> {{ 'Catalog.Product.Edit'| trans({}, "messages", app.request.locale) }}
-                    </a>
+                    {% if product.catalog == 'MATERIAL' %}
+                        <a href="{{ path("paprec_product_material_edit", {id: product.id}) }}"
+                           class="btn btn-sm btn-warning"><i
+                                    class="fa fa-xs fa-edit"></i> {{ 'Catalog.Product.Edit'| trans({}, "messages", app.request.locale) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path("paprec_product_edit", {id: product.id}) }}"
+                           class="btn btn-sm btn-warning"><i
+                                    class="fa fa-xs fa-edit"></i> {{ 'Catalog.Product.Edit'| trans({}, "messages", app.request.locale) }}
+                        </a>
+                    {% endif %}
                     <a id="catalogProductRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
                                 class="fa fa-xs fa-trash"></i> {{ 'Catalog.Product.Remove'| trans({}, "messages", app.request.locale) }}
                     </a>
@@ -87,12 +94,14 @@
                                         {% endif %}
                                     </label>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TransportType'| trans({}, "messages", app.request.locale) }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {{ ('General.TransportType.' ~ product.transportType)|trans }}
-                                    </label>
-                                </div>
+                                {% if product.catalog != 'MATERIAL' %}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TransportType'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ ('General.TransportType.' ~ product.transportType)|trans }}
+                                        </label>
+                                    </div>
+                                {% endif %}
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Catalog.Label'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
@@ -101,42 +110,44 @@
                                         {% endif %}
                                     </label>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Frequency'|trans }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {% if product.frequency == 'PONCTUAL' %}
-                                            {{ 'General.Frequency.PONCTUAL'|trans }}
-                                        {% elseif product.frequency == 'REGULAR' %}
-                                            {{ product.frequencyTimes }} / {{ ('General.Frequency.' ~ product.frequencyInterval)|trans }}
-                                        {% elseif product.frequency == 'UNKNOWN' %}
-                                            {{ 'General.Frequency.UNKNOWN'|trans }}
-                                        {% endif %}
-                                    </label>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.RentalUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {{ product.rentalUnitPrice|formatAmount('EUR', app.request.locale) }}
-                                    </label>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TransportUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {{ product.transportUnitPrice|formatAmount('EUR', app.request.locale) }}
-                                    </label>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TreatmentUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {{ product.treatmentUnitPrice|formatAmount('EUR', app.request.locale) }}
-                                    </label>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TraceabilityUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {{ product.traceabilityUnitPrice|formatAmount('EUR', app.request.locale) }}
-                                    </label>
-                                </div>
+                                {% if product.catalog != 'MATERIAL' %}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Frequency'|trans }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {% if product.frequency == 'PONCTUAL' %}
+                                                {{ 'General.Frequency.PONCTUAL'|trans }}
+                                            {% elseif product.frequency == 'REGULAR' %}
+                                                {{ product.frequencyTimes }} / {{ ('General.Frequency.' ~ product.frequencyInterval)|trans }}
+                                            {% elseif product.frequency == 'UNKNOWN' %}
+                                                {{ 'General.Frequency.UNKNOWN'|trans }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.RentalUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ product.rentalUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TransportUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ product.transportUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TreatmentUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ product.treatmentUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.TraceabilityUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ product.traceabilityUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                {% endif %}
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.WasteClassification'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
@@ -157,12 +168,14 @@
                                         {% endif %}
                                     </label>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">{{ 'Catalog.Product.MaterialUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
-                                    <label class="col-form-label col-md-8">
-                                        {{ product.materialUnitPrice }}
-                                    </label>
-                                </div>
+                                {% if product.catalog == 'MATERIAL' %}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.Product.MaterialUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ product.materialUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                {% endif %}
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.IsEnabled.IsEnabled'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">

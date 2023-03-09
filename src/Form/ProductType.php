@@ -151,7 +151,6 @@ class ProductType extends AbstractType
             ))
             ->add('wasteClassification', TextType::class)
             ->add('code', TextType::class)
-            ->add('materialUnitPrice', TextType::class)
         ;
     }
 

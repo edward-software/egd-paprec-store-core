@@ -101,6 +101,11 @@ class ProductController extends AbstractController
             'id' => 'p.catalog',
             'method' => ['getCatalog']
         );
+        $cols['catalogLabel'] = array(
+            'label' => 'catalogLabel',
+            'id' => 'p.catalog',
+            'method' => ['getCatalog']
+        );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
 
 
@@ -400,18 +405,12 @@ class ProductController extends AbstractController
             $languages[$language] = $language;
         }
 
-        $transportTypes = array();
-        foreach ($this->getParameter('paprec_transport_types') as $transportType) {
-            $transportTypes[$transportType] = $transportType;
-        }
-        $transportTypes['MATERIAL'] = 'MATERIAL';
-
         $product = new Product();
         $productLabel = new ProductLabel();
+        $product->setCatalog('MATERIAL');
+        $product->setTransportType(null);
 
-        $form1 = $this->createForm(ProductMaterialType::class, $product, array(
-            'transportTypes' => $transportTypes
-        ));
+        $form1 = $this->createForm(ProductMaterialType::class, $product);
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,
             'language' => 'FR'
@@ -428,6 +427,7 @@ class ProductController extends AbstractController
             $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
             $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
             $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+            $product->setMaterialUnitPrice($this->numberManager->normalize($product->getMaterialUnitPrice()));
 
             $product->setDateCreation(new \DateTime);
             $product->setUserCreation($user);
@@ -523,6 +523,77 @@ class ProductController extends AbstractController
             ));
         }
         return $this->render('product/edit.html.twig', array(
+            'form1' => $form1->createView(),
+            'form2' => $form2->createView(),
+            'product' => $product,
+            'productLabel' => $productLabel
+        ));
+    }
+
+    /**
+     * @Route("/editMaterial/{id}",  name="paprec_product_material_edit")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws \Exception
+     */
+    public function editMaterialAction(Request $request, Product $product)
+    {
+        $this->productManager->isDeleted($product, true);
+
+        $user = $this->getUser();
+
+        $languages = array();
+        foreach ($this->getParameter('paprec_languages') as $language) {
+            $languages[$language] = $language;
+        }
+
+        $language = $request->getLocale();
+        $productLabel = $this->productManager->getProductLabelByProductAndLocale($product, strtoupper($language));
+
+        $product->setRentalUnitPrice($this->numberManager->denormalize($product->getRentalUnitPrice()));
+        $product->setTransportUnitPrice($this->numberManager->denormalize($product->getTransportUnitPrice()));
+        $product->setTreatmentUnitPrice($this->numberManager->denormalize($product->getTreatmentUnitPrice()));
+        $product->setTraceabilityUnitPrice($this->numberManager->denormalize($product->getTraceabilityUnitPrice()));
+        $product->setMaterialUnitPrice($this->numberManager->denormalize($product->getMaterialUnitPrice()));
+
+
+        $form1 = $this->createForm(ProductMaterialType::class, $product);
+        $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
+            'languages' => $languages,
+            'language' => $productLabel->getLanguage()
+        ));
+
+        $form1->handleRequest($request);
+        $form2->handleRequest($request);
+
+//        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted()) {
+
+            $product = $form1->getData();
+
+            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+            $product->setMaterialUnitPrice($this->numberManager->normalize($product->getMaterialUnitPrice()));
+
+
+            $product->setDateUpdate(new \DateTime);
+            $product->setUserUpdate($user);
+            $this->em->flush();
+
+            $productLabel = $form2->getData();
+            $productLabel->setDateUpdate(new \DateTime);
+            $productLabel->setUserUpdate($user);
+            $productLabel->setProduct($product);
+
+            $this->em->flush();
+
+            return $this->redirectToRoute('paprec_product_view', array(
+                'id' => $product->getId()
+            ));
+        }
+        return $this->render('product/editMaterial.html.twig', array(
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),
             'product' => $product,
