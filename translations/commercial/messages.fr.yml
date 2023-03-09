@@ -153,7 +153,7 @@ Commercial:
         Success:
             generatedQuoteSent: Le devis a bien été généré et envoyé au client.
             generatedContractSent: Le contrat a bien été généré et envoyé au client.
-            generatedMissionSheetSent: La feuille de mission a bien été généré et envoyé au commercial en charge.
+            generatedMissionSheetSent: La feuille de mission a bien été généré et envoyé au commercial en charge ainsi qu'à(aux) agence(s).
             newUserInChargeWarned: Un mail a été envoyé au nouveau commercial en charge
         Locale: Langue
         Number: Numéro offre

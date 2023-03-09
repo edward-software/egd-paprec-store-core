@@ -1249,6 +1249,7 @@ class QuoteRequestManager
                 return false;
             }
 
+            $messages = [];
             $message = new Swift_Message();
             $message
                 ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
@@ -1338,6 +1339,8 @@ class QuoteRequestManager
             $message->attach(new \Swift_Attachment(file_get_contents($filenameMissionSheet), $downloadedFileName,
                 'application/pdf'));
 
+            $messages[] = $message;
+
             $quoteRequestLinesByAgency = [];
             $agenciesById = [];
             if (count($quoteRequest->getQuoteRequestLines())) {
@@ -1352,6 +1355,24 @@ class QuoteRequestManager
                 foreach ($quoteRequestLinesByAgency as $agencyId => $quoteRequestLines) {
                     $agency = $agenciesById[$agencyId];
                     if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
+
+                        $rcptTo = $agency->getDestinationEmailMission();
+                        $message = new Swift_Message();
+                        $message
+                            ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
+                                array(), 'messages', strtolower($locale)))
+                            ->setFrom($from)
+                            ->setTo($rcptTo)
+                            ->setBody(
+                                $this->container->get('templating')->render(
+                                    'public/emails/generatedMissionSheetEmail.html.twig',
+                                    array(
+                                        'quoteRequest' => $quoteRequest,
+                                        'locale' => strtolower($locale)
+                                    )
+                                ),
+                                'text/html'
+                            );
 
                         $dir = $templateDir . '/exploitation';
                         $actualFilename = $pdfTmpFolder . '/exploitation/' . md5(uniqid('', true)) . '.pdf';
@@ -1410,15 +1431,22 @@ class QuoteRequestManager
 
                         $message->attach(new \Swift_Attachment(file_get_contents($actualFilename), $downloadedFileName,
                             'application/pdf'));
+
+                        $messages[] = $message;
                     }
                 }
             }
 
-
-            if ($this->container->get('mailer')->send($message)) {
-                return true;
+            $return = true;
+            if (count($messages)) {
+                foreach ($messages as $m) {
+                    if (!$this->container->get('mailer')->send($m)) {
+                        $return = false;
+                    }
+                }
             }
-            return false;
+
+            return $return;
 
         } catch (ORMException $e) {
             throw new Exception('unableToGenerateProductQuote', 500);
