@@ -60,7 +60,7 @@
                         {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
                             <a href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
                                class="btn btn-sm btn-secondary"><i
-                                        class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.GeneratePdf'| trans({}, "messages", app.request.locale) }}
+                                        class="fa fa-xs fa-paper-plane"></i> {{ 'Commercial.QuoteRequest.MissionSheet.SendPdf'| trans({}, "messages", app.request.locale) }}
                             </a>
                             {% endif %}
                         {% endif %}

@@ -144,7 +144,7 @@ Commercial:
         MissionSheet:
             Add: Ajouter une feuille de mission
             Edit: Edition de la feuille de mission
-            GeneratePdf: Générer le pdf de la feuille de mission
+            SendPdf: Envoyer le pdf de la feuille de mission
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
