@@ -51,7 +51,8 @@ class Agency
     private $legalInfoTemplate;
 
     /**
-     * @ORM\Column(name="destinationEmailMission", type="string", length=255, nullable=true)
+     * @ORM\Column(name="destinationEmailMission", type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
      * @Assert\Email(
      *     groups={"public"},
      *      message = "email_error"
