@@ -23,16 +23,41 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <div class="paprec-flex mb-4">
-                        <select name="catalog" id="catalogInput" class="form-control mr-2 input-sm col-3">
+                    <div class="paprec-flex pb-4">
+                        <label for="selectedPrice1" class="d-flex align-items-center">CA compris entre : </label>
+                        <select name="price1" id="selectedPrice1" class="form-control mr-3 input-sm col-1 ml-1">
+                            {% if prices|length > 0 %}
+                                {% for price in prices %}
+                                    <option value="{{ price }}"{% if price == selectedPrice1 %} selected{% endif %}>{{ price }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <label for="selectedPrice2" class="d-flex ml-2 mr-3 align-items-center">et</label>
+                        <select name="price2" id="selectedPrice2" class="form-control input-sm col-1 ml-2 mr-2">
+                            {% if prices|length > 0 %}
+                                {% for price in prices %}
+                                    <option value="{{ price }}"{% if price == selectedPrice2 %} selected{% endif %}>{{ price }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <select name="catalog" id="selectedCatalog" class="form-control mr-2 input-sm col-2">
                             {% for catalog in catalogs %}
-                                <option value="{{ catalog }}"{% if catalog == choosedCatalog %} selected{% endif %}>{{ ('Commercial.QuoteRequest.'~ catalog)|trans() }}</option>
+                                <option value="{{ catalog }}"{% if catalog == selectedCatalog %} selected{% endif %}>{{ ('Commercial.QuoteRequest.'~ catalog)|trans() }}</option>
                             {% endfor %}
                         </select>
-                        <a href="javascript:void(0)" class="btn btn-outline-primary filter-button">Appliquer</a>
+                        <select name="status" id="selectedStatus" class="form-control mr-2 input-sm col-2">
+                            {% for s in status %}
+                                <option value="{{ s }}"{% if s == selectedStatus %} selected{% endif %}>{{ ('Commercial.QuoteStatusList.'~ s)|trans() }}</option>
+                            {% endfor %}
+                        </select>
+                        <button href="javascript:void(0)" class="btn btn-outline-primary ml-5 mr-1"
+                                id="applyFilterButton">
+                            Appliquer les filtres
+                        </button>
+                        <button id="resetFilterButton" class="btn btn-outline-secondary">Réinitialiser</button>
                     </div>
 
-                    <table id="quoteRequestsListDatatable" class="table table-bordered table-hover"
+                    <table id="followUpsListDatatable" class="table table-bordered table-hover"
                            cellpadding="0" cellspacing="0" border="0" width="100%">
                         <thead>
                         <tr>
@@ -59,11 +84,10 @@
     <script>
         $(function () {
 
-            $('#quoteRequestsListDatatable').EgdDatatable({
+            $('#followUpsListDatatable').EgdDatatable({
                 url: "{{ path('paprec_dashboard_follow_up_loadList') }}",
                 order: [[3, "desc"]],
                 columns: [
-                    // {"data": "id"},
                     {"data": "number"},
                     {"data": "businessName"},
                     {"data": "dateCreation"},
@@ -74,27 +98,52 @@
                 ]
             });
 
-            $('.filter-button').on('click', function () {
-                var catalog = $('#catalogInput').val();
-                var url = '{{ path('paprec_dashboard_activity_index', {'catalog': '0000'}) }}'.replace('0000', catalog);
+            $('#applyFilterButton').on('click', function () {
+                {% autoescape false %}
+                const listUrl = "{{ url('paprec_dashboard_follow_up_loadList') }}";
+                {% endautoescape %}
 
-                $(location).attr('href', url);
+                const filterUrl = new URL(listUrl);
+                const params = new URLSearchParams(filterUrl.search);
 
+                var selectedCatalog = $('#selectedCatalog').val();
+                var selectedStatus = $('#selectedStatus').val();
+                var selectedPrice1 = $('#selectedPrice1').val();
+                if(selectedPrice1 === ''){
+                    selectedPrice1 = '#';
+                }
+                var selectedPrice2 = $('#selectedPrice2').val();
+                if(selectedPrice2 === ''){
+                    selectedPrice2 = '#';
+                }
 
-                {# Swal.fire({ #}
-                {#    title: "{{ 'General.Confirm'|trans }}", #}
-                {#    text: "{{ 'General.Confirm-cancel'|trans }}", #}
-                {#    showCancelButton: true, #}
-                {#    confirmButtonText: "{{ 'General.Yes'|trans }}", #}
-                {#    cancelButtonText: "{{ 'General.No'|trans }}" #}
-                {# }).then(function (result) { #}
-                {#    if (result.value) { #}
-                {#
-                {#    } #}
-                {# }); #}
+                params.set('selectedCatalog', selectedCatalog);
+                params.set('selectedStatus', selectedStatus);
+                params.set('selectedPrice1', selectedPrice1);
+                params.set('selectedPrice2', selectedPrice2);
 
+                filterUrl.search = params;
+
+                $('#followUpsListDatatable').DataTable().ajax.url(filterUrl.toString()).load();
             });
 
+            $('#resetFilterButton').on('click', function () {
+                {% autoescape false %}
+                const listUrl = "{{ url('paprec_dashboard_follow_up_loadList') }}";
+                {% endautoescape %}
+
+                const filterUrl = new URL(listUrl);
+                const params = new URLSearchParams(filterUrl.search);
+
+                $('#selectedCatalog').val('ALL');
+                $('#selectedStatus').val('ALL');
+                $('#selectedPrice1').val('#');
+                $('#selectedPrice2').val('#');
+
+                params.set('sessionReset', true);
+                filterUrl.search = params;
+                $('#followUpsListDatatable').DataTable().ajax.url(filterUrl.toString()).load();
+            });
         });
     </script>
 {% endblock %}

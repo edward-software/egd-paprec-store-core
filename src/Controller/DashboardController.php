@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\QuoteRequest;
+use App\Entity\Setting;
 use App\Entity\User;
 use App\Service\NumberManager;
 use App\Tools\DataTable;
@@ -40,13 +41,13 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         $userIds = [];
-        $choosedCatalog = $request->get('catalog');
+        $selectedCatalog = $request->get('selectedCatalog');
         $session = $this->get('session');
 
-        if (!$choosedCatalog) {
-            $choosedCatalog = $session->get('activityDashboardFilterChoosedCatalog');
+        if (!$selectedCatalog) {
+            $selectedCatalog = $session->get('activityDashboardFilterSelectedCatalog');
         } else {
-            $session->set('activityDashboardFilterChoosedCatalog', $choosedCatalog);
+            $session->set('activityDashboardFilterSelectedCatalog', $selectedCatalog);
         }
 
         $columns = [
@@ -190,10 +191,10 @@ class DashboardController extends AbstractController
             ->andWhere('qR.dateCreation > :date')
             ->setParameter('date', $startDateM12);
 
-        if ($choosedCatalog && $choosedCatalog !== 'ALL') {
+        if ($selectedCatalog && $selectedCatalog !== 'ALL') {
             $queryBuilder
                 ->andWhere('qR.catalog = :catalog')
-                ->setParameter('catalog', $choosedCatalog);
+                ->setParameter('catalog', $selectedCatalog);
         }
 
         $quoteRequests = $queryBuilder->getQuery()->getResult();
@@ -388,7 +389,7 @@ class DashboardController extends AbstractController
                 'REGULAR',
                 'PONCTUAL'
             ],
-            'choosedCatalog' => $choosedCatalog
+            'selectedCatalog' => $selectedCatalog
         ]);
     }
 
@@ -400,17 +401,49 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         $session = $this->get('session');
-        $choosedCatalog = $session->get('followUpDashboardFilterChoosedCatalog');
+        $selectedCatalog = $session->get('followUpDashboardFilterSelectedCatalog');
+        $selectedPrice1 = $session->get('followUpDashboardFilterSelectedPrice1');
+        $selectedPrice2 = $session->get('followUpDashboardFilterSelectedPrice2');
+        $selectedStatus = $session->get('followUpDashboardFilterSelectedStatus');
+
+        $query = $this->em
+            ->getRepository(Setting::class)
+            ->createQueryBuilder('s')
+            ->select('s')
+            ->where('s.deleted IS NULL')
+            ->andWhere('s.keyName = :key')
+            ->setParameter('key', 'DASHBOARD_FOLLOW_UP_FILTER_PRICE');
+
+        $prices = $query->getQuery()->getResult();
+
+        $tmp = [];
+        $tmp[] = null;
+        if ($prices && count($prices)) {
+            foreach ($prices as $p) {
+                $tmp[] = $p->getValue();
+            }
+            $prices = $tmp;
+        }
+
+        $status = [];
+        $status['ALL'] = 'ALL';
+        foreach ($this->getParameter('paprec_quote_status') as $s) {
+            $status[$s] = $s;
+        }
 
         return $this->render('dashboard/followUp/index.html.twig', [
             'user' => $user,
-            'choosedCatalog' => $choosedCatalog,
+            'selectedCatalog' => $selectedCatalog,
+            'selectedPrice1' => $selectedPrice1,
+            'selectedPrice2' => $selectedPrice2,
+            'selectedStatus' => $selectedStatus,
             'catalogs' => [
                 'ALL',
                 'REGULAR',
                 'PONCTUAL'
             ],
-//            'choosedCatalog' => $choosedCatalog
+            'prices' => $prices,
+            'status' => $status
         ]);
     }
 
@@ -423,12 +456,45 @@ class DashboardController extends AbstractController
         $systemUser = $this->getUser();
         $session = $this->get('session');
         $userIds = [];
-        $choosedCatalog = $request->get('catalog');
+        $selectedCatalog = $request->get('selectedCatalog');
+        $selectedPrice1 = $request->get('selectedPrice1');
+        $selectedPrice2 = $request->get('selectedPrice2');
+        $selectedStatus = $request->get('selectedStatus');
 
-        if (!$choosedCatalog) {
-            $choosedCatalog = $session->get('followUpDashboardFilterChoosedCatalog');
+        if (!$selectedCatalog) {
+            $selectedCatalog = $session->get('followUpDashboardFilterSelectedCatalog');
         } else {
-            $session->set('followUpDashboardFilterChoosedCatalog', $choosedCatalog);
+            if($selectedCatalog === 'ALL'){
+                $selectedCatalog = null;
+            }
+            $session->set('followUpDashboardFilterSelectedCatalog', $selectedCatalog);
+        }
+
+        if (!$selectedPrice1) {
+            $selectedPrice1 = $session->get('followUpDashboardFilterSelectedPrice1');
+        } else {
+            if($selectedPrice1 === '#'){
+                $selectedPrice1 = null;
+            }
+            $session->set('followUpDashboardFilterSelectedPrice1', $selectedPrice1);
+        }
+
+        if (!$selectedPrice2) {
+            $selectedPrice2 = $session->get('followUpDashboardFilterSelectedPrice2');
+        } else {
+            if($selectedPrice2 === '#'){
+                $selectedPrice2 = null;
+            }
+            $session->set('followUpDashboardFilterSelectedPrice2', $selectedPrice2);
+        }
+
+        if (!$selectedStatus) {
+            $selectedStatus = $session->get('followUpDashboardFilterSelectedStatus');
+        } else {
+            if($selectedStatus === 'ALL'){
+                $selectedStatus = null;
+            }
+            $session->set('followUpDashboardFilterSelectedStatus', $selectedStatus);
         }
 
         if ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
@@ -516,6 +582,36 @@ class DashboardController extends AbstractController
             ->setParameter('userIds', $userIds);
 
 
+
+        if($selectedCatalog){
+            $queryBuilder
+                ->andWhere('q.catalog = :catalog')
+                ->setParameter('catalog', $selectedCatalog);
+        }
+
+        if($selectedStatus){
+            $queryBuilder
+                ->andWhere('q.quoteStatus = :quoteStatus')
+                ->setParameter('quoteStatus', $selectedStatus);
+        }
+
+        if($selectedPrice1 !== null && $selectedPrice1 >= 0){
+            $selectedPrice1 = $this->numberManager->normalize($selectedPrice1);
+
+            $queryBuilder
+                ->andWhere('q.totalAmount >= :price1')
+                ->setParameter('price1', $selectedPrice1);
+        }
+
+        if($selectedPrice2 !== null && $selectedPrice2 >= 0){
+            $selectedPrice2 = $this->numberManager->normalize($selectedPrice2);
+
+            $queryBuilder
+                ->andWhere('q.totalAmount <= :price2')
+                ->setParameter('price2', $selectedPrice2);
+        }
+
+
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
             if (substr($search['value'], 0, 1) === '#') {
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
@@ -543,13 +639,13 @@ class DashboardController extends AbstractController
             $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
                 $request->getLocale());
 
-            if($line['followUps']){
-                $line['followUpDate']  = null;
-                $line['followUpLastDate']  = null;
-                if($line['followUps']->getDate()){
+            if ($line['followUps']) {
+                $line['followUpDate'] = null;
+                $line['followUpLastDate'] = null;
+                if ($line['followUps']->getDate()) {
                     $line['followUpDate'] = $line['followUps']->getDate()->format('d/m/Y');
                 }
-                if($line['followUps']->getDateUpdate()){
+                if ($line['followUps']->getDateUpdate()) {
                     $line['followUpLastDate'] = $line['followUps']->getDateUpdate()->format('d/m/Y');
                 }
                 $line['followUpContent'] = $line['followUps']->getContent();

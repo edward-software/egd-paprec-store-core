@@ -76,6 +76,7 @@ Commercial:
         KeyName:
             KeyName: Clé
             FOLLOW_UP_RELAUNCHED_DAYS: Nombre de jours à partir duquel le suivi est relancé
+            DASHBOARD_FOLLOW_UP_FILTER_PRICE: Prix permettant de filter le chiffre d'affaires dans la liste d'offre présente dans le Tableau de bord de relance
         Value: Valeur
     QuoteRequest:
         QuoteRequests: Demandes de devis
@@ -171,6 +172,7 @@ Commercial:
         SignatoryTitle1: Titre signataire 1
 
     QuoteStatusList:
+        ALL: Toutes les offres
         QUOTE_CREATED: Offre créée
         QUOTE_SENT: Offre envoyée
         CONTRACT_SENT: Contrat envoyé
@@ -344,7 +346,7 @@ Commercial:
         QuoteRequest:
             Number: N°Offre
             Date-creation: Date offre
-            TotalAmount: CA (décroissant)
+            TotalAmount: CA
             Last-follow-up: Dernier suivi
             Last-update: Depuis
         Agency:

@@ -24,15 +24,15 @@
                 </div>
                 <div class="card-body">
                     <div class="paprec-flex mb-4">
-                        <select name="catalog" id="catalogInput" class="form-control mr-2 input-sm col-3">
+                        <select name="catalog" id="selectedCatalog" class="form-control mr-2 input-sm col-3">
                             {% for catalog in catalogs %}
-                                <option value="{{ catalog }}"{% if catalog == choosedCatalog %} selected{% endif %}>{{ ('Commercial.QuoteRequest.'~ catalog)|trans() }}</option>
+                                <option value="{{ catalog }}"{% if catalog == selectedCatalog %} selected{% endif %}>{{ ('Commercial.QuoteRequest.'~ catalog)|trans() }}</option>
                             {% endfor %}
                         </select>
                         <a href="javascript:void(0)" class="btn btn-outline-primary filter-button">Appliquer</a>
                     </div>
 
-                    <table id="quoteRequestsListDatatable" class="table table-bordered table-hover"
+                    <table class="table table-bordered table-hover"
                            cellpadding="0" cellspacing="0" border="0" width="100%">
                         <thead>
                         <tr>
@@ -188,28 +188,11 @@
 {% block javascripts %}
     <script>
         $(function () {
-
             $('.filter-button').on('click', function () {
-                var catalog = $('#catalogInput').val();
-                var url = '{{ path('paprec_dashboard_activity_index', {'catalog': '0000'}) }}'.replace('0000', catalog);
-
+                var catalog = $('#selectedCatalog').val();
+                var url = '{{ path('paprec_dashboard_activity_index', {'selectedCatalog': '0000'}) }}'.replace('0000', catalog);
                 $(location).attr('href', url);
-
-
-                {# Swal.fire({ #}
-                {#    title: "{{ 'General.Confirm'|trans }}", #}
-                {#    text: "{{ 'General.Confirm-cancel'|trans }}", #}
-                {#    showCancelButton: true, #}
-                {#    confirmButtonText: "{{ 'General.Yes'|trans }}", #}
-                {#    cancelButtonText: "{{ 'General.No'|trans }}" #}
-                {# }).then(function (result) { #}
-                {#    if (result.value) { #}
-                {#
-                {#    } #}
-                {# }); #}
-
             });
-
         });
     </script>
 {% endblock %}

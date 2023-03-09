@@ -165,7 +165,7 @@ class SettingController extends AbstractController
                     'keyName' => $keyName
                 ]);
 
-                if ($count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
+                if ($this->getParameter('paprec.setting.max_by_key')[$keyName] !== -1 && $count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
                     $errors['keyName'] = array(
                         'code' => 400,
                         'message' => 'Le nombre de valeur max pour cette clé est atteinte.'
@@ -230,19 +230,66 @@ class SettingController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
-            $setting = $form->getData();
+            $formData = $form->all();
+            $keyName = null;
+            if (is_array($formData) && count($formData)) {
+                foreach ($formData as $key => $value) {
+                    $parameters[$key] = $value->getData();
+                }
+            }
 
-            $setting->setDateUpdate(new DateTime);
-            $setting->setUserUpdate($user);
+            if (is_array($parameters) && count($parameters)) {
+                foreach ($parameters as $key => $value) {
+                    $$key = $value;
+                }
+            }
 
-            $this->em->flush();
+            $errors = [];
+            if (isset($keyName)) {
+                $count = $this->getDoctrine()->getManager()->getRepository(Setting::class)->count([
+                    'keyName' => $keyName
+                ]);
 
-            return $this->redirectToRoute('paprec_setting_view', array(
-                'id' => $setting->getId()
-            ));
+                if ($this->getParameter('paprec.setting.max_by_key')[$keyName] !== -1 && $count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
+                    $errors['keyName'] = array(
+                        'code' => 400,
+                        'message' => 'Le nombre de valeur max pour cette clé est atteinte.'
+                    );
+                }
+            }
 
+            if ($errors && count($errors)) {
+                $form = $this->createForm(SettingType::class, $setting, [
+                    'keys' => $this->getParameter('paprec.setting.keys')
+                ]);
+
+                if ($errors['keyName']) {
+                    $form->get('keyName')->addError(new FormError('Le nombre de valeur max pour cette clé est atteinte.'));
+                }
+
+                return $this->render('setting/edit.html.twig', array(
+                    'form' => $form->createView(),
+                    'errors' => $errors,
+                    'setting' => $setting
+                ));
+            }
+
+            if ($form->isValid()) {
+
+                $setting = $form->getData();
+
+                $setting->setDateUpdate(new DateTime);
+                $setting->setUserUpdate($user);
+
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_setting_view', array(
+                    'id' => $setting->getId()
+                ));
+
+            }
         }
 
         return $this->render('setting/edit.html.twig', array(

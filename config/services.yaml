@@ -114,9 +114,11 @@ parameters:
 
     paprec.setting.keys:
         - FOLLOW_UP_RELAUNCHED_DAYS
+        - DASHBOARD_FOLLOW_UP_FILTER_PRICE
 
     paprec.setting.max_by_key:
         FOLLOW_UP_RELAUNCHED_DAYS: 1
+        DASHBOARD_FOLLOW_UP_FILTER_PRICE: -1
 
     paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
     paprec.quote_request_file.max_file_size: 5000000
