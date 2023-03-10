@@ -222,6 +222,9 @@ Commercial:
         GROUND: Niveau rue sans marche
 
     QuoteRequestLine:
+        Wastes: Déchets
+        Materials: Matériels
+        Quantities: Quantités
         ProductName: Nom du produit
         UnitPrice: Prix unitaire
         Quantity: Quantité
@@ -252,24 +255,27 @@ Commercial:
 
     NewQuoteEmail:
         Object: Voici une nouvelle demande client N°%number%
-        Dear: Cher(ère) Collègue Easy Recyclage
-        Message1: Tu trouveras ci-joint une demande de vérification de l'offre pour la zone géographique ainsi que du contrat prévu.
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
-        Message2: Nous t’en remercions par avance.
         Partner: Ton partenaire Easy Recyclage
+        Message1: souhaite être rappelé avant le
+        Message2: Son besoin
+        Message3: Ses précisions
+        Message4: Accédez à son dossier dans votre Back office
+        Message5: Si le bouton ne fonctionne pas
+        Message6: afin d'accéder au back-office
 
     ConfirmEmail:
         Object: Nous vous remercions pour votre demande
         Dear:
-            M: Cher Monsieur
-            Mrs: Chère Madame
-        Title: Votre demande a bien été prise en compte et envoyée au service commercial de votre région.
-        Message1: Merci pour votre demande du  %date%. Nous vous remercions de l'intérêt que vous portez aux services Easy Recyclage.
-        QuoteRequestRecap: Voici le récapitulatif de votre demande
+            M: Mr
+            Mrs: Mme
+        Message1: Nous avons bien pris en charge votre demande de devis sur la base des besoins rappelés si dessous
         TechnicalService: service technique
-        Message2: Nous vous enverrons notre offre pour les services EASY RECYCLAGE dans les 24 heures.
-        Regards: Bien cordialement
-        Partner: Votre partenaire Easy Recyclage
+        Message2: sera votre interlocuteur pour la suite.
+        Message3: Si vous souhaitez lui proposer un créneau horaire pour échanger , n'hésitez pas à le lui demander en envoyant un message à
+        Message4: A défaut il vous rappellera sous 24h.
+        Regards: Très cordialement
+        Partner: L'équipe Easy Recyclage
         NoReply: Ne pas répondre à ce message; il a été envoyé à partir d'une boîte automatisée.
         Disclaimer:
             Message1: Vous avez reçu cet e-mail pour vous informer des modifications importantes apportées aux services
@@ -289,9 +295,10 @@ Commercial:
     NewContactRequestEmail:
         Object: Voici une nouvelle demande d'accompagnement pour un client
         Dear: Cher(ère) Collègue Easy Recyclage
-        Message1: Tu trouveras ci-joint une demande d'accompagnement d'un client.
+        Message1: souhaite être rappelé avant le
+        Message2: son besoin
+        Message3: ses précisions
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
-        Message2: Nous t’en remercions par avance.
         Regards: Bien cordialement
         Partner: Ton partenaire Easy Recyclage
 

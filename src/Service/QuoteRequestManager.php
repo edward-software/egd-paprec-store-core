@@ -811,7 +811,8 @@ class QuoteRequestManager
                         'public/emails/newQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
-                            'locale' => strtolower($locale)
+                            'locale' => strtolower($locale),
+                            'quoteRequestLines' => $quoteRequest->getQuoteRequestLines()
                         )
                     ),
                     'text/html'
