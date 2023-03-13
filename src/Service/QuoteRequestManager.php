@@ -1346,11 +1346,13 @@ class QuoteRequestManager
             $agenciesById = [];
             if (count($quoteRequest->getQuoteRequestLines())) {
                 foreach ($quoteRequest->getQuoteRequestLines() as $qRL) {
-                    if (!array_key_exists($qRL->getAgency()->getId(), $quoteRequestLinesByAgency)) {
-                        $quoteRequestLinesByAgency[$qRL->getAgency()->getId()] = [];
-                        $agenciesById[$qRL->getAgency()->getId()] = $qRL->getAgency();
+                    if ($qRL->getAgency()) {
+                        if (!array_key_exists($qRL->getAgency()->getId(), $quoteRequestLinesByAgency)) {
+                            $quoteRequestLinesByAgency[$qRL->getAgency()->getId()] = [];
+                            $agenciesById[$qRL->getAgency()->getId()] = $qRL->getAgency();
+                        }
+                        $quoteRequestLinesByAgency[$qRL->getAgency()->getId()][] = $qRL;
                     }
-                    $quoteRequestLinesByAgency[$qRL->getAgency()->getId()][] = $qRL;
                 }
 
                 foreach ($quoteRequestLinesByAgency as $agencyId => $quoteRequestLines) {
@@ -1380,19 +1382,25 @@ class QuoteRequestManager
 
                         $sheetName = '';
                         $pdfExploitName = 'Exploitation';
+                        $logoName = '';
                         if ($agency->getTemplate() === 'LCB') {
                             $sheetName = 'Exploitation LCB';
+                            $logoName = 'logo-lcb.jpg';
                         } elseif ($agency->getTemplate() === 'CFS') {
                             $sheetName = 'Exploitation CFS';
+                            $logoName = 'logo-confidentialys.jpg';
                         } elseif ($agency->getTemplate() === 'LPP') {
                             $sheetName = 'Navette LPP';
                             $pdfExploitName = 'Navette';
+                            $logoName = 'logo-lpp.png';
                         } elseif ($agency->getTemplate() === 'PAPREC') {
                             $sheetName = 'Navette IDF';
                             $pdfExploitName = 'Navette';
+                            $logoName = 'logo-paprec.png';
                         } elseif ($agency->getTemplate() === 'IN_SITU') {
                             $sheetName = 'Navette In Situ';
                             $pdfExploitName = 'Navette';
+                            $logoName = 'logo-in-situ.png';
                         }
 
                         $snappy->generateFromHtml(
@@ -1401,6 +1409,7 @@ class QuoteRequestManager
                                     $dir . '/printMissionSheet.html.twig',
                                     array(
                                         'quoteRequest' => $quoteRequest,
+                                        'logoName' => $logoName,
                                         'sheetName' => $sheetName,
                                         'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                                         'missionSheet' => $missionSheet,
@@ -1411,6 +1420,22 @@ class QuoteRequestManager
                             ),
                             $actualFilename
                         );
+
+//                        echo $this->container->get('templating')->render(
+//                            $dir . '/printMissionSheet.html.twig',
+//                            array(
+//                                'quoteRequest' => $quoteRequest,
+//                                'sheetName' => $sheetName,
+//                                'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+//                                'missionSheet' => $missionSheet,
+//                                'date' => $today,
+//                                'locale' => $locale
+//                            )
+//                        );
+//                        exit;
+
+
+
                         $downloadedFileName = 'FM';
                         $downloadedFileName .= ' ' . $today->format('o');
                         $downloadedFileName .= ' ' . $today->format('m');
