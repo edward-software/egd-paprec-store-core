@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\QuoteRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -38,6 +39,7 @@ class ContactRequestPublicType extends AbstractType
             ->add('phone', TelType::class, array(
                 'invalid_message' => 'Public.Contact.PhoneError',
             ))
+            ->add('comment', TextareaType::class)
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ));

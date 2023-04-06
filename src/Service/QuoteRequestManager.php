@@ -1400,7 +1400,7 @@ class QuoteRequestManager
                         } elseif ($agency->getTemplate() === 'IN_SITU') {
                             $sheetName = 'Navette In Situ';
                             $pdfExploitName = 'Navette';
-                            $logoName = 'logo-in-situ.png';
+                            $logoName = 'logo-insitu.png';
                         }
 
                         $snappy->generateFromHtml(

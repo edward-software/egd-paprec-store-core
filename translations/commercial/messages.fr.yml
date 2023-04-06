@@ -295,9 +295,9 @@ Commercial:
     NewContactRequestEmail:
         Object: Voici une nouvelle demande d'accompagnement pour un client
         Dear: Cher(ère) Collègue Easy Recyclage
-        Message1: souhaite être rappelé avant le
-        Message2: son besoin
-        Message3: ses précisions
+        Message1: souhaite être rappelé.
+        Message2: "Son besoin : "
+        Message3: "Ses précisions : "
         QuoteLink: Cliquer ici sur le lien pour accéder à la demande.
         Regards: Bien cordialement
         Partner: Ton partenaire Easy Recyclage

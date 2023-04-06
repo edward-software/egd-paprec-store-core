@@ -208,6 +208,7 @@ class SubscriptionController extends AbstractController
     /**
      * @Route("/{locale}/regulier/catalogue/contact/{cartUuid}",  name="paprec_public_contact_regulier_index")
      * @Route("/{locale}/ponctuel/contact/{cartUuid}",  name="paprec_public_contact_ponctuel_index")
+     * @Route("/{locale}/materiel/contact/{cartUuid}",  name="paprec_public_contact_materiel_index")
      * @param Request $request
      * @param $locale
      * @param $cartUuid
@@ -409,6 +410,7 @@ class SubscriptionController extends AbstractController
     /**
      * @Route("/{locale}/ponctuel/contact/valide/{cartUuid}/{quoteRequestId}", name="paprec_public_confirm_ponctuel_index")
      * @Route("/{locale}/regulier/catalogue/contact/valide/{cartUuid}/{quoteRequestId}", name="paprec_public_confirm_regulier_index")
+     * @Route("/{locale}/materiel/contact/valide/{cartUuid}/{quoteRequestId}", name="paprec_public_confirm_materiel_index")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Exception

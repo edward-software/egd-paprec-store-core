@@ -44,22 +44,28 @@ Public:
         Title: La Corbeille Bleue assure la gestion de vos déchets et la destruction de vos documents confidentiels dans toute la France pour des opérations régulières ou ponctuelles
         Solution1:
             Title: 'OPERATIONS REGULIERES'
-            Message1: 'Nous vous proposons :'
-            Message2: 'Un grand choix de matériels de stockage'
-            Message3: 'La détermination des fréquences des interventions'
-            Message4: 'Notre service pourra être adapté tout au long du contrat'
+            Message1: 'Nous vous proposons des prestations avec :'
+            Message2: 'Une large gamme de matériels'
+            Message3: 'Une logistique souple (fréquences sur mesure)'
+            Message4: 'Des solutions pour tous vos déchets'
+            Message5: "Besoin d'aide pour estimer vos volumes ?"
+            Message6: 'Pensez à la demande de rappel !'
         Solution2:
             Title: 'OPERATIONS PONCTUELLES'
-            Message1: 'Nous vous proposons :'
-            Message2: "Une gamme complète de matériel pour organiser le tri dans vos bureaux"
-            Message3: 'Des interventions ponctuelles de désarchivage ou de désencombrement'
+            Message1: 'Nous vous proposons des prestations pour :'
+            Message2: "des désarchivages ou désencombrements"
+            Message3: 'tous volumes à partir de 1 M3'
+            Message4: 'tous vos déchets (archives, DEEE, mobilier, …)'
+            Message5: "Besoin d'aide pour estimer vos volumes ?"
+            Message6: 'Pensez à la demande de rappel !'
         Solution3:
             Title: 'Matériel'
-            Message1: 'à faire'
-            Message2: "à faire"
-            Message3: 'à faire'
-            Message4: 'à faire'
-            Message5: 'à faire'
+            Message1: 'Nous vous proposons une gamme complète de matériels de tri pour vos bureaux :'
+            Message2: "Bornes d'apport volontaire pour chaque flux de déchets"
+            Message3: 'Des contenances entre 90 litres et 140 litres'
+            Message4: 'Des niveaux de gamme adaptés à tous les budgets'
+            Message5: 'Dimensionnement : une borne pour 12 personnes'
+            Message6: 'Avantage : nos matériels sont personnalisables avec votre logo !'
 
     Catalog:
         BreadcrumbTitle: Offres de services
@@ -119,6 +125,7 @@ Public:
         PostalCode: Code postal ou Ville
         City: Ville
         Comment: Précision
+        Need: Besoin
         SendRequest: Envoyer la demande
         BreadcrumbContent: Coordonnées du client
         Signatory: Signataire
@@ -148,7 +155,7 @@ Public:
         BreadcrumbTitle: Confirmation de la demande
         Title: Félicitations !
         Message-1: Votre demande de devis a bien été prise en compte.
-        Message-2: Un mail récapitulant votre demande vient de vous êtes adressé
+        Message-2: Un mail récapitulant votre demande vient de vous êtes adressé.
         Message-3: va prendre contact avec vous.
         Message-4: Nous restons à votre disposition . A très bientôt !!!
         Message: Vous devriez recevoir un e-mail de confirmation, cette opération peut prendre plusieurs minutes. Si vous ne recevez pas la confirmation, vérifiez dans votre dossier à spam, sinon contactez notre
