@@ -59,57 +59,239 @@
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal">Nombre de nouvelles affaires</th>
-                                    <td>{{ data['qr_number']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number']['M_4_12'] }}</a>
+
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number']['M_3'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number']['M_2'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number']['M_1'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number']['M'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number']['TOTAL'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont ouvertes à ce jour</th>
-                                    <td>{{ data['qr_number_opened']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_opened']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_opened']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_opened']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_opened']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_opened']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number_opened']['M_4_12'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number_opened']['M_3'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number_opened']['M_2'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number_opened']['M_1'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number_opened']['M'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_number_opened']['TOTAL'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées gagnées</th>
-                                    <td>{{ data['qr_number_closed_won']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_won']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_won']['M_4_12'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_won']['M_3'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_won']['M_2'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_won']['M_1'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_won']['M'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_won']['TOTAL'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées non gagnées</th>
-                                    <td>{{ data['qr_number_closed_not_won']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_not_won']['M_4_12'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_not_won']['M_3'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_not_won']['M_2'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_not_won']['M_1'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_not_won']['M'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_number_closed_not_won']['TOTAL'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th>soit total affaires générées (12 mois)</th>
-                                    <td>{{ data['qr_number_total']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_total']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_total']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_total']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_total']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_number_total']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4}) }}"
+                                           target="_blank">{{ data['qr_number_total']['M_4_12'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3}) }}"
+                                           target="_blank">{{ data['qr_number_total']['M_3'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2}) }}"
+                                           target="_blank">{{ data['qr_number_total']['M_2'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1}) }}"
+                                           target="_blank">{{ data['qr_number_total']['M_1'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM}) }}"
+                                           target="_blank">{{ data['qr_number_total']['M'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM}) }}"
+                                           target="_blank">{{ data['qr_number_total']['TOTAL'] }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="text-right">Taux de signature</th>
-                                    <td>{{ data['qr_number_signature']['M_4_12'] }} %</td>
-                                    <td>{{ data['qr_number_signature']['M_3'] }} %</td>
-                                    <td>{{ data['qr_number_signature']['M_2'] }} %</td>
-                                    <td>{{ data['qr_number_signature']['M_1'] }} %</td>
-                                    <td>{{ data['qr_number_signature']['M'] }} %</td>
-                                    <td>{{ data['qr_number_signature']['TOTAL'] }} %</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_signature']['M_4_12'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_signature']['M_3'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_signature']['M_2'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_signature']['M_1'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_signature']['M'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_number_signature']['TOTAL'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -122,57 +304,237 @@
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal">CA des nouvelles affaires</th>
-                                    <td>{{ data['qr_turnover']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover']['M_4_12']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover']['M_3']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover']['M_2']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover']['M_1']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover']['M']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover']['TOTAL']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont ouverte à ce jour</th>
-                                    <td>{{ data['qr_turnover_opened']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_opened']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover_opened']['M_4_12']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover_opened']['M_3']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover_opened']['M_2']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover_opened']['M_1']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover_opened']['M']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank">{{ data['qr_turnover_opened']['TOTAL']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'QUOTE_CREATED,QUOTE_SENT,CONTRACT_SENT'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées gagnées</th>
-                                    <td>{{ data['qr_turnover_closed_won']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_won']['M_4_12']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_won']['M_3']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_won']['M_2']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_won']['M_1']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_won']['M']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_won']['TOTAL']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées non gagnées</th>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_not_won']['M_4_12']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_not_won']['M_3']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_not_won']['M_2']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_not_won']['M_1']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_not_won']['M']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank">{{ data['qr_turnover_closed_not_won']['TOTAL']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_LOST'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th>soit total affaires générées (12 mois)</th>
-                                    <td>{{ data['qr_turnover_total']['M_4_12']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_total']['M_3']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_total']['M_2']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_total']['M_1']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_total']['M']|format_currency('EUR') }}</td>
-                                    <td>{{ data['qr_turnover_total']['TOTAL']|format_currency('EUR') }}</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4}) }}"
+                                           target="_blank">{{ data['qr_turnover_total']['M_4_12']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3}) }}"
+                                           target="_blank">{{ data['qr_turnover_total']['M_3']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2}) }}"
+                                           target="_blank">{{ data['qr_turnover_total']['M_2']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1}) }}"
+                                           target="_blank">{{ data['qr_turnover_total']['M_1']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM}) }}"
+                                           target="_blank">{{ data['qr_turnover_total']['M']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM}) }}"
+                                           target="_blank">{{ data['qr_turnover_total']['TOTAL']|format_currency('EUR') }}</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                                 <tr class="line-number">
                                     <th class="text-right">Taux de signature</th>
-                                    <td>{{ data['qr_turnover_signature']['M_4_12'] }} %</td>
-                                    <td>{{ data['qr_turnover_signature']['M_3'] }} %</td>
-                                    <td>{{ data['qr_turnover_signature']['M_2'] }} %</td>
-                                    <td>{{ data['qr_turnover_signature']['M_1'] }} %</td>
-                                    <td>{{ data['qr_turnover_signature']['M'] }} %</td>
-                                    <td>{{ data['qr_turnover_signature']['TOTAL'] }} %</td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_signature']['M_4_12'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM4, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_signature']['M_3'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM3, periodEndDate: endDateM3, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_signature']['M_2'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM2, periodEndDate: endDateM2, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_signature']['M_1'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM1, periodEndDate: endDateM1, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_signature']['M'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path("paprec_quoteRequest_index", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank">{{ data['qr_turnover_signature']['TOTAL'] }} %</a>
+                                        <a href="{{ path("paprec_dashboard_activity_quoteRequest_export", {userIds: data['team_user_ids'], periodStartDate: startDateM12, periodEndDate: endDateM, selectedStatus: 'CONTRACT_SIGNED'}) }}"
+                                           target="_blank"><i class="fas fa-file-export fa-xs"></i></a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         {% endif %}

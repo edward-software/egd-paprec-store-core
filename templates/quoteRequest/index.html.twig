@@ -103,7 +103,9 @@
 
 
             $('#quoteRequestsListDatatable').EgdDatatable({
-                url: "{{ path('paprec_quoteRequest_loadList') }}",
+                {% autoescape false %}
+                url: "{{ path('paprec_quoteRequest_loadList', {userIds: userIds, periodStartDate: periodStartDate, periodEndDate: periodEndDate, selectedStatus: selectedStatus}) }}",
+                {% endautoescape %}
                 columns: [
                     {"data": "id"},
                     {"data": "reference"},

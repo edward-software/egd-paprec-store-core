@@ -8,11 +8,15 @@ use App\Entity\User;
 use App\Service\NumberManager;
 use App\Tools\DataTable;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -79,6 +83,7 @@ class DashboardController extends AbstractController
 
             $datas[0]['user_id'] = null;
             $datas[0]['name'] = 'Équipe';
+            $datas[0]['team_user_ids'] = '';
             foreach ($lines as $line) {
                 $datas[0][$line] = [];
                 foreach ($columns as $column) {
@@ -104,6 +109,15 @@ class DashboardController extends AbstractController
                     $userIds[] = $user->getId();
                     $usersById[$user->getId()] = $user;
                     $roles = $user->getRoles();
+
+                    /**
+                     * On récupère tous les users par team, cela nous sert pour filtrer la liste des devis
+                     */
+                    if($datas[0]['team_user_ids'] !== ''){
+                        $datas[0]['team_user_ids'] .= ',';
+                    }
+                    $datas[0]['team_user_ids'] .= $user->getId();
+
                     if (in_array('ROLE_ADMIN', $roles)) {
 
                     } elseif (in_array('ROLE_MANAGER_COMMERCIAL', $roles)) {
@@ -123,6 +137,7 @@ class DashboardController extends AbstractController
                     $managerKey = $count;
                     $u = $usersById[$managerId];
                     $datas[$count]['user_id'] = null;
+                    $datas[$count]['team_user_ids'] = '';
                     $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName();
                     foreach ($lines as $line) {
                         $datas[$count][$line] = [];
@@ -138,7 +153,17 @@ class DashboardController extends AbstractController
                             0, // Équipe Globale
                             $managerKey
                         ];
+
+                        /**
+                         * On récupère tous les users par team, cela nous sert pour filtrer la liste des devis
+                         */
+                        if($datas[$managerKey]['team_user_ids'] !== ''){
+                            $datas[$managerKey]['team_user_ids'] .= ',';
+                        }
+                        $datas[$managerKey]['team_user_ids'] .= $user->getId();
+
                         $datas[$count]['user_id'] = $user->getId();
+                        $datas[$count]['team_user_ids'] = $user->getId();
                         $datas[$count]['name'] = $user->getFirstName() . ' ' . $user->getLastName();
                         foreach ($lines as $line) {
                             $datas[$count][$line] = [];
@@ -170,6 +195,7 @@ class DashboardController extends AbstractController
         } elseif ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
 
             $datas[0]['user_id'] = null;
+            $datas[0]['team_user_ids'] = '';
             $datas[0]['name'] = 'Équipe';
             foreach ($lines as $line) {
                 $datas[0][$line] = [];
@@ -194,6 +220,16 @@ class DashboardController extends AbstractController
                     $datas[$count]['teams'] = [
                         0 // Équipe Globale
                     ];
+
+                    /**
+                     * On récupère tous les users par team, cela nous sert pour filtrer la liste des devis
+                     */
+                    if($datas[0]['team_user_ids'] !== ''){
+                        $datas[0]['team_user_ids'] .= ',';
+                    }
+                    $datas[0]['team_user_ids'] .= $u->getId();
+
+
                     $datas[$count]['user_id'] = $u->getId();
                     $datas[$count]['name'] = $u->getFirstName() . ' ' . $u->getLastName();
                     foreach ($lines as $line) {
@@ -208,6 +244,7 @@ class DashboardController extends AbstractController
 
         } elseif ($this->isGranted('ROLE_COMMERCIAL') || $this->isGranted('ROLE_COMMERCIAL_MULTISITES')) {
             $userIds[] = $user->getId();
+            $datas[0]['team_user_ids'] = $user->getId();
             $datas[0]['user_id'] = $user->getId();
             $datas[0]['name'] = $user->getFirstName() . ' ' . $user->getLastName();
             foreach ($lines as $line) {
@@ -299,6 +336,7 @@ class DashboardController extends AbstractController
 
                 $userInChargeId = $quoteRequest->getUserInCharge();
 
+
                 if ($userInChargeId) {
                     $userInChargeId = $userInChargeId->getId();
                     $key = array_search($userInChargeId, array_column($datas, 'user_id'));
@@ -307,7 +345,7 @@ class DashboardController extends AbstractController
                         $keysTeam = $datas[$key]['teams'];
                     }
 
-                    if ($key >= 0) {
+                    if ($key != false && $key >= 0) {
 
                         $totalAmount = $this->numberManager->denormalize($quoteRequest->getTotalAmount());
 
@@ -510,8 +548,181 @@ class DashboardController extends AbstractController
                 'PONCTUAL',
                 'MATERIAL'
             ],
+            'startDateM12' => $startDateM12,
+            'endDateM4' => $endDateM4,
+            'startDateM3' => $startDateM3,
+            'endDateM3' => $endDateM3,
+            'startDateM2' => $startDateM2,
+            'endDateM2' => $endDateM2,
+            'startDateM1' => $startDateM1,
+            'endDateM1' => $endDateM1,
+            'startDateM' => $startDateM,
+            'endDateM' => $endDateM,
             'selectedCatalog' => $selectedCatalog
         ]);
+    }
+
+    /**
+     * @Route("/activity/exportQuoteRequest", name="paprec_dashboard_activity_quoteRequest_export")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function exportAction(Request $request)
+    {
+        $status = $request->get('selectedStatus');
+        $periodStartDate = $request->get('periodStartDate');
+        $periodEndDate = $request->get('periodEndDate');
+        $userIds = $request->get('userIds');
+
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        $queryBuilder->select(array('q'))
+            ->from('App:QuoteRequest', 'q')
+            ->where('q.deleted IS NULL');
+        if ($status !== null && $status !== '#') {
+
+            $status = explode(',', $status);
+
+            $queryBuilder
+                ->andWhere('q.quoteStatus IN (:status)')
+                ->setParameter('status', $status);
+        }
+
+        if ($periodStartDate && $periodEndDate) {
+            $periodStartDate = new \DateTime($periodStartDate);
+            $periodEndDate = new \DateTime($periodEndDate);
+
+            $queryBuilder
+                ->andWhere('q.dateCreation >= :start')
+                ->andWhere('q.dateCreation < :end')
+                ->setParameter('start', $periodStartDate->format('Y-m-d') . ' 00:00:00')
+                ->setParameter('end', $periodEndDate->format('Y-m-d') . ' 23:59:59');
+        }
+
+        if (!empty($userIds)) {
+            $userIds = explode(',', $userIds);
+
+            $queryBuilder
+                ->andWhere('q.userInCharge IN (:userIds)')
+                ->setParameter('userIds', $userIds);
+        }
+
+        /** @var QuoteRequest[] $quoteRequests */
+        $quoteRequests = $queryBuilder->getQuery()->getResult();
+
+        /** @var Spreadsheet $spreadsheet */
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet
+            ->getProperties()->setCreator("Paprec Easy Recyclage")
+            ->setLastModifiedBy("EasyRecyclageShop")
+            ->setTitle("Paprec Easy Recyclage - Devis")
+            ->setSubject("Extraction");
+
+        $sheet = $spreadsheet->setActiveSheetIndex(0);
+        $sheet->setTitle('Devis');
+
+        // Labels
+        $sheetLabels = [
+            'ID',
+            'Date créa.',
+            'Dernière modification',
+            'Langue',
+            'Numéro offre du devis',
+            'Nom société',
+            'Civilité',
+            'Nom',
+            'Prénom',
+            'Email',
+            'Téléphone',
+            'Prestation multi-sites',
+            'Staff',
+            'Accès',
+            'Adresse',
+            'Ville',
+            'Remarques',
+            'Statut',
+            'Montant total (€)',
+            'Ajustement prix (+/- en %)',
+            'Commentaire commercial',
+            'Budget annuel',
+            'Numéro client',
+            'Référence de l\'offre',
+            'Commercial en charge',
+            'Code postal',
+            'Date de fin de la prestation'
+        ];
+
+        $xAxe = 'A';
+        foreach ($sheetLabels as $label) {
+            $sheet->setCellValue($xAxe . 1, $label);
+            $xAxe++;
+        }
+
+        $yAxe = 2;
+        foreach ($quoteRequests as $quoteRequest) {
+
+            $getters = [
+                $quoteRequest->getId(),
+                $quoteRequest->getDateCreation()->format('Y-m-d'),
+                $quoteRequest->getDateUpdate() ? $quoteRequest->getDateUpdate()->format('Y-m-d') : '',
+                $quoteRequest->getLocale(),
+                $quoteRequest->getNumber(),
+                $quoteRequest->getBusinessName(),
+                $quoteRequest->getCivility(),
+                $quoteRequest->getLastName(),
+                $quoteRequest->getFirstName(),
+                $quoteRequest->getEmail(),
+                $quoteRequest->getPhone(),
+                $quoteRequest->getIsMultisite() ? 'true' : 'false',
+                $this->translator->trans('Commercial.StaffList.' . $quoteRequest->getStaff()),
+                $quoteRequest->getAccess(),
+                $quoteRequest->getAddress(),
+                $quoteRequest->getCity(),
+                $quoteRequest->getComment(),
+                $quoteRequest->getQuoteStatus(),
+                $this->numberManager->denormalize($quoteRequest->getTotalAmount()),
+                $this->numberManager->denormalize($quoteRequest->getOverallDiscount()) . '%',
+                $quoteRequest->getSalesmanComment(),
+                $this->numberManager->denormalize($quoteRequest->getAnnualBudget()),
+//                $quoteRequest->getFrequency(),
+//                $quoteRequest->getFrequencyTimes(),
+//                $quoteRequest->getFrequencyInterval(),
+                $quoteRequest->getCustomerId(),
+                $quoteRequest->getReference(),
+                $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
+                $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
+                $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : '',
+            ];
+
+            $xAxe = 'A';
+            foreach ($getters as $getter) {
+                $sheet->setCellValue($xAxe . $yAxe, (string)$getter);
+                $xAxe++;
+            }
+            $yAxe++;
+        }
+
+
+        // Resize columns
+        for ($i = 'A'; $i != $sheet->getHighestDataColumn(); $i++) {
+            $sheet->getColumnDimension($i)->setAutoSize(true);
+        }
+
+        $fileName = 'EasyRecyclageShop-Extraction-Devis--' . date('Y-m-d') . '.xlsx';
+
+        $streamedResponse = new StreamedResponse();
+        $streamedResponse->setCallback(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
+
+        $streamedResponse->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $streamedResponse->headers->set('Pragma', 'public');
+        $streamedResponse->headers->set('Cache-Control', 'maxage=1');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
+
+        return $streamedResponse->send();
     }
 
     /**

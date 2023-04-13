@@ -66,15 +66,25 @@ class QuoteRequestController extends AbstractController
      * @Route("", name="paprec_quoteRequest_index")
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+
+        $periodStartDate = $request->get('periodStartDate');
+        $periodEndDate = $request->get('periodEndDate');
+        $selectedStatus = $request->get('selectedStatus');
+        $userIds = $request->get('userIds');
+
         $status = array();
         foreach ($this->getParameter('paprec_quote_status') as $s) {
             $status[$s] = $s;
         }
 
         return $this->render('quoteRequest/index.html.twig', array(
-            'status' => $status
+            'status' => $status,
+            'periodStartDate' => $periodStartDate,
+            'periodEndDate' => $periodEndDate,
+            'selectedStatus' => $selectedStatus,
+            'userIds' => $userIds
         ));
     }
 
@@ -98,6 +108,10 @@ class QuoteRequestController extends AbstractController
         $catalog = $request->get('selectedCatalog');
         $status = $request->get('selectedStatus');
         $lastUpdateDate = $request->get('lastUpdateDate');
+
+        $periodStartDate = $request->get('periodStartDate');
+        $periodEndDate = $request->get('periodEndDate');
+        $userIds = $request->get('userIds');
 
         $filters = $request->get('filters');
         $pageSize = $request->get('length');
@@ -150,7 +164,6 @@ class QuoteRequestController extends AbstractController
             'method' => array('getUserInCharge', '__toString')
         );
 
-
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
         $queryBuilder->select(array('q'))
@@ -166,8 +179,11 @@ class QuoteRequestController extends AbstractController
                 ->setParameter('catalog', $catalog);
         }
         if ($status !== null && $status !== '#') {
+
+            $status = explode(',', $status);
+
             $queryBuilder
-                ->andWhere('q.quoteStatus = :status')
+                ->andWhere('q.quoteStatus IN (:status)')
                 ->setParameter('status', $status);
         }
         if ($lastUpdateDate !== null && $lastUpdateDate !== '') {
@@ -182,6 +198,24 @@ class QuoteRequestController extends AbstractController
                 ->setParameter('dayAfter', $dayAfter->format('Y-m-d') . ' 23:59:59');
         }
 
+        if ($periodStartDate && $periodEndDate) {
+            $periodStartDate = new \DateTime($periodStartDate);
+            $periodEndDate = new \DateTime($periodEndDate);
+
+            $queryBuilder
+                ->andWhere('q.dateCreation >= :start')
+                ->andWhere('q.dateCreation < :end')
+                ->setParameter('start', $periodStartDate->format('Y-m-d') . ' 00:00:00')
+                ->setParameter('end', $periodEndDate->format('Y-m-d') . ' 23:59:59');
+        }
+
+        if (!empty($userIds)) {
+            $userIds = explode(',', $userIds);
+
+            $queryBuilder
+                ->andWhere('q.userInCharge IN (:userIds)')
+                ->setParameter('userIds', $userIds);
+        }
 
         /**
          * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
@@ -307,38 +341,32 @@ class QuoteRequestController extends AbstractController
         // Labels
         $sheetLabels = [
             'ID',
-            'Creation date',
-            'Update date',
-            'Deleted',
-            'User creation',
-            'User update',
-            'Locale',
-            'Number',
-            'Business name',
-            'Civility',
-            'Last name',
-            'First name',
+            'Date créa.',
+            'Dernière modification',
+            'Langue',
+            'Numéro offre du devis',
+            'Nom société',
+            'Civilité',
+            'Nom',
+            'Prénom',
             'Email',
-            'Phone',
-            'is Multisite',
+            'Téléphone',
+            'Prestation multi-sites',
             'Staff',
-            'Access',
-            'Address',
-            'City',
-            'Customer comment',
-            'Status',
-            'Total amount',
-            'Overall Discount',
-            'Salesman Comment',
-            'Annual Budget',
-//            'Frequency',
-//            'Frequency Times',
-//            'Frequency Interval',
-            'Customer ID',
-            'Reference',
-            'User in charge',
-            'Postal Code',
-            'Service End Date',
+            'Accès',
+            'Adresse',
+            'Ville',
+            'Remarques',
+            'Statut',
+            'Montant total (€)',
+            'Ajustement prix (+/- en %)',
+            'Commentaire commercial',
+            'Budget annuel',
+            'Numéro client',
+            'Référence de l\'offre',
+            'Commercial en charge',
+            'Code postal',
+            'Date de fin de la prestation'
         ];
 
         $xAxe = 'A';
@@ -354,9 +382,6 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->getId(),
                 $quoteRequest->getDateCreation()->format('Y-m-d'),
                 $quoteRequest->getDateUpdate() ? $quoteRequest->getDateUpdate()->format('Y-m-d') : '',
-                $quoteRequest->getDeleted() ? 'true' : 'false',
-                $quoteRequest->getUserCreation(),
-                $quoteRequest->getUserUpdate(),
                 $quoteRequest->getLocale(),
                 $quoteRequest->getNumber(),
                 $quoteRequest->getBusinessName(),
@@ -376,9 +401,6 @@ class QuoteRequestController extends AbstractController
                 $this->numberManager->denormalize($quoteRequest->getOverallDiscount()) . '%',
                 $quoteRequest->getSalesmanComment(),
                 $this->numberManager->denormalize($quoteRequest->getAnnualBudget()),
-//                $quoteRequest->getFrequency(),
-//                $quoteRequest->getFrequencyTimes(),
-//                $quoteRequest->getFrequencyInterval(),
                 $quoteRequest->getCustomerId(),
                 $quoteRequest->getReference(),
                 $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
@@ -1421,7 +1443,8 @@ class QuoteRequestController extends AbstractController
 
         $locale = 'fr';
 
-        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
+        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest,
+            $quoteRequest->getMissionSheet(),
             $locale);
         if ($wasSent) {
             $this->get('session')->getFlashBag()->add('success', 'generatedMissionSheetSent');
@@ -1473,7 +1496,8 @@ class QuoteRequestController extends AbstractController
 
         $locale = 'fr';
 
-        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
+        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest,
+            $quoteRequest->getMissionSheet(),
             $locale);
         if ($wasSent) {
             $this->get('session')->getFlashBag()->add('success', 'generatedMissionSheetSent');
