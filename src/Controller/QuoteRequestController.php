@@ -630,7 +630,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/addFollowUp", name="paprec_quote_request_follow_up_add")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function addFollowUpAction(Request $request, QuoteRequest $quoteRequest)
     {
@@ -639,8 +639,14 @@ class QuoteRequestController extends AbstractController
         $followUp = new FollowUp();
         $followUp->setQuoteRequest($quoteRequest);
 
+        $status = [];
+        foreach ($this->getParameter('paprec.follow_up.status') as $s) {
+            $status[$s] = $s;
+        }
+
         $form = $this->createForm(FollowUpType::class, $followUp, [
-            'quoteRequestId' => $quoteRequest->getId()
+            'quoteRequestId' => $quoteRequest->getId(),
+            'status' => $status
         ]);
 
         $form->handleRequest($request);
@@ -670,7 +676,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/followUpLoadList", name="paprec_quote_request_follow_up_loadList")
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function followUpLoadListAction(
         Request $request,
@@ -717,6 +723,15 @@ class QuoteRequestController extends AbstractController
 
         $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
             $paginator, $rowPrefix);
+
+        // Reformatage de certaines données
+        $tmp = [];
+        foreach ($dt['data'] as $data) {
+            $line = $data;
+            $line['status'] = $this->translator->trans('Commercial.FollowUp.Status.' . $line['status']);
+            $tmp[] = $line;
+        }
+        $dt['data'] = $tmp;
 
         $return['recordsTotal'] = $dt['recordsTotal'];
         $return['recordsFiltered'] = $dt['recordsTotal'];
@@ -1370,6 +1385,58 @@ class QuoteRequestController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/sendMissionSheet", name="paprec_quote_request_mission_sheet_send")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @throws \Exception
+     */
+    public function sendMissionSheetAction(QuoteRequest $quoteRequest)
+    {
+        /**
+         * On commence par pdf générés (seulement ceux générés dans le BO  pour éviter de supprimer un PDF en cours d'envoi pour un utilisateur
+         */
+        $pdfFolder = $this->getParameter('paprec.data_tmp_directory');
+
+        /**
+         * Si le dossier n'existe pas, on le créé
+         */
+        if (!is_dir($pdfFolder)) {
+            if (!mkdir($pdfFolder, 0777, true)) {
+                return false;
+            }
+        }
+
+        $finder = new Finder();
+
+        $finder->files()->in($pdfFolder);
+
+        if ($finder->hasResults()) {
+            foreach ($finder as $file) {
+                $absoluteFilePath = $file->getRealPath();
+//                $fileNameWithExtension = $file->getRelativePathname();
+                if (file_exists($absoluteFilePath)) {
+                    unlink($absoluteFilePath);
+                }
+            }
+        }
+
+        $locale = 'fr';
+
+        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
+            $locale);
+        if ($wasSent) {
+            $this->get('session')->getFlashBag()->add('success', 'generatedMissionSheetSent');
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'generatedMissionSheetNotSent');
+        }
+
+        return $this->redirectToRoute('paprec_quote_request_view', [
+            'id' => $quoteRequest->getId()
+        ]);
+
+    }
+
+    /**
+     * TODO A FAIRE
      * @Route("/{id}/downloadMissionSheet", name="paprec_quote_request_mission_sheet_download")
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Exception

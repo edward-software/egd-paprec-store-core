@@ -119,6 +119,22 @@ class Agency
      */
     private $template;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phoneNumber", type="string", length=255, nullable=true)
+     * @Assert\NotBlank(groups={"public"})
+     */
+    private $phoneNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="faxNumber", type="string", length=255, nullable=true)
+     * @Assert\NotBlank(groups={"public"})
+     */
+    private $faxNumber;
+
 
     /**
      * #################################
@@ -589,5 +605,39 @@ class Agency
         $this->template = $template;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string $phoneNumber
+     */
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFaxNumber()
+    {
+        return $this->faxNumber;
+    }
+
+    /**
+     * @param string $faxNumber
+     */
+    public function setFaxNumber(string $faxNumber): void
+    {
+        $this->faxNumber = $faxNumber;
+    }
+
+
 
 }

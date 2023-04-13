@@ -36,13 +36,13 @@
                            cellpadding="0" cellspacing="0" border="0" width="100%">
                         <thead>
                         <tr>
-                            <th style="width: 30%">Commercial</th>
+                            <th style="width: 40%">Commercial</th>
                             <th>Antérieur (M-4 à M-12)</th>
                             <th>M-3</th>
                             <th>M-2</th>
                             <th>M-1</th>
                             <th>M</th>
-                            <th>TOTAL À DATE</th>
+                            <th style="width: 20%">TOTAL À DATE</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,59 +57,59 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal">Nombre de nouvelles affaires</th>
-                                    <td>{{ data['qr_number']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_number']['M_3'] }}</td>
-                                    <td>{{ data['qr_number']['M_2'] }}</td>
-                                    <td>{{ data['qr_number']['M_1'] }}</td>
-                                    <td>{{ data['qr_number']['M'] }}</td>
-                                    <td>{{ data['qr_number']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_number']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont ouvertes à ce jour</th>
-                                    <td>{{ data['qr_number_opened']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_number_opened']['M_3'] }}</td>
-                                    <td>{{ data['qr_number_opened']['M_2'] }}</td>
-                                    <td>{{ data['qr_number_opened']['M_1'] }}</td>
-                                    <td>{{ data['qr_number_opened']['M'] }}</td>
-                                    <td>{{ data['qr_number_opened']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_number_opened']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_opened']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_opened']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_opened']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_opened']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_opened']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées gagnées</th>
-                                    <td>{{ data['qr_number_closed_won']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M_3'] }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M_2'] }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M_1'] }}</td>
-                                    <td>{{ data['qr_number_closed_won']['M'] }}</td>
-                                    <td>{{ data['qr_number_closed_won']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_won']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_won']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées non gagnées</th>
-                                    <td>{{ data['qr_number_closed_not_won']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M_3'] }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M_2'] }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M_1'] }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['M'] }}</td>
-                                    <td>{{ data['qr_number_closed_not_won']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_closed_not_won']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th>soit total affaires générées (12 mois)</th>
-                                    <td>{{ data['qr_number_total']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_number_total']['M_3'] }}</td>
-                                    <td>{{ data['qr_number_total']['M_2'] }}</td>
-                                    <td>{{ data['qr_number_total']['M_1'] }}</td>
-                                    <td>{{ data['qr_number_total']['M'] }}</td>
-                                    <td>{{ data['qr_number_total']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_number_total']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_total']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_total']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_total']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_total']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_number_total']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="text-right">Taux de signature</th>
-                                    <td>{{ data['qr_number_signature']['M_4_12'] }}%</td>
-                                    <td>{{ data['qr_number_signature']['M_3'] }}%</td>
-                                    <td>{{ data['qr_number_signature']['M_2'] }}%</td>
-                                    <td>{{ data['qr_number_signature']['M_1'] }}%</td>
-                                    <td>{{ data['qr_number_signature']['M'] }}%</td>
-                                    <td>{{ data['qr_number_signature']['TOTAL'] }}%</td>
+                                    <td>{{ data['qr_number_signature']['M_4_12'] }} %</td>
+                                    <td>{{ data['qr_number_signature']['M_3'] }} %</td>
+                                    <td>{{ data['qr_number_signature']['M_2'] }} %</td>
+                                    <td>{{ data['qr_number_signature']['M_1'] }} %</td>
+                                    <td>{{ data['qr_number_signature']['M'] }} %</td>
+                                    <td>{{ data['qr_number_signature']['TOTAL'] }} %</td>
                                 </tr>
                                 <tr>
                                     <th></th>
@@ -120,59 +120,59 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal">CA des nouvelles affaires</th>
-                                    <td>{{ data['qr_turnover']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_turnover']['M_3'] }}</td>
-                                    <td>{{ data['qr_turnover']['M_2'] }}</td>
-                                    <td>{{ data['qr_turnover']['M_1'] }}</td>
-                                    <td>{{ data['qr_turnover']['M'] }}</td>
-                                    <td>{{ data['qr_turnover']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_turnover']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont ouverte à ce jour</th>
-                                    <td>{{ data['qr_turnover_opened']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M_3'] }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M_2'] }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M_1'] }}</td>
-                                    <td>{{ data['qr_turnover_opened']['M'] }}</td>
-                                    <td>{{ data['qr_turnover_opened']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_opened']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_opened']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées gagnées</th>
-                                    <td>{{ data['qr_turnover_closed_won']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M_3'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M_2'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M_1'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['M'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_won']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_won']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="font-weight-normal text-right">dont clôturées non gagnées</th>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_3'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_2'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M_1'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['M'] }}</td>
-                                    <td>{{ data['qr_turnover_closed_not_won']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_closed_not_won']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th>soit total affaires générées (12 mois)</th>
-                                    <td>{{ data['qr_turnover_total']['M_4_12'] }}</td>
-                                    <td>{{ data['qr_turnover_total']['M_3'] }}</td>
-                                    <td>{{ data['qr_turnover_total']['M_2'] }}</td>
-                                    <td>{{ data['qr_turnover_total']['M_1'] }}</td>
-                                    <td>{{ data['qr_turnover_total']['M'] }}</td>
-                                    <td>{{ data['qr_turnover_total']['TOTAL'] }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_4_12']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_3']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_2']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_total']['M_1']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_total']['M']|format_currency('EUR') }}</td>
+                                    <td>{{ data['qr_turnover_total']['TOTAL']|format_currency('EUR') }}</td>
                                 </tr>
-                                <tr>
+                                <tr class="line-number">
                                     <th class="text-right">Taux de signature</th>
-                                    <td>{{ data['qr_turnover_signature']['M_4_12'] }}%</td>
-                                    <td>{{ data['qr_turnover_signature']['M_3'] }}%</td>
-                                    <td>{{ data['qr_turnover_signature']['M_2'] }}%</td>
-                                    <td>{{ data['qr_turnover_signature']['M_1'] }}%</td>
-                                    <td>{{ data['qr_turnover_signature']['M'] }}%</td>
-                                    <td>{{ data['qr_turnover_signature']['TOTAL'] }}%</td>
+                                    <td>{{ data['qr_turnover_signature']['M_4_12'] }} %</td>
+                                    <td>{{ data['qr_turnover_signature']['M_3'] }} %</td>
+                                    <td>{{ data['qr_turnover_signature']['M_2'] }} %</td>
+                                    <td>{{ data['qr_turnover_signature']['M_1'] }} %</td>
+                                    <td>{{ data['qr_turnover_signature']['M'] }} %</td>
+                                    <td>{{ data['qr_turnover_signature']['TOTAL'] }} %</td>
                                 </tr>
                             {% endfor %}
                         {% endif %}

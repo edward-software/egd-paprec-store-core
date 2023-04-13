@@ -58,7 +58,7 @@
                                 </a>
                             {% endif %}
                         {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
-                            <a href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
+                            <a href="{{ path("paprec_quote_request_mission_sheet_send", {id: quoteRequest.id}) }}"
                                class="btn btn-sm btn-secondary"><i
                                         class="fa fa-xs fa-paper-plane"></i> {{ 'Commercial.QuoteRequest.MissionSheet.SendPdf'| trans({}, "messages", app.request.locale) }}
                             </a>

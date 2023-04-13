@@ -23,11 +23,11 @@ parameters:
     paprec_custom_area_codes:
         - catalog_top
 
-    paprec.product.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
-    paprec.range.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
-    paprec.agency.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
-    paprec.other_need.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
-    paprec.custom_area.picto_path: "%kernel.root_dir%/../public/uploads/pictos"
+    paprec.product.picto_path: "%kernel.project_dir%/public/uploads/pictos"
+    paprec.range.picto_path: "%kernel.project_dir%/public/uploads/pictos"
+    paprec.agency.picto_path: "%kernel.project_dir%/public/uploads/pictos"
+    paprec.other_need.picto_path: "%kernel.project_dir%/public/uploads/pictos"
+    paprec.custom_area.picto_path: "%kernel.project_dir%/public/uploads/pictos"
     paprec.php_path: "%env(PAPREC_PHP_PATH)%"
     paprec.project_path: "%env(PAPREC_PROJECT_PATH)%"
 
@@ -45,8 +45,8 @@ parameters:
         - BOM
         - PL_PONCT
 
-    paprec.data_tmp_directory: "%kernel.root_dir%/data/tmp"
-    paprec.files_directory: "%kernel.root_dir%/data/pdf"
+    paprec.data_tmp_directory: "%kernel.project_dir%/data/tmp"
+    paprec.files_directory: "%kernel.project_dir%/data/pdf"
     paprec.file_names:
         - cg
     paprec.cover_file_names:
@@ -120,9 +120,9 @@ parameters:
         FOLLOW_UP_RELAUNCHED_DAYS: 1
         DASHBOARD_FOLLOW_UP_FILTER_PRICE: -1
 
-    paprec.quote_request_file.directory: "%kernel.root_dir%/data/quote-request/file"
+    paprec.quote_request_file.directory: "%kernel.project_dir%/data/quote-request/file"
     paprec.quote_request_file.max_file_size: 5000000
-    paprec.follow_up_file.directory: "%kernel.root_dir%/data/follow-up/file"
+    paprec.follow_up_file.directory: "%kernel.project_dir%/data/follow-up/file"
     paprec.follow_up_file.max_file_size: 5000000
 
 services:
@@ -152,6 +152,11 @@ services:
 
     twig.extension.intl:
         class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.intl-extra:
+        class: Twig\Extra\Intl\IntlExtension
         tags:
             - { name: twig.extension }
 

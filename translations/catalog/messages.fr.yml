@@ -10,12 +10,14 @@ Catalog:
         Name: Nom de l'agence
         BusinessName: Raison sociale
         EntityName: Nom d’entité
-        LegalInfoTemplate: Informations legales
+        LegalInfoTemplate: Informations legales (bas de page)
         DestinationEmailMission: Adresse mail de destination pour les feuilles de mission
         BusinessId: Identification société
         Address: Adresse l'agence
         City: Ville
         PostalCode: Code postal
+        PhoneNumber: Tél.
+        FaxNumber: Fax
         Date-crea: Date de créa.
         Date-creation: Date de création
         Date-update: Date de mise à jour
@@ -37,7 +39,7 @@ Catalog:
         DeletedUser: (Compte supprimé)
         System-information: Informations système
         Template:
-            Template: Template
+            Template: CGV
             LCB: La Corbeille Bleue
             CFS: Confidentialys
             LPP: Le Petit ???
@@ -99,7 +101,7 @@ Catalog:
         Products: Liste des produits
         Add: Ajouter un produit
         Add-material: Ajouter un matériel
-        Edit: Editer un produit
+        Edit: Modifier un produit
         Remove: Supprimer
         List: Liste des produits
         Information: Information du produit
@@ -129,7 +131,7 @@ Catalog:
             Enable: Activer
         Picto: Picto
         AddPicture: Ajouter image
-        PilotPicture: Image principale
+        PilotPicture: Logo
         SetSecondaryPicture: Définir en image secondaire
         Pictures: Images
         EditPicture: Remplacer image
@@ -148,7 +150,7 @@ Catalog:
 
     ProductLabel:
         Add: Ajouter une traduction
-        Edit: Editer traduction
+        Edit: Modifier traduction
         Language:
             Language: Langue
             EN: Anglais
@@ -166,7 +168,7 @@ Catalog:
         View: Vue de la gamme
         Ranges: Liste des gammes
         Add: Ajouter une gamme
-        Edit: Editer une gamme
+        Edit: Modifier une gamme
         Remove: Supprimer
         List: Liste des gammes
         Information: Information de la gamme
@@ -191,7 +193,7 @@ Catalog:
 
     RangeLabel:
         Add: Ajouter une traduction
-        Edit: Editer traduction
+        Edit: Modifier traduction
         Language:
             Language: Langue
             EN: Anglais

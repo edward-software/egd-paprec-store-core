@@ -162,7 +162,8 @@ class SettingController extends AbstractController
             $errors = [];
             if (isset($keyName)) {
                 $count = $this->getDoctrine()->getManager()->getRepository(Setting::class)->count([
-                    'keyName' => $keyName
+                    'keyName' => $keyName,
+                    'deleted' => null
                 ]);
 
                 if ($this->getParameter('paprec.setting.max_by_key')[$keyName] !== -1 && $count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
@@ -224,6 +225,7 @@ class SettingController extends AbstractController
 
         $this->settingManager->isDeleted($setting, true);
 
+        $currentKeyName = $setting->getKeyName();
         $form = $this->createForm(SettingType::class, $setting, [
             'keys' => $this->getParameter('paprec.setting.keys')
         ]);
@@ -249,10 +251,11 @@ class SettingController extends AbstractController
             $errors = [];
             if (isset($keyName)) {
                 $count = $this->getDoctrine()->getManager()->getRepository(Setting::class)->count([
-                    'keyName' => $keyName
+                    'keyName' => $keyName,
+                    'deleted' => null
                 ]);
 
-                if ($this->getParameter('paprec.setting.max_by_key')[$keyName] !== -1 && $count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
+                if ($currentKeyName !== $keyName && $this->getParameter('paprec.setting.max_by_key')[$keyName] !== -1 && $count >= $this->getParameter('paprec.setting.max_by_key')[$keyName]) {
                     $errors['keyName'] = array(
                         'code' => 400,
                         'message' => 'Le nombre de valeur max pour cette clé est atteinte.'

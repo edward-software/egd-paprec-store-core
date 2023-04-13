@@ -112,16 +112,17 @@ class QuoteRequestType extends AbstractType
             ->add('salesmanComment', TextareaType::class)
             ->add('annualBudget')
             ->add('catalog', ChoiceType::class, array(
+                'required' => true,
                 'choices' => array(
                     'REGULAR' => 'REGULAR',
                     'PONCTUAL' => 'PONCTUAL',
                     'MATERIAL' => 'MATERIAL',
                 ),
+                'empty_data' => 'REGULAR',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     $choiceValue = strtoupper($choiceValue);
                     return 'Commercial.QuoteRequest.Catalog.' . $choiceValue;
                 },
-                'required' => true,
                 'expanded' => true
             ))
             ->add('reference')

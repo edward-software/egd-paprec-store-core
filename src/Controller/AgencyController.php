@@ -80,10 +80,8 @@ class AgencyController extends AbstractController
         $cols['name'] = array('label' => 'name', 'id' => 'a.name', 'method' => array('getName'));
         $cols['businessName'] = array('label' => 'businessName', 'id' => 'a.businessName', 'method' => array('getBusinessName'));
         $cols['businessId'] = array('label' => 'businessId', 'id' => 'a.businessId', 'method' => array('getBusinessId'));
-        $cols['template'] = array('label' => 'template', 'id' => 'a.template', 'method' => array('getTemplate'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Agency::class)->createQueryBuilder('a');
-
 
         $queryBuilder->select(array('a'))
             ->where('a.deleted IS NULL');
@@ -102,7 +100,6 @@ class AgencyController extends AbstractController
 
         $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
             $paginator, $rowPrefix);
-
 
         $return['recordsTotal'] = $dt['recordsTotal'];
         $return['recordsFiltered'] = $dt['recordsTotal'];

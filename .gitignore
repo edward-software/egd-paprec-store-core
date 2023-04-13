@@ -11,6 +11,7 @@
 /vendor/
 /public/build/
 /src/data
+/data
 /.DS_Store
 /public/.DS_Store
 /assets/.DS_Store

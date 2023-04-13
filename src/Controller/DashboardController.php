@@ -75,7 +75,99 @@ class DashboardController extends AbstractController
         ];
 
         $datas = [];
-        if ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
+        if ($this->isGranted('ROLE_ADMIN')) {
+
+            $datas[0]['user_id'] = null;
+            $datas[0]['name'] = 'Équipe';
+            foreach ($lines as $line) {
+                $datas[0][$line] = [];
+                foreach ($columns as $column) {
+                    $datas[0][$line][$column] = 0;
+                }
+            }
+
+            $queryBuilder = $this->em->getRepository(User::class)->createQueryBuilder('u');
+
+            $queryBuilder->select(['u'])
+                ->where('u.deleted IS NULL');
+
+            $users = $queryBuilder->getQuery()->getResult();
+
+            if ($users && count($users)) {
+
+                /**
+                 * On met les utilisateurs par manager
+                 */
+                $usersByManager = [];
+                $usersById = [];
+                foreach ($users as $user) {
+                    $userIds[] = $user->getId();
+                    $usersById[$user->getId()] = $user;
+                    $roles = $user->getRoles();
+                    if (in_array('ROLE_ADMIN', $roles)) {
+
+                    } elseif (in_array('ROLE_MANAGER_COMMERCIAL', $roles)) {
+
+                    } elseif (in_array('ROLE_COMMERCIAL', $roles) || in_array('ROLE_COMMERCIAL_MULTISITES', $roles)) {
+                        if ($user->getManager()) {
+                            if (!array_key_exists($user->getManager()->getId(), $usersByManager)) {
+                                $usersByManager[$user->getManager()->getId()] = [];
+                            }
+                            $usersByManager[$user->getManager()->getId()][] = $user;
+                        }
+                    }
+                }
+
+                $count = 1;
+                foreach ($usersByManager as $managerId => $uByManager) {
+                    $managerKey = $count;
+                    $u = $usersById[$managerId];
+                    $datas[$count]['user_id'] = null;
+                    $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName();
+                    foreach ($lines as $line) {
+                        $datas[$count][$line] = [];
+                        foreach ($columns as $column) {
+                            $datas[$count][$line][$column] = 0;
+                        }
+                    }
+                    $count++;
+
+                    foreach ($uByManager as $user) {
+
+                        $datas[$count]['teams'] = [
+                            0, // Équipe Globale
+                            $managerKey
+                        ];
+                        $datas[$count]['user_id'] = $user->getId();
+                        $datas[$count]['name'] = $user->getFirstName() . ' ' . $user->getLastName();
+                        foreach ($lines as $line) {
+                            $datas[$count][$line] = [];
+                            foreach ($columns as $column) {
+                                $datas[$count][$line][$column] = 0;
+                            }
+                        }
+                        $count++;
+
+                    }
+                }
+
+
+
+//                foreach ($users as $u) {
+//                    $userIds[] = $u->getId();
+//                    $datas[$count]['user_id'] = $u->getId();
+//                    $datas[$count]['name'] = $u->getFirstName() . ' ' . $u->getLastName();
+//                    foreach ($lines as $line) {
+//                        $datas[$count][$line] = [];
+//                        foreach ($columns as $column) {
+//                            $datas[$count][$line][$column] = 0;
+//                        }
+//                    }
+//                    $count++;
+//                }
+            }
+
+        } elseif ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
 
             $datas[0]['user_id'] = null;
             $datas[0]['name'] = 'Équipe';
@@ -99,6 +191,9 @@ class DashboardController extends AbstractController
                 $count = 1;
                 foreach ($users as $u) {
                     $userIds[] = $u->getId();
+                    $datas[$count]['teams'] = [
+                        0 // Équipe Globale
+                    ];
                     $datas[$count]['user_id'] = $u->getId();
                     $datas[$count]['name'] = $u->getFirstName() . ' ' . $u->getLastName();
                     foreach ($lines as $line) {
@@ -207,7 +302,10 @@ class DashboardController extends AbstractController
                 if ($userInChargeId) {
                     $userInChargeId = $userInChargeId->getId();
                     $key = array_search($userInChargeId, array_column($datas, 'user_id'));
-                    $keyTeam = array_search('Équipe', array_column($datas, 'name'));
+                    $keysTeam = null;
+                    if (array_key_exists('teams', $datas[$key])) {
+                        $keysTeam = $datas[$key]['teams'];
+                    }
 
                     if ($key >= 0) {
 
@@ -237,9 +335,11 @@ class DashboardController extends AbstractController
                          */
                         $datas[$key]['qr_number_total'][$columnKeyName]++;
                         $datas[$key]['qr_number_total']['TOTAL']++;
-                        if ($keyTeam >= 0) {
-                            $datas[$keyTeam]['qr_number_total'][$columnKeyName]++;
-                            $datas[$keyTeam]['qr_number_total']['TOTAL']++;
+                        if ($keysTeam && count($keysTeam) >= 0) {
+                            foreach ($keysTeam as $keyTeam) {
+                                $datas[$keyTeam]['qr_number_total'][$columnKeyName]++;
+                                $datas[$keyTeam]['qr_number_total']['TOTAL']++;
+                            }
                         }
 
                         /**
@@ -247,9 +347,11 @@ class DashboardController extends AbstractController
                          */
                         $datas[$key]['qr_turnover_total'][$columnKeyName] += $totalAmount;
                         $datas[$key]['qr_turnover_total']['TOTAL'] += $totalAmount;
-                        if ($keyTeam >= 0) {
-                            $datas[$keyTeam]['qr_turnover_total'][$columnKeyName] += $totalAmount;
-                            $datas[$keyTeam]['qr_turnover_total']['TOTAL'] += $totalAmount;
+                        if ($keysTeam && count($keysTeam) >= 0) {
+                            foreach ($keysTeam as $keyTeam) {
+                                $datas[$keyTeam]['qr_turnover_total'][$columnKeyName] += $totalAmount;
+                                $datas[$keyTeam]['qr_turnover_total']['TOTAL'] += $totalAmount;
+                            }
                         }
 
                         if ($quoteRequest->getQuoteStatus() === 'CONTRACT_SIGNED') {
@@ -258,9 +360,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_number_closed_won'][$columnKeyName]++;
                             $datas[$key]['qr_number_closed_won']['TOTAL']++;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_number_closed_won'][$columnKeyName]++;
-                                $datas[$keyTeam]['qr_number_closed_won']['TOTAL']++;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_number_closed_won'][$columnKeyName]++;
+                                    $datas[$keyTeam]['qr_number_closed_won']['TOTAL']++;
+                                }
                             }
 
                             /**
@@ -276,9 +380,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_turnover_closed_won'][$columnKeyName] += $totalAmount;
                             $datas[$key]['qr_turnover_closed_won']['TOTAL'] += $totalAmount;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_turnover_closed_won'][$columnKeyName] += $totalAmount;
-                                $datas[$keyTeam]['qr_turnover_closed_won']['TOTAL'] += $totalAmount;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_turnover_closed_won'][$columnKeyName] += $totalAmount;
+                                    $datas[$keyTeam]['qr_turnover_closed_won']['TOTAL'] += $totalAmount;
+                                }
                             }
 
                             /**
@@ -297,9 +403,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_number_closed_not_won'][$columnKeyName]++;
                             $datas[$key]['qr_number_closed_not_won']['TOTAL']++;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_number_closed_not_won'][$columnKeyName]++;
-                                $datas[$keyTeam]['qr_number_closed_not_won']['TOTAL']++;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_number_closed_not_won'][$columnKeyName]++;
+                                    $datas[$keyTeam]['qr_number_closed_not_won']['TOTAL']++;
+                                }
                             }
 
                             /**
@@ -307,9 +415,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_turnover_closed_not_won'][$columnKeyName] += $totalAmount;
                             $datas[$key]['qr_turnover_closed_not_won']['TOTAL'] += $totalAmount;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_turnover_closed_not_won'][$columnKeyName] += $totalAmount;
-                                $datas[$keyTeam]['qr_turnover_closed_not_won']['TOTAL'] += $totalAmount;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_turnover_closed_not_won'][$columnKeyName] += $totalAmount;
+                                    $datas[$keyTeam]['qr_turnover_closed_not_won']['TOTAL'] += $totalAmount;
+                                }
                             }
 
                         } else {
@@ -318,9 +428,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_number_opened'][$columnKeyName]++;
                             $datas[$key]['qr_number_opened']['TOTAL']++;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_number_opened'][$columnKeyName]++;
-                                $datas[$keyTeam]['qr_number_opened']['TOTAL']++;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_number_opened'][$columnKeyName]++;
+                                    $datas[$keyTeam]['qr_number_opened']['TOTAL']++;
+                                }
                             }
 
                             /**
@@ -328,9 +440,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_number'][$columnKeyName]++;
                             $datas[$key]['qr_number']['TOTAL']++;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_number'][$columnKeyName]++;
-                                $datas[$keyTeam]['qr_number']['TOTAL']++;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_number'][$columnKeyName]++;
+                                    $datas[$keyTeam]['qr_number']['TOTAL']++;
+                                }
                             }
 
                             /**
@@ -338,9 +452,11 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_turnover'][$columnKeyName] += $totalAmount;
                             $datas[$key]['qr_turnover']['TOTAL'] += $totalAmount;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_turnover'][$columnKeyName] += $totalAmount;
-                                $datas[$keyTeam]['qr_turnover']['TOTAL'] += $totalAmount;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_turnover'][$columnKeyName] += $totalAmount;
+                                    $datas[$keyTeam]['qr_turnover']['TOTAL'] += $totalAmount;
+                                }
                             }
 
                             /**
@@ -348,28 +464,32 @@ class DashboardController extends AbstractController
                              */
                             $datas[$key]['qr_turnover_opened'][$columnKeyName] += $totalAmount;
                             $datas[$key]['qr_turnover_opened']['TOTAL'] += $totalAmount;
-                            if ($keyTeam >= 0) {
-                                $datas[$keyTeam]['qr_turnover_opened'][$columnKeyName] += $totalAmount;
-                                $datas[$keyTeam]['qr_turnover_opened']['TOTAL'] += $totalAmount;
+                            if ($keysTeam && count($keysTeam) >= 0) {
+                                foreach ($keysTeam as $keyTeam) {
+                                    $datas[$keyTeam]['qr_turnover_opened'][$columnKeyName] += $totalAmount;
+                                    $datas[$keyTeam]['qr_turnover_opened']['TOTAL'] += $totalAmount;
+                                }
                             }
                         }
 
-                        if ($keyTeam >= 0) {
-                            if ($datas[$keyTeam]['qr_number_total'][$columnKeyName] > 0) {
-                                $datas[$keyTeam]['qr_number_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_number_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_number_total'][$columnKeyName],
-                                    1);
-                            }
-                            if ($datas[$keyTeam]['qr_number_total']['TOTAL'] > 0) {
-                                $datas[$keyTeam]['qr_number_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_number_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_number_total']['TOTAL'],
-                                    1);
-                            }
-                            if ($datas[$keyTeam]['qr_turnover_total'][$columnKeyName] > 0) {
-                                $datas[$keyTeam]['qr_turnover_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_turnover_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_turnover_total'][$columnKeyName],
-                                    1);
-                            }
-                            if ($datas[$keyTeam]['qr_turnover_total']['TOTAL'] > 0) {
-                                $datas[$keyTeam]['qr_turnover_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_turnover_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_turnover_total']['TOTAL'],
-                                    1);
+                        if ($keysTeam && count($keysTeam) >= 0) {
+                            foreach ($keysTeam as $keyTeam) {
+                                if ($datas[$keyTeam]['qr_number_total'][$columnKeyName] > 0) {
+                                    $datas[$keyTeam]['qr_number_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_number_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_number_total'][$columnKeyName],
+                                        1);
+                                }
+                                if ($datas[$keyTeam]['qr_number_total']['TOTAL'] > 0) {
+                                    $datas[$keyTeam]['qr_number_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_number_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_number_total']['TOTAL'],
+                                        1);
+                                }
+                                if ($datas[$keyTeam]['qr_turnover_total'][$columnKeyName] > 0) {
+                                    $datas[$keyTeam]['qr_turnover_signature'][$columnKeyName] = round(($datas[$keyTeam]['qr_turnover_closed_won'][$columnKeyName] * 100) / $datas[$keyTeam]['qr_turnover_total'][$columnKeyName],
+                                        1);
+                                }
+                                if ($datas[$keyTeam]['qr_turnover_total']['TOTAL'] > 0) {
+                                    $datas[$keyTeam]['qr_turnover_signature']['TOTAL'] = round(($datas[$keyTeam]['qr_turnover_closed_won']['TOTAL'] * 100) / $datas[$keyTeam]['qr_turnover_total']['TOTAL'],
+                                        1);
+                                }
                             }
                         }
 
@@ -387,7 +507,8 @@ class DashboardController extends AbstractController
             'catalogs' => [
                 'ALL',
                 'REGULAR',
-                'PONCTUAL'
+                'PONCTUAL',
+                'MATERIAL'
             ],
             'selectedCatalog' => $selectedCatalog
         ]);
@@ -413,8 +534,7 @@ class DashboardController extends AbstractController
             ->where('s.deleted IS NULL')
             ->andWhere('s.keyName = :key')
             ->setParameter('key', 'DASHBOARD_FOLLOW_UP_FILTER_PRICE')
-            ->orderBy('s.value + 0', 'ASC')
-        ;
+            ->orderBy('s.value + 0', 'ASC');
 
         $prices = $query->getQuery()->getResult();
 
@@ -442,7 +562,8 @@ class DashboardController extends AbstractController
             'catalogs' => [
                 'ALL',
                 'REGULAR',
-                'PONCTUAL'
+                'PONCTUAL',
+                'MATERIAL'
             ],
             'prices' => $prices,
             'status' => $status
@@ -466,7 +587,7 @@ class DashboardController extends AbstractController
         if (!$selectedCatalog) {
             $selectedCatalog = $session->get('followUpDashboardFilterSelectedCatalog');
         } else {
-            if($selectedCatalog === 'ALL'){
+            if ($selectedCatalog === 'ALL') {
                 $selectedCatalog = null;
             }
             $session->set('followUpDashboardFilterSelectedCatalog', $selectedCatalog);
@@ -475,7 +596,7 @@ class DashboardController extends AbstractController
         if (!$selectedPrice1) {
             $selectedPrice1 = $session->get('followUpDashboardFilterSelectedPrice1');
         } else {
-            if($selectedPrice1 === '#'){
+            if ($selectedPrice1 === '#') {
                 $selectedPrice1 = null;
             }
             $session->set('followUpDashboardFilterSelectedPrice1', $selectedPrice1);
@@ -484,7 +605,7 @@ class DashboardController extends AbstractController
         if (!$selectedPrice2) {
             $selectedPrice2 = $session->get('followUpDashboardFilterSelectedPrice2');
         } else {
-            if($selectedPrice2 === '#'){
+            if ($selectedPrice2 === '#') {
                 $selectedPrice2 = null;
             }
             $session->set('followUpDashboardFilterSelectedPrice2', $selectedPrice2);
@@ -493,13 +614,27 @@ class DashboardController extends AbstractController
         if (!$selectedStatus) {
             $selectedStatus = $session->get('followUpDashboardFilterSelectedStatus');
         } else {
-            if($selectedStatus === 'ALL'){
+            if ($selectedStatus === 'ALL') {
                 $selectedStatus = null;
             }
             $session->set('followUpDashboardFilterSelectedStatus', $selectedStatus);
         }
 
-        if ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $queryBuilder = $this->em->getRepository(User::class)->createQueryBuilder('u');
+
+            $queryBuilder->select(['u'])
+                ->where('u.deleted IS NULL');
+
+            $users = $queryBuilder->getQuery()->getResult();
+
+            if ($users && count($users)) {
+                foreach ($users as $u) {
+                    $userIds[] = $u->getId();
+                }
+            }
+
+        } elseif ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
             $queryBuilder = $this->em->getRepository(User::class)->createQueryBuilder('u');
 
             $queryBuilder->select(['u'])
@@ -580,21 +715,23 @@ class DashboardController extends AbstractController
             ->leftJoin('q.followUps', 'fU')
             ->where('q.deleted IS NULL')
             ->andWhere('q.userInCharge IN (:userIds)')
-            ->setParameter('userIds', $userIds);
+            ->setParameter('userIds', $userIds)
+            ->andWhere('fU.status != :status')
+            ->setParameter('status', 'CLOSED');
 
-        if($selectedCatalog){
+        if ($selectedCatalog) {
             $queryBuilder
                 ->andWhere('q.catalog = :catalog')
                 ->setParameter('catalog', $selectedCatalog);
         }
 
-        if($selectedStatus){
+        if ($selectedStatus) {
             $queryBuilder
                 ->andWhere('q.quoteStatus = :quoteStatus')
                 ->setParameter('quoteStatus', $selectedStatus);
         }
 
-        if($selectedPrice1 !== null && $selectedPrice1 >= 0){
+        if ($selectedPrice1 !== null && $selectedPrice1 >= 0) {
             $selectedPrice1 = $this->numberManager->normalize((int)$selectedPrice1);
 
             $queryBuilder
@@ -602,7 +739,7 @@ class DashboardController extends AbstractController
                 ->setParameter('price1', $selectedPrice1);
         }
 
-        if($selectedPrice2 !== null && $selectedPrice2 >= 0){
+        if ($selectedPrice2 !== null && $selectedPrice2 >= 0) {
             $selectedPrice2 = $this->numberManager->normalize((int)$selectedPrice2);
 
             $queryBuilder

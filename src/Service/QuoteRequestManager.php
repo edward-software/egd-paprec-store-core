@@ -4,6 +4,7 @@ namespace App\Service;
 
 
 use App\Entity\MissionSheet;
+use App\Entity\Product;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestLine;
 use Doctrine\ORM\EntityManagerInterface;
@@ -1108,6 +1109,17 @@ class QuoteRequestManager
     {
         try {
 
+            $query = $this->em
+                ->getRepository(QuoteRequest::class)
+                ->createQueryBuilder('qR')
+                ->select('qR', 'uC', 'a')
+                ->leftJoin('qR.userInCharge', 'uC')
+                ->leftJoin('uC.agency', 'a')
+                ->where('qR = :quoteRequest')
+                ->setParameter("quoteRequest", $quoteRequest);
+
+            $quoteRequest = $query->getQuery()->getOneOrNullResult();
+
             $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
 
             if (!is_dir($pdfTmpFolder)) {
@@ -1115,7 +1127,6 @@ class QuoteRequestManager
                     throw new \RuntimeException(sprintf('Directory "%s" was not created', $pdfTmpFolder));
                 }
             }
-
 
             $filename = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
             $filenameOffer = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
@@ -1132,18 +1143,22 @@ class QuoteRequestManager
             $snappy->setOption('dpi', 72);
             $snappy->setOption('zoom', 1);
 
-//            $snappy->setOption('footer-html', $this->container->get('templating')->render('@PaprecCommercial/QuoteRequest/PDF/fr/_footer.html.twig'));
+            $agency = null;
+            if ($quoteRequest->getUserInCharge() && $quoteRequest->getUserInCharge()->getAgency()) {
+                $agency = $quoteRequest->getUserInCharge()->getAgency();
+            }
 
             $templateDir = 'public/PDF';
 
-            if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/' . strtolower($quoteRequest->getPostalCode()->getAgency()->getName()))) {
-                $templateDir .= '/' . strtolower($quoteRequest->getPostalCode()->getAgency()->getName());
-            }
-
             $snappy->setOption('header-html',
-                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+                $this->container->get('templating')->render($templateDir . '/header.html.twig', [
+                    'agency' => $agency
+                ]));
+
             $snappy->setOption('footer-html',
-                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig', [
+                    'agency' => $agency
+                ]));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
@@ -1240,23 +1255,33 @@ class QuoteRequestManager
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
+            $agencyMail = null;
+            $commercialMail = null;
             if ($quoteRequest->getUserInCharge()) {
-                $rcptTo = $quoteRequest->getUserInCharge()->getEmail();
+                $commercialMail = $quoteRequest->getUserInCharge()->getEmail();
+                if ($quoteRequest->getUserInCharge()->getAgency()) {
+                    $agencyMail = $quoteRequest->getUserInCharge()->getAgency()->getDestinationEmailMission();
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
 
-            if ($rcptTo == null || $rcptTo == '') {
+            if ($agencyMail == null || $agencyMail == '' || $commercialMail == null || $commercialMail == '') {
                 return false;
             }
 
-            $messages = [];
+            /**
+             * Contenu du mail
+             */
             $message = new Swift_Message();
             $message
                 ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
                     array(), 'messages', strtolower($locale)))
                 ->setFrom($from)
-                ->setTo($rcptTo)
+                ->setTo($agencyMail)
+                ->setCc($commercialMail)
                 ->setBody(
                     $this->container->get('templating')->render(
                         'public/emails/generatedMissionSheetEmail.html.twig',
@@ -1303,7 +1328,7 @@ class QuoteRequestManager
             $pdfArray = [];
 
             /**
-             * On génère la page d'offre
+             * On génère la page CREATION
              */
             $snappy->generateFromHtml(
                 array(
@@ -1340,8 +1365,6 @@ class QuoteRequestManager
             $message->attach(new \Swift_Attachment(file_get_contents($filenameMissionSheet), $downloadedFileName,
                 'application/pdf'));
 
-            $messages[] = $message;
-
             $quoteRequestLinesByAgency = [];
             $agenciesById = [];
             if (count($quoteRequest->getQuoteRequestLines())) {
@@ -1359,23 +1382,23 @@ class QuoteRequestManager
                     $agency = $agenciesById[$agencyId];
                     if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
 
-                        $rcptTo = $agency->getDestinationEmailMission();
-                        $message = new Swift_Message();
-                        $message
-                            ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
-                                array(), 'messages', strtolower($locale)))
-                            ->setFrom($from)
-                            ->setTo($rcptTo)
-                            ->setBody(
-                                $this->container->get('templating')->render(
-                                    'public/emails/generatedMissionSheetEmail.html.twig',
-                                    array(
-                                        'quoteRequest' => $quoteRequest,
-                                        'locale' => strtolower($locale)
-                                    )
-                                ),
-                                'text/html'
-                            );
+//                        $rcptTo = $agency->getDestinationEmailMission();
+//                        $message = new Swift_Message();
+//                        $message
+//                            ->setSubject($this->translator->trans('Commercial.GeneratedMissionSheetEmail.Object',
+//                                array(), 'messages', strtolower($locale)))
+//                            ->setFrom($from)
+//                            ->setTo($rcptTo)
+//                            ->setBody(
+//                                $this->container->get('templating')->render(
+//                                    'public/emails/generatedMissionSheetEmail.html.twig',
+//                                    array(
+//                                        'quoteRequest' => $quoteRequest,
+//                                        'locale' => strtolower($locale)
+//                                    )
+//                                ),
+//                                'text/html'
+//                            );
 
                         $dir = $templateDir . '/exploitation';
                         $actualFilename = $pdfTmpFolder . '/exploitation/' . md5(uniqid('', true)) . '.pdf';
@@ -1435,7 +1458,6 @@ class QuoteRequestManager
 //                        exit;
 
 
-
                         $downloadedFileName = 'FM';
                         $downloadedFileName .= ' ' . $today->format('o');
                         $downloadedFileName .= ' ' . $today->format('m');
@@ -1457,19 +1479,13 @@ class QuoteRequestManager
 
                         $message->attach(new \Swift_Attachment(file_get_contents($actualFilename), $downloadedFileName,
                             'application/pdf'));
-
-                        $messages[] = $message;
                     }
                 }
             }
 
             $return = true;
-            if (count($messages)) {
-                foreach ($messages as $m) {
-                    if (!$this->container->get('mailer')->send($m)) {
-                        $return = false;
-                    }
-                }
+            if (!$this->container->get('mailer')->send($message)) {
+                $return = false;
             }
 
             return $return;

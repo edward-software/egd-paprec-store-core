@@ -101,6 +101,16 @@ class FollowUpController extends AbstractController
         $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
             $paginator, $rowPrefix);
 
+
+        // Reformatage de certaines données
+        $tmp = [];
+        foreach ($dt['data'] as $data) {
+            $line = $data;
+            $line['status'] = $this->translator->trans('Commercial.FollowUp.Status.' . $line['status']);
+            $tmp[] = $line;
+        }
+        $dt['data'] = $tmp;
+
         $return['recordsTotal'] = $dt['recordsTotal'];
         $return['recordsFiltered'] = $dt['recordsTotal'];
         $return['data'] = $dt['data'];

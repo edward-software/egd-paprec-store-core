@@ -102,6 +102,20 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Agency.PhoneNumber'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.phoneNumber, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.phoneNumber) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Agency.FaxNumber'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form.faxNumber, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form.faxNumber) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Agency.Template.Template'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form.template, {'attr': {'class': 'form-control'}}) }}

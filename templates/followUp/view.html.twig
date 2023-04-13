@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content_title %}
-  {{ 'Commercial.FollowUp.Agencies'|trans }}
+  {{ 'Commercial.FollowUp.FollowUps'|trans }}
 {% endblock %}
 
 {% block main_content %}
@@ -106,7 +106,7 @@
                 <div class="form-group row">
                   <label class="col-md-4 col-form-label">{{ 'Commercial.FollowUp.Status.Status'|trans }}</label>
                   <label class="col-form-label col-md-8">
-                    {{ followUp.status }}
+                    {{ ('Commercial.FollowUp.Status.'~followUp.status)|trans }}
                   </label>
                 </div>
                 <div class="form-group row">

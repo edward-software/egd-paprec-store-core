@@ -8,7 +8,7 @@ Commercial:
         Validate: Valider la feuille de mission
         View: Vue de la feuille de mission
         Add: Ajouter une feuille de mission
-        Edit: Editer une feuille de mission
+        Edit: Modifier une feuille de mission
         Remove: Supprimer
         List: Feuilles de mission
         ContractType:
@@ -36,12 +36,12 @@ Commercial:
         FollowUps: Suivis
         View: Vue du suivi
         Add: Ajouter un suivi
-        Edit: Editer un suivi
+        Edit: Modifier un suivi
         Remove: Supprimer
         List: Suivis
         Information: Information du suivi
         Content: Contenu
-        Date: Date
+        Date: Date effective du contact
         Email:
             Title: Relance des suivis
         Status:
@@ -70,7 +70,7 @@ Commercial:
         Settings: Paramètrages
         List: Paramètrages
         Add: Ajout d'un paramètre
-        Edit: Edition du paramètre
+        Edit: Modifier le paramètre
         Remove: Supprimer
         View: Vue du paramètre
         KeyName:
@@ -130,7 +130,7 @@ Commercial:
         AddLine: Ajouter un produit
         Confirm-send-quote: Êtes-vous sûr de vouloir envoyer le devis au client ?
         Confirm-send-contract: Êtes-vous sûr de vouloir envoyer le contrat au client ?
-        Edit: Edition du devis
+        Edit: Modifier le devis
         REGULAR: Régulier
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
@@ -143,7 +143,7 @@ Commercial:
             Add: Ajouter un suivi
         MissionSheet:
             Add: Ajouter une feuille de mission
-            Edit: Edition de la feuille de mission
+            Edit: Modifier la feuille de mission
             SendPdf: Envoyer le pdf de la feuille de mission
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
@@ -153,7 +153,7 @@ Commercial:
         Success:
             generatedQuoteSent: Le devis a bien été généré et envoyé au client.
             generatedContractSent: Le contrat a bien été généré et envoyé au client.
-            generatedMissionSheetSent: La feuille de mission a bien été généré et envoyé au commercial en charge ainsi qu'à(aux) agence(s).
+            generatedMissionSheetSent: La feuille de mission a bien été généré et envoyé au commercial en charge ainsi qu'à son agence.
             newUserInChargeWarned: Un mail a été envoyé au nouveau commercial en charge
         Locale: Langue
         Number: Numéro offre
@@ -354,8 +354,8 @@ Commercial:
             Number: N°Offre
             Date-creation: Date offre
             TotalAmount: CA
-            Last-follow-up: Dernier suivi
-            Last-update: Depuis
+            Last-follow-up: Date suivi
+            Last-update: Dernier suivi
         Agency:
             BusinessName: Raison sociale
         FollowUp:

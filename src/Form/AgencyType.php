@@ -26,6 +26,8 @@ class AgencyType extends AbstractType
             ->add('destinationEmailMission', TextType::class)
             ->add('legalInfoTemplate', TextareaType::class)
             ->add('entityName', TextType::class)
+            ->add('phoneNumber', TextType::class)
+            ->add('faxNumber', TextType::class)
             ->add('name', TextType::class, array(
                 "required" => true
             ))
