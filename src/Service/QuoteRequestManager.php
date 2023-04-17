@@ -761,7 +761,6 @@ class QuoteRequestManager
         }
     }
 
-
     /**
      * Envoie un mail au commercial associé lui indiquant la nouvelle demande de devis créée
      * @throws Exception
@@ -855,7 +854,6 @@ class QuoteRequestManager
 
         return $reference;
     }
-
 
     /**
      * Envoi de l'offre généré au client
@@ -1501,8 +1499,6 @@ class QuoteRequestManager
             throw new Exception($e->getMessage(), $e->getCode());
         }
     }
-
-
 
     /**
      * Génère la feuille de mission

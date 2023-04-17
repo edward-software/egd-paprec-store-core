@@ -141,11 +141,8 @@ class ProductManager
      * Utilisée dans le calcul du montant d'un Cart et dans le calcul du montant d'une ligne ProductQuoteLine
      * Si le calcul est modifiée, il faudra donc le modifier uniquement ici
      *
-     * @param PostalCode $pC
-     * @param Product $product
-     * @param $qtty
+     * @param QuoteRequestLine $quoteRequestLine
      * @return float|int
-     * @throws Exception
      */
     public function calculatePrice(QuoteRequestLine $quoteRequestLine)
     {
@@ -154,24 +151,19 @@ class ProductManager
         $frequencyIntervalValue = 1;
         if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
             $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
-            $frequencyInterval = $quoteRequestLine->getFrequencyInterval();
+            $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
             if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
                 $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
             }
         }
 
-        return
-                (($quoteRequestLine->getEditableRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate()) * $quoteRequestLine->getQuantity())
-                + (
-                (($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate()))
-                + (
-                    (($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate()))
-                + (($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()))
-                )
-                * $quoteRequestLine->getQuantity()
-                )
-            * ($frequencyIntervalValue);
+        $editableRentalUnitPrice = (($quoteRequestLine->getEditableRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate()) * $quoteRequestLine->getQuantity());
+        $editableTransportUnitPrice = (($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate()));
+        $editableTreatmentUnitPrice = (($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate()));
+        $editableTraceabilityUnitPrice = (($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()));
+        $quantity = $quoteRequestLine->getQuantity();
 
+        return ($editableRentalUnitPrice + $editableTransportUnitPrice + $editableTreatmentUnitPrice + $editableTraceabilityUnitPrice) * $quantity * $frequencyIntervalValue;;
     }
 
     /**

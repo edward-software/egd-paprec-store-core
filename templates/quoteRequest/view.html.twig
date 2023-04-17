@@ -514,16 +514,6 @@
                                                     0
                                                 {% else %}
                                                     {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-                                                    {#                                                    #}{# <span class="small color-darkgray">({{ ((quoteRequestLine.editableRentalUnitPrice - quoteRequestLine.rentalUnitPrice) / quoteRequestLine.rentalUnitPrice * 100 * 100)|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
-                                                    {#                                                    {% set percentageRental = (quoteRequest.overallDiscount + (quoteRequestLine.editableRentalUnitPrice - quoteRequestLine.rentalUnitPrice) / quoteRequestLine.rentalUnitPrice * 100 * 100) %} #}
-                                                    {#                                                    {% set colorRental = null %} #}
-                                                    {#                                                    {% if percentageRental == 0 %} #}
-                                                    {#                                                        {% set colorRental = 'black' %} #}
-                                                    {#                                                    {% elseif percentageRental > 0 %} #}
-                                                    {#                                                        {% set colorRental = 'green' %} #}
-                                                    {#                                                    {% elseif percentageRental < 0 %} #}
-                                                    {#                                                        {% set colorRental = 'red' %} #}
-                                                    {#                                                    {% endif %} #}
                                                     <span class="small"
                                                           style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
@@ -533,17 +523,6 @@
                                                     0
                                                 {% else %}
                                                     {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
-                                                    {#                                                    {% set percentageTransport = (quoteRequest.overallDiscount + (quoteRequestLine.editableTransportUnitPrice - quoteRequestLine.transportUnitPrice) / quoteRequestLine.transportUnitPrice * 100 * 100) %} #}
-                                                    {#                                                    {% set colorTransport = null %} #}
-                                                    {#                                                    {% if percentageTransport == 0 %} #}
-                                                    {#                                                        {% set colorTransport = 'black' %} #}
-                                                    {#                                                    {% elseif percentageTransport > 0 %} #}
-                                                    {#                                                        {% set colorTransport = 'green' %} #}
-                                                    {#                                                    {% elseif percentageTransport < 0 %} #}
-                                                    {#                                                        {% set colorTransport = 'red' %} #}
-                                                    {#                                                    {% endif %} #}
-                                                    {#                                                    <span class="small" #}
-                                                    {#                                                          style="color: {{ colorTransport }}">({{ percentageTransport|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
                                                     <span class="small"
                                                           style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                                 {% endif %}
