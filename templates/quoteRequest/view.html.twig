@@ -62,6 +62,12 @@
                                class="btn btn-sm btn-secondary"><i
                                         class="fa fa-xs fa-paper-plane"></i> {{ 'Commercial.QuoteRequest.MissionSheet.SendPdf'| trans({}, "messages", app.request.locale) }}
                             </a>
+
+                            <a id="downloadGeneratedQuoteButton"
+                               href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
+                               class="btn btn-sm btn-secondary"><i
+                                        class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Download'|trans }}
+                            </a>
                             {% endif %}
                         {% endif %}
                         <a href="{{ path("paprec_quote_request_follow_up_add", {id: quoteRequest.id}) }}"

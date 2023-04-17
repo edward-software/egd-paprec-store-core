@@ -945,10 +945,15 @@ class QuoteRequestManager
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
 
-            $rcptTo = $quoteRequest->getEmail();
+            $rcptTo = [];
+            $rcptTo[] = $quoteRequest->getEmail();
 
             if ($rcptTo == null || $rcptTo == '') {
                 return false;
+            }
+
+            if($quoteRequest->getUserInCharge()){
+                $rcptTo[] = $quoteRequest->getUserInCharge()->getEmail();
             }
 
             $localeFilename = 'FR';
@@ -1489,6 +1494,138 @@ class QuoteRequestManager
             }
 
             return $return;
+
+        } catch (ORMException $e) {
+            throw new Exception('unableToGenerateProductQuote', 500);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+
+
+    /**
+     * Génère la feuille de mission
+     *
+     * @param QuoteRequest $quoteRequest
+     * @param MissionSheet $missionSheet
+     * @return bool|string
+     * @throws Exception
+     */
+    public function generateMissionSheetPDF(QuoteRequest $quoteRequest, MissionSheet $missionSheet, $locale)
+    {
+        try {
+
+            $pdfTmpFolder = $this->container->getParameter('paprec.data_tmp_directory');
+
+            if (!is_dir($pdfTmpFolder)) {
+                if (!mkdir($pdfTmpFolder, 0755, true) && !is_dir($pdfTmpFolder)) {
+                    throw new \RuntimeException(sprintf('Directory "%s" was not created', $pdfTmpFolder));
+                }
+            }
+
+            $pdfTmpFolder .= '/' . 'missionSheet';
+            $filenameMissionSheet = $pdfTmpFolder . '/' . md5(uniqid('', true)) . '.pdf';
+
+            $today = new \DateTime();
+
+            $snappy = new Pdf($_ENV['WKHTMLTOPDF_PATH']);
+            $snappy->setOption('zoom', 0.78);
+
+            $templateDir = 'public/PDF/missionSheet';
+
+            $snappy->setOption('header-html',
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
+            $snappy->setOption('footer-html',
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
+
+            if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
+                return false;
+            }
+
+            $pdfs = [];
+            /**
+             * On génère la page CREATION
+             */
+            $pdfs[] = $this->container->get('templating')->render(
+                $templateDir . '/printMissionSheet.html.twig',
+                array(
+                    'quoteRequest' => $quoteRequest,
+                    'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                    'missionSheet' => $missionSheet,
+                    'date' => $today,
+                    'locale' => $locale
+                )
+            );
+
+            $quoteRequestLinesByAgency = [];
+            $agenciesById = [];
+            if (count($quoteRequest->getQuoteRequestLines())) {
+                foreach ($quoteRequest->getQuoteRequestLines() as $qRL) {
+                    if ($qRL->getAgency()) {
+                        if (!array_key_exists($qRL->getAgency()->getId(), $quoteRequestLinesByAgency)) {
+                            $quoteRequestLinesByAgency[$qRL->getAgency()->getId()] = [];
+                            $agenciesById[$qRL->getAgency()->getId()] = $qRL->getAgency();
+                        }
+                        $quoteRequestLinesByAgency[$qRL->getAgency()->getId()][] = $qRL;
+                    }
+                }
+
+                foreach ($quoteRequestLinesByAgency as $agencyId => $quoteRequestLines) {
+                    $agency = $agenciesById[$agencyId];
+                    if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
+                        $dir = $templateDir . '/exploitation';
+                        $actualFilename = $pdfTmpFolder . '/exploitation/' . md5(uniqid('', true)) . '.pdf';
+
+                        $sheetName = '';
+                        $pdfExploitName = 'Exploitation';
+                        $logoName = '';
+                        if ($agency->getTemplate() === 'LCB') {
+                            $sheetName = 'Exploitation LCB';
+                            $logoName = 'logo-lcb.jpg';
+                        } elseif ($agency->getTemplate() === 'CFS') {
+                            $sheetName = 'Exploitation CFS';
+                            $logoName = 'logo-confidentialys.jpg';
+                        } elseif ($agency->getTemplate() === 'LPP') {
+                            $sheetName = 'Navette LPP';
+                            $pdfExploitName = 'Navette';
+                            $logoName = 'logo-lpp.png';
+                        } elseif ($agency->getTemplate() === 'PAPREC') {
+                            $sheetName = 'Navette IDF';
+                            $pdfExploitName = 'Navette';
+                            $logoName = 'logo-paprec.png';
+                        } elseif ($agency->getTemplate() === 'IN_SITU') {
+                            $sheetName = 'Navette In Situ';
+                            $pdfExploitName = 'Navette';
+                            $logoName = 'logo-insitu.png';
+                        }
+
+                        $pdfs[] = $this->container->get('templating')->render(
+                            $dir . '/printMissionSheet.html.twig',
+                            array(
+                                'quoteRequest' => $quoteRequest,
+                                'logoName' => $logoName,
+                                'sheetName' => $sheetName,
+                                'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                                'missionSheet' => $missionSheet,
+                                'date' => $today,
+                                'locale' => $locale
+                            )
+                        );
+                    }
+                }
+            }
+
+            $snappy->generateFromHtml(
+                $pdfs,
+                $filenameMissionSheet
+            );
+
+            if (!file_exists($filenameMissionSheet)) {
+                return false;
+            }
+
+            return $filenameMissionSheet;
 
         } catch (ORMException $e) {
             throw new Exception('unableToGenerateProductQuote', 500);

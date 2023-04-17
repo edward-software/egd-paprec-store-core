@@ -984,6 +984,10 @@ class QuoteRequestController extends AbstractController
         if ($quoteRequest->getPostalCode()) {
             $sendContract = $this->quoteRequestManager->sendGeneratedContractEmail($quoteRequest);
             if ($sendContract) {
+
+                $quoteRequest->setQuoteStatus('CONTRACT_SENT');
+                $this->em->flush();
+
                 $this->get('session')->getFlashBag()->add('success', 'generatedContractSent');
             } else {
                 $this->get('session')->getFlashBag()->add('error', 'generatedContractNotSent');
@@ -1530,18 +1534,31 @@ class QuoteRequestController extends AbstractController
 
         $locale = 'fr';
 
-        $wasSent = $this->quoteRequestManager->sendGenerateMissionSheetPDF($quoteRequest,
-            $quoteRequest->getMissionSheet(),
-            $locale);
-        if ($wasSent) {
-            $this->get('session')->getFlashBag()->add('success', 'generatedMissionSheetSent');
+        $fileName = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(), $locale);
+
+        // This should return the file to the browser as response
+        $response = new BinaryFileResponse($fileName);
+
+        // To generate a file download, you need the mimetype of the file
+        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
+
+        // Set the mimetype with the guesser or manually
+        if ($mimeTypeGuesser->isSupported()) {
+            // Guess the mimetype of the file according to the extension of the file
+            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($fileName));
         } else {
-            $this->get('session')->getFlashBag()->add('error', 'generatedMissionSheetNotSent');
+            // Set the mimetype of the file manually, in this case for a text file is text/plain
+            $response->headers->set('Content-Type', 'application/pdf');
         }
 
-        return $this->redirectToRoute('paprec_quote_request_view', [
-            'id' => $quoteRequest->getId()
-        ]);
+        // Set content disposition inline of the file
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
+                array(), 'messages', $locale) . '-' . $quoteRequest->getBusinessName() . '.pdf'
+        );
+
+        return $response;
 
     }
 }
