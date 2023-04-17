@@ -146,48 +146,67 @@
                                             {{ form_errors(form.isMultisite) }}
                                         </div>
                                     </div>
-                                    <div class="form-group">
+
+                                    <div class="form-group address-content">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.Address'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.address, {'attr': {'class': 'form-control address-field'}}) }}
+                                            {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field'}}) }}
                                             {{ form_errors(form.address) }}
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.PostalCode'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.postalCode, {'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete') }}) }}
+                                            {{ form_widget(form.postalCode, {'id': 'postalCodeField', 'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete') }}) }}
                                             {{ form_errors(form.postalCode) }}
                                         </div>
                                     </div>
+
                                     <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label>
+{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label>#}
                                         <div class="form-content">
-                                            {{ form_widget(form.city, {'attr': {'class': 'form-control address-field'}}) }}
+                                            {{ form_widget(form.city, {'id': 'cityField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.city) }}
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <div class="form-content">
+                                            {{ form_widget(form.postalCodeString, {'id': 'postalCodeStringField', 'attr': {'class': 'form-control', 'hidden': true}}) }}
+                                            {{ form_errors(form.postalCodeString) }}
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.BillingAddress'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.billingAddress, {'attr': {'class': 'form-control address-field '}}) }}
+                                            {{ form_widget(form.billingAddress, {'id': 'billingAddressAutocomplete', 'attr': {'class': 'form-control address-field'}}) }}
                                             {{ form_errors(form.billingAddress) }}
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.billingPostalCode, {'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete')}}) }}
+                                            {{ form_widget(form.billingPostalCode, {'id': 'billingPostalCodeField', 'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete')}}) }}
                                             {{ form_errors(form.billingPostalCode) }}
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>
+{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>#}
                                         <div class="form-content">
-                                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control address-field '}}) }}
+                                            {{ form_widget(form.billingCity, {'id': 'billingCityField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.billingCity) }}
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <div class="form-content">
+                                            {{ form_widget(form.billingPostalCodeString, {'id': 'billingPostalCodeStringField', 'attr': {'class': 'form-control', 'hidden': true}}) }}
+                                            {{ form_errors(form.billingPostalCodeString) }}
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.Comment'|trans }}</label>
                                         <div class="form-content">
@@ -329,9 +348,104 @@
 {% endblock %}
 
 {% block javascripts %}
-
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ google_places_secret_key }}"></script>
     <script>
         $(function () {
+            google.maps.event.addDomListener(window, 'load', function () {
+                var element = document.getElementById('addressAutocomplete');
+
+                if (element) {
+                    var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
+                    autocomplete.setComponentRestrictions({
+                        country: ["fr"],
+                    });
+                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+
+                        var place = this.getPlace();
+
+                        for (var i in place.address_components) {
+                            var component = place.address_components[i];
+                            var componentType = component.types[0];
+
+                            switch (componentType) {
+                                case 'postal_code': {
+                                    $('#postalCodeStringField').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'street_number': {
+                                    $('#addressAutocomplete').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'locality': {
+                                    $('#cityField').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'route': {
+                                    var text = $('#addressAutocomplete').val();
+
+                                    text += ' ' + component.long_name;
+
+                                    $('#addressAutocomplete').val(text);
+                                    break;
+                                }
+                            }
+                        }
+
+                    });
+                }
+            });
+
+            google.maps.event.addDomListener(window, 'load', function () {
+                var element = document.getElementById('billingAddressAutocomplete');
+
+                if (element) {
+                    var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
+                    autocomplete.setComponentRestrictions({
+                        country: ["fr"],
+                    });
+                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+
+                        var place = this.getPlace();
+
+                        for (var i in place.address_components) {
+                            var component = place.address_components[i];
+
+                            var componentType = component.types[0];
+
+                            switch (componentType) {
+                                case 'postal_code': {
+                                    $('#billingPostalCodeStringField').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'street_number': {
+                                    $('#billingAddressAutocomplete').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'locality': {
+                                    $('#billingCityField').val(component.long_name);
+                                    break;
+                                }
+
+                                case 'route': {
+                                    var text = $('#billingAddressAutocomplete').val();
+
+                                    text += ' ' + component.long_name;
+
+                                    $('#billingAddressAutocomplete').val(text);
+                                    break;
+                                }
+                            }
+                        }
+
+                    });
+                }
+            });
 
             // you may need to change this code if you are not using Bootstrap Datepicker
             $('.ponctual-date-datepicker').datepicker({
@@ -340,16 +454,14 @@
                 maxDate: "+1M"
             });
 
-
-            $('#paprec_catalogbundle_quote_request_postalCode').autocomplete({
-                source: '' + $('#paprec_catalogbundle_quote_request_postalCode').data('url'),
+            $('#postalCodeField').autocomplete({
+                source: '' + $('#postalCodeField').data('url'),
                 minLength: 1
             })
 
             $('.commercial-quoteRequest-save-button').on('click', function () {
                 $('#commercialQuoteRequestForm').submit();
             });
-
 
             $('.commercial-quoteRequest-cancel-button').on('click', function () {
 

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\QuoteRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -66,7 +67,6 @@ class QuoteRequestPublicType extends AbstractType
                 'data' => '150',
                 'required' => true
             ))
-
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('email', TextType::class)
@@ -109,9 +109,16 @@ class QuoteRequestPublicType extends AbstractType
             ))
             ->add('billingCity', TextType::class)
             ->add('comment', TextareaType::class, array('required' => false))
-        ->add('signatoryFirstName1', TextType::class)
-        ->add('signatoryLastName1', TextType::class)
-        ->add('signatoryTitle1', TextType::class);
+            ->add('signatoryFirstName1', TextType::class)
+            ->add('signatoryLastName1', TextType::class)
+            ->add('signatoryTitle1', TextType::class)
+            ->add('postalCodeString', HiddenType::class, [
+                'mapped' => false
+            ])
+            ->add('billingPostalCodeString', HiddenType::class, [
+                'mapped' => false
+            ])
+        ;
 
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);

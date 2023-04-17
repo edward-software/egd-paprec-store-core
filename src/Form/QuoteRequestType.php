@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,7 +52,7 @@ class QuoteRequestType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'General.' . $choiceValue;
                 },
-                'data' => 'M',
+                'data' => $options['civility'],
                 'expanded' => true,
                 'required' => true
             ))
@@ -94,13 +95,13 @@ class QuoteRequestType extends AbstractType
                 'invalid_message' => 'Public.Contact.PostalCodeError',
                 'required' => true
             ))
-            ->add('city', TextType::class)
+            ->add('city', HiddenType::class)
             ->add('billingAddress', TextType::class)
             ->add('billingPostalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError',
                 'required' => true
             ))
-            ->add('billingCity', TextType::class)
+            ->add('billingCity', HiddenType::class)
             ->add('comment', TextareaType::class)
             ->add('quoteStatus', ChoiceType::class, array(
                 "choices" => $options['status'],
@@ -113,12 +114,12 @@ class QuoteRequestType extends AbstractType
             ->add('annualBudget')
             ->add('catalog', ChoiceType::class, array(
                 'required' => true,
+                'data' => $options['catalog'],
                 'choices' => array(
                     'REGULAR' => 'REGULAR',
                     'PONCTUAL' => 'PONCTUAL',
                     'MATERIAL' => 'MATERIAL',
                 ),
-                'empty_data' => 'REGULAR',
                 "choice_label" => function ($choiceValue, $key, $value) {
                     $choiceValue = strtoupper($choiceValue);
                     return 'Commercial.QuoteRequest.Catalog.' . $choiceValue;
@@ -169,7 +170,16 @@ class QuoteRequestType extends AbstractType
             ))
             ->add('serviceEndDate', DateType::class, array(
                 'widget' => 'single_text'
-            ));
+            ))
+            ->add('postalCodeString', HiddenType::class, [
+                'data' => $options['postalCodeString'],
+                'mapped' => false
+            ])
+            ->add('billingPostalCodeString', HiddenType::class, [
+                'data' => $options['billingPostalCodeString'],
+                'mapped' => false
+            ])
+        ;
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
 //        $builder->get('billingPostalCode')
@@ -194,7 +204,11 @@ class QuoteRequestType extends AbstractType
             'locales' => null,
             'staff' => null,
             'access' => null,
-            'floorNumber' => null
+            'floorNumber' => null,
+            'catalog' => null,
+            'civility' => null,
+            'postalCodeString' => null,
+            'billingPostalCodeString' => null
         ));
     }
 

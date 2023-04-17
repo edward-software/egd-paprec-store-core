@@ -510,32 +510,47 @@ class QuoteRequestController extends AbstractController
             'locales' => $locales,
             'access' => $access,
             'staff' => $staff,
-            'floorNumber' => $floorNumber
+            'floorNumber' => $floorNumber,
+            'catalog' => 'REGULAR',
+            'civility' => 'M'
         ));
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
 
             $quoteRequest = $form->getData();
 
-            $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
-            $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
-
-            $quoteRequest->setOrigin('BO');
-            $quoteRequest->setUserCreation($user);
-
-            $reference = $this->quoteRequestManager->generateReference($quoteRequest);
-            $quoteRequest->setReference($reference);
+            $postalCodeString = $form->get('postalCodeString')->getData();
+            $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
 
-            $this->em->persist($quoteRequest);
-            $this->em->flush();
+            if ($quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+            }
 
-            return $this->redirectToRoute('paprec_quote_request_view', array(
-                'id' => $quoteRequest->getId()
-            ));
+            if ($quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
+                $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+            }
 
+            if ($form->isValid()) {
+                $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
+                $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
+
+                $quoteRequest->setOrigin('BO');
+                $quoteRequest->setUserCreation($user);
+
+                $reference = $this->quoteRequestManager->generateReference($quoteRequest);
+                $quoteRequest->setReference($reference);
+
+                $this->em->persist($quoteRequest);
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_quote_request_view', array(
+                    'id' => $quoteRequest->getId()
+                ));
+
+            }
         }
 
         return $this->render('quoteRequest/add.html.twig', array(
@@ -588,48 +603,67 @@ class QuoteRequestController extends AbstractController
             'locales' => $locales,
             'access' => $access,
             'staff' => $staff,
-            'floorNumber' => $floorNumber
+            'floorNumber' => $floorNumber,
+            'catalog' => $quoteRequest->getCatalog(),
+            'civility' => $quoteRequest->getCivility(),
+            'postalCodeString' => $quoteRequest->getPostalCode()->getCode(),
+            'billingPostalCodeString' => $quoteRequest->getBillingPostalCode()
         ));
 
         $savedCommercial = $quoteRequest->getUserInCharge();
 
         $form->handleRequest($request);
 
-//        if ($form->isSubmitted() && $form->isValid()) {
         if ($form->isSubmitted()) {
+
             $quoteRequest = $form->getData();
 
-            $overallDiscount = $quoteRequest->getOverallDiscount();
-            $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
+            $postalCodeString = $form->get('postalCodeString')->getData();
+            $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
-            if ($quoteRequest->getQuoteRequestLines()) {
-                foreach ($quoteRequest->getQuoteRequestLines() as $line) {
-                    $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false,
-                        $overallDiscount);
+            if ($quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+            }
+
+            if ($quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
+                $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+            }
+
+            if ($form->isValid()) {
+                $quoteRequest = $form->getData();
+
+                $overallDiscount = $quoteRequest->getOverallDiscount();
+                $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
+
+                if ($quoteRequest->getQuoteRequestLines()) {
+                    foreach ($quoteRequest->getQuoteRequestLines() as $line) {
+                        $this->quoteRequestManager->editLine($quoteRequest, $line, $user, false, false,
+                            $overallDiscount);
+                    }
                 }
+                $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
+                $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
+
+                $quoteRequest->setDateUpdate(new \DateTime());
+                $quoteRequest->setUserUpdate($user);
+
+                /**
+                 * Si le commercial en charge a changé, alors on envoie un mail au nouveau commercial
+                 */
+                if ($quoteRequest->getUserInCharge() && ((!$savedCommercial && $quoteRequest->getUserInCharge())
+                        || ($savedCommercial && $savedCommercial->getId() !== $quoteRequest->getUserInCharge()->getId()))) {
+                    $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
+                    $this->get('session')->getFlashBag()->add('success', 'newUserInChargeWarned');
+                }
+
+
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_quote_request_view', array(
+                    'id' => $quoteRequest->getId()
+                ));
+
             }
-            $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
-            $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
-
-            $quoteRequest->setDateUpdate(new \DateTime());
-            $quoteRequest->setUserUpdate($user);
-
-            /**
-             * Si le commercial en charge a changé, alors on envoie un mail au nouveau commercial
-             */
-            if ($quoteRequest->getUserInCharge() && ((!$savedCommercial && $quoteRequest->getUserInCharge())
-                    || ($savedCommercial && $savedCommercial->getId() !== $quoteRequest->getUserInCharge()->getId()))) {
-                $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
-                $this->get('session')->getFlashBag()->add('success', 'newUserInChargeWarned');
-            }
-
-
-            $this->em->flush();
-
-            return $this->redirectToRoute('paprec_quote_request_view', array(
-                'id' => $quoteRequest->getId()
-            ));
-
         }
 
         return $this->render('quoteRequest/edit.html.twig', array(

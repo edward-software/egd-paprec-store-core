@@ -15,6 +15,7 @@ use App\Service\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -250,89 +251,97 @@ class SubscriptionController extends AbstractController
          * TODO problème avec la clé du captcha
          */
 //        if ($form->isSubmitted() && $form->isValid() && $this->captchaVerify($request->get('g-recaptcha-response'))) {
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
-            $quoteRequest->setQuoteStatus('QUOTE_CREATED');
-            $quoteRequest->setOrigin('SHOP');
-            $quoteRequest->setLocale($locale);
-            $quoteRequest->setCatalog($cart->getType());
-            $quoteRequest->setPonctualDate($cart->getPonctualDate());
-            $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
-            /**
-             * Set Signatory if isSameSignatory
-             */
-            if ($quoteRequest->getIsSameSignatory()) {
-                $quoteRequest->setSignatoryLastName1($quoteRequest->getLastName());
-                $quoteRequest->setSignatoryFirstName1($quoteRequest->getFirstName());
-                $quoteRequest->setSignatoryTitle1($quoteRequest->getCivility());
+
+            $postalCodeString = $form->get('postalCodeString')->getData();
+
+            if ($quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
             }
 
-            /**
-             * Set BillingAddress if isSameAddress
-             */
-            if ($quoteRequest->getIsSameAddress() && !$quoteRequest->getIsMultisite()) {
-                $quoteRequest->setBillingAddress($quoteRequest->getAddress());
-                $quoteRequest->setBillingPostalCode($quoteRequest->getPostalCode()->getCode());
-                $quoteRequest->setBillingCity($quoteRequest->getPostalCode()->getCity());
-            }
+            if ($form->isValid()) {
+                $quoteRequest->setQuoteStatus('QUOTE_CREATED');
+                $quoteRequest->setOrigin('SHOP');
+                $quoteRequest->setLocale($locale);
+                $quoteRequest->setCatalog($cart->getType());
+                $quoteRequest->setPonctualDate($cart->getPonctualDate());
+                $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
+                /**
+                 * Set Signatory if isSameSignatory
+                 */
+                if ($quoteRequest->getIsSameSignatory()) {
+                    $quoteRequest->setSignatoryLastName1($quoteRequest->getLastName());
+                    $quoteRequest->setSignatoryFirstName1($quoteRequest->getFirstName());
+                    $quoteRequest->setSignatoryTitle1($quoteRequest->getCivility());
+                }
 
-            if ($cart->getOtherNeeds() && count($cart->getOtherNeeds())) {
-                foreach ($cart->getOtherNeeds() as $otherNeed) {
-                    if (strtolower($otherNeed->getLanguage()) === strtolower($locale)) {
-                        $quoteRequest->addOtherNeed($otherNeed);
-                        $otherNeed->addQuoteRequest($quoteRequest);
+                /**
+                 * Set BillingAddress if isSameAddress
+                 */
+                if ($quoteRequest->getIsSameAddress() && !$quoteRequest->getIsMultisite()) {
+                    $quoteRequest->setBillingAddress($quoteRequest->getAddress());
+                    $quoteRequest->setBillingPostalCode($quoteRequest->getPostalCode()->getCode());
+                    $quoteRequest->setBillingCity($quoteRequest->getPostalCode()->getCity());
+                }
+
+                if ($cart->getOtherNeeds() && count($cart->getOtherNeeds())) {
+                    foreach ($cart->getOtherNeeds() as $otherNeed) {
+                        if (strtolower($otherNeed->getLanguage()) === strtolower($locale)) {
+                            $quoteRequest->addOtherNeed($otherNeed);
+                            $otherNeed->addQuoteRequest($quoteRequest);
+                        }
                     }
                 }
-            }
 
-            $reference = $this->quoteRequestManager->generateReference($quoteRequest);
-            $quoteRequest->setReference($reference);
-
-
-            if ($quoteRequest->getIsMultisite()) {
-                $quoteRequest->setUserInCharge(null);
-            } else {
-                $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
-                $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
-            }
-
-            $this->em->persist($quoteRequest);
+                $reference = $this->quoteRequestManager->generateReference($quoteRequest);
+                $quoteRequest->setReference($reference);
 
 
-            /**
-             * On récupère tous les produits ajoutés au Cart
-             */
-            if ($cart->getContent() !== null) {
-                foreach ($cart->getContent() as $item) {
-                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'],
-                        $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
+                if ($quoteRequest->getIsMultisite()) {
+                    $quoteRequest->setUserInCharge(null);
+                } else {
+                    $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+                    $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
                 }
-            }
-            $this->em->flush();
 
-            /**
-             * On envoie le mail de confirmation à l'utilisateur
-             */
-            $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
+                $this->em->persist($quoteRequest);
 
-            /**
-             * On envoie le mail de confirmation au commercial en charge (qui est donc lié au code postal)
-             */
-            $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
 
-            if (strtoupper($quoteRequest->getCatalog()) === 'PONCTUAL') {
-                return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
-                    'locale' => $locale,
-                    'cartUuid' => $cart->getId(),
-                    'quoteRequestId' => $quoteRequest->getId()
-                ));
-            } else {
-                return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
-                    'locale' => $locale,
-                    'cartUuid' => $cart->getId(),
-                    'quoteRequestId' => $quoteRequest->getId()
-                ));
-            }
+                /**
+                 * On récupère tous les produits ajoutés au Cart
+                 */
+                if ($cart->getContent() !== null) {
+                    foreach ($cart->getContent() as $item) {
+                        $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'],
+                            $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
+                    }
+                }
+                $this->em->flush();
+
+                /**
+                 * On envoie le mail de confirmation à l'utilisateur
+                 */
+                $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
+
+                /**
+                 * On envoie le mail de confirmation au commercial en charge (qui est donc lié au code postal)
+                 */
+                $sendNewRequestEmail = $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
+
+                if (strtoupper($quoteRequest->getCatalog()) === 'PONCTUAL') {
+                    return $this->redirectToRoute('paprec_public_confirm_ponctuel_index', array(
+                        'locale' => $locale,
+                        'cartUuid' => $cart->getId(),
+                        'quoteRequestId' => $quoteRequest->getId()
+                    ));
+                } else {
+                    return $this->redirectToRoute('paprec_public_confirm_regulier_index', array(
+                        'locale' => $locale,
+                        'cartUuid' => $cart->getId(),
+                        'quoteRequestId' => $quoteRequest->getId()
+                    ));
+                }
 
 
 //            if ($sendConfirmEmail && $sendNewRequestEmail) {
@@ -350,6 +359,7 @@ class SubscriptionController extends AbstractController
 //                    ));
 //                }
 //            }
+            }
         }
 
         return $this->render('public/contact.html.twig', array(
