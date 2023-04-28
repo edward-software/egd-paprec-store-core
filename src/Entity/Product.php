@@ -107,7 +107,7 @@ class Product
      *
      * @ORM\Column(name="treatmentUnitPrice", type="integer", nullable=true)
      * @Assert\Regex(
-     *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
+     *     pattern="/^-?\d{1,6}((\.|\,)\d{1,2})?$/",
      *     match=true,
      *     message="la valeur doit être un nombre entre 0 et 999 999,99 ('.' autorisé)"
      * )
@@ -197,7 +197,6 @@ class Product
      * @var int
      *
      * @ORM\Column(name="materialUnitPrice", type="integer", nullable=true)
-     * @Assert\NotBlank()
      * @Assert\Regex(
      *     pattern="/^\d{1,6}((\.|\,)\d{1,2})?$/",
      *     match=true,

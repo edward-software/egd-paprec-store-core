@@ -137,6 +137,13 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @ORM\Column(name="civility", type="string", length=10, nullable=true)
+     */
+    private $civility;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="lastName", type="string", length=255, nullable=true)
      */
     private $lastName;
@@ -667,6 +674,30 @@ class User implements UserInterface
     {
         $this->agency = $agency;
         return $this;
+    }
+
+    /**
+     * Set civility.
+     *
+     * @param string|null $civility
+     *
+     * @return User
+     */
+    public function setCivility($civility = null)
+    {
+        $this->civility = $civility;
+
+        return $this;
+    }
+
+    /**
+     * Get civility.
+     *
+     * @return string|null
+     */
+    public function getCivility()
+    {
+        return $this->civility;
     }
 
 }

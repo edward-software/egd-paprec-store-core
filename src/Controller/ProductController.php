@@ -347,7 +347,8 @@ class ProductController extends AbstractController
         $productLabel = new ProductLabel();
 
         $form1 = $this->createForm(ProductType::class, $product, array(
-            'transportTypes' => $transportTypes
+            'transportTypes' => $transportTypes,
+            'defaultFrequencyTimes' => '5'
         ));
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,
@@ -487,6 +488,7 @@ class ProductController extends AbstractController
 
         $form1 = $this->createForm(ProductType::class, $product, array(
             'transportTypes' => $transportTypes,
+            'defaultFrequencyTimes' => $product->getFrequencyTimes()
         ));
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,

@@ -103,7 +103,8 @@ class ProductType extends AbstractType
                 ),
                 'expanded' => false,
                 'multiple' => false,
-                'required' => true
+                'required' => true,
+                'data' => $options['defaultFrequencyTimes']
             ))
             ->add('frequencyInterval', ChoiceType::class, array(
                 'choices' => array(
@@ -162,6 +163,7 @@ class ProductType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Product::class,
             'transportTypes' => null,
+            'defaultFrequencyTimes' => null
         ));
     }
 

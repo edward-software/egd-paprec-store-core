@@ -76,14 +76,14 @@ Catalog:
         TransportRate: Variable Transport
         CbrRegTransportRate: Coef. transport CBR régulier
         CbrPonctTransportRate: Coef. transport CBR ponctuel
-        VlPlCfsRegTransportRate: Coef. transport VL/PL CFS régulier
-        VlPlCfsPonctTransportRate: Coef. transport VL/PL CFS ponctuel
-        VlPlTransportRate: Coef. transport fourgon VL mutualisé
+        VlPlCfsRegTransportRate: Coef. transport PL régulier
+        VlPlCfsPonctTransportRate: Coef. transport PL ponctuel
+        VlPlTransportRate: Coef. transport VL régulier
         BomTransportRate: Coef. transport BOM
-        PlPonctTransportRate: Coef. trasnport ponctuel PL
+        PlPonctTransportRate: Coef. Ampliroll/semi
         LivraisonTransportRate: Coef. transport Livraison
         TreatmentRate: Coef. traitement
-        TraceabilityRate: Coef. traçabilité
+        TraceabilityRate: Coef. Matériel Additionnel
         UserInCharge: Commercial en charge
         DisabledUser: (Compte non actif)
         DeletedUser: (Compte supprimé)
@@ -146,7 +146,7 @@ Catalog:
         RentalUnitPrice: PU location
         TransportUnitPrice: PU Transport
         TreatmentUnitPrice: PU Traitement
-        TraceabilityUnitPrice: PU Traçabilité
+        TraceabilityUnitPrice: PU Matériel Additionnel
 
     ProductLabel:
         Add: Ajouter une traduction

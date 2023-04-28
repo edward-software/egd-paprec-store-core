@@ -155,9 +155,11 @@ Public:
         BreadcrumbTitle: Confirmation de la demande
         Title: Félicitations !
         Message-1: Votre demande de devis a bien été prise en compte.
-        Message-2: Un mail récapitulant votre demande vient de vous êtes adressé.
-        Message-3: va prendre contact avec vous.
-        Message-4: Nous restons à votre disposition . A très bientôt !!!
+        Message-2: Un mail récapitulant votre demande vient de vous être adressée.
+        Message-3: Votre interlocuteur dédié,
+        Message-5: va prendre contact avec vous dans les 24 heures.
+        Message-6: Son contact complet figure dans un mail qui vient de vous être adressé avec le rappel de votre besoin.
+        Message-4: Nous restons à votre disposition. A très bientôt !!!
         Message: Vous devriez recevoir un e-mail de confirmation, cette opération peut prendre plusieurs minutes. Si vous ne recevez pas la confirmation, vérifiez dans votre dossier à spam, sinon contactez notre
         TechnicalService: service technique
         BreadcrumbContent: Confirmation de la demande

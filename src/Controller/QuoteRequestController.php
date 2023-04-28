@@ -462,11 +462,14 @@ class QuoteRequestController extends AbstractController
             }
         }
 
+        $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
+
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
             'hasContract' => $hasContract,
             'isAbleToSendContractEmail' => $isAbleToSendContractEmail,
-            'formAddQuoteRequestFile' => $formAddQuoteRequestFile->createView()
+            'formAddQuoteRequestFile' => $formAddQuoteRequestFile->createView(),
+            'monthlyCoefficientValues' => $monthlyCoefficientValues
         ));
     }
 
@@ -1183,6 +1186,7 @@ class QuoteRequestController extends AbstractController
     public function addMissionSheetAction(Request $request, QuoteRequest $quoteRequest)
     {
         $user = $this->getUser();
+        $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
 
         $agencies = $this->getDoctrine()->getManager()->getRepository(Agency::class)->findBy([
             'deleted' => null
@@ -1225,12 +1229,12 @@ class QuoteRequestController extends AbstractController
 
             $errors = [];
             if (isset($contractType) && strtoupper($contractType) === 'MODIFICATION') {
-                if (!$mnemonicNumber) {
-                    $errors['mnemonicNumber'] = array(
-                        'code' => 400,
-                        'message' => 'La valeur ne doit pas être nulle'
-                    );
-                }
+//                if (!$mnemonicNumber) {
+//                    $errors['mnemonicNumber'] = array(
+//                        'code' => 400,
+//                        'message' => 'La valeur ne doit pas être nulle'
+//                    );
+//                }
                 if (!$contractNumber) {
                     $errors['contractNumber'] = array(
                         'code' => 400,
@@ -1247,15 +1251,16 @@ class QuoteRequestController extends AbstractController
                     $form->get('contractNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
                 }
 
-                if ($errors['mnemonicNumber']) {
-                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
-                }
+//                if ($errors['mnemonicNumber']) {
+//                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+//                }
 
                 return $this->render('quoteRequest/missionSheet/add.html.twig', array(
                     'form' => $form->createView(),
                     'quoteRequest' => $quoteRequest,
                     'errors' => $errors,
-                    'agencies' => $agencies
+                    'agencies' => $agencies,
+                    'monthlyCoefficientValues' => $monthlyCoefficientValues
                 ));
             }
 
@@ -1268,7 +1273,7 @@ class QuoteRequestController extends AbstractController
                 $missionSheet->setStatus('NOT_VALIDATED');
 
                 if (strtoupper($missionSheet->getContractType()) === 'CREATION') {
-                    $missionSheet->setMnemonicNumber(null);
+//                    $missionSheet->setMnemonicNumber(null);
                     $missionSheet->setContractNumber(null);
                 }
 
@@ -1292,7 +1297,8 @@ class QuoteRequestController extends AbstractController
                 $this->em->flush();
 
                 return $this->redirectToRoute('paprec_quote_request_view', array(
-                    'id' => $quoteRequest->getId()
+                    'id' => $quoteRequest->getId(),
+                    'monthlyCoefficientValues' => $monthlyCoefficientValues
                 ));
 
             }
@@ -1301,7 +1307,8 @@ class QuoteRequestController extends AbstractController
         return $this->render('quoteRequest/missionSheet/add.html.twig', array(
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
-            'agencies' => $agencies
+            'agencies' => $agencies,
+            'monthlyCoefficientValues' => $monthlyCoefficientValues
         ));
     }
 
@@ -1312,7 +1319,7 @@ class QuoteRequestController extends AbstractController
     public function editMissionSheetAction(Request $request, QuoteRequest $quoteRequest, $missionSheetId)
     {
         $missionSheet = $this->quoteRequestManager->getMissionSheet($missionSheetId, true);
-
+        $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
         $user = $this->getUser();
 
         $agencies = $this->getDoctrine()->getManager()->getRepository(Agency::class)->findBy([
@@ -1349,12 +1356,12 @@ class QuoteRequestController extends AbstractController
 
             $errors = [];
             if (isset($contractType) && strtoupper($contractType) === 'MODIFICATION') {
-                if (!$mnemonicNumber) {
-                    $errors['mnemonicNumber'] = array(
-                        'code' => 400,
-                        'message' => 'La valeur ne doit pas être nulle'
-                    );
-                }
+//                if (!$mnemonicNumber) {
+//                    $errors['mnemonicNumber'] = array(
+//                        'code' => 400,
+//                        'message' => 'La valeur ne doit pas être nulle'
+//                    );
+//                }
                 if (!$contractNumber) {
                     $errors['contractNumber'] = array(
                         'code' => 400,
@@ -1371,16 +1378,17 @@ class QuoteRequestController extends AbstractController
                     $form->get('contractNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
                 }
 
-                if ($errors['mnemonicNumber']) {
-                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
-                }
+//                if ($errors['mnemonicNumber']) {
+//                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+//                }
 
                 return $this->render('quoteRequest/missionSheet/edit.html.twig', array(
                     'form' => $form->createView(),
                     'quoteRequest' => $quoteRequest,
                     'missionSheet' => $missionSheet,
                     'errors' => $errors,
-                    'agencies' => $agencies
+                    'agencies' => $agencies,
+                    'monthlyCoefficientValues' => $monthlyCoefficientValues
                 ));
             }
 
@@ -1393,7 +1401,7 @@ class QuoteRequestController extends AbstractController
                 $missionSheet->setStatus('NOT_VALIDATED');
 
                 if (strtoupper($missionSheet->getContractType()) === 'CREATION') {
-                    $missionSheet->setMnemonicNumber(null);
+//                    $missionSheet->setMnemonicNumber(null);
                     $missionSheet->setContractNumber(null);
                 }
 
@@ -1415,7 +1423,8 @@ class QuoteRequestController extends AbstractController
                 $this->em->flush();
 
                 return $this->redirectToRoute('paprec_quote_request_view', array(
-                    'id' => $quoteRequest->getId()
+                    'id' => $quoteRequest->getId(),
+                    'monthlyCoefficientValues' => $monthlyCoefficientValues
                 ));
 
             }
@@ -1425,7 +1434,8 @@ class QuoteRequestController extends AbstractController
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
             'missionSheet' => $missionSheet,
-            'agencies' => $agencies
+            'agencies' => $agencies,
+            'monthlyCoefficientValues' => $monthlyCoefficientValues
         ));
     }
 

@@ -46,7 +46,9 @@
                                         {{ form_errors(form.contractType) }}
                                     </div>
                                 </div>
-                                <div class="form-group col-md-4 mnemonic-number-input" style="display: none;">
+                                <div class="form-group col-md-4 mnemonic-number-input"
+{#                                     style="display: none;"#}
+                                >
                                     <div class="form-label">{{ 'Commercial.MissionSheet.MnemonicNumber'|trans }}</div>
                                     <div class="form-content{% if form_errors(form.mnemonicNumber) %} has-error{% endif %}">
                                         {{ form_widget(form.mnemonicNumber, {'attr': {'class': 'form-control'}}) }}
@@ -162,7 +164,11 @@
                                         {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
                                             0
                                         {% else %}
-                                            {{ (((quoteRequestLine.rentalRate / 1000000000000000) * (quoteRequestLine.editableRentalUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                            {{ (
+                                            quoteRequestLine.quantity *
+                                            (quoteRequestLine.rentalRate / 1000000000000000) *
+                                            (quoteRequestLine.editableRentalUnitPrice)
+                                            )|formatAmount('EUR', app.request.locale) }}
                                             <span class="small"
                                                   style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                         {% endif %}
@@ -171,7 +177,11 @@
                                         {% if quoteRequestLine.editableTransportUnitPrice == 0 %}
                                             0
                                         {% else %}
-                                            {{ (((quoteRequestLine.transportRate / 1000000000000000) * (quoteRequestLine.editableTransportUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                            {{ (
+                                            (monthlyCoefficientValues[quoteRequestLine.frequencyInterval|lower]) *
+                                            (quoteRequestLine.transportRate / 1000000000000000) *
+                                            (quoteRequestLine.editableTransportUnitPrice)
+                                            )|formatAmount('EUR', app.request.locale) }}
                                             <span class="small"
                                                   style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                         {% endif %}
@@ -189,7 +199,11 @@
                                         {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
                                             0
                                         {% else %}
-                                            {{ (((quoteRequestLine.treatmentRate / 1000000000000000) * (quoteRequestLine.editableTreatmentUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                            {{ (
+                                            quoteRequestLine.quantity *
+                                            (quoteRequestLine.treatmentRate / 1000000000000000) *
+                                            (quoteRequestLine.editableTreatmentUnitPrice)
+                                            )|formatAmount('EUR', app.request.locale) }}
                                             <span class="small"
                                                   style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                         {% endif %}
@@ -198,7 +212,11 @@
                                         {% if quoteRequestLine.editableTraceabilityUnitPrice == 0 %}
                                             0
                                         {% else %}
-                                            {{ (((quoteRequestLine.traceabilityRate / 1000000000000000) * (quoteRequestLine.editableTraceabilityUnitPrice)))|formatAmount('EUR', app.request.locale) }}
+                                            {{ (
+                                            (quoteRequestLine.quantity - 1) *
+                                            (quoteRequestLine.traceabilityRate / 1000000000000000) *
+                                            (quoteRequestLine.editableTraceabilityUnitPrice)
+                                            )|formatAmount('EUR', app.request.locale) }}
                                             <span class="small"
                                                   style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                         {% endif %}
@@ -259,28 +277,28 @@
         $(function () {
 
             if ($('.contract-type-input').val() === 'MODIFICATION') {
-                $('.mnemonic-number-input').css('display', 'block');
+                // $('.mnemonic-number-input').css('display', 'block');
                 $('.contract-number-input').css('display', 'block');
-                $('.mnemonic-number-input input').attr('required', 'true');
+                // $('.mnemonic-number-input input').attr('required', 'true');
                 $('.contract-number-input input').attr('required', 'true');
             } else {
-                $('.mnemonic-number-input').css('display', 'none');
+                // $('.mnemonic-number-input').css('display', 'none');
                 $('.contract-number-input').css('display', 'none');
-                $('.mnemonic-number-input input').attr('required', 'false');
+                // $('.mnemonic-number-input input').attr('required', 'false');
                 $('.contract-number-input input').attr('required', 'false');
             }
 
 
             $('.contract-type-input').on('change', function () {
                 if ($(this).val() === 'MODIFICATION') {
-                    $('.mnemonic-number-input').css('display', 'block');
+                    // $('.mnemonic-number-input').css('display', 'block');
                     $('.contract-number-input').css('display', 'block');
-                    $('.mnemonic-number-input input').attr('required', 'true');
+                    // $('.mnemonic-number-input input').attr('required', 'true');
                     $('.contract-number-input input').attr('required', 'true');
                 } else {
-                    $('.mnemonic-number-input').css('display', 'none');
+                    // $('.mnemonic-number-input').css('display', 'none');
                     $('.contract-number-input').css('display', 'none');
-                    $('.mnemonic-number-input input').attr('required', 'false');
+                    // $('.mnemonic-number-input input').attr('required', 'false');
                     $('.contract-number-input input').attr('required', 'false');
                 }
             });

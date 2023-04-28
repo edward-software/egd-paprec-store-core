@@ -57,7 +57,8 @@ class MissionSheet
     /**
      * @var string
      *
-     * @ORM\Column(name="mnemonicNumber", type="string", length=255, nullable=true)
+     * @ORM\Column(name="mnemonicNumber", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $mnemonicNumber;
 

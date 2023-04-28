@@ -157,13 +157,41 @@ class ProductManager
             }
         }
 
-        $editableRentalUnitPrice = (($quoteRequestLine->getEditableRentalUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate()) * $quoteRequestLine->getQuantity());
-        $editableTransportUnitPrice = (($quoteRequestLine->getEditableTransportUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate()));
-        $editableTreatmentUnitPrice = (($quoteRequestLine->getEditableTreatmentUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate()));
-        $editableTraceabilityUnitPrice = (($quoteRequestLine->getEditableTraceabilityUnitPrice() == 0) ? 0 : $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate()));
         $quantity = $quoteRequestLine->getQuantity();
 
-        return ($editableRentalUnitPrice + $editableTransportUnitPrice + $editableTreatmentUnitPrice + $editableTraceabilityUnitPrice) * $quantity * $frequencyIntervalValue;;
+        /**
+         * Nombre de Produit * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
+         */
+        $editableRentalUnitPrice = 0;
+        if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
+            $editableRentalUnitPrice = $quantity * $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
+        }
+
+        /**
+         * Transport : Nombre de passage par mois (fonction de la fréquence) * Cout Transport * Coefficient Transport précisé dans le champ produit du CP
+         */
+        $editableTransportUnitPrice = 0;
+        if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+            $editableTransportUnitPrice = $frequencyIntervalValue * $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+        }
+
+        /**
+         * Traitement :  (Nombre de Produit) * (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+         */
+        $editableTreatmentUnitPrice = 0;
+        if ($quoteRequestLine->getEditableTreatmentUnitPrice() !== null) {
+            $editableTreatmentUnitPrice = $quantity * $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+        }
+
+        /**
+         * Matériel Additionnel :  (Nombre de Produit -1) * (PU Matériel Additionnel du Produit * Coefficient Matériel Additionnel du CP de l’adresse à collecter)
+         */
+        $editableTraceabilityUnitPrice = 0;
+        if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
+            $editableTraceabilityUnitPrice = ($quantity - 1) * $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+        }
+
+        return $editableRentalUnitPrice + $editableTransportUnitPrice + $editableTreatmentUnitPrice + $editableTraceabilityUnitPrice;
     }
 
     /**

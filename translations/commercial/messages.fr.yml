@@ -140,12 +140,12 @@ Commercial:
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
         FollowUp:
-            Add: Ajouter un suivi
+            Add: Ajouter
         MissionSheet:
-            Add: Ajouter une feuille de mission
-            Edit: Modifier la feuille de mission
-            SendPdf: Envoyer le pdf de la feuille de mission
-            Download: Télécharger la feuille de mission
+            Add: Ajouter
+            Edit: Modifier
+            SendPdf: Envoyer le pdf
+            Download: Télécharger
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
@@ -232,7 +232,7 @@ Commercial:
         RentalUnitPrice: PU location
         TransportUnitPrice: PU Transport
         TreatmentUnitPrice: PU Traitement
-        TraceabilityUnitPrice: PU Traçabilité
+        TraceabilityUnitPrice: PU Matériel Additionnel
         BasePrice: PU de base
         RentalPrice: Location
         Transport: Transport/passage
@@ -240,12 +240,13 @@ Commercial:
         PassingFrequency: Fréquence de passage
         RegularPassingFrequency: Fréquence de passage (si régulier)
         Treatment: Traitement
-        Traceability: Traçabilité/contenant
+        Traceability: Matériel Additionnel
         TreatmentCollect: PU Collecte et traitement/contenant
         Access: Accès
         TotalAmount: Montant total
         SelectAgency: Choisir l'agence
         Add: Ajout d'un produit
+        Edit: Modification d'un produit
         Product: Produit
 
     GeneralEmail:
