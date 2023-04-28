@@ -290,7 +290,8 @@ class UserController extends AbstractController
 
         $form = $this->createForm(UserType::class, $user, [
             'roles' => $roles,
-            'languages' => $languages
+            'languages' => $languages,
+            'civility' => 'M'
         ]);
 
         $form->handleRequest($request);
@@ -344,7 +345,8 @@ class UserController extends AbstractController
 
         $form = $this->createForm(UserEditType::class, $user, [
             'roles' => $roles,
-            'languages' => $languages
+            'languages' => $languages,
+            'civility' => 'M'
         ]);
 
         $form->handleRequest($request);
@@ -388,7 +390,8 @@ class UserController extends AbstractController
         }
 
         $form = $this->createForm(UserMyProfileType::class, $user, [
-            'languages' => $languages
+            'languages' => $languages,
+            'civility' => 'M'
         ]);
 
         $form->handleRequest($request);

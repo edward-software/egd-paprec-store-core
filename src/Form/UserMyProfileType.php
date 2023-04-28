@@ -29,6 +29,18 @@ class UserMyProfileType extends AbstractType
                     'required' => true]
             )
             ->add('companyName', TextType::class)
+            ->add('civility', ChoiceType::class, array(
+                'choices' => array(
+                    'M',
+                    'MME'
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
+                'data' => $options['civility'],
+                'expanded' => true,
+                'required' => true
+            ))
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('nickname', TextType::class)
@@ -71,6 +83,7 @@ class UserMyProfileType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'civility' => null,
             'languages' => null
         ]);
     }
