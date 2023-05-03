@@ -205,6 +205,17 @@ class Product
      */
     private $materialUnitPrice;
 
+    /**
+     * @ORM\Column(name="referenceDate", type="string", length=7, nullable=true)
+     */
+    private $referenceDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="string", length=500, nullable=true)
+     */
+    private $comment;
 
     /**
      * #################################
@@ -251,6 +262,12 @@ class Product
      * @ORM\JoinColumn(name="billingUnitId")
      */
     private $billingUnit;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Setting", inversedBy="products")
+     * @ORM\JoinColumn(name="mercurialId")
+     */
+    private $mercurial;
 
 
     /**
@@ -919,5 +936,57 @@ class Product
     {
         $this->materialUnitPrice = $materialUnitPrice;
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMercurial()
+    {
+        return $this->mercurial;
+    }
+
+    /**
+     * @param mixed $mercurial
+     * @return Product
+     */
+    public function setMercurial($mercurial): self
+    {
+        $this->mercurial = $mercurial;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferenceDate()
+    {
+        return $this->referenceDate;
+    }
+
+    /**
+     * @param mixed $referenceDate
+     * @return Product
+     */
+    public function setReferenceDate($referenceDate): self
+    {
+        $this->referenceDate = $referenceDate;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment(string $comment)
+    {
+        $this->comment = $comment;
     }
 }

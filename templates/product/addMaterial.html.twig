@@ -143,6 +143,30 @@
                                         {{ form_errors(form1.isEnabled) }}
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Mercurial'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.mercurial, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.mercurial) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Reference-date'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.referenceDate, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.referenceDate) }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Comment'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.comment, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.comment) }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

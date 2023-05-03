@@ -5,11 +5,14 @@ namespace App\Form;
 use App\Entity\BillingUnit;
 use App\Entity\Product;
 use App\Entity\Range;
+use App\Entity\Setting;
 use App\Repository\BillingUnitRepository;
 use App\Repository\RangeRepository;
+use App\Repository\SettingRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -152,6 +155,22 @@ class ProductType extends AbstractType
             ))
             ->add('wasteClassification', TextType::class)
             ->add('code', TextType::class)
+            ->add('mercurial', EntityType::class, array(
+                'class' => Setting::class,
+                'query_builder' => function (SettingRepository $er) {
+                    return $er->createQueryBuilder('m')
+                        ->select(array('m'))
+                        ->where('m.deleted IS NULL')
+                        ->andWhere('m.keyName = :keyName')
+                        ->setParameter('keyName', 'PRODUCT_MERCURIAL');
+                },
+                'choice_label' => 'value',
+                'placeholder' => '',
+                'empty_data' => null
+            ))
+            ->add('comment', TextareaType::class)
+            ->add('referenceDate', TextType::class, [
+            ])
         ;
     }
 

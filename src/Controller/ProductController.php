@@ -357,7 +357,6 @@ class ProductController extends AbstractController
 
         $form1->handleRequest($request);
         $form2->handleRequest($request);
-
         if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
 
             $product = $form1->getData();

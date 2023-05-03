@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -77,11 +79,17 @@ class Setting
     private $userUpdate;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="mercurial")
+     */
+    private $products;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->dateCreation = new \DateTime();
+        $this->products = new ArrayCollection();
     }
 
     /**
@@ -219,5 +227,41 @@ class Setting
     {
         $this->value = $value;
         return $this;
+    }
+
+    /**
+     * Add Product.
+     *
+     * @param Product $product
+     *
+     * @return Setting
+     */
+    public function addProduct(Product $product)
+    {
+        $this->products[] = $product;
+
+        return $this;
+    }
+
+    /**
+     * Remove product.
+     *
+     * @param Product $product
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeProduct(Product $product)
+    {
+        return $this->products->removeElement($product);
+    }
+
+    /**
+     * Get products.
+     *
+     * @return Collection
+     */
+    public function getProducts()
+    {
+        return $this->products;
     }
 }

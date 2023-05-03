@@ -112,6 +112,9 @@ Catalog:
         WasteClassification: Qualité
         Code: Code
         BillingUnit: Unité de facturation
+        Mercurial: Mercuriale
+        Reference-date: Mois et année de référence
+        Comment: Commentaire à usage strictement interne d’explication des prix
         MaterialUnitPrice: Prix de Vente €HT/unité
         Catalog:
             Label: Catalogue
