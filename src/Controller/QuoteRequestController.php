@@ -1507,7 +1507,6 @@ class QuoteRequestController extends AbstractController
     }
 
     /**
-     * TODO A FAIRE
      * @Route("/{id}/downloadMissionSheet", name="paprec_quote_request_mission_sheet_download")
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @throws \Exception

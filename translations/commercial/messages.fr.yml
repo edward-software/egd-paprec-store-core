@@ -122,15 +122,19 @@ Commercial:
         SalesmanComment: Commentaire commercial
         AnnualBudget: Budget annuel
         View: Vue du devis
-        Download-quote: Télécharger PDF
+        Download-quote: Télécharger
+        Download-quote-tooltip: "Téléchargez le contrat pour le visualiser et le valider avant envoi au client. Attention, l'envoi du contrat est bien sous votre responsabilité, à vous de procéder à un contrôle attentif. Prix… Adresses… Produits...  !"
         DownloadedQuoteName: Contrat Easy Recyclage
+        Remove-tooltip: "Attention… la suppression d'une Offre est définitive. Est bien cela que vous souhaitez ?"
         Send-quote: Envoyer devis au client
-        Send-contract: Envoyer contrat au client
+        Send-contract: Envoi client
+        Send-contract-tooltip: "Tout est OK ? … attention : toutes les pièces jointes à l'offre et accessibles dans le menu EDITION de l'OFFRE seront ajoutées en pièces jointes à l'envoi du contrat. Est-ce bien cela que vous souhaitez ? Alors Go !"
         ProductsList: Liste des produits
         AddLine: Ajouter un produit
         Confirm-send-quote: Êtes-vous sûr de vouloir envoyer le devis au client ?
         Confirm-send-contract: Êtes-vous sûr de vouloir envoyer le contrat au client ?
-        Edit: Modifier le devis
+        Edit: Modifier l'offre
+        Edit-tooltip: "Réaffectez une offre, adaptez la solution, les prix, les contacts ou les produits pour répondre au besoin de votre client, modifiez l'avancement en fonction de vos échanges, …"
         REGULAR: Régulier
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
@@ -140,12 +144,14 @@ Commercial:
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
         FollowUp:
-            Add: Ajouter
+            Add: Ajouter un suivi
+            Add-tooltip: "Tenez à jour votre portefeuille d'offres selon l'actualité des échanges avec votre client. Une offre avec un suivi récent ne sera pas incluse dans les mails de relances d'offres sans mises à jour que vous recevrez"
         MissionSheet:
-            Add: Ajouter
-            Edit: Modifier
-            SendPdf: Envoyer le pdf
-            Download: Télécharger
+            Add: Ajouter la feuille de mission
+            Add-tooltip: 'Mettons les choses au clair : ce bouton ne sera accessible que quand votre offre sera en position Contrat Signé, ET que vous aurez joint le PDF du contrat signé ! " & "Attention, une FM est définitive… seul vote manager pourra la modifier si besoin. Tout est OK ? Alors Go !'
+            Edit: Modifier la feuille de mission
+            SendPdf: Envoyer la feuille de mission
+            Download: Télécharger la feuille de mission
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.
@@ -183,6 +189,7 @@ Commercial:
     QuoteRequestFile:
         AddTitle: Ajout d'un fichier joint
         BtnAddLabel: Ajouter un fichier
+        BtnAddLabel-tooltip: "Ajouter un fichier (Offre sur mesure, fiche prestation, … Ou Contrat Signé). Attention, tout fichier ajouté sera automatiquement ajouté en pièce jointe au mail automatique qui sera envoyé au client si vous demandez CONTRAT/ENVOI CLIENT."
         MaxSize: '(Taille maximale du fichier : 5Mo)'
         FileListTitle: Liste des fichiers
         FileNameColumn: Nom

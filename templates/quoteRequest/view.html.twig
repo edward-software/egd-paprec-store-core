@@ -33,95 +33,106 @@
                         <i class="fa fa-xs fa-quoteRequest"></i> {{ 'Commercial.QuoteRequest.View'|trans }}
                     </h4>
                     <div class="float-right">
-                        <button class="btn btn-sm btn-primary"
-                                data-target="#uploadQuoteRequestFileModal" data-toggle="modal"
-                                id="openModalUploadQuoteRequestFile"><i
-                                    class="fa fa-file"></i> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
-                        </button>
-                        <a href="javascript:void(0);"
-                           class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i
-                                    class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}
-                        </a>
-                        {% if hasContract and quoteRequest.quoteStatus == 'CONTRACT_SIGNED' %}
-                        <div class="btn-group">
-                            <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
-                                    aria-expanded="false">
-                                Feuille de Mission
-                            </button>
-                            <div class="dropdown-menu">
-                                {% if not quoteRequest.missionSheet %}
-                                    {% if is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_COMMERCIAL_MULTISITES') %}
-                                            <a href="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
-                                               class="dropdown-item"><i
-                                                        class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
-                                            </a>
-                                    {% endif %}
-                                {% else %}
-                                    {% if is_granted('ROLE_MANAGER_COMMERCIAL') %}
-                                        <a href="{{ path("paprec_quote_request_mission_sheet_edit", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}"
-                                           class="dropdown-item"><i
-                                                    class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Edit'| trans({}, "messages", app.request.locale) }}
-                                        </a>
-                                    {% endif %}
-                                    {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
-                                        <a id="commmecialQuoteRequestMissionSheetValidateButton"
-                                           href="javascript:void(0);"
-                                           class="dropdown-item"><i
-                                                    class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
-                                        </a>
-                                    {% endif %}
-                                    {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
-                                        <a href="{{ path("paprec_quote_request_mission_sheet_send", {id: quoteRequest.id}) }}"
-                                           class="dropdown-item"><i
-                                                    class="fa fa-xs fa-paper-plane"></i> {{ 'Commercial.QuoteRequest.MissionSheet.SendPdf'| trans({}, "messages", app.request.locale) }}
-                                        </a>
-                                    {% endif %}
-                                    {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
-                                        <a id="downloadGeneratedQuoteButton"
-                                           href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
-                                           class="dropdown-item"><i
-                                                    class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Download'|trans }}
-                                        </a>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endif %}
 
                         <div class="btn-group">
-                            <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
                                     aria-expanded="false">
-                                Suivi
+                                Offre
                             </button>
                             <div class="dropdown-menu">
+                                <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
+                                   class="dropdown-item"
+                                   data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Edit-tooltip'|trans }}"
+                                ><i class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a>
                                 <a href="{{ path("paprec_quote_request_follow_up_add", {id: quoteRequest.id}) }}"
-                                   class="dropdown-item"><i
-                                            class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.FollowUp.Add'| trans({}, "messages", app.request.locale) }}
+                                   class="dropdown-item"
+                                   data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.FollowUp.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.FollowUp.Add'| trans({}, "messages", app.request.locale) }}
+                                </a>
+                                <a href="javascript:void(0);"
+                                   class="dropdown-item"
+                                   data-tooltip="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequestFile.BtnAddLabel-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                   data-target="#uploadQuoteRequestFileModal"
+                                   data-toggle="modal"
+                                   id="openModalUploadQuoteRequestFile"><i
+                                            class="fa fa-file"></i> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
                                 </a>
                             </div>
                         </div>
 
-                        <div class="btn-group dropleft">
+                        <div class="btn-group">
                             <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
                                     aria-expanded="false">
-                                Devis
+                                Contrat
                             </button>
                             <div class="dropdown-menu">
-                                <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
-                                   class="dropdown-item"><i
-                                            class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a>
                                 {% if quoteRequest.postalCode %}
                                     <a id="downloadGeneratedQuoteButton"
                                        href="{{ path("paprec_quote_request_download", {id: quoteRequest.id}) }}"
-                                       class="dropdown-item"><i
-                                                class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
+                                       class="dropdown-item"
+                                       data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Download-quote-tooltip'|trans }}"
+                                    ><i class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
                                     </a>
                                 {% endif %}
-                                <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
-                                   class="dropdown-item"><i
-                                            class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
+                                <a href="javascript:void(0);"
+                                   class="dropdown-item send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"
+                                   data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Send-contract-tooltip'|trans }}"
+                                ><i class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}</a>
                             </div>
                         </div>
+
+                        {% if hasContract and quoteRequest.quoteStatus == 'CONTRACT_SIGNED' %}
+                            <div class="btn-group">
+                                <button class="btn btn-success btn-sm dropdown-toggle" type="button"
+                                        data-toggle="dropdown"
+                                        aria-expanded="false">
+                                    Lancement
+                                </button>
+                                <div class="dropdown-menu">
+                                    {% if not quoteRequest.missionSheet %}
+                                        {% if is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_COMMERCIAL_MULTISITES') %}
+                                            <a href="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
+                                               class="dropdown-item"
+                                               data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.MissionSheet.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                            ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if is_granted('ROLE_MANAGER_COMMERCIAL') %}
+                                            <a href="{{ path("paprec_quote_request_mission_sheet_edit", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}"
+                                               class="dropdown-item">
+                                                <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Edit'| trans({}, "messages", app.request.locale) }}
+                                            </a>
+                                        {% endif %}
+                                        {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
+                                            <a id="commmecialQuoteRequestMissionSheetValidateButton"
+                                               href="javascript:void(0);"
+                                               class="dropdown-item">
+                                                <i class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
+                                            </a>
+                                        {% endif %}
+                                        {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
+                                            <a href="{{ path("paprec_quote_request_mission_sheet_send", {id: quoteRequest.id}) }}"
+                                               class="dropdown-item">
+                                                <i class="fa fa-xs fa-paper-plane"></i> {{ 'Commercial.QuoteRequest.MissionSheet.SendPdf'| trans({}, "messages", app.request.locale) }}
+                                            </a>
+                                        {% endif %}
+                                        {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
+                                            <a id="downloadGeneratedQuoteButton"
+                                               href="{{ path("paprec_quote_request_mission_sheet_download", {id: quoteRequest.id}) }}"
+                                               class="dropdown-item">
+                                                <i class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Download'|trans }}
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
+                           class="btn btn-sm btn-danger"
+                           data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Remove-tooltip'|trans }}">
+                            <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
 
 
                         {#                        {% if not quoteRequest.missionSheet %} #}
@@ -172,15 +183,15 @@
                         {#                                        class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }} #}
                         {#                            </a> #}
                         {#                        {% endif %} #}
-{#                        <button class="btn btn-sm btn-primary"#}
-{#                                data-target="#uploadQuoteRequestFileModal" data-toggle="modal"#}
-{#                                id="openModalUploadQuoteRequestFile"><i#}
-{#                                    class="fa fa-file"></i> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}#}
-{#                        </button>#}
-{#                        <a href="javascript:void(0);"#}
-{#                           class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i#}
-{#                                    class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}#}
-{#                        </a>#}
+                        {#                        <button class="btn btn-sm btn-primary" #}
+                        {#                                data-target="#uploadQuoteRequestFileModal" data-toggle="modal" #}
+                        {#                                id="openModalUploadQuoteRequestFile"><i #}
+                        {#                                    class="fa fa-file"></i> {{ 'Commercial.QuoteRequestFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }} #}
+                        {#                        </button> #}
+                        {#                        <a href="javascript:void(0);" #}
+                        {#                           class="btn btn-sm btn-success mr-1 send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"><i #}
+                        {#                                    class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }} #}
+                        {#                        </a> #}
                         {#                        <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}" #}
                         {#                           class="btn btn-sm btn-warning"><i #}
                         {#                                    class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a> #}
@@ -805,6 +816,8 @@
 {% block javascripts %}
     <script>
         $(function () {
+
+            $('[data-toggle="tooltip"],[data-tooltip="tooltip"]').tooltip();
 
             $('#followUpsListDatatable').EgdDatatable({
                 url: "{{ path('paprec_quote_request_follow_up_loadList', {'id': quoteRequest.id}) }}",

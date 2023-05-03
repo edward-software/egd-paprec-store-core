@@ -1513,6 +1513,14 @@ class QuoteRequestManager
                 }
             }
 
+            $pdfFilename = $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.NewContractEmail.FileName',
+                    array(), 'messages', strtolower($locale)) . '-' . $quoteRequest->getBusinessName() . '.pdf';
+
+            $pdfFile = $this->generatePDF($quoteRequest, strtolower($locale), true);
+
+            $message->attach(new \Swift_Attachment(file_get_contents($pdfFile), $pdfFilename,
+                'application/pdf'));
+
             $return = true;
             if (!$this->container->get('mailer')->send($message)) {
                 $return = false;

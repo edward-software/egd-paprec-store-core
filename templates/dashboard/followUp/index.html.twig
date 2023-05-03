@@ -88,13 +88,24 @@
                 url: "{{ path('paprec_dashboard_follow_up_loadList') }}",
                 order: [[3, "desc"]],
                 columns: [
-                    {"data": "number"},
+                    {"data": "number", "className": "column-number"},
                     {"data": "businessName"},
                     {"data": "dateCreation"},
                     {"data": "totalAmount", "className": "text-right"},
                     {"data": "followUpDate"},
                     {"data": "followUpLastDate"},
                     {"data": "followUpContent", "width": "40%"}
+                ],
+                formatColumns: [
+                    {
+                        targetClassName: 'column-number',
+                        format: function (line) {
+                            var id = line.id;
+                            var url = '{{ path('paprec_quote_request_view', {id: '0000'}) }}'.replace('0000', id);
+
+                            return '<a href="' + url +'">' + line.number + '</a>';
+                        }
+                    }
                 ]
             });
 
