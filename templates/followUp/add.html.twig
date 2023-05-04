@@ -30,43 +30,75 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="col-md-7">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Commercial.FollowUp.Date'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form.date, {'attr': {'class': 'form-control datepicker'}}) }}
-                                        {{ form_errors(form.date) }}
-                                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
                                 </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Commercial.FollowUp.Status.Status'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form.status) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Commercial.FollowUp.Content'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form.content) }}
-                                    </div>
-                                </div>
-                                {% if quoteRequest is not defined %}
+                                <div class="card-body">
                                     <div class="form-group">
-                                        <div class="form-label">{{ 'Commercial.FollowUp.QuoteRequest.QuoteRequest'|trans }}</div>
+                                        <div class="form-label">{{ 'Commercial.FollowUp.Date'|trans }}</div>
                                         <div class="form-content">
-                                            {{ form_widget(form.quoteRequest, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form.quoteRequest) }}
+                                            {{ form_widget(form.date, {'attr': {'class': 'form-control datepicker'}}) }}
+                                            {{ form_errors(form.date) }}
                                         </div>
                                     </div>
-                                {% endif %}
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'Commercial.FollowUp.Status.Status'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.status) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-label">{{ 'Commercial.FollowUp.Content'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form.content) }}
+                                        </div>
+                                    </div>
+                                    {% if quoteRequest is not defined %}
+                                        <div class="form-group">
+                                            <div class="form-label">{{ 'Commercial.FollowUp.QuoteRequest.QuoteRequest'|trans }}</div>
+                                            <div class="form-content">
+                                                {{ form_widget(form.quoteRequest, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(form.quoteRequest) }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
+                        </div>
+                        <div class="col-md-5">
+                            {% if quoteRequest is defined %}
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title">{{ 'Commercial.QuoteRequest.QuoteRequest'|trans }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <div class="form-label">{{ 'Commercial.QuoteRequest.Date-crea'|trans }}</div>
+                                            <div class="form-content">
+                                                {{ quoteRequest.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-label">{{ 'Commercial.QuoteRequest.Customer'|trans }}</div>
+                                            <div class="form-content">
+                                                {{ quoteRequest.lastName }} {{ quoteRequest.firstName }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-label">{{ 'Commercial.QuoteRequest.TotalAmount'|trans }}</div>
+                                            <div class="form-content">
+                                                {{ quoteRequest.totalAmount|formatAmount('EUR', app.request.locale) }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

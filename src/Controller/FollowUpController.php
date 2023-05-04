@@ -9,6 +9,7 @@ use App\Form\FollowUpFileType;
 use App\Form\FollowUpType;
 use App\Form\QuoteRequestFileType;
 use App\Service\FollowUpManager;
+use App\Service\UserManager;
 use App\Tools\DataTable;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,15 +33,18 @@ class FollowUpController extends AbstractController
     private $em;
     private $translator;
     private $followUpManager;
+    private $userManager;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
-        FollowUpManager $followUpManager
+        FollowUpManager $followUpManager,
+        UserManager $userManager
     ) {
         $this->em = $em;
         $this->translator = $translator;
         $this->followUpManager = $followUpManager;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -158,8 +162,27 @@ class FollowUpController extends AbstractController
             $status[$s] = $s;
         }
 
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $user->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $user->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $user->getRoles(), true);
+        $commercialIds = [];
+
+        if ($isManager) {
+            $commercials = $this->userManager->getCommercialsFromManager($user->getId());
+            if ($commercials && count($commercials)) {
+                foreach ($commercials as $commercial) {
+                    $commercialIds[] = $commercial->getId();
+                }
+            }
+        }
+
         $form = $this->createForm(FollowUpType::class, $followUp, [
-            'status' => $status
+            'status' => $status,
+            'userId' => $user->getId(),
+            'isManager' => $isManager,
+            'isCommercialMultiSite' => $isCommercialMultiSite,
+            'isCommercial' => $isCommercial,
+            'commercialIds' => $commercialIds
         ]);
 
         $form->handleRequest($request);

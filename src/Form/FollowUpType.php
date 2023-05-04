@@ -47,15 +47,47 @@ class FollowUpType extends AbstractType
                     'class' => QuoteRequest::class,
                     'query_builder' => function (EntityRepository $er) {
 
-                        $qb = $er->createQueryBuilder('p')
-                            ->select('p')
-                            ->where('p.deleted is NULL');
+                        $qb = $er->createQueryBuilder('q')
+                            ->select('q')
+                            ->where('q.deleted is NULL');
 
                         if ($this->options['quoteRequestId']) {
                             $qb
-                                ->andWhere('p.id = :quoteRequestId')
+                                ->andWhere('q.id = :quoteRequestId')
                                 ->setParameter('quoteRequestId', $this->options['quoteRequestId']);
                         }
+
+                        /**
+                         * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
+                         */
+                        if ($this->options['isCommercialMultiSite']) {
+                            $qb
+                                ->andWhere('q.isMultisite = true');
+                        }
+                        /**
+                         * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+                         */
+                        if ($this->options['isManager']) {
+                            $commercials = $this->userManager->getCommercialsFromManager($this->options['userId']);
+                            $commercialIds = array();
+                            if ($commercials && count($commercials)) {
+                                foreach ($commercials as $commercial) {
+                                    $commercialIds[] = $commercial->getId();
+                                }
+                            }
+                            $qb
+                                ->andWhere('q.userInCharge IN (:commercialIds)')
+                                ->setParameter('commercialIds', $commercialIds);
+                        }
+                        /**
+                         * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+                         */
+                        if ($this->options['isCommercial']) {
+                            $qb
+                                ->andWhere('q.userInCharge = :userInChargeId')
+                                ->setParameter('userInChargeId', $this->options['userId']);
+                        }
+
 
                         return $qb;
                     },
@@ -75,6 +107,11 @@ class FollowUpType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => FollowUp::class,
             'quoteRequestId' => null,
+            'isCommercialMultiSite' => null,
+            'isManager' => null,
+            'isCommercial' => null,
+            'commercialIds' => null,
+            'userId' => null,
             'status' => null
         ));
     }

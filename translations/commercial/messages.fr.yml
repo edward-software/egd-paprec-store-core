@@ -80,6 +80,7 @@ Commercial:
             PRODUCT_MERCURIAL: Mercuriale
         Value: Valeur
     QuoteRequest:
+        QuoteRequest: Devis
         QuoteRequests: Demandes de devis
         List: Liste des demandes de devis
         Add: Ajout d'un devis
@@ -119,6 +120,7 @@ Commercial:
         Comment: Commentaire
         OverallDiscount: Ajustement prix (+/- en %)
         TollFees: Frais de péages
+        Customer: Client
         CustomerId: Numéro client
         SalesmanComment: Commentaire commercial
         AnnualBudget: Budget annuel

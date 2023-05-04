@@ -307,6 +307,11 @@ class QuoteRequestController extends AbstractController
     public function exportAction(Request $request, $dateStart, $dateEnd, $status)
     {
 
+        $systemUser = $this->getUser();
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $systemUser->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $systemUser->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $systemUser->getRoles(), true);
+
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
@@ -321,6 +326,37 @@ class QuoteRequestController extends AbstractController
             $queryBuilder->andWhere('q.dateCreation BETWEEN :dateStart AND :dateEnd')
                 ->setParameter('dateStart', $dateStart)
                 ->setParameter('dateEnd', $dateEnd);
+        }
+
+        /**
+         * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
+         */
+        if ($isCommercialMultiSite) {
+            $queryBuilder
+                ->andWhere('q.isMultisite = true');
+        }
+        /**
+         * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+         */
+        if ($isManager) {
+            $commercials = $this->userManager->getCommercialsFromManager($systemUser->getId());
+            $commercialIds = array();
+            if ($commercials && count($commercials)) {
+                foreach ($commercials as $commercial) {
+                    $commercialIds[] = $commercial->getId();
+                }
+            }
+            $queryBuilder
+                ->andWhere('q.userInCharge IN (:commercialIds)')
+                ->setParameter('commercialIds', $commercialIds);
+        }
+        /**
+         * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+         */
+        if ($isCommercial) {
+            $queryBuilder
+                ->andWhere('q.userInCharge = :userInChargeId')
+                ->setParameter('userInChargeId', $systemUser->getId());
         }
 
         /** @var QuoteRequest[] $quoteRequests */
