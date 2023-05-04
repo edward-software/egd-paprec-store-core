@@ -42,16 +42,19 @@
                             <div class="dropdown-menu">
                                 <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}"
                                    class="dropdown-item"
-                                   data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Edit-tooltip'|trans }}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="{{ 'Commercial.QuoteRequest.Edit-tooltip'|trans }}"
                                 ><i class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a>
                                 <a href="{{ path("paprec_quote_request_follow_up_add", {id: quoteRequest.id}) }}"
                                    class="dropdown-item"
-                                   data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.FollowUp.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="{{ 'Commercial.QuoteRequest.FollowUp.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
                                 ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.FollowUp.Add'| trans({}, "messages", app.request.locale) }}
                                 </a>
                                 <a href="javascript:void(0);"
                                    class="dropdown-item"
-                                   data-tooltip="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequestFile.BtnAddLabel-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                   data-tooltip="tooltip" data-placement="top"
+                                   title="{{ 'Commercial.QuoteRequestFile.BtnAddLabel-tooltip'| trans({}, "messages", app.request.locale) }}"
                                    data-target="#uploadQuoteRequestFileModal"
                                    data-toggle="modal"
                                    id="openModalUploadQuoteRequestFile"><i
@@ -70,14 +73,17 @@
                                     <a id="downloadGeneratedQuoteButton"
                                        href="{{ path("paprec_quote_request_download", {id: quoteRequest.id}) }}"
                                        class="dropdown-item"
-                                       data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Download-quote-tooltip'|trans }}"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="{{ 'Commercial.QuoteRequest.Download-quote-tooltip'|trans }}"
                                     ><i class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
                                     </a>
                                 {% endif %}
                                 <a href="javascript:void(0);"
                                    class="dropdown-item send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"
-                                   data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Send-contract-tooltip'|trans }}"
-                                ><i class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}</a>
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="{{ 'Commercial.QuoteRequest.Send-contract-tooltip'|trans }}"
+                                ><i class="fa fa-xs fa-envelope"></i> {{ 'Commercial.QuoteRequest.Send-contract'|trans }}
+                                </a>
                             </div>
                         </div>
 
@@ -93,7 +99,8 @@
                                         {% if is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_COMMERCIAL_MULTISITES') %}
                                             <a href="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
                                                class="dropdown-item"
-                                               data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.MissionSheet.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                               data-toggle="tooltip" data-placement="top"
+                                               title="{{ 'Commercial.QuoteRequest.MissionSheet.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
                                             ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
                                             </a>
                                         {% endif %}
@@ -131,7 +138,8 @@
 
                         <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
                            class="btn btn-sm btn-danger"
-                           data-toggle="tooltip" data-placement="top" title="{{ 'Commercial.QuoteRequest.Remove-tooltip'|trans }}">
+                           data-toggle="tooltip" data-placement="top"
+                           title="{{ 'Commercial.QuoteRequest.Remove-tooltip'|trans }}">
                             <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a>
 
 
@@ -650,6 +658,10 @@
                                                 {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
                                                     0
                                                 {% else %}
+                                                    {% if quoteRequestLine.editableTreatmentUnitPrice < 0 %}
+                                                        <i class="fas fa-exclamation-triangle" data-toggle="tooltip" data-placement="top"
+                                                           title="Le prix sera indexé mensuellement à la variation de la mercuriale Mercuriale choisie, référence Mois et Année de Référence"></i>
+                                                    {% endif %}
                                                     {{ (
                                                     quoteRequestLine.quantity *
                                                     (quoteRequestLine.treatmentRate / 1000000000000000) *
