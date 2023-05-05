@@ -96,7 +96,6 @@ class UserType extends AbstractType
                     return $ur->createQueryBuilder('u')
                         ->where('u.deleted IS NULL')
                         ->andWhere('u.roles LIKE \'%ROLE_MANAGER%\'')
-                        ->andWhere('u.enabled = 1')
                         ->orderBy('u.username');
                 }
             ))
