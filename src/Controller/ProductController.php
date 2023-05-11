@@ -6,6 +6,7 @@ use App\Entity\FollowUp;
 use App\Entity\Picture;
 use App\Entity\Product;
 use App\Entity\ProductLabel;
+use App\Entity\Range;
 use App\Form\PictureProductType;
 use App\Form\ProductLabelType;
 use App\Form\ProductMaterialType;
@@ -141,7 +142,7 @@ class ProductController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
             $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
-            if($line['catalog']){
+            if ($line['catalog']) {
                 $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . strtoupper($line['catalog']));
             }
             $tmp[] = $line;
@@ -343,6 +344,31 @@ class ProductController extends AbstractController
             $transportTypes[$transportType] = $transportType;
         }
 
+        $qb = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
+
+        $qb
+            ->select(array('r', 'rL'))
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->where('r.deleted IS NULL')
+            ->andWhere('rL.language = :language')
+            ->orderBy('r.position', 'ASC')
+            ->setParameter('language', 'FR')
+            ->andWhere('r.catalog != :catalog')
+            ->setParameter('catalog', 'MATERIAL');
+        $ranges = $qb->getQuery()->getResult();
+
+        $rangesByCatalog = [];
+        if (is_array($ranges) && count($ranges)) {
+            foreach ($ranges as $range) {
+                if (is_iterable($range->getRangeLabels()) && $range->getRangeLabels()[0]) {
+                    $rangesByCatalog[$range->getCatalog()][] = [
+                        'id' => $range->getId(),
+                        'name' => $range->getRangeLabels()[0]->getName()
+                    ];
+                }
+            }
+        }
+
         $product = new Product();
         $productLabel = new ProductLabel();
 
@@ -388,7 +414,10 @@ class ProductController extends AbstractController
 
         return $this->render('product/add.html.twig', array(
             'form1' => $form1->createView(),
-            'form2' => $form2->createView()
+            'form2' => $form2->createView(),
+            'rangesByCatalog' => $rangesByCatalog,
+            'defaultCatalog' => 'REGULAR',
+            'defaultRangeId' => null
         ));
     }
 
@@ -476,6 +505,31 @@ class ProductController extends AbstractController
             $transportTypes[$transportType] = $transportType;
         }
 
+        $qb = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
+
+        $qb
+            ->select(array('r', 'rL'))
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->where('r.deleted IS NULL')
+            ->andWhere('rL.language = :language')
+            ->orderBy('r.position', 'ASC')
+            ->setParameter('language', 'FR')
+            ->andWhere('r.catalog != :catalog')
+            ->setParameter('catalog', 'MATERIAL');
+        $ranges = $qb->getQuery()->getResult();
+
+        $rangesByCatalog = [];
+        if (is_array($ranges) && count($ranges)) {
+            foreach ($ranges as $range) {
+                if (is_iterable($range->getRangeLabels()) && $range->getRangeLabels()[0]) {
+                    $rangesByCatalog[$range->getCatalog()][] = [
+                        'id' => $range->getId(),
+                        'name' => $range->getRangeLabels()[0]->getName()
+                    ];
+                }
+            }
+        }
+
         $language = $request->getLocale();
         $productLabel = $this->productManager->getProductLabelByProductAndLocale($product, strtoupper($language));
 
@@ -527,7 +581,10 @@ class ProductController extends AbstractController
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),
             'product' => $product,
-            'productLabel' => $productLabel
+            'productLabel' => $productLabel,
+            'rangesByCatalog' => $rangesByCatalog,
+            'defaultCatalog' => $product->getCatalog(),
+            'defaultRangeId' => $product->getRange()->getId()
         ));
     }
 

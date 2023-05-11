@@ -267,6 +267,7 @@ class SubscriptionController extends AbstractController
                 $quoteRequest->setCatalog($cart->getType());
                 $quoteRequest->setPonctualDate($cart->getPonctualDate());
                 $quoteRequest->setNumber($this->quoteRequestManager->generateNumber($quoteRequest));
+                $quoteRequest->setDuration(36);
                 /**
                  * Set Signatory if isSameSignatory
                  */

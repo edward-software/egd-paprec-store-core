@@ -178,7 +178,7 @@
                                             0
                                         {% else %}
                                             {{ (
-                                            (monthlyCoefficientValues[quoteRequestLine.frequencyInterval|lower]) *
+                                            (monthlyCoefficientValues[quoteRequestLine.frequencyInterval|lower]|default(1)) *
                                             (quoteRequestLine.transportRate / 1000000000000000) *
                                             (quoteRequestLine.editableTransportUnitPrice)
                                             )|formatAmount('EUR', app.request.locale) }}

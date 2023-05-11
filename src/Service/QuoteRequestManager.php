@@ -1464,7 +1464,7 @@ class QuoteRequestManager
                                         'quoteRequest' => $quoteRequest,
                                         'logoName' => $logoName,
                                         'sheetName' => $sheetName,
-                                        'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                                        'quoteRequestLines' => $quoteRequestLines,
                                         'missionSheet' => $missionSheet,
                                         'date' => $today,
                                         'locale' => $locale
@@ -1637,7 +1637,7 @@ class QuoteRequestManager
                                 'quoteRequest' => $quoteRequest,
                                 'logoName' => $logoName,
                                 'sheetName' => $sheetName,
-                                'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
+                                'quoteRequestLines' => $quoteRequestLines,
                                 'missionSheet' => $missionSheet,
                                 'date' => $today,
                                 'locale' => $locale

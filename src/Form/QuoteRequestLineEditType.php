@@ -37,7 +37,8 @@ class QuoteRequestLineEditType extends AbstractType
                 "choice_label" => function ($choiceValue, $key, $value) {
                     return 'Commercial.QuoteRequest.' . $choiceValue;
                 },
-                'expanded' => true
+                'expanded' => true,
+                'disabled' => 'disabled'
             ))
             ->add('frequencyTimes', ChoiceType::class, array(
                 'choices' => array(

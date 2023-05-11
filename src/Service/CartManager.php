@@ -211,20 +211,33 @@ class CartManager
         $cart = $this->get($id);
         $qtty = '1';
         $content = $cart->getContent();
+        /**
+         * Si la ligne existe on réutilise sa fréquence sinon on utilise sa fréquence par défaut
+         */
+        $frequencyTimes = 5;
+        $frequencyInterval = 'WEEK';
         if ($content && count($content)) {
             foreach ($content as $key => $prod) {
                 if ($prod['pId'] == $product->getId()) {
                     $qtty = (string)((int)$prod['qtty'] + 1);
                     unset($content[$key]);
+                    $frequencyTimes = (int)$prod['frequencyTimes'];
+                    $frequencyInterval = $prod['frequencyInterval'];
                 }
             }
         }
+
+
+        /**
+         * Si la ligne n'existe pas on utilise la fréquence par défaut fréquence
+         */
+
         $newContent = [
             'pId' => $product->getId(),
             'qtty' => $qtty,
             'frequency' => $product->getFrequency(),
-            'frequencyTimes' => $product->getFrequencyTimes(),
-            'frequencyInterval' => $product->getFrequencyInterval()
+            'frequencyTimes' => $frequencyTimes,
+            'frequencyInterval' => $frequencyInterval
         ];
         $content[] = $newContent;
 

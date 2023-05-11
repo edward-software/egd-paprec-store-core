@@ -179,7 +179,9 @@
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.Mercurial'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
-                                        {{ product.mercurial.value }}
+                                        {% if product.mercurial %}
+                                            {{ product.mercurial.value }}
+                                        {% endif %}
                                     </label>
                                 </div>
                                 <div class="form-group row">

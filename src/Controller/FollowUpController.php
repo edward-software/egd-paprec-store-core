@@ -9,6 +9,7 @@ use App\Form\FollowUpFileType;
 use App\Form\FollowUpType;
 use App\Form\QuoteRequestFileType;
 use App\Service\FollowUpManager;
+use App\Service\NumberManager;
 use App\Service\UserManager;
 use App\Tools\DataTable;
 use DateTime;
@@ -34,17 +35,20 @@ class FollowUpController extends AbstractController
     private $translator;
     private $followUpManager;
     private $userManager;
+    private $numberManager;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         FollowUpManager $followUpManager,
+        NumberManager $numberManager,
         UserManager $userManager
     ) {
         $this->em = $em;
         $this->translator = $translator;
         $this->followUpManager = $followUpManager;
         $this->userManager = $userManager;
+        $this->numberManager = $numberManager;
     }
 
     /**
@@ -75,8 +79,19 @@ class FollowUpController extends AbstractController
         $cols['id'] = array('label' => 'id', 'id' => 'fU.id', 'method' => array('getId'));
         $cols['status'] = array('label' => 'status', 'id' => 'fU.status', 'method' => array('getStatus'));
         $cols['content'] = array('label' => 'content', 'id' => 'fU.content', 'method' => array('getContent'));
-        $cols['quoteRequestOrigin'] = array('label' => 'quoteRequestOrigin', 'id' => 'p.origin', 'method' => array('getQuoteRequest', 'getOrigin'));
-        $cols['quoteRequestNumber'] = array('label' => 'quoteRequestNumber', 'id' => 'p.number', 'method' => array('getQuoteRequest', 'getNumber'));
+        $cols['quoteRequestOrigin'] = array('label' => 'quoteRequestOrigin', 'id' => 'qR.origin', 'method' => array('getQuoteRequest', 'getOrigin'));
+        $cols['quoteRequestNumber'] = array('label' => 'quoteRequestNumber', 'id' => 'qR.number', 'method' => array('getQuoteRequest', 'getNumber'));
+        $cols['quoteRequestId'] = array('label' => 'quoteRequestId', 'id' => 'qR.id', 'method' => array('getQuoteRequest', 'getId'));
+        $cols['quoteRequestDateCreation'] = array(
+            'label' => 'quoteRequestDateCreation',
+            'id' => 'qR.dateCreation',
+            'method' => array('getQuoteRequest', 'getDateCreation'),
+            'filter' => array(array('name' => 'format', 'args' => array('d/m/Y H:i:s')))
+        );
+        $cols['quoteRequestUserInCharge'] = array('label' => 'quoteRequestUserInCharge', 'id' => 'qR.userInCharge', 'method' => array('getQuoteRequest', 'getUserInCharge', '__toString'));
+        $cols['quoteRequestBusinessName'] = array('label' => 'quoteRequestBusinessName', 'id' => 'qR.businessName', 'method' => array('getQuoteRequest', 'getBusinessName'));
+        $cols['quoteRequestTotalAmount'] = array('label' => 'quoteRequestTotalAmount', 'id' => 'qR.totalAmount', 'method' => array('getQuoteRequest', 'getTotalAmount'));
+        $cols['quoteRequestComment'] = array('label' => 'quoteRequestComment', 'id' => 'qR.comment', 'method' => array('getQuoteRequest', 'getComment'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(FollowUp::class)->createQueryBuilder('fU');
 
@@ -111,6 +126,10 @@ class FollowUpController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
             $line['status'] = $this->translator->trans('Commercial.FollowUp.Status.' . $line['status']);
+
+            $line['quoteRequestTotalAmount'] = $this->numberManager->formatAmount($data['quoteRequestTotalAmount'], null,
+                $request->getLocale());
+
             $tmp[] = $line;
         }
         $dt['data'] = $tmp;

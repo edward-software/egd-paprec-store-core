@@ -128,6 +128,7 @@ Commercial:
         Download-quote: Télécharger
         Download-quote-tooltip: "Téléchargez le contrat pour le visualiser et le valider avant envoi au client. Attention, l'envoi du contrat est bien sous votre responsabilité, à vous de procéder à un contrôle attentif. Prix… Adresses… Produits...  !"
         DownloadedQuoteName: Contrat Easy Recyclage
+        DownloadedMissionSheetName: Feuille de mission Easy Recyclage
         Remove-tooltip: "Attention… la suppression d'une Offre est définitive. Est bien cela que vous souhaitez ?"
         Send-quote: Envoyer devis au client
         Send-contract: Envoi client

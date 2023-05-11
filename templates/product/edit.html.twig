@@ -108,7 +108,7 @@
                                 <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Product.Range'|trans }}</div>
                                     <div class="form-content">
-                                        {{ form_widget(form1.range, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form1.range, {'attr': {'class': 'form-control range-field'}}) }}
                                         {{ form_errors(form1.range) }}
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                                 <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Product.Catalog.Label'|trans }}</div>
                                     <div class="form-content">
-                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control catalog-field'}}) }}
                                         {{ form_errors(form1.catalog) }}
                                     </div>
                                 </div>
@@ -283,6 +283,36 @@
             });
             {% endif %}
 
+
+            //Gestion du champs Range qui change selon le catalog
+            var rangesByCatalog = {{ rangesByCatalog|json_encode|raw }};
+            var defaultRangeId = '{{ defaultRangeId }}';
+
+            $(document).ready(function () {
+                if (rangesByCatalog) {
+                    $('.range-field').empty();
+                    $('.range-field').append('<option value=""></option>');
+                    rangesByCatalog['{{ defaultCatalog }}'].forEach(function (element) {
+                        if(defaultRangeId && defaultRangeId == element.id){
+                            $('.range-field').append('<option value= ' + element.id + ' selected>' + element.name + '</option>');
+                        }else{
+                            $('.range-field').append('<option value= ' + element.id + ' >' + element.name + '</option>');
+                        }
+                    });
+                }
+            });
+
+            $('.catalog-field').on('change', function (e) {
+                console.log('t');
+                var catalog = $('.catalog-field input:checked').val();
+                if(rangesByCatalog[catalog]){
+                    $('.range-field').empty();
+                    $('.range-field').append('<option value="" checked></option>');
+                    rangesByCatalog[catalog].forEach(function (element) {
+                        $('.range-field').append('<option value= ' + element.id + ' >' + element.name + '</option>');
+                    });
+                }
+            });
         });
     </script>
 {% endblock %}
