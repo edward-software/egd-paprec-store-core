@@ -91,15 +91,6 @@
                     type: 'open',
                     url: "{{ path('paprec_user_view', {id: '__rowId__'}) }}"
                 },
-                buttons: [
-                    {
-                        label: '{{ "User.User.Send-access"|trans }}',
-                        type: 'ajaxMany',
-                        url: "{{ path("paprec_user_sendAccessMany", {ids: '__rowIds__', json: 1}) }}",
-                        confirmMessage: "{{ 'User.User.Confirm-send-access'|trans|e('js') }}",
-                        className: 'btn-sm'
-                    }
-                ],
                 rowButtons: [
                     {
                         label: "{{ 'General.View'|trans }}",

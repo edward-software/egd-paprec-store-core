@@ -104,6 +104,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.Catalog.Label'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control catalog-field'}}) }}
+                                        {{ form_errors(form1.catalog) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Product.Range'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form1.range, {'attr': {'class': 'form-control range-field'}}) }}
@@ -115,13 +122,6 @@
                                     <div class="form-content">
                                         {{ form_widget(form1.transportType, {'attr': {'class': 'form-control'}}) }}
                                         {{ form_errors(form1.transportType) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.Product.Catalog.Label'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control catalog-field'}}) }}
-                                        {{ form_errors(form1.catalog) }}
                                     </div>
                                 </div>
                                 <div class="form-group">

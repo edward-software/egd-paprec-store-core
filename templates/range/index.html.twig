@@ -73,25 +73,52 @@
                 },
                 buttons: [
                     {
-                        label: '{{ "Catalog.Range.IsEnabled.Disable"|trans }}',
+                        label: '<span data-toggle="tooltip" data-placement="top" title="{{ "Catalog.Range.IsEnabled.Disable-multiple"|trans }}">{{ "Catalog.Range.IsEnabled.Disable"|trans }}</span>',
                         type: 'ajaxMany',
                         url: "{{ path("paprec_range_disableMany", {ids: '__rowIds__', json: 1}) }}",
                         confirmMessage: "{{ 'General.Confirm-disable'|trans|e('js') }}",
-                        className: 'btn-sm'
+                        className: 'btn-sm',
+                        buttons:
+                            {
+                                cancel: {
+                                    label: '{{ 'General.Cancel'|trans|e('js') }}'
+                                },
+                                confirm: {
+                                    label: '{{ 'General.Confirm'|trans|e('js') }}'
+                                }
+                            }
                     },
                     {
-                        label: '{{ "Catalog.Range.IsEnabled.Enable"|trans }}',
+                        label: '<span data-toggle="tooltip" data-placement="top" title="{{ "Catalog.Range.IsEnabled.Enable-multiple"|trans }}">{{ "Catalog.Range.IsEnabled.Enable"|trans }}</span>',
                         type: 'ajaxMany',
                         url: "{{ path("paprec_range_enableMany", {ids: '__rowIds__', json: 1}) }}",
-                        confirmMessage: "{{ 'General.Confirm-disable'|trans|e('js') }}",
-                        className: 'btn-sm'
+                        confirmMessage: "{{ 'General.Confirm-enable'|trans|e('js') }}",
+                        className: 'btn-sm',
+                        buttons:
+                            {
+                                cancel: {
+                                    label: '{{ 'General.Cancel'|trans|e('js') }}'
+                                },
+                                confirm: {
+                                    label: '{{ 'General.Confirm'|trans|e('js') }}'
+                                }
+                            }
                     },
                     {
-                        label: '{{ "General.Remove"|trans }}',
+                        label: '<span data-toggle="tooltip" data-placement="top" title="{{ "General.Remove-multiple"|trans }}">{{ "General.Remove"|trans }}</span>',
                         type: 'ajaxMany',
                         url: "{{ path("paprec_range_removeMany", {ids: '__rowIds__', json: 1}) }}",
                         confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
-                        className: 'btn-sm'
+                        className: 'btn-sm',
+                        buttons:
+                            {
+                                cancel: {
+                                    label: '{{ 'General.Cancel'|trans|e('js') }}'
+                                },
+                                confirm: {
+                                    label: '{{ 'General.Confirm'|trans|e('js') }}'
+                                }
+                            }
                     }
                 ],
                 rowButtons: [

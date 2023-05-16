@@ -4,6 +4,7 @@ General:
     Add:                      Ajouter
     Edit:                     Modifier
     Remove:                   Supprimer
+    Remove-multiple:          Séléctionner une ou plusieurs lignes pour les supprimer
     Validate:                 Valider
     Close:                    Fermer
     View:                     Visualiser

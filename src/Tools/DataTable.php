@@ -111,6 +111,7 @@ class DataTable
                             $queryBuilder->addOrderBy($colId, $order['dir']);
                         }
                     } else {
+//                        dd($cols[$order['column']]['id']);
                         $queryBuilder->addOrderBy($cols[$order['column']]['id'], $order['dir']);
                     }
                 }
@@ -137,7 +138,11 @@ class DataTable
         $pagination = $paginator->paginate(
             $queryBuilder,
             (int)$start,
-            (int)$pageSize
+            (int)$pageSize,
+            [
+                'wrap-queries' => true, // Dans le cas où on a une requête avec un "having" la pagination ne fonctionne pas, il faut mettre ces 2 options pour que ça fonctionne
+                'distinct' => false
+            ]
         );
 
         $recordsTotal = $pagination->getTotalItemCount();

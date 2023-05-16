@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Picture;
+use App\Entity\PostalCode;
+use App\Entity\Product;
 use App\Entity\Range;
 use App\Entity\RangeLabel;
 use App\Form\PictureRangeType;
@@ -80,27 +82,26 @@ class RangeController extends AbstractController
         $columns = $request->get('columns');
         $rowPrefix = $request->get('rowPrefix');
 
-        $cols['id'] = array('label' => 'id', 'id' => 'p.id', 'method' => array('getId'));
+        $cols['id'] = array('label' => 'id', 'id' => 'r.id', 'method' => array('getId'));
         $cols['name'] = array(
             'label' => 'name',
-            'id' => 'pL.name',
+            'id' => 'rL.name',
             'method' => array(array('getRangeLabels', 0), 'getName')
         );
         $cols['catalog'] = array(
             'label' => 'catalog',
-            'id' => 'p.catalog',
+            'id' => 'r.catalog',
             'method' => ['getCatalog']
         );
-        $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
+        $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'r.isEnabled', 'method' => array('getIsEnabled'));
 
 
-        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('p');
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
 
-        $queryBuilder->select(array('p', 'pL'))
-            ->leftJoin('p.rangeLabels', 'pL')
-            ->where('p.deleted IS NULL')
-            ->andWhere('pL.language = :language')
-            ->orderBy('p.position', 'ASC')
+        $queryBuilder->select(array('r', 'rL'))
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->where('r.deleted IS NULL')
+            ->andWhere('rL.language = :language')
             ->setParameter('language', 'FR');
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
@@ -124,7 +125,7 @@ class RangeController extends AbstractController
         foreach ($dt['data'] as $data) {
             $line = $data;
             $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
-            if($line['catalog']){
+            if ($line['catalog']) {
                 $line['catalog'] = $this->translator->trans('Catalog.Product.Catalog.' . strtoupper($line['catalog']));
             }
             $tmp[] = $line;
@@ -423,6 +424,24 @@ class RangeController extends AbstractController
 
         $range->setDeleted(new \DateTime);
         $range->setIsEnabled(false);
+
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Product::class)->createQueryBuilder('p');
+
+        $queryBuilder->select('p')
+            ->leftJoin('p.range', 'r')
+            ->where('p.deleted IS NULL')
+            ->andWhere('r.id = :rangeId')
+            ->setParameter('rangeId', $range->getId());
+
+        $products = $queryBuilder->getQuery()->getResult();
+
+        if (is_array($products) && count($products)) {
+            foreach ($products as $p) {
+                $p->setRange(null);
+            }
+        }
+
         $this->em->flush();
 
         return $this->redirectToRoute('paprec_range_index');
@@ -482,7 +501,9 @@ class RangeController extends AbstractController
             }
             $this->em->flush();
         }
-        return $this->redirectToRoute('paprec_range_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**
@@ -506,7 +527,9 @@ class RangeController extends AbstractController
             }
             $this->em->flush();
         }
-        return $this->redirectToRoute('paprec_range_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

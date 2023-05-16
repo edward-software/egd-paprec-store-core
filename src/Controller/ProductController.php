@@ -94,7 +94,7 @@ class ProductController extends AbstractController
         );
         $cols['range'] = array(
             'label' => 'range',
-            'id' => 'p.range',
+            'id' => 'rL.name',
             'method' => array('getRange', array(array('getRangeLabels', 0), 'getName'))
         );
         $cols['catalog'] = array(
@@ -108,7 +108,6 @@ class ProductController extends AbstractController
             'method' => ['getCatalog']
         );
         $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
-
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Product::class)->createQueryBuilder('p');
 
@@ -734,7 +733,10 @@ class ProductController extends AbstractController
             }
             $this->em->flush();
         }
-        return $this->redirectToRoute('paprec_product_index');
+
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**
@@ -758,7 +760,9 @@ class ProductController extends AbstractController
             }
             $this->em->flush();
         }
-        return $this->redirectToRoute('paprec_product_index');
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 
     /**

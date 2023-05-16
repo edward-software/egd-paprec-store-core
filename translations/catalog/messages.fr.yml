@@ -13,7 +13,7 @@ Catalog:
         LegalInfoTemplate: Informations legales (bas de page)
         DestinationEmailMission: Adresse mail de destination pour les feuilles de mission
         BusinessId: Identification société
-        Address: Adresse l'agence
+        Address: Adresse de l'agence
         City: Ville
         PostalCode: Code postal
         PhoneNumber: Tél.
@@ -131,7 +131,9 @@ Catalog:
             Yes: Oui
             No: Non
             Disable: Désactiver
+            Disable-multiple: Séléctionner une ou plusieurs lignes pour les désactiver
             Enable: Activer
+            Enable-multiple: Séléctionner une ou plusieurs lignes pour les activer
         Picto: Picto
         AddPicture: Ajouter image
         PilotPicture: Logo
@@ -180,7 +182,9 @@ Catalog:
             Yes: Oui
             No: Non
             Disable: Désactiver
+            Disable-multiple: Séléctionner une ou plusieurs lignes pour les désactiver
             Enable: Activer
+            Enable-multiple: Séléctionner une ou plusieurs lignes pour les activer
         Picto: Picto
         AddPicture: Ajouter image
         PilotPicture: Image principale

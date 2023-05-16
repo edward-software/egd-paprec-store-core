@@ -81,7 +81,6 @@ class FollowUpController extends AbstractController
         $cols['content'] = array('label' => 'content', 'id' => 'fU.content', 'method' => array('getContent'));
         $cols['quoteRequestOrigin'] = array('label' => 'quoteRequestOrigin', 'id' => 'qR.origin', 'method' => array('getQuoteRequest', 'getOrigin'));
         $cols['quoteRequestNumber'] = array('label' => 'quoteRequestNumber', 'id' => 'qR.number', 'method' => array('getQuoteRequest', 'getNumber'));
-        $cols['quoteRequestId'] = array('label' => 'quoteRequestId', 'id' => 'qR.id', 'method' => array('getQuoteRequest', 'getId'));
         $cols['quoteRequestDateCreation'] = array(
             'label' => 'quoteRequestDateCreation',
             'id' => 'qR.dateCreation',
@@ -92,11 +91,12 @@ class FollowUpController extends AbstractController
         $cols['quoteRequestBusinessName'] = array('label' => 'quoteRequestBusinessName', 'id' => 'qR.businessName', 'method' => array('getQuoteRequest', 'getBusinessName'));
         $cols['quoteRequestTotalAmount'] = array('label' => 'quoteRequestTotalAmount', 'id' => 'qR.totalAmount', 'method' => array('getQuoteRequest', 'getTotalAmount'));
         $cols['quoteRequestComment'] = array('label' => 'quoteRequestComment', 'id' => 'qR.comment', 'method' => array('getQuoteRequest', 'getComment'));
+        $cols['quoteRequestId'] = array('label' => 'quoteRequestId', 'id' => 'qR.id', 'method' => array('getQuoteRequest', 'getId'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(FollowUp::class)->createQueryBuilder('fU');
 
 
-        $queryBuilder->select(array('fU'))
+        $queryBuilder
             ->select(array('fU', 'qR'))
             ->where('fU.deleted is NULL')
             ->leftJoin('fU.quoteRequest', 'qR')
