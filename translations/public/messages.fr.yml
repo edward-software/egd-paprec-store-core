@@ -111,6 +111,7 @@ Public:
         Email: E-mail
         Phone: Téléphone
         PhoneNumberInfo: "Suivre la mise en forme  : +33 01 02 03 04 05"
+        RecallDate: Heure souhaitée pour le rappel
         CoworkerNumber: Effectif
         IsMultisite: Prestation multi-sites
         isMultisiteInfo: Votre demande de prestation multisite a bien été pris en compte. Vous serez contacté très prochainement par le service commercial.

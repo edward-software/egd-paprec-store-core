@@ -495,6 +495,7 @@ class SubscriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequest = $form->getData();
+            $recallDate = $form->get('recallDate')->getData();
 
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
@@ -523,7 +524,7 @@ class SubscriptionController extends AbstractController
             $this->em->flush();
 
             $this->quoteRequestManager->sendConfirmContactRequestEmail($quoteRequest, $locale);
-            $this->quoteRequestManager->sendNewContactRequestEmail($quoteRequest, $locale);
+            $this->quoteRequestManager->sendNewContactRequestEmail($quoteRequest, $locale, $recallDate);
 
             return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
                 'locale' => $locale,
@@ -614,7 +615,8 @@ class SubscriptionController extends AbstractController
             return $this->render('public/partials/quoteLine.html.twig', array(
                 'locale' => $locale,
                 'product' => $product,
-                'quantity' => $qtty
+                'quantity' => $qtty,
+                'cartUuid' => $cartUuid
             ));
 
         } catch (\Exception $e) {
@@ -640,7 +642,8 @@ class SubscriptionController extends AbstractController
                 return $this->render('public/partials/quoteLine.html.twig', array(
                     'locale' => $locale,
                     'product' => $product,
-                    'quantity' => $qtty
+                    'quantity' => $qtty,
+                    'cartUuid' => $cartUuid
                 ));
             } else {
                 return new JsonResponse(null, 200);

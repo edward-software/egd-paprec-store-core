@@ -741,7 +741,7 @@ class QuoteRequestManager
      * Envoie un mail au service commercial suite à une demande d'aide d'un client pour la création d'un devis
      * @throws Exception
      */
-    public function sendNewContactRequestEmail(QuoteRequest $quoteRequest, $locale)
+    public function sendNewContactRequestEmail(QuoteRequest $quoteRequest, $locale, $recallDate = null)
     {
 
         try {
@@ -771,7 +771,8 @@ class QuoteRequestManager
                         'public/emails/newContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
-                            'quoteRequest' => $quoteRequest
+                            'quoteRequest' => $quoteRequest,
+                            'recallDate' => $recallDate
                         )
                     ),
                     'text/html'

@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\QuoteRequest;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,6 +44,10 @@ class ContactRequestPublicType extends AbstractType
             ->add('comment', TextareaType::class)
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
+            ))
+            ->add('recallDate', DateTimeType::class, array(
+                'widget' => 'single_text',
+                'mapped' => false
             ));
 
         $builder->get('postalCode')
