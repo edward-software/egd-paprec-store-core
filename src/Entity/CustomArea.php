@@ -13,11 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="customAreas")
  * @ORM\Entity(repositoryClass="App\Repository\CustomAreaRepository")
- * @UniqueEntity(
- *     fields={"code", "language"},
- *     message="Ce code existe déjà pour cette langue",
- *     payload="codeLanguageAlreadyExists"
- * )
  */
 class CustomArea
 {
