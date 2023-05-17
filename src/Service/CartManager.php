@@ -366,7 +366,7 @@ class CartManager
     {
         $cart = $this->get($cartUuid);
 
-        $qtty = 1;
+        $qtty = 0;
         $content = $cart->getContent();
         if ($content && count($content)) {
             foreach ($content as $key => $prod) {
