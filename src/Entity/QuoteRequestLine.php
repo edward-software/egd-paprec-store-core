@@ -171,7 +171,7 @@ class QuoteRequestLine
     /**
      * @var int
      *
-     * @ORM\Column(name="treatmentCollectPrice", type="integer")
+     * @ORM\Column(name="treatmentCollectPrice", type="integer", nullable=true)
      */
     private $treatmentCollectPrice;
 
@@ -818,12 +818,12 @@ class QuoteRequestLine
         return $this;
     }
 
-    public function getTreatmentCollectPrice(): ?int
+    public function getTreatmentCollectPrice()
     {
         return $this->treatmentCollectPrice;
     }
 
-    public function setTreatmentCollectPrice(int $treatmentCollectPrice): self
+    public function setTreatmentCollectPrice($treatmentCollectPrice): self
     {
         $this->treatmentCollectPrice = $treatmentCollectPrice;
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -12,6 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="customAreas")
  * @ORM\Entity(repositoryClass="App\Repository\CustomAreaRepository")
+ * @UniqueEntity(
+ *     fields={"code", "language"},
+ *     message="Ce code existe déjà pour cette langue",
+ *     payload="codeLanguageAlreadyExists"
+ * )
  */
 class CustomArea
 {
@@ -85,8 +91,7 @@ class CustomArea
     /**
      * @var string
      *
-     * @ORM\Column(name="rightContent", type="text")
-     * @Assert\NotNull()
+     * @ORM\Column(name="rightContent", type="text", nullable=true)
      */
     private $rightContent;
 

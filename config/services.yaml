@@ -22,6 +22,9 @@ parameters:
 
     paprec_custom_area_codes:
         - catalog_top
+        - catalog_first_block
+        - catalog_second_block
+        - catalog_third_block
 
     paprec.product.picto_path: "%kernel.project_dir%/public/uploads/pictos"
     paprec.range.picto_path: "%kernel.project_dir%/public/uploads/pictos"
@@ -123,9 +126,9 @@ parameters:
         PRODUCT_MERCURIAL: -1
 
     paprec.quote_request_file.directory: "%kernel.project_dir%/data/quote-request/file"
-    paprec.quote_request_file.max_file_size: 5000000
+    paprec.quote_request_file.max_file_size: 100000000
     paprec.follow_up_file.directory: "%kernel.project_dir%/data/follow-up/file"
-    paprec.follow_up_file.max_file_size: 5000000
+    paprec.follow_up_file.max_file_size: 100000000
 
 services:
     # default configuration for services in *this* file

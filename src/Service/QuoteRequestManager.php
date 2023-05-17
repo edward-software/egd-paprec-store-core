@@ -521,9 +521,9 @@ class QuoteRequestManager
         }
 
         $totalLine = 0 + $this->calculateTotalLine($quoteRequestLine);
-        if ($quoteRequest->getOverallDiscount() !== null) {
-            $totalLine *= (1 + $quoteRequest->getOverallDiscount() / 10000);
-        }
+//        if ($quoteRequest->getOverallDiscount() !== null) {
+//            $totalLine *= (1 + $quoteRequest->getOverallDiscount() / 10000);
+//        }
         $quoteRequestLine->setTotalAmount($totalLine);
         $treatmentCollectPrice = $this->calculateTreatmentCollectPrice($quoteRequestLine);
         $quoteRequestLine->setTreatmentCollectPrice($treatmentCollectPrice);

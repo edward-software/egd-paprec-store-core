@@ -395,7 +395,7 @@ class QuoteRequestController extends AbstractController
             'Remarques',
             'Statut',
             'Montant total (€)',
-            'Ajustement prix (+/- en %)',
+//            'Ajustement prix (+/- en %)',
             'Commentaire commercial',
             'Budget annuel',
             'Numéro client',
@@ -434,7 +434,7 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->getComment(),
                 $quoteRequest->getQuoteStatus(),
                 $this->numberManager->denormalize($quoteRequest->getTotalAmount()),
-                $this->numberManager->denormalize($quoteRequest->getOverallDiscount()) . '%',
+//                $this->numberManager->denormalize($quoteRequest->getOverallDiscount()) . '%',
                 $quoteRequest->getSalesmanComment(),
                 $this->numberManager->denormalize($quoteRequest->getAnnualBudget()),
                 $quoteRequest->getCustomerId(),
@@ -573,7 +573,7 @@ class QuoteRequestController extends AbstractController
             }
 
             if ($form->isValid()) {
-                $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
+//                $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
                 $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
 
                 $quoteRequest->setOrigin('BO');
@@ -634,7 +634,7 @@ class QuoteRequestController extends AbstractController
             $floorNumber[$f] = $f;
         }
 
-        $quoteRequest->setOverallDiscount($this->numberManager->denormalize($quoteRequest->getOverallDiscount()));
+//        $quoteRequest->setOverallDiscount($this->numberManager->denormalize($quoteRequest->getOverallDiscount()));
         $quoteRequest->setAnnualBudget($this->numberManager->denormalize($quoteRequest->getAnnualBudget()));
 
         $form = $this->createForm(QuoteRequestType::class, $quoteRequest, array(
@@ -671,7 +671,8 @@ class QuoteRequestController extends AbstractController
             if ($form->isValid()) {
                 $quoteRequest = $form->getData();
 
-                $overallDiscount = $quoteRequest->getOverallDiscount();
+//                $overallDiscount = $quoteRequest->getOverallDiscount();
+                $overallDiscount = null;
                 $quoteRequest->setAnnualBudget($this->numberManager->normalize($quoteRequest->getAnnualBudget()));
 
                 if ($quoteRequest->getQuoteRequestLines()) {
@@ -681,7 +682,7 @@ class QuoteRequestController extends AbstractController
                     }
                 }
                 $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
-                $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
+//                $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
 
                 $quoteRequest->setDateUpdate(new \DateTime());
                 $quoteRequest->setUserUpdate($user);
@@ -890,6 +891,12 @@ class QuoteRequestController extends AbstractController
          */
         if ($form->isSubmitted()) {
             $quoteRequestLine = $form->getData();
+
+            if($quoteRequestLine->getFrequency() !== 'REGULAR'){
+                $quoteRequestLine->setFrequencyTimes(null);
+                $quoteRequestLine->setFrequencyInterval(null);
+            }
+
             $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
 
             return $this->redirectToRoute('paprec_quote_request_view', array(

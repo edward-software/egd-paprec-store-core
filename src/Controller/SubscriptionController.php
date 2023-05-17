@@ -88,8 +88,40 @@ class SubscriptionController extends AbstractController
         if ($locale !== 'fr') {
             return $this->redirectToRoute('paprec_public_devis_home', array('locale' => 'fr'));
         }
+
+        $customAreas = $this->em->getRepository('App:CustomArea')->findBy([
+            'language' => 'FR',
+            'deleted' => null
+        ]);
+
+        $catalogTop = null;
+        $catalogFirstBlock = null;
+        $catalogSecondBlock = null;
+        $catalogThirdBlock = null;
+        if (is_array($customAreas) && count($customAreas)) {
+            foreach ($customAreas as $customArea) {
+                if ($customArea->getCode() === 'catalog_top') {
+                    $catalogTop = $customArea;
+
+                } elseif ($customArea->getCode() === 'catalog_first_block') {
+                    $catalogFirstBlock = $customArea;
+
+                } elseif ($customArea->getCode() === 'catalog_second_block') {
+                    $catalogSecondBlock = $customArea;
+
+                } elseif ($customArea->getCode() === 'catalog_third_block') {
+                    $catalogThirdBlock = $customArea;
+
+                }
+            }
+        }
+
         return $this->render('public/type.html.twig', array(
-            'locale' => $locale
+            'locale' => $locale,
+            'catalogTop' => $catalogTop,
+            'catalogFirstBlock' => $catalogFirstBlock,
+            'catalogSecondBlock' => $catalogSecondBlock,
+            'catalogThirdBlock' => $catalogThirdBlock,
         ));
     }
 
