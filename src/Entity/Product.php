@@ -48,8 +48,7 @@ class Product
     /**
      * @var string
      * Le volume du produit
-     * @ORM\Column(name="capacity", type="string", length=10)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="capacity", type="string", length=10, nullable=true)
      */
     private $capacity;
 
@@ -64,8 +63,7 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="dimensions", type="string", length=500)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="dimensions", type="string", length=500, nullable=true)
      */
     private $dimensions;
 
@@ -77,6 +75,27 @@ class Product
      * @Assert\NotBlank()
      */
     private $isEnabled;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="hideFrequency", type="boolean", nullable=true)
+     */
+    private $hideFrequency;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="hideCapacity", type="boolean", nullable=true)
+     */
+    private $hideCapacity;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="hideDimension", type="boolean", nullable=true)
+     */
+    private $hideDimension;
 
     /**
      * @var int
@@ -988,5 +1007,77 @@ class Product
     public function setComment(string $comment)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * Set HideCapacity.
+     *
+     * @param bool HideCapacity
+     *
+     * @return Product
+     */
+    public function setHideCapacity($hideCapacity)
+    {
+        $this->hideCapacity = $hideCapacity;
+
+        return $this;
+    }
+
+    /**
+     * Get hideCapacity.
+     *
+     * @return bool
+     */
+    public function getHideCapacity()
+    {
+        return $this->hideCapacity;
+    }
+
+    /**
+     * Set HideFrequency.
+     *
+     * @param bool HideFrequency
+     *
+     * @return Product
+     */
+    public function setHideFrequency($hideFrequency)
+    {
+        $this->hideFrequency = $hideFrequency;
+
+        return $this;
+    }
+
+    /**
+     * Get hideFrequency.
+     *
+     * @return bool
+     */
+    public function getHideFrequency()
+    {
+        return $this->hideFrequency;
+    }
+
+    /**
+     * Set HideDimension.
+     *
+     * @param bool HideDimension
+     *
+     * @return Product
+     */
+    public function setHideDimension($hideDimension)
+    {
+        $this->hideDimension = $hideDimension;
+
+        return $this;
+    }
+
+    /**
+     * Get hideDimension.
+     *
+     * @return bool
+     */
+    public function getHideDimension()
+    {
+        return $this->hideDimension;
     }
 }

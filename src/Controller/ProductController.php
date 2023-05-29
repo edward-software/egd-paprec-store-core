@@ -11,6 +11,7 @@ use App\Form\PictureProductType;
 use App\Form\ProductLabelType;
 use App\Form\ProductMaterialType;
 use App\Form\ProductType;
+use App\Form\SettingType;
 use App\Service\NumberManager;
 use App\Service\PictureManager;
 use App\Service\ProductLabelManager;
@@ -27,6 +28,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +69,20 @@ class ProductController extends AbstractController
      */
     public function indexAction()
     {
-        return $this->render('product/index.html.twig');
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
+
+        $queryBuilder->select('r')
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->where('r.deleted IS NULL')
+            ->andWhere('rL.language = :language')
+            ->setParameter('language', 'FR');
+
+        $ranges = $queryBuilder->getQuery()->getResult();
+
+        return $this->render('product/index.html.twig', [
+            'ranges' => $ranges
+        ]);
     }
 
     /**
@@ -85,6 +100,10 @@ class ProductController extends AbstractController
         $search = $request->get('search');
         $columns = $request->get('columns');
         $rowPrefix = $request->get('rowPrefix');
+
+        $selectedCatalog = $request->get('selectedCatalog');
+        $selectedRange = $request->get('selectedRange');
+        $isEnabled = $request->get('isEnabled');
 
         $cols['id'] = array('label' => 'id', 'id' => 'p.id', 'method' => array('getId'));
         $cols['name'] = array(
@@ -119,6 +138,25 @@ class ProductController extends AbstractController
             ->andWhere('pL.language = :language')
             ->setParameter('language', 'FR');
 
+        /**
+         * Application des filtres
+         */
+        if ($selectedCatalog !== null && $selectedCatalog !== '#') {
+            $queryBuilder
+                ->andWhere('p.catalog = :catalog')
+                ->setParameter('catalog', $selectedCatalog);
+        }
+        if ($selectedRange !== null && $selectedRange !== '#') {
+            $queryBuilder
+                ->andWhere('r.id = :rangeId')
+                ->setParameter('rangeId', $selectedRange);
+        }
+        if ($isEnabled !== null && $isEnabled !== '#') {
+            $queryBuilder
+                ->andWhere('p.isEnabled = :isEnabled')
+                ->setParameter('isEnabled', $isEnabled);
+        }
+
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
             if (substr($search['value'], 0, 1) === '#') {
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
@@ -128,7 +166,8 @@ class ProductController extends AbstractController
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
                     $queryBuilder->expr()->like('pL.name', '?1'),
                     $queryBuilder->expr()->like('p.dimensions', '?1'),
-                    $queryBuilder->expr()->like('p.isEnabled', '?1')
+                    $queryBuilder->expr()->like('p.isEnabled', '?1'),
+                    $queryBuilder->expr()->like('rL.name', '?1')
                 ))->setParameter(1, '%' . $search['value'] . '%');
             }
         }
@@ -382,33 +421,73 @@ class ProductController extends AbstractController
 
         $form1->handleRequest($request);
         $form2->handleRequest($request);
-        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+        if ($form1->isSubmitted()) {
+            $hideCapacity = $form1->get('hideCapacity')->getData();
+            $hideDimension = $form1->get('hideDimension')->getData();
+            $capacity = $form1->get('capacity')->getData();
+            $dimensions = $form1->get('dimensions')->getData();
 
-            $product = $form1->getData();
+            $errors = [];
+            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+                $errors['capacity'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
+            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+                $errors['dimensions'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
 
-            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
-            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
-            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
-            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+            if ($errors && count($errors)) {
+                foreach ($errors as $key => $error) {
+                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+                }
+            }
 
-            $product->setDateCreation(new \DateTime);
-            $product->setUserCreation($user);
+            if ($form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
 
-            $this->em->persist($product);
-            $this->em->flush();
+                $product = $form1->getData();
 
-            $productLabel = $form2->getData();
-            $productLabel->setDateCreation(new \DateTime);
-            $productLabel->setUserCreation($user);
-            $productLabel->setProduct($product);
 
-            $this->em->persist($productLabel);
-            $this->em->flush();
+                if($product->getHideFrequency() === 1){
+                    $product->setFrequency('UNKNOWN');
+                }
 
-            return $this->redirectToRoute('paprec_product_view', array(
-                'id' => $product->getId()
-            ));
+                if($product->getHideCapacity() === 1){
+                    $product->setCapacity('');
+                }
 
+                if($product->getHideDimension() === 1){
+                    $product->setDimensions('');
+                }
+
+                $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+                $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+                $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+                $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+
+                $product->setDateCreation(new \DateTime);
+                $product->setUserCreation($user);
+
+                $this->em->persist($product);
+                $this->em->flush();
+
+                $productLabel = $form2->getData();
+                $productLabel->setDateCreation(new \DateTime);
+                $productLabel->setUserCreation($user);
+                $productLabel->setProduct($product);
+
+                $this->em->persist($productLabel);
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_product_view', array(
+                    'id' => $product->getId()
+                ));
+
+            }
         }
 
         return $this->render('product/add.html.twig', array(
@@ -447,34 +526,73 @@ class ProductController extends AbstractController
         $form1->handleRequest($request);
         $form2->handleRequest($request);
 
-        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
+        if ($form1->isSubmitted()) {
+            $hideCapacity = $form1->get('hideCapacity')->getData();
+            $hideDimension = $form1->get('hideDimension')->getData();
+            $capacity = $form1->get('capacity')->getData();
+            $dimensions = $form1->get('dimensions')->getData();
 
-            $product = $form1->getData();
+            $errors = [];
+            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+                $errors['capacity'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
+            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+                $errors['dimensions'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
 
-            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
-            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
-            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
-            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
-            $product->setMaterialUnitPrice($this->numberManager->normalize($product->getMaterialUnitPrice()));
+            if ($errors && count($errors)) {
+                foreach ($errors as $key => $error) {
+                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+                }
+            }
+            if ($form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
 
-            $product->setDateCreation(new \DateTime);
-            $product->setUserCreation($user);
+                $product = $form1->getData();
 
-            $this->em->persist($product);
-            $this->em->flush();
 
-            $productLabel = $form2->getData();
-            $productLabel->setDateCreation(new \DateTime);
-            $productLabel->setUserCreation($user);
-            $productLabel->setProduct($product);
+                if($product->getHideFrequency() === 1){
+                    $product->setFrequency('UNKNOWN');
+                }
 
-            $this->em->persist($productLabel);
-            $this->em->flush();
+                if($product->getHideCapacity() === 1){
+                    $product->setCapacity('');
+                }
 
-            return $this->redirectToRoute('paprec_product_view', array(
-                'id' => $product->getId()
-            ));
+                if($product->getHideDimension() === 1){
+                    $product->setDimensions('');
+                }
 
+                $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+                $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+                $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+                $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+                $product->setMaterialUnitPrice($this->numberManager->normalize($product->getMaterialUnitPrice()));
+
+                $product->setDateCreation(new \DateTime);
+                $product->setUserCreation($user);
+
+                $this->em->persist($product);
+                $this->em->flush();
+
+                $productLabel = $form2->getData();
+                $productLabel->setDateCreation(new \DateTime);
+                $productLabel->setUserCreation($user);
+                $productLabel->setProduct($product);
+
+                $this->em->persist($productLabel);
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_product_view', array(
+                    'id' => $product->getId()
+                ));
+
+            }
         }
 
         return $this->render('product/addMaterial.html.twig', array(
@@ -551,30 +669,73 @@ class ProductController extends AbstractController
         $form2->handleRequest($request);
 
 //        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
-        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted()) {
+        if ($form1->isSubmitted()) {
+            $hideCapacity = $form1->get('hideCapacity')->getData();
+            $hideDimension = $form1->get('hideDimension')->getData();
+            $capacity = $form1->get('capacity')->getData();
+            $dimensions = $form1->get('dimensions')->getData();
 
-            $product = $form1->getData();
+            $errors = [];
+            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+                $errors['capacity'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
+            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+                $errors['dimensions'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
 
-            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
-            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
-            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
-            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+            if ($errors && count($errors)) {
+                foreach ($errors as $key => $error) {
+                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+                }
+            }
+            if ($form1->isValid() && $form2->isSubmitted()) {
+
+                $product = $form1->getData();
+
+                if($product->getHideFrequency() === 1){
+                    $product->setFrequency('UNKNOWN');
+                }
+
+                if($product->getHideCapacity() === 1){
+                    $product->setCapacity('');
+                }
+
+                if($product->getHideDimension() === 1){
+                    $product->setDimensions('');
+                }
+
+                $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+                $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+                $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+                $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
 
 
-            $product->setDateUpdate(new \DateTime);
-            $product->setUserUpdate($user);
-            $this->em->flush();
+                $product->setDateUpdate(new \DateTime);
+                $product->setUserUpdate($user);
+                $this->em->flush();
 
-            $productLabel = $form2->getData();
-            $productLabel->setDateUpdate(new \DateTime);
-            $productLabel->setUserUpdate($user);
-            $productLabel->setProduct($product);
+                $productLabel = $form2->getData();
+                $productLabel->setDateUpdate(new \DateTime);
+                $productLabel->setUserUpdate($user);
+                $productLabel->setProduct($product);
 
-            $this->em->flush();
+                $this->em->flush();
 
-            return $this->redirectToRoute('paprec_product_view', array(
-                'id' => $product->getId()
-            ));
+                return $this->redirectToRoute('paprec_product_view', array(
+                    'id' => $product->getId()
+                ));
+            }
+        }
+
+        $defaultRangeId = null;
+        if ($product->getRange()) {
+            $defaultRangeId = $product->getRange()->getId();
         }
         return $this->render('product/edit.html.twig', array(
             'form1' => $form1->createView(),
@@ -583,7 +744,7 @@ class ProductController extends AbstractController
             'productLabel' => $productLabel,
             'rangesByCatalog' => $rangesByCatalog,
             'defaultCatalog' => $product->getCatalog(),
-            'defaultRangeId' => $product->getRange()->getId()
+            'defaultRangeId' => $defaultRangeId
         ));
     }
 
@@ -624,32 +785,71 @@ class ProductController extends AbstractController
         $form2->handleRequest($request);
 
 //        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
-        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted()) {
+        if ($form1->isSubmitted()) {
+            $hideCapacity = $form1->get('hideCapacity')->getData();
+            $hideDimension = $form1->get('hideDimension')->getData();
+            $capacity = $form1->get('capacity')->getData();
+            $dimensions = $form1->get('dimensions')->getData();
 
-            $product = $form1->getData();
+            $errors = [];
+            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+                $errors['capacity'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
+            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+                $errors['dimensions'] = array(
+                    'code' => 400,
+                    'message' => 'Cette valeur ne doit pas être vide.'
+                );
+            }
 
-            $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
-            $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
-            $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
-            $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
-            $product->setMaterialUnitPrice($this->numberManager->normalize($product->getMaterialUnitPrice()));
+            if ($errors && count($errors)) {
+                foreach ($errors as $key => $error) {
+                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+                }
+            }
+            if ($form1->isValid() && $form2->isSubmitted()) {
+
+                $product = $form1->getData();
+
+                if($product->getHideFrequency() === 1){
+                    $product->setFrequency('UNKNOWN');
+                }
+
+                if($product->getHideCapacity() === 1){
+                    $product->setCapacity('');
+                }
+
+                if($product->getHideDimension() === 1){
+                    $product->setDimensions('');
+                }
+
+                $product->setRentalUnitPrice($this->numberManager->normalize($product->getRentalUnitPrice()));
+                $product->setTransportUnitPrice($this->numberManager->normalize($product->getTransportUnitPrice()));
+                $product->setTreatmentUnitPrice($this->numberManager->normalize($product->getTreatmentUnitPrice()));
+                $product->setTraceabilityUnitPrice($this->numberManager->normalize($product->getTraceabilityUnitPrice()));
+                $product->setMaterialUnitPrice($this->numberManager->normalize($product->getMaterialUnitPrice()));
 
 
-            $product->setDateUpdate(new \DateTime);
-            $product->setUserUpdate($user);
-            $this->em->flush();
+                $product->setDateUpdate(new \DateTime);
+                $product->setUserUpdate($user);
+                $this->em->flush();
 
-            $productLabel = $form2->getData();
-            $productLabel->setDateUpdate(new \DateTime);
-            $productLabel->setUserUpdate($user);
-            $productLabel->setProduct($product);
+                $productLabel = $form2->getData();
+                $productLabel->setDateUpdate(new \DateTime);
+                $productLabel->setUserUpdate($user);
+                $productLabel->setProduct($product);
 
-            $this->em->flush();
+                $this->em->flush();
 
-            return $this->redirectToRoute('paprec_product_view', array(
-                'id' => $product->getId()
-            ));
+                return $this->redirectToRoute('paprec_product_view', array(
+                    'id' => $product->getId()
+                ));
+            }
         }
+
         return $this->render('product/editMaterial.html.twig', array(
             'form1' => $form1->createView(),
             'form2' => $form2->createView(),

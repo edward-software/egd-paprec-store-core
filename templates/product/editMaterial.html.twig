@@ -169,6 +169,42 @@
                                         {{ form_errors(form1.comment) }}
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.HideFrequency.HideFrequency'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.hideFrequency.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form1.hideFrequency) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.HideCapacity.HideCapacity'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.hideCapacity.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form1.hideCapacity) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.Product.HideDimension.HideDimension'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.hideDimension.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form1.hideDimension) }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -134,6 +134,18 @@ Catalog:
             Disable-multiple: Séléctionner une ou plusieurs lignes pour les désactiver
             Enable: Activer
             Enable-multiple: Séléctionner une ou plusieurs lignes pour les activer
+        HideFrequency:
+            HideFrequency: Cacher la fréquence ?
+            Yes: Oui
+            No: Non
+        HideCapacity:
+            HideCapacity: Cacher le volume ?
+            Yes: Oui
+            No: Non
+        HideDimension:
+            HideDimension: Cacher les dimensions ?
+            Yes: Oui
+            No: Non
         Picto: Picto
         AddPicture: Ajouter image
         PilotPicture: Logo

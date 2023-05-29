@@ -39,6 +39,36 @@ class ProductMaterialType extends AbstractType
                 },
                 "expanded" => true,
             ))
+            ->add('hideFrequency', ChoiceType::class, array(
+                "choices" => array(
+                    0,
+                    1
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
+                "expanded" => true,
+            ))
+            ->add('hideCapacity', ChoiceType::class, array(
+                "choices" => array(
+                    0,
+                    1
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
+                "expanded" => true,
+            ))
+            ->add('hideDimension', ChoiceType::class, array(
+                "choices" => array(
+                    0,
+                    1
+                ),
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.' . $choiceValue;
+                },
+                "expanded" => true,
+            ))
             ->add('position')
             ->add('range', EntityType::class, array(
                 'class' => Range::class,
