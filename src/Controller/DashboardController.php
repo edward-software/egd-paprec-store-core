@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\QuoteRequest;
+use App\Entity\QuoteRequestLine;
 use App\Entity\Setting;
 use App\Entity\User;
 use App\Service\NumberManager;
@@ -113,7 +114,7 @@ class DashboardController extends AbstractController
                     /**
                      * On récupère tous les users par team, cela nous sert pour filtrer la liste des devis
                      */
-                    if($datas[0]['team_user_ids'] !== ''){
+                    if ($datas[0]['team_user_ids'] !== '') {
                         $datas[0]['team_user_ids'] .= ',';
                     }
                     $datas[0]['team_user_ids'] .= $user->getId();
@@ -157,7 +158,7 @@ class DashboardController extends AbstractController
                         /**
                          * On récupère tous les users par team, cela nous sert pour filtrer la liste des devis
                          */
-                        if($datas[$managerKey]['team_user_ids'] !== ''){
+                        if ($datas[$managerKey]['team_user_ids'] !== '') {
                             $datas[$managerKey]['team_user_ids'] .= ',';
                         }
                         $datas[$managerKey]['team_user_ids'] .= $user->getId();
@@ -175,7 +176,6 @@ class DashboardController extends AbstractController
 
                     }
                 }
-
 
 
 //                foreach ($users as $u) {
@@ -224,7 +224,7 @@ class DashboardController extends AbstractController
                     /**
                      * On récupère tous les users par team, cela nous sert pour filtrer la liste des devis
                      */
-                    if($datas[0]['team_user_ids'] !== ''){
+                    if ($datas[0]['team_user_ids'] !== '') {
                         $datas[0]['team_user_ids'] .= ',';
                     }
                     $datas[0]['team_user_ids'] .= $u->getId();
@@ -1011,4 +1011,199 @@ class DashboardController extends AbstractController
         return new JsonResponse($return);
 
     }
+
+    /**
+     * @Route("/marketingReport/export", name="paprec_dashboard_marketing_report_export")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function exportMarketingReportAction(Request $request)
+    {
+
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        $queryBuilder->select(['qRL', 'q'])
+            ->from('App:QuoteRequestLine', 'qRL')
+            ->join('qRL.quoteRequest', 'q')
+            ->where('q.deleted IS NULL')
+            ->andWhere('qRL.deleted IS NULL');
+
+        /** @var QuoteRequestLine[] $quoteRequestLines */
+        $quoteRequestLines = $queryBuilder->getQuery()->getResult();
+
+        /** @var Spreadsheet $spreadsheet */
+        $spreadsheet = new Spreadsheet();
+
+        $spreadsheet
+            ->getProperties()->setCreator("Paprec Easy Recyclage")
+            ->setTitle("Paprec Easy Recyclage - Rapport Marketing")
+            ->setSubject("Extraction");
+
+        $sheet = $spreadsheet->setActiveSheetIndex(0);
+        $sheet->setTitle('Devis');
+
+        // Labels
+        $sheetLabels = [
+            'ID',
+            'Date créa.',
+            'Dernière modification',
+            'Langue',
+            'Numéro offre du devis',
+            'Nom société',
+            'Civilité',
+            'Nom',
+            'Prénom',
+            'Email',
+            'Téléphone',
+            'Prestation multi-sites',
+            'Staff',
+            'Accès',
+            'Adresse',
+            'Ville',
+            'Remarques',
+            'Statut',
+            'Montant total (€)',
+            'Commentaire commercial',
+            'Budget annuel',
+            'Numéro client',
+            'Référence de l\'offre',
+            'Commercial en charge',
+            'Code postal',
+            'Date de fin de la prestation',
+            'Produit',
+            'Quantité',
+            'Location',
+            'Transport/passage',
+            'Fréquence de passage',
+            'Traitement',
+            'Matériel additionnel',
+            'Montant'
+        ];
+
+        $xAxe = 'A';
+        foreach ($sheetLabels as $label) {
+            $sheet->setCellValue($xAxe . 1, $label);
+            $xAxe++;
+        }
+
+        $yAxe = 2;
+        foreach ($quoteRequestLines as $quoteRequestLine) {
+
+            $quoteRequest = $quoteRequestLine->getQuoteRequest();
+
+            if ($quoteRequest) {
+                $productName = '';
+                if ($quoteRequestLine->getProduct()->getProductLabels() && is_array($quoteRequestLine->getProduct()->getProductLabels()) && count($quoteRequestLine->getProduct()->getProductLabels())) {
+                    $productName = $quoteRequestLine->getProduct()->getProductLabels()[0]->getName();
+                }
+
+                $frequencyIntervalValue = 1;
+                if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
+                    $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
+                    $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
+                    if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
+                        $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
+                    }
+                }
+
+                $quantity = $quoteRequestLine->getQuantity();
+
+                $editableRentalUnitPrice = 0;
+                if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
+                    $editableRentalUnitPrice = $quantity * $this->numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                }
+
+                $editableTransportUnitPrice = 0;
+                if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+                    $editableTransportUnitPrice = $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                }
+
+                $editableTreatmentUnitPrice = 0;
+                if ($quoteRequestLine->getEditableTreatmentUnitPrice() !== null) {
+                    $editableTreatmentUnitPrice = $quantity * $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                }
+
+                $editableTraceabilityUnitPrice = 0;
+                if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
+                    $editableTraceabilityUnitPrice = ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                }
+
+                $frequency = $quoteRequestLine->getFrequencyTimes() . ' x/ ' . $this->translator->trans('General.Frequency.' . $quoteRequestLine->getFrequencyInterval());
+                if ($quoteRequestLine->getFrequency() !== 'REGULAR') {
+                    $frequency = $this->translator->trans('General.Frequency.' . $quoteRequestLine->getFrequency());
+                }
+
+                $isMultisite = 'Non';
+                if($quoteRequest->getIsMultisite() == 1){
+                    $isMultisite = 'Oui';
+                }
+
+                $getters = [
+                    $quoteRequest->getId(),
+                    $quoteRequest->getDateCreation()->format('Y-m-d'),
+                    $quoteRequest->getDateUpdate() ? $quoteRequest->getDateUpdate()->format('Y-m-d') : '',
+                    $quoteRequest->getLocale(),
+                    $quoteRequest->getNumber(),
+                    $quoteRequest->getBusinessName(),
+                    $quoteRequest->getCivility(),
+                    $quoteRequest->getLastName(),
+                    $quoteRequest->getFirstName(),
+                    $quoteRequest->getEmail(),
+                    $quoteRequest->getPhone(),
+                    $isMultisite,
+                    $this->translator->trans('Commercial.StaffList.' . $quoteRequest->getStaff()),
+                    $this->translator->trans('Commercial.AccessList.' . $quoteRequest->getAccess()),
+                    $quoteRequest->getAddress(),
+                    $quoteRequest->getCity(),
+                    $quoteRequest->getComment(),
+                    $this->translator->trans('Commercial.QuoteStatusList.' . $quoteRequest->getQuoteStatus()),
+                    $this->numberManager->denormalize($quoteRequest->getTotalAmount()),
+                    $quoteRequest->getSalesmanComment(),
+                    $this->numberManager->denormalize($quoteRequest->getAnnualBudget()),
+                    $quoteRequest->getCustomerId(),
+                    $quoteRequest->getReference(),
+                    $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
+                    $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
+                    $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : '',
+                    $quoteRequestLine->getProduct()->getCode() . ' - ' . $productName,
+                    $quoteRequestLine->getQuantity(),
+                    $editableRentalUnitPrice,
+                    $editableTransportUnitPrice,
+                    $frequency,
+                    $editableTreatmentUnitPrice,
+                    $editableTraceabilityUnitPrice,
+                    $this->numberManager->denormalize($quoteRequestLine->getTotalAmount())
+                ];
+
+                $xAxe = 'A';
+                foreach ($getters as $getter) {
+                    $sheet->setCellValue($xAxe . $yAxe, (string)$getter);
+                    $xAxe++;
+                }
+                $yAxe++;
+            }
+        }
+
+
+        // Resize columns
+        for ($i = 'A'; $i != $sheet->getHighestDataColumn(); $i++) {
+            $sheet->getColumnDimension($i)->setAutoSize(true);
+        }
+
+        $fileName = 'EasyRecyclageShop-Extraction-Rapport-Marketing-' . date('Y-m-d') . '.xlsx';
+
+        $streamedResponse = new StreamedResponse();
+        $streamedResponse->setCallback(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        });
+
+        $streamedResponse->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $streamedResponse->headers->set('Pragma', 'public');
+        $streamedResponse->headers->set('Cache-Control', 'maxage=1');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
+
+        return $streamedResponse->send();
+    }
+
 }

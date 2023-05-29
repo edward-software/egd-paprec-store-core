@@ -280,6 +280,7 @@ Catalog:
         Dashboard: Tableau de bord
         Activities: Activité
         FollowUps: Relances
+        Export-marketing-report: Rapport marketing
         Activity:
             Activity: Tableau de bord Activité
         FollowUp:

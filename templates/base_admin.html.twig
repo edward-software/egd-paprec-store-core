@@ -92,7 +92,8 @@
     <!-- Static navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="{{ path('paprec_home_home') }}">
-            <img class="img-fluid mt-1" src="{{ asset('/build/static/logo-easy-recyclage.png') }}" alt="" width="200" height="100">
+            <img class="img-fluid mt-1" src="{{ asset('/build/static/logo-easy-recyclage.png') }}" alt="" width="200"
+                 height="100">
         </a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
                 aria-controls="navbar" aria-label="Toggle navigation">
@@ -144,6 +145,11 @@
                                    href="{{ path('paprec_dashboard_activity_index') }}">{{ 'Catalog.Dashboard.Activities'|trans }}</a>
                                 <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_dashboard_followUp'|length) == 'paprec_dashboard_followUp' %} active{% endif %}"
                                    href="{{ path('paprec_dashboard_follow_up_index') }}">{{ 'Catalog.Dashboard.FollowUps'|trans }}</a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="dropdown-item"
+                                       target="_blank"
+                                       href="{{ path('paprec_dashboard_marketing_report_export') }}">{{ 'Catalog.Dashboard.Export-marketing-report'|trans }}</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
