@@ -129,6 +129,8 @@ parameters:
     paprec.quote_request_file.max_file_size: 100000000
     paprec.follow_up_file.directory: "%kernel.project_dir%/data/follow-up/file"
     paprec.follow_up_file.max_file_size: 100000000
+    paprec.agency_file.directory: "%kernel.project_dir%/data/agency/file"
+    paprec.agency_file.max_file_size: 100000000
 
 services:
     # default configuration for services in *this* file

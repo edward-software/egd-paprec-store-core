@@ -978,7 +978,7 @@ class QuoteRequestManager
                 return false;
             }
 
-            if($quoteRequest->getUserInCharge()){
+            if ($quoteRequest->getUserInCharge()) {
                 $rcptTo[] = $quoteRequest->getUserInCharge()->getEmail();
             }
 
@@ -1221,7 +1221,7 @@ class QuoteRequestManager
             /**
              * Concaténation des fichiers
              */
-            $pdfArray = array();
+            $pdfArray = [];
 
             $ponctualFileNames = $this->container->getParameter('paprec.file_names');
             $ponctualFileCovers = $this->container->getParameter('paprec.cover_file_names');
@@ -1244,13 +1244,20 @@ class QuoteRequestManager
              */
             $pdfArray[] = $filenameOffer;
 
-
             if (is_array($ponctualFileNames) && count($ponctualFileNames)) {
                 foreach ($ponctualFileNames as $ponctualFileName) {
                     $noticeFilename = $ponctualFileDirectory . '/' . $ponctualFileName . '.pdf';
                     if (file_exists($noticeFilename)) {
                         $pdfArray[] = $noticeFilename;
                     }
+                }
+            }
+
+            if (!empty($agency->getAgencyFiles()) && is_iterable($agency->getAgencyFiles())) {
+                $agencyFileDirectory = $this->container->getParameter('paprec.agency_file.directory');
+
+                foreach ($agency->getAgencyFiles() as $agencyFile) {
+                    $pdfArray[] = $agencyFileDirectory . '/' . $agencyFile->getSystemName();
                 }
             }
 

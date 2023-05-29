@@ -39,12 +39,24 @@ Catalog:
         DeletedUser: (Compte supprimé)
         System-information: Informations système
         Template:
-            Template: CGV
+            Template: Template
             LCB: La Corbeille Bleue
             CFS: Confidentialys
             LPP: Le Petit ???
             IDF: Paprec
             IN_SITU: In Situ
+
+    AgencyFile:
+        AddTitle: Ajout d'un CGV
+        BtnAddLabel: Ajouter un CGV
+        BtnAddLabel-tooltip: "Ajouter un fichier (CGV)"
+        MaxSize: '(Taille maximale du fichier : 5Mo)'
+        FileListTitle: Liste des CGVs
+        FileNameColumn: Nom
+        FileTypeColumn: Format
+        Type:
+            Type: Type
+            GTC: CGV
 
     PostalCode:
         PostalCodes: Code postaux

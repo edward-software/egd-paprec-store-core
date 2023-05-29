@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -159,7 +160,12 @@ class Agency
      *              Relations
      * #################################
      */
-
+    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AgencyFile", mappedBy="agency")
+     */
+    private $agencyFiles;
+    
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PostalCode", mappedBy="agency")
      */
@@ -183,6 +189,7 @@ class Agency
         $this->dateCreation = new \DateTime();
         $this->postalCodes = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->agencyFiles = new ArrayCollection();
     }
 
     /**
@@ -638,6 +645,34 @@ class Agency
         $this->faxNumber = $faxNumber;
     }
 
+    /**
+     * @return Collection|AgencyFile[]
+     */
+    public function getAgencyFiles(): Collection
+    {
+        return $this->agencyFiles;
+    }
 
+    public function addAgencyFile(AgencyFile $agencyFile): self
+    {
+        if (!$this->agencyFiles->contains($agencyFile)) {
+            $this->agencyFiles[] = $agencyFile;
+            $agencyFile->setAgency($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAgencyFile(AgencyFile $agencyFile): self
+    {
+        if ($this->agencyFiles->removeElement($agencyFile)) {
+            // set the owning side to null (unless already changed)
+            if ($agencyFile->getAgency() === $this) {
+                $agencyFile->setAgency(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

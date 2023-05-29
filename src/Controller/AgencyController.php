@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Agency;
 use App\Entity\Picture;
+use App\Entity\AgencyFile;
+use App\Entity\QuoteRequestFile;
 use App\Form\AgencyType;
 use App\Form\PictureAgencyType;
+use App\Form\AgencyFileType;
+use App\Form\QuoteRequestFileType;
 use App\Service\AgencyManager;
 use App\Service\NumberManager;
 use App\Service\PictureManager;
@@ -15,14 +19,17 @@ use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -186,7 +193,6 @@ class AgencyController extends AbstractController
     {
         $this->agencyManager->isDeleted($agency, true);
 
-
         foreach ($this->getParameter('paprec_types_picture') as $type) {
             $types[$type] = $type;
         }
@@ -201,10 +207,14 @@ class AgencyController extends AbstractController
             'types' => $types,
         ));
 
+        $agencyFile = new AgencyFile();
+        $formAddAgencyFile = $this->createForm(AgencyFileType::class, $agencyFile, []);
+
         return $this->render('agency/view.html.twig', array(
             'agency' => $agency,
             'formAddPicture' => $formAddPicture->createView(),
             'formEditPicture' => $formEditPicture->createView(),
+            'formAddAgencyFile' => $formAddAgencyFile->createView(),
         ));
     }
 
@@ -527,6 +537,116 @@ class AgencyController extends AbstractController
         return $this->redirectToRoute('paprec_agency_view', array(
             'id' => $agency->getId()
         ));
+    }
+
+    /**
+     * @Route("/addAgencyFile/{agencyId}", name="paprec_agency_add_agency_file")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function addAgencyFileAction(Request $request, $agencyId)
+    {
+        $agency = $this->agencyManager->get($agencyId, true);
+
+        $agencyFile = new AgencyFile();
+
+        $form = $this->createForm(AgencyFileType::class, $agencyFile, array());
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $agency->setDateUpdate(new \DateTime());
+            $agencyFile = $form->getData();
+            $agencyFile->setType('GTC');
+
+            if ($agencyFile->getSystemPath() instanceof UploadedFile) {
+                $agencyFilePath = $agencyFile->getSystemPath();
+
+                $agencyFileSize = $agencyFile->getSystemPath()->getClientSize();
+
+                $fileMaxSize = $this->getParameter('paprec.agency_file.max_file_size');
+
+                if ($agencyFileSize > $fileMaxSize) {
+                    $this->get('session')->getFlashBag()->add('error', 'generatedAgencyFileNotAdded');
+
+                    return $this->redirectToRoute('paprec_agency_view', array(
+                        'id' => $agency->getId()
+                    ));
+                }
+
+                $agencyFileSystemName = md5(uniqid('', true)) . '.' . $agencyFilePath->guessExtension();
+
+                $agencyFilePath->move($this->getParameter('paprec.agency_file.directory'),
+                    $agencyFileSystemName);
+
+                $agencyFileOriginalName = $agencyFile->getSystemPath()->getClientOriginalName();
+                $agencyFileMimeType = $agencyFile->getSystemPath()->getClientMimeType();
+
+                $agencyFile
+                    ->setSystemName($agencyFileSystemName)
+                    ->setOriginalFileName($agencyFileOriginalName)
+                    ->setMimeType($agencyFileMimeType)
+                    ->setSystemSize($agencyFileSize)
+                    ->setAgency($agency);
+                $agency->addAgencyFile($agencyFile);
+                $this->em->persist($agencyFile);
+                $this->em->flush();
+            }
+
+            return $this->redirectToRoute('paprec_agency_view', array(
+                'id' => $agency->getId()
+            ));
+        }
+
+        return $this->redirectToRoute('paprec_agency_view', array(
+            'id' => $agency->getId()
+        ));
+    }
+
+    /**
+     * @Route("removeAgencyFile/{agencyId}/{agencyFileId}", name="paprec_agency_remove_agency_file")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @ParamConverter("agencyFile", options={"id" = "agencyFileId"})
+     */
+    public function removeAgencyFileAction(Request $request, $agencyId, AgencyFile $agencyFile)
+    {
+        $agency = $this->agencyManager->get($agencyId, true);
+
+        $this->em->remove($agencyFile);
+        $this->em->flush();
+
+        $agencyFileFolder = $this->getParameter('paprec.agency_file.directory');
+        $agencyFilePath = $agencyFileFolder . '/' . $agencyFile->getSystemName();
+
+        if (file_exists($agencyFilePath)) {
+            unlink($agencyFilePath);
+        }
+
+        return $this->redirectToRoute('paprec_agency_view', array(
+            'id' => $agency->getId()
+        ));
+    }
+    
+
+    /**
+     * @Route("/downloadAgencyFile/{id}", name="paprec_agency_download_agency_file")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
+    public function downloadAgencyFileAction(Request $request, AgencyFile $agencyFile)
+    {
+        $agencyFileFolder = $this->getParameter('paprec.agency_file.directory');
+        $agencyFilePath = $agencyFileFolder . '/' . $agencyFile->getSystemName();
+        if (file_exists($agencyFilePath)) {
+            $response = new BinaryFileResponse($agencyFilePath);
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $agencyFile->getOriginalFileName());
+
+            return $response;
+        }
+
+        return $this->redirectToRoute('paprec_agency_view', array(
+            'id' => $agencyFile->getAgency()->getId()
+        ));
+
     }
 
 }

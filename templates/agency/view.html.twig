@@ -179,6 +179,78 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-md-12 mt-2">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>
+                                                {{ 'Catalog.AgencyFile.FileListTitle'|trans }}
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+
+                                            <div class="float-right">
+                                                <a href="javascript:void(0);"
+                                                   class="btn btn-light mb-2"
+                                                   data-target="#uploadAgencyFileModal"
+                                                   data-toggle="modal"
+                                                   id="openModalUploadAgencyFile"><i
+                                                            class="fa fa-file"></i> {{ 'Catalog.AgencyFile.BtnAddLabel'| trans({}, "messages", app.request.locale) }}
+                                                </a>
+                                            </div>
+
+                                            <table id="agencyFileListDatatable"
+                                                   class="table table-striped table-bordered table-hover"
+                                                   cellpadding="0" cellspacing="0" border="0">
+                                                <thead>
+                                                <tr>
+                                                    <th>{{ 'Catalog.AgencyFile.FileNameColumn'| trans({}, "messages", app.request.locale) }}</th>
+                                                    <th>{{ 'Catalog.AgencyFile.Type.Type'| trans({}, "messages", app.request.locale) }}</th>
+                                                    <th>{{ 'Catalog.AgencyFile.FileTypeColumn'| trans({}, "messages", app.request.locale) }}</th>
+                                                    <th></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                {% if agency.agencyFiles is not null and agency.agencyFiles|length > 0 %}
+                                                    {% for agencyFile in agency.agencyFiles %}
+
+                                                        <tr>
+                                                            <td>
+                                                                {{ agencyFile.originalFileName }}
+                                                            </td>
+
+                                                            <td>
+                                                                {% if agencyFile.type %}
+                                                                    {{ ('Catalog.AgencyFile.Type.'~agencyFile.type)|trans }}
+                                                                {% endif %}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ agencyFile.originalFileName|split('.')|last|upper }}
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <a href="{{ path('paprec_agency_download_agency_file', {id: agencyFile.id}) }}"
+                                                                   class="btn btn-sm btn-info">
+                                                                    <i class="fa fa-xs fa-download"></i>
+                                                                </a>
+                                                                <a href="#"
+                                                                   class="btn btn-sm btn-danger commercialAgencyFileRemoveButton"
+                                                                   data-id="{{ agencyFile.id }}">
+                                                                    <i class="fa fa-xs fa-trash"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         {#
@@ -274,6 +346,61 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <!-- Modal d'ajout d'un CGV' -->
+                        <div class="modal fade" id="uploadAgencyFileModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Upload Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formAddAgencyFile" name="formAddAgencyFile"
+                                          action="{{ path("paprec_agency_add_agency_file", {agencyId: agency.id}) }}"
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">
+                                                {{ 'Catalog.AgencyFile.AddTitle'| trans({}, "messages", app.request.locale) }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    <span>{{ 'Catalog.AgencyFile.MaxSize'| trans({}, "messages", app.request.locale) }}</span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddAgencyFile.systemPath, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddAgencyFile.systemPath) }}
+                                                </div>
+                                            </div>
+{#                                            <div class="form-group">#}
+{#                                                <div class="form-label">#}
+{#                                                    <span>{{ 'Catalog.AgencyFile.Type.Type'| trans({}, "messages", app.request.locale) }}</span>#}
+{#                                                </div>#}
+{#                                                <div class="form-content">#}
+{#                                                    {{ form_widget(formAddAgencyFile.type, {'attr': {'class': 'form-control'}}) }}#}
+{#                                                    {{ form_errors(formAddAgencyFile.type) }}#}
+{#                                                </div>#}
+{#                                            </div>#}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formAddAgencyFileSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formAddAgencyFile) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-12 mt-3">
@@ -409,6 +536,29 @@
 
             $('#formEditPictureSubmitButton').on('click', function () {
                 $('#formEditPicture').submit();
+            });
+
+
+            $('#formAddAgencyFileSubmitButton').on('click', function () {
+                $('#formAddAgencyFile').submit();
+            });
+
+            $('.commercialAgencyFileRemoveButton').on('click', function () {
+                var agencyFileId = $(this).data('id');
+                var url = "{{ path("paprec_agency_remove_agency_file", {agencyId: agency.id, agencyFileId: '0000'}) }}".replace('0000', agencyFileId);
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-remove'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
             });
         });
     </script>
