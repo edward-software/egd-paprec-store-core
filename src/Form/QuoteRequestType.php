@@ -109,7 +109,7 @@ class QuoteRequestType extends AbstractType
                     return 'Commercial.QuoteStatusList.' . $choiceValue;
                 }
             ))
-            ->add('overallDiscount')
+//            ->add('overallDiscount')
             ->add('salesmanComment', TextareaType::class)
             ->add('annualBudget')
             ->add('catalog', ChoiceType::class, array(

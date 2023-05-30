@@ -376,7 +376,7 @@ Commercial:
             Content: Contenu
 
     PDF:
-        Title: Devis de Prestation
+        Title: Devis de Prestation valable %number% mois
         Company: Nom de la société
         Address: Adresse
         PostalCode: CP / Ville
@@ -424,6 +424,12 @@ Commercial:
         ContractFrequency: Fréquence de passage
         ContractMensuelEstimation: Estimation Mensuelle
         ContractTotalAmount: Budget Total (€ HT)
+        ProductCode: Code
+        Waste: Déchet
+        RentalUnitPrice: PU Loc
+        TreatmentCollectPrice: PU Collecte
+        TreatmentUnitPrice: PU Traitement
+        MensualAmount: Budget FORFAITAIRE mensuel
         Footer:
             StreetName: 7 rue du Docteur Lancereaux - 75008 Paris
             PhoneNumberTitle: Tél.
