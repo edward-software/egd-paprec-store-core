@@ -355,6 +355,118 @@ class QuoteRequest
      */
     private $serviceEndDate;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeCode1", type="string", length=255, nullable=true)
+     */
+    private $managementFeeCode1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeCode2", type="string", length=255, nullable=true)
+     */
+    private $managementFeeCode2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeCode3", type="string", length=255, nullable=true)
+     */
+    private $managementFeeCode3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeCode4", type="string", length=255, nullable=true)
+     */
+    private $managementFeeCode4;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeDescription1", type="string", length=255, nullable=true)
+     */
+    private $managementFeeDescription1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeDescription2", type="string", length=255, nullable=true)
+     */
+    private $managementFeeDescription2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeDescription3", type="string", length=255, nullable=true)
+     */
+    private $managementFeeDescription3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeDescription4", type="string", length=255, nullable=true)
+     */
+    private $managementFeeDescription4;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeFrequency1", type="string", length=255, nullable=true)
+     */
+    private $managementFeeFrequency1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeFrequency2", type="string", length=255, nullable=true)
+     */
+    private $managementFeeFrequency2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeFrequency3", type="string", length=255, nullable=true)
+     */
+    private $managementFeeFrequency3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="managementFeeFrequency4", type="string", length=255, nullable=true)
+     */
+    private $managementFeeFrequency4;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="managementFeeAmount1", type="bigint", nullable=true)
+     */
+    private $managementFeeAmount1;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="managementFeeAmount2", type="bigint", nullable=true)
+     */
+    private $managementFeeAmount2;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="managementFeeAmount3", type="bigint", nullable=true)
+     */
+    private $managementFeeAmount3;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="managementFeeAmount4", type="bigint", nullable=true)
+     */
+    private $managementFeeAmount4;
+
 
     /**
      * #################################
@@ -425,6 +537,26 @@ class QuoteRequest
         $this->duration = 0;
         $this->quoteRequestFiles = new ArrayCollection();
         $this->followUps = new ArrayCollection();
+
+        /**
+         * Valeur par défaut des frais de gestion
+         */
+        $this->managementFeeCode1 = 'FGEST';
+        $this->managementFeeCode2 = 'PASBAC';
+        $this->managementFeeCode3 = 'FORFAIT';
+        $this->managementFeeCode4 = null;
+        $this->managementFeeDescription1 = 'Frais de gestion';
+        $this->managementFeeDescription2 = 'Passage à vide';
+        $this->managementFeeDescription3 = 'Facturation forfaitaire mensuelle';
+        $this->managementFeeDescription4 = null;
+        $this->managementFeeFrequency1 = 'MONTH';
+        $this->managementFeeFrequency2 = null;
+        $this->managementFeeFrequency3 = 'MONTH';
+        $this->managementFeeFrequency4 = null;
+        $this->managementFeeAmount1 = 35* 100;
+        $this->managementFeeAmount2 = 30* 100;
+        $this->managementFeeAmount3 = null;
+        $this->managementFeeAmount4 = null;
     }
 
     /**
@@ -1581,6 +1713,295 @@ class QuoteRequest
         $this->missionSheet = $missionSheet;
     }
 
+    /**
+     * @return string
+     */
+    public function getManagementFeeCode1()
+    {
+        return $this->managementFeeCode1;
+    }
+
+    /**
+     * @param string $managementFeeCode1
+     * @return QuoteRequest
+     */
+    public function setManagementFeeCode1($managementFeeCode1 = null)
+    {
+        $this->managementFeeCode1 = $managementFeeCode1;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeCode2()
+    {
+        return $this->managementFeeCode2;
+    }
+
+    /**
+     * @param string $managementFeeCode2
+     * @return QuoteRequest
+     */
+    public function setManagementFeeCode2($managementFeeCode2 = null)
+    {
+        $this->managementFeeCode2 = $managementFeeCode2;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeCode3()
+    {
+        return $this->managementFeeCode3;
+    }
+
+    /**
+     * @param string $managementFeeCode3
+     * @return QuoteRequest
+     */
+    public function setManagementFeeCode3($managementFeeCode3 = null)
+    {
+        $this->managementFeeCode3 = $managementFeeCode3;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeCode4()
+    {
+        return $this->managementFeeCode4;
+    }
+
+    /**
+     * @param string $managementFeeCode4
+     * @return QuoteRequest
+     */
+    public function setManagementFeeCode4($managementFeeCode4 = null)
+    {
+        $this->managementFeeCode4 = $managementFeeCode4;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeDescription1()
+    {
+        return $this->managementFeeDescription1;
+    }
+
+    /**
+     * @param string $managementFeeDescription1
+     * @return QuoteRequest
+     */
+    public function setManagementFeeDescription1($managementFeeDescription1 = null)
+    {
+        $this->managementFeeDescription1 = $managementFeeDescription1;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeDescription2()
+    {
+        return $this->managementFeeDescription2;
+    }
+
+    /**
+     * @param string $managementFeeDescription2
+     * @return QuoteRequest
+     */
+    public function setManagementFeeDescription2($managementFeeDescription2 = null)
+    {
+        $this->managementFeeDescription2 = $managementFeeDescription2;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeDescription3()
+    {
+        return $this->managementFeeDescription3;
+    }
+
+    /**
+     * @param string $managementFeeDescription3
+     * @return QuoteRequest
+     */
+    public function setManagementFeeDescription3($managementFeeDescription3 = null)
+    {
+        $this->managementFeeDescription3 = $managementFeeDescription3;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeDescription4()
+    {
+        return $this->managementFeeDescription4;
+    }
+
+    /**
+     * @param string $managementFeeDescription4
+     * @return QuoteRequest
+     */
+    public function setManagementFeeDescription4($managementFeeDescription4 = null)
+    {
+        $this->managementFeeDescription4 = $managementFeeDescription4;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeFrequency1()
+    {
+        return $this->managementFeeFrequency1;
+    }
+
+    /**
+     * @param string $managementFeeFrequency1
+     * @return QuoteRequest
+     */
+    public function setManagementFeeFrequency1($managementFeeFrequency1 = null)
+    {
+        $this->managementFeeFrequency1 = $managementFeeFrequency1;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeFrequency2()
+    {
+        return $this->managementFeeFrequency2;
+    }
+
+    /**
+     * @param string $managementFeeFrequency2
+     * @return QuoteRequest
+     */
+    public function setManagementFeeFrequency2($managementFeeFrequency2 = null)
+    {
+        $this->managementFeeFrequency2 = $managementFeeFrequency2;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeFrequency3()
+    {
+        return $this->managementFeeFrequency3;
+    }
+
+    /**
+     * @param string $managementFeeFrequency3
+     * @return QuoteRequest
+     */
+    public function setManagementFeeFrequency3($managementFeeFrequency3 = null)
+    {
+        $this->managementFeeFrequency3 = $managementFeeFrequency3;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeFrequency4()
+    {
+        return $this->managementFeeFrequency4;
+    }
+
+    /**
+     * @param string $managementFeeFrequency4
+     * @return QuoteRequest
+     */
+    public function setManagementFeeFrequency4($managementFeeFrequency4 = null)
+    {
+        $this->managementFeeFrequency4 = $managementFeeFrequency4;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeAmount1()
+    {
+        return $this->managementFeeAmount1;
+    }
+
+    /**
+     * @param string $managementFeeAmount1
+     * @return QuoteRequest
+     */
+    public function setManagementFeeAmount1($managementFeeAmount1 = null)
+    {
+        $this->managementFeeAmount1 = $managementFeeAmount1;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeAmount2()
+    {
+        return $this->managementFeeAmount2;
+    }
+
+    /**
+     * @param string $managementFeeAmount2
+     * @return QuoteRequest
+     */
+    public function setManagementFeeAmount2($managementFeeAmount2 = null)
+    {
+        $this->managementFeeAmount2 = $managementFeeAmount2;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeAmount3()
+    {
+        return $this->managementFeeAmount3;
+    }
+
+    /**
+     * @param string $managementFeeAmount3
+     * @return QuoteRequest
+     */
+    public function setManagementFeeAmount3($managementFeeAmount3 = null)
+    {
+        $this->managementFeeAmount3 = $managementFeeAmount3;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManagementFeeAmount4()
+    {
+        return $this->managementFeeAmount4;
+    }
+
+    /**
+     * @param string $managementFeeAmount4
+     * @return QuoteRequest
+     */
+    public function setManagementFeeAmount4($managementFeeAmount4 = null)
+    {
+        $this->managementFeeAmount4 = $managementFeeAmount4;
+        return $this;
+    }
+
+    
 
 
 

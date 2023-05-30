@@ -1,0 +1,589 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.MissionSheetProduct.View'| trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.MissionSheetProduct.MissionSheetProducts'| trans({}, "messages", app.request.locale) }}
+{% endblock %}
+
+{% block main_content %}
+    <div class="col-md-12">
+        <!-- CARD -->
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    <i class="fa fa-xs fa-folder"></i> {{ 'Catalog.MissionSheetProduct.View'| trans({}, "messages", app.request.locale) }}
+                </h4>
+                <div class="float-right">
+                    <a href="{{ path("paprec_mission_sheet_product_addMissionSheetProductLabel", {id: missionSheetProduct.id}) }}"
+                       class="btn btn-sm btn-success"><i
+                                class="fa fa-xs fa-plus"></i> {{ 'Catalog.MissionSheetProductLabel.Add'| trans({}, "messages", app.request.locale) }}
+                    </a>
+                    {% if missionSheetProduct.catalog == 'MATERIAL' %}
+                        <a href="{{ path("paprec_mission_sheet_product_material_edit", {id: missionSheetProduct.id}) }}"
+                           class="btn btn-sm btn-warning"><i
+                                    class="fa fa-xs fa-edit"></i> {{ 'Catalog.MissionSheetProduct.Edit'| trans({}, "messages", app.request.locale) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path("paprec_mission_sheet_product_edit", {id: missionSheetProduct.id}) }}"
+                           class="btn btn-sm btn-warning"><i
+                                    class="fa fa-xs fa-edit"></i> {{ 'Catalog.MissionSheetProduct.Edit'| trans({}, "messages", app.request.locale) }}
+                        </a>
+                    {% endif %}
+                    <a id="catalogMissionSheetProductRemoveButton" href="javascript:void(0);" class="btn btn-sm btn-danger"><i
+                                class="fa fa-xs fa-trash"></i> {{ 'Catalog.MissionSheetProduct.Remove'| trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+                <div class="float-left">
+                    <a href="{{ path('paprec_mission_sheet_product_index') }}" class="btn btn-sm btn-default"><i
+                                class="fa fa-xs fa-chevron-left"></i> {{ 'Catalog.MissionSheetProduct.List'| trans({}, "messages", app.request.locale) }}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.Information'| trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProductLabel.Language.Language'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProductLabel.language }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProductLabel.Name'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProductLabel.name }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProductLabel.Short-description'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProductLabel.shortDescription|nl2br }}
+                                    </label>
+                                </div>
+                                {% if missionSheetProduct.hideCapacity == 0 or missionSheetProduct.hideCapacity == null %}
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Capacity'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProduct.capacity }} {% autoescape false %} {{ missionSheetProduct.capacityUnit }} {% endautoescape %}
+                                    </label>
+                                </div>
+                                {% endif %}
+                                {% if missionSheetProduct.hideDimension == 0 or missionSheetProduct.hideDimension == null %}
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Dimensions'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProduct.dimensions|nl2br }}
+                                    </label>
+                                </div>
+                                {% endif %}
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Range'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.range %}
+                                            <a href="{{ path('paprec_range_view', {id: missionSheetProduct.range.id}) }}">
+                                                {{ missionSheetProduct.range|rangeLabelTranslation('fr') }}
+                                            </a>
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% if missionSheetProduct.catalog != 'MATERIAL' %}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.TransportType'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ ('General.TransportType.' ~ missionSheetProduct.transportType)|trans }}
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Catalog.Label'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.catalog %}
+                                            {{ ('Catalog.MissionSheetProduct.Catalog.' ~ missionSheetProduct.catalog) |trans }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% if missionSheetProduct.catalog != 'MATERIAL' %}
+                                    {% if missionSheetProduct.hideFrequency == 0 or missionSheetProduct.hideFrequency == null %}
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Frequency'|trans }}</label>
+                                            <label class="col-form-label col-md-8">
+                                                {% if missionSheetProduct.frequency == 'PONCTUAL' %}
+                                                    {{ 'General.Frequency.PONCTUAL'|trans }}
+                                                {% elseif missionSheetProduct.frequency == 'REGULAR' %}
+                                                    {{ missionSheetProduct.frequencyTimes }} / {{ ('General.Frequency.' ~ missionSheetProduct.frequencyInterval)|trans }}
+                                                {% elseif missionSheetProduct.frequency == 'UNKNOWN' %}
+                                                    {{ 'General.Frequency.UNKNOWN'|trans }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.RentalUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ missionSheetProduct.rentalUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.TransportUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ missionSheetProduct.transportUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.TreatmentUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ missionSheetProduct.treatmentUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.TraceabilityUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ missionSheetProduct.traceabilityUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.WasteClassification'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProduct.wasteClassification }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Code'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProduct.code }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.BillingUnit'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.billingUnit %}
+                                            {{ missionSheetProduct.billingUnit.code }} - {{ missionSheetProduct.billingUnit.name }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% if missionSheetProduct.catalog == 'MATERIAL' %}
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.MaterialUnitPrice'| trans({}, "messages", app.request.locale) }}</label>
+                                        <label class="col-form-label col-md-8">
+                                            {{ missionSheetProduct.materialUnitPrice|formatAmount('EUR', app.request.locale) }}
+                                        </label>
+                                    </div>
+                                {% endif %}
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Mercurial'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.mercurial %}
+                                            {{ missionSheetProduct.mercurial.value }}
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Reference-date'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProduct.referenceDate|format_date('long', 'MM/YYYY') }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.Comment'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ missionSheetProduct.comment }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.IsEnabled.IsEnabled'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.isEnabled == 1 %}{{ 'Catalog.MissionSheetProduct.IsEnabled.Yes'| trans({}, "messages", app.request.locale) }}{% else %}{{ 'Catalog.MissionSheetProduct.IsEnabled.No'| trans({}, "messages", app.request.locale) }}{% endif %}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.HideFrequency.HideFrequency'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.hideFrequency == 1 %}{{ 'Catalog.MissionSheetProduct.HideFrequency.Yes'| trans({}, "messages", app.request.locale) }}{% else %}{{ 'Catalog.MissionSheetProduct.HideFrequency.No'| trans({}, "messages", app.request.locale) }}{% endif %}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.HideCapacity.HideCapacity'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.hideCapacity == 1 %}{{ 'Catalog.MissionSheetProduct.HideCapacity.Yes'| trans({}, "messages", app.request.locale) }}{% else %}{{ 'Catalog.MissionSheetProduct.HideCapacity.No'| trans({}, "messages", app.request.locale) }}{% endif %}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProduct.HideDimension.HideDimension'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {% if missionSheetProduct.hideDimension == 1 %}{{ 'Catalog.MissionSheetProduct.HideDimension.Yes'| trans({}, "messages", app.request.locale) }}{% else %}{{ 'Catalog.MissionSheetProduct.HideDimension.No'| trans({}, "messages", app.request.locale) }}{% endif %}
+                                    </label>
+                                </div>
+                            </div>
+                            {#
+                            Affichage des photos
+                            #}
+                            <div class="col-md-6">
+                                {#
+                                Affichage des photos PilotPicture
+                                #}
+                                <div class="col-md-12 mt-2 no-gutters">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            {{ 'Catalog.MissionSheetProduct.PilotPicture'| trans({}, "messages", app.request.locale) }}
+                                            {% if missionSheetProduct.pictures is empty %}
+                                                <div class="float-right">
+                                                    <button class="btn btn-sm btn-outline-primary"
+                                                            data-target="#uploadPictureModal" data-toggle="modal"
+                                                            data-type="PILOTPICTURE" id="openModalUploadPicture">
+                                                        <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.MissionSheetProduct.AddPicture'| trans({}, "messages", app.request.locale) }}
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="card-group">
+                                                {% if (missionSheetProduct.pilotPictures) %}
+                                                    {% for picture in missionSheetProduct.pilotPictures %}
+                                                        <div class="card card-sec">
+                                                            <div class="card-header">
+                                                                {# <div class="float-left"> {{ 'Catalog.MissionSheetProduct.PilotPicture'| trans({}, "messages", app.request.locale) }}</div> #}
+                                                                <div class="dropdown float-right">
+                                                                    <button class="p-0 btn btn-sm btn-light dropdown-toggle btn-sm"
+                                                                            type="button" id="{{ picture.id }}"
+                                                                            data-toggle="dropdown" aria-haspopup="true"
+                                                                            aria-expanded="false">
+                                                                        <i class="fa fa-xs fa-cog"></i>
+                                                                    </button>
+                                                                    <div class="dropdown-menu"
+                                                                         aria-labelledby="{{ picture.id }}">
+                                                                        <button id="pictureEditButton"
+                                                                                class="dropdown-item"
+                                                                                type="button"
+                                                                                data-target="#editPictureModal"
+                                                                                data-toggle="modal"
+                                                                                data-type="PILOTPICTURE"
+                                                                                data-id="{{ picture.id }}">
+                                                                            <i class="fa fa-xs fa-pencil-alt"></i> {{ 'General.Edit'| trans({}, "messages", app.request.locale) }}
+                                                                        </button>
+                                                                        <button data-id="{{ picture.id }}"
+                                                                                class="dropdown-item removePictureButton"
+                                                                                type="button">
+                                                                            <i class="fa fa-xs fa-trash"></i> {{ 'General.Remove'| trans({}, "messages", app.request.locale) }}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <img class="card-img-top"
+                                                                 src="{{ asset('/uploads/pictos/' ~ picture.path) }}"
+                                                                 alt="{{ 'Catalog.MissionSheetProduct.Pictures'| trans({}, "messages", app.request.locale) }}">
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#
+                                Affichage photo de type PilotPicture
+                                #}
+                            </div>
+                        </div>
+                        {#
+                        Modal d'affichage des formulaires
+                        #}
+                        <div class="modal fade" id="uploadPictureModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Upload Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formAddPicture" name="formAddPicture"
+                                            {% set params = {id: missionSheetProduct.id, type: 'Picture' } %}
+                                          action="{{ path("paprec_mission_sheet_product_addPicture", params) }}"
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="uploadPictureModalTitle">
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span id="uploadPictureSizeInfo">
+
+                                                        </span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddPicture.path) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formAddPictureSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formAddPicture) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="editPictureModal" tabindex="-1" role="dialog"
+                             aria-labelledby="Edit Picture" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <form id="formEditPicture" name="formEditPicture"
+                                          action=""
+                                          method="post" enctype="multipart/form-data">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editPictureModalTitle">
+                                                {{ 'Catalog.MissionSheetProduct.EditPicture'| trans({}, "messages", app.request.locale) }}
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div class="form-label">
+                                                    {{ 'Catalog.Picture.Path'| trans({}, "messages", app.request.locale) }}
+                                                    <span id="editPictureSizeInfo">
+
+                                                        </span>
+                                                </div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formEditPicture.path, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formEditPicture.path) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    data-dismiss="modal">
+                                                {{ 'General.Cancel'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                    id="formEditPictureSubmitButton">
+                                                {{ 'General.Save'| trans({}, "messages", app.request.locale) }}
+                                            </button>
+                                        </div>
+                                        {{ form_rest(formEditPicture) }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ 'General.System-information'| trans({}, "messages", app.request.locale) }}</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-creation'| trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ missionSheetProduct.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-md-4 col-form-label">{{ 'General.Date-update'| trans({}, "messages", app.request.locale) }}</label>
+                                <label class="col-form-label col-md-8">
+                                    {{ missionSheetProduct.dateUpdate is empty ? "" : missionSheetProduct.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% for pL in otherMissionSheetProductLabels %}
+                    <div class="col-md-12 mt-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ ('Catalog.MissionSheetProductLabel.Language.'~pL.language)| trans({}, "messages", app.request.locale) }}</h5>
+                                <div class="float-right">
+                                    <a href="{{ path("paprec_mission_sheet_product_editMissionSheetProductLabel", {id: missionSheetProduct.id, missionSheetProductLabelId: pL.id}) }}"
+                                       class="btn btn-sm btn-warning"><i
+                                                class="fa fa-xs fa-edit"></i> {{ 'Catalog.MissionSheetProductLabel.Edit'| trans({}, "messages", app.request.locale) }}
+                                    </a>
+                                    <a id="catalogMissionSheetProductLabelRemoveButton_{{ pL.id }}" href="javascript:void(0);"
+                                       class="btn btn-sm btn-danger catalogMissionSheetProductLabelRemoveButton"><i
+                                                class="fa fa-xs fa-trash"></i> {{ 'Catalog.MissionSheetProductLabel.Remove'| trans({}, "messages", app.request.locale) }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProductLabel.Name'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ pL.name }}
+                                    </label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-4 col-form-label">{{ 'Catalog.MissionSheetProductLabel.Short-description'| trans({}, "messages", app.request.locale) }}</label>
+                                    <label class="col-form-label col-md-8">
+                                        {{ pL.shortDescription|nl2br }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+    {% block javascripts %}
+
+        <script>
+            $(function () {
+
+                $('#catalogMissionSheetProductRemoveButton').on('click', function () {
+
+                    var url = "{{ path("paprec_mission_sheet_product_remove", {id: missionSheetProduct.id}) }}";
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
+                        text: "{{ 'General.Confirm-remove'| trans({}, "messages", app.request.locale) }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
+                        cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+
+                });
+
+                $('.catalogMissionSheetProductLabelRemoveButton').on('click', function () {
+
+                    var pLId = $(this).attr('id').replace('catalogMissionSheetProductLabelRemoveButton_', '');
+
+                    var url = "{{ path("paprec_mission_sheet_product_removeMissionSheetProductLabel", {id: missionSheetProduct.id, missionSheetProductLabelId: 'missionSheetProductLabelId'}) }}".replace('missionSheetProductLabelId', pLId);
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
+                        text: "{{ 'General.Confirm-remove'| trans({}, "messages", app.request.locale) }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
+                        cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+
+                });
+
+                $('.catalog-mission-sheet-product-save-button').on('click', function () {
+
+                    $('#catalogMissionSheetProductForm').submit();
+
+                });
+
+                // Au chargement de la modal d'ajout d'une photo
+                // On met à jour le titre de la modal d'ajout de photo en fonction du type que l'on ajoute
+                // On modifie aussi l'url d'action pour passer en paramètre le type de photo à ajouter
+                $('#uploadPictureModal').on('show.bs.modal', function (e) {
+                    var type = $(e.relatedTarget).data('type');
+                    var actionUrl = "{{ path("paprec_mission_sheet_product_addPicture", {id: missionSheetProduct.id, type: 'typeTmp'}) }}";
+                    var sizeInfo = document.getElementById('uploadPictureSizeInfo');
+
+                    actionUrl = actionUrl.replace('typeTmp', type);
+                    document.formAddPicture.action = actionUrl;
+                    switch (type) {
+                        case 'Picto':
+                            type = "{{ 'Catalog.MissionSheetProduct.Picto'| trans({}, "messages", app.request.locale) }}";
+                            sizeInfo.innerText = '(125 x 120 pixels)';
+                            break;
+                        case 'PilotPicture':
+                            type = "{{ 'Catalog.MissionSheetProduct.PilotPicture'| trans({}, "messages", app.request.locale) }}";
+                            sizeInfo.innerText = '(277 x 395 pixels)';
+                            break;
+                        default:
+                            type = "{{ 'Catalog.MissionSheetProduct.Pictures'| trans({}, "messages", app.request.locale) }}";
+                            sizeInfo.innerText = '(60 x 60 pixels)';
+                            break;
+                    }
+                    var title = document.getElementById('uploadPictureModalTitle');
+                    title.innerText = type;
+                });
+
+                // Au chargement de la modal d'édition d'une photo
+                // On modifie l'URL d'action du formulaire pour passer en paramètre l'ID de la photo modifiée
+                $('#editPictureModal').on('show.bs.modal', function (e) {
+                    var pictureID = $(e.relatedTarget).data('id');
+                    var type = $(e.relatedTarget).data('type');
+                    var actionUrl = "{{ path("paprec_mission_sheet_product_editPicture", {id: missionSheetProduct.id, pictureID: 'pictureTmp'}) }}";
+                    var sizeInfo = document.getElementById('editPictureSizeInfo');
+
+                    actionUrl = actionUrl.replace('pictureTmp', pictureID);
+                    document.formEditPicture.action = actionUrl;
+                    switch (type) {
+                        case 'Picto':
+                            type = "{{ 'Catalog.MissionSheetProduct.Picto'| trans({}, "messages", app.request.locale) }}";
+                            sizeInfo.innerText = '(125 x 120 pixels)';
+                            break;
+                        case 'PilotPicture':
+                            type = "{{ 'Catalog.MissionSheetProduct.PilotPicture'| trans({}, "messages", app.request.locale) }}";
+                            sizeInfo.innerText = '(277 x 395 pixels)';
+                            break;
+                        default:
+                            type = "{{ 'Catalog.MissionSheetProduct.Pictures'| trans({}, "messages", app.request.locale) }}";
+                            sizeInfo.innerText = '(60 x 60 pixels)';
+                            break;
+                    }
+                    var title = document.getElementById('editPictureModalTitle');
+                    title.innerText = type;
+                });
+
+
+                $('.removePictureButton').on('click', function () {
+                    picId = $(this).data('id');
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
+                        text: "{{ 'General.Confirm-remove'| trans({}, "messages", app.request.locale) }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
+                        cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            var url = "{{ path("paprec_mission_sheet_product_removePicture", {id: missionSheetProduct.id, pictureID: 'pictureTmp'}) }}";
+                            url = url.replace('pictureTmp', picId);
+                            $(location).attr('href', url);
+                        }
+                    });
+                });
+
+
+                $('#formAddPictureSubmitButton').on('click', function () {
+                    $('#formAddPicture').submit();
+                });
+
+                $('#formEditPictureSubmitButton').on('click', function () {
+                    $('#formEditPicture').submit();
+                });
+            });
+        </script>
+
+    {% endblock %}

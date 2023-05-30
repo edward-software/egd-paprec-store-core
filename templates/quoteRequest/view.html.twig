@@ -727,6 +727,191 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-12 mt-3">
+                        <form id="formQuoteRequestViewManagementFee" name="formAddQuoteRequestFile"
+                              action="{{ path("paprec_quote_request_edit_quote_request_management_fee", {quoteRequestId: quoteRequest.id}) }}"
+                              method="post">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>
+                                        {{ 'Commercial.QuoteRequest.ManagementFee'|trans }}
+                                    </h5>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="row">
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeCode1'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeCode1, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeCode1) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeDescription1'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeDescription1, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeDescription1) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeFrequency1'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeFrequency1, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeFrequency1) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeAmount1'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeAmount1, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeAmount1) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeCode2'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeCode2, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeCode2) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeDescription2'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeDescription2, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeDescription2) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeFrequency2'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeFrequency2, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeFrequency2) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeAmount2'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeAmount2, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeAmount2) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeCode3'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeCode3, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeCode3) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeDescription3'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeDescription3, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeDescription3) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeFrequency3'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeFrequency3, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeFrequency3) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeAmount3'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeAmount3, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeAmount3) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeCode4'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeCode4, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeCode4) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeDescription4'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeDescription4, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeDescription4) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeFrequency4'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeFrequency4, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeFrequency4) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="form-label">{{ 'Commercial.QuoteRequest.ManagementFeeAmount4'|trans }}</div>
+                                                <div class="form-content">
+                                                    {{ form_widget(formAddManagementFee.managementFeeAmount4, {'attr': {'class': 'form-control'}}) }}
+                                                    {{ form_errors(formAddManagementFee.managementFeeAmount4) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="card-footer">
+                                    <div class="float-right">
+                                        <a href="javascript:void(0);"
+                                           class="btn btn-sm btn-success quote-request-view-management-fee-save-button"><i
+                                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+
+                                        <a href="javascript:void(0);"
+                                           class="btn btn-sm btn-danger quote-request-view-management-fee-cancel-button"><i
+                                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{ form_rest(formAddManagementFee) }}
+                        </form>
+                    </div>
 
                     <div class="col-md-12 mt-3">
                         <div class="card">
@@ -845,6 +1030,14 @@
         $(function () {
 
             $('[data-toggle="tooltip"],[data-tooltip="tooltip"]').tooltip();
+
+            $('.quote-request-view-management-fee-save-button').on('click', function () {
+                $('#formQuoteRequestViewManagementFee').submit();
+            });
+
+            $('.quote-request-view-management-fee-cancel-button').on('click', function () {
+                location.reload();
+            });
 
             $('#followUpsListDatatable').EgdDatatable({
                 url: "{{ path('paprec_quote_request_follow_up_loadList', {'id': quoteRequest.id}) }}",

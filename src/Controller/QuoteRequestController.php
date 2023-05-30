@@ -13,6 +13,7 @@ use App\Form\MissionSheetType;
 use App\Form\QuoteRequestFileType;
 use App\Form\QuoteRequestLineAddType;
 use App\Form\QuoteRequestLineEditType;
+use App\Form\QuoteRequestManagementFeeType;
 use App\Form\QuoteRequestType;
 use App\Service\NumberManager;
 use App\Service\QuoteRequestManager;
@@ -500,13 +501,12 @@ class QuoteRequestController extends AbstractController
 
         $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
 
-
         /**
          * On calcule le prix sans les réductions
          */
         $total = 0;
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
-            foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine){
+            foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
                 $frequencyIntervalValue = 1;
                 if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
                     $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
@@ -547,12 +547,18 @@ class QuoteRequestController extends AbstractController
             }
         }
 
+        /**
+         * Frais de gestion
+         */
+
+        $formAddManagementFee = $this->createForm(QuoteRequestManagementFeeType::class, $quoteRequest, []);
 
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
             'hasContract' => $hasContract,
             'isAbleToSendContractEmail' => $isAbleToSendContractEmail,
             'formAddQuoteRequestFile' => $formAddQuoteRequestFile->createView(),
+            'formAddManagementFee' => $formAddManagementFee->createView(),
             'monthlyCoefficientValues' => $monthlyCoefficientValues,
             'total' => $total
         ));
@@ -1161,6 +1167,33 @@ class QuoteRequestController extends AbstractController
         );
 
         return $response;
+    }
+
+    /**
+     * @Route("/editManagementFee/{quoteRequestId}", name="paprec_quote_request_edit_quote_request_management_fee")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function editManagementFeeAction(Request $request, $quoteRequestId)
+    {
+        $quoteRequest = $this->quoteRequestManager->get($quoteRequestId, true);
+
+        $form = $this->createForm(QuoteRequestManagementFeeType::class, $quoteRequest, array());
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $quoteRequest = $form->getData();
+            $quoteRequest->setDateUpdate(new \DateTime());
+
+            $this->em->flush();
+
+            return $this->redirectToRoute('paprec_quote_request_view', array(
+                'id' => $quoteRequest->getId()
+            ));
+        }
+
+        return $this->redirectToRoute('paprec_quote_request_view', array(
+            'id' => $quoteRequest->getId()
+        ));
     }
 
     /**

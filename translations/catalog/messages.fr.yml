@@ -193,6 +193,91 @@ Catalog:
         Information: Informations
         Remove: Supprimer
 
+    MissionSheetProduct:
+        View: Vue du produit
+        MissionSheetProducts: Liste des produits de feuille de mission
+        Add: Ajouter un produit
+        Add-material: Ajouter un matériel
+        Edit: Modifier un produit
+        Remove: Supprimer
+        List: Liste des produits
+        Information: Information du produit
+        Capacity: Volume
+        Dimensions: Dimensions
+        Range: Gamme
+        TransportType: Type de transport
+        WasteClassification: Qualité
+        Code: Code
+        BillingUnit: Unité de facturation
+        Mercurial: Mercuriale
+        Reference-date: Mois et année de référence
+        Comment: Commentaire à usage strictement interne d’explication des prix
+        MaterialUnitPrice: Prix de Vente €HT/unité
+        Catalog:
+            Label: Catalogue
+            REGULAR: Régulier
+            PONCTUAL: Ponctuel
+            MATERIAL: Matériel
+        Frequency: Fréquence
+        PassingFrequency: Fréquence de passage (si régulier)
+        FrequencyInterval: Fréquence
+        FrequencyTimes: Fréquence
+        AvailablePostalCodes: Disponibilités géographiques
+        IsEnabled:
+            IsEnabled: Actif
+            Yes: Oui
+            No: Non
+            Disable: Désactiver
+            Disable-multiple: Séléctionner une ou plusieurs lignes pour les désactiver
+            Enable: Activer
+            Enable-multiple: Séléctionner une ou plusieurs lignes pour les activer
+        HideFrequency:
+            HideFrequency: Cacher la fréquence ?
+            Yes: Oui
+            No: Non
+        HideCapacity:
+            HideCapacity: Cacher le volume ?
+            Yes: Oui
+            No: Non
+        HideDimension:
+            HideDimension: Cacher les dimensions ?
+            Yes: Oui
+            No: Non
+        Picto: Picto
+        AddPicture: Ajouter image
+        PilotPicture: Logo
+        SetSecondaryPicture: Définir en image secondaire
+        Pictures: Images
+        EditPicture: Remplacer image
+        System-information: Informations système
+        Date-creation: Date de création
+        Date-update: Date dernière modification
+        Export: Exporter les produits
+        Details: Details du produit
+        CapacityUnit: Unité de volume
+        Position: Position
+        FolderNumber: Nombre de dossiers
+        RentalUnitPrice: PU location
+        TransportUnitPrice: PU Transport
+        TreatmentUnitPrice: PU Traitement
+        TraceabilityUnitPrice: PU Matériel Additionnel
+
+    MissionSheetProductLabel:
+        Add: Ajouter une traduction
+        Edit: Modifier traduction
+        Language:
+            Language: Langue
+            EN: Anglais
+            FR: Français
+            IT: Italien
+            DE: Allemand
+        Name: Nom
+        Short-description: Description courte
+        Lock: Verrou
+        Version: Version
+        Information: Informations
+        Remove: Supprimer
+
     Range:
         View: Vue de la gamme
         Ranges: Liste des gammes

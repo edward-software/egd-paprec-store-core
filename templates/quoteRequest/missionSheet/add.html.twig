@@ -47,7 +47,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-4 mnemonic-number-input"
-{#                                         style="display: none;"#}
+                                            {#                                         style="display: none;" #}
                                     >
                                         <div class="form-label">{{ 'Commercial.MissionSheet.MnemonicNumber'|trans }}</div>
                                         <div class="form-content{% if form_errors(form.mnemonicNumber) %} has-error{% endif %}">
@@ -157,7 +157,7 @@
                                         <tr>
                                             <td>{{ quoteRequestLine.id|formatId(6) }}</td>
                                             <td>
-                                                    {{ quoteRequestLine.product|productLabelTranslation(app.user.lang) }}
+                                                {{ quoteRequestLine.product|productLabelTranslation(app.user.lang) }}
                                             </td>
                                             <td>{{ quoteRequestLine.quantity }}</td>
                                             <td>
@@ -231,7 +231,8 @@
                                                       style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span>
                                             </td>
                                             <td class="text-center">
-                                                <select name="quoteRequestLineAgency[{{ quoteRequestLine.id }}]" class="form-control">
+                                                <select name="quoteRequestLineAgency[{{ quoteRequestLine.id }}]"
+                                                        class="form-control">
                                                     {% for agency in agencies %}
                                                         <option value="{{ agency.id }}"{% if quoteRequest.userInCharge and quoteRequest.userInCharge.agency and quoteRequest.userInCharge.agency.id == agency.id %} selected{% endif %}>{{ agency.name }}</option>
                                                     {% endfor %}
@@ -239,6 +240,63 @@
                                             </td>
                                         </tr>
                                     {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>
+                                    {{ 'Commercial.QuoteRequest.ManagementFee'|trans }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <table id=""
+                                       class="table table-striped table-bordered table-hover"
+                                       cellpadding="0" cellspacing="0" border="0">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ 'Commercial.QuoteRequest.ManagementFeeCode'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequest.ManagementFeeDescription'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequest.ManagementFeeFrequency'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequest.ManagementFeeAmount'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if quoteRequest.managementFeeCode1 is not empty or quoteRequest.managementFeeDescription1 is not empty or quoteRequest.managementFeeFrequency1 is not empty or (quoteRequest.managementFeeAmount1 is not null and quoteRequest.managementFeeAmount1 >= 0) %}
+                                        <tr>
+                                            <td>{{ quoteRequest.managementFeeCode1 }}</td>
+                                            <td>{{ quoteRequest.managementFeeDescription1 }}</td>
+                                            <td>{% if quoteRequest.managementFeeFrequency1 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency1)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
+                                            <td>{{ quoteRequest.managementFeeAmount1|formatAmount('EUR', app.request.locale) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if quoteRequest.managementFeeCode2 is not empty or quoteRequest.managementFeeDescription2 is not empty or quoteRequest.managementFeeFrequency2 is not empty or (quoteRequest.managementFeeAmount2 is not null and quoteRequest.managementFeeAmount2 >= 0) %}
+                                        <tr>
+                                            <td>{{ quoteRequest.managementFeeCode2 }}</td>
+                                            <td>{{ quoteRequest.managementFeeDescription2 }}</td>
+                                            <td>{% if quoteRequest.managementFeeFrequency2 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency2)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
+                                            <td>{{ quoteRequest.managementFeeAmount2|formatAmount('EUR', app.request.locale) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if quoteRequest.managementFeeCode3 is not empty or quoteRequest.managementFeeDescription3 is not empty or quoteRequest.managementFeeFrequency3 is not empty or (quoteRequest.managementFeeAmount3 is not null and quoteRequest.managementFeeAmount3 >= 0) %}
+                                        <tr>
+                                            <td>{{ quoteRequest.managementFeeCode3 }}</td>
+                                            <td>{{ quoteRequest.managementFeeDescription3 }}</td>
+                                            <td>{% if quoteRequest.managementFeeFrequency3 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency3)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
+                                            <td>{{ quoteRequest.managementFeeAmount3|formatAmount('EUR', app.request.locale) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if quoteRequest.managementFeeCode4 is not empty or quoteRequest.managementFeeDescription4 is not empty or quoteRequest.managementFeeFrequency4 is not empty or (quoteRequest.managementFeeAmount4 is not null and quoteRequest.managementFeeAmount4 >= 0) %}
+                                        <tr>
+                                            <td>{{ quoteRequest.managementFeeCode4 }}</td>
+                                            <td>{{ quoteRequest.managementFeeDescription4 }}</td>
+                                            <td>{% if quoteRequest.managementFeeFrequency4 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency4)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
+                                            <td>{{ quoteRequest.managementFeeAmount4|formatAmount('EUR', app.request.locale) }}</td>
+                                        </tr>
+                                    {% endif %}
                                     </tbody>
                                 </table>
                             </div>

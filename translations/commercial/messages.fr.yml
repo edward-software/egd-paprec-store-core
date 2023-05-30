@@ -148,6 +148,27 @@ Commercial:
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
+        ManagementFee: Frais de gestion
+        ManagementFeeCode: Code
+        ManagementFeeDescription: Description
+        ManagementFeeFrequency: Fréquence
+        ManagementFeeAmount: Montant
+        ManagementFeeCode1: Code 1
+        ManagementFeeCode2: Code 2
+        ManagementFeeCode3: Code 3
+        ManagementFeeCode4: Code 4
+        ManagementFeeDescription1: Description 1
+        ManagementFeeDescription2: Description 2
+        ManagementFeeDescription3: Description 3
+        ManagementFeeDescription4: Description 4
+        ManagementFeeFrequency1: Fréquence 1
+        ManagementFeeFrequency2: Fréquence 2
+        ManagementFeeFrequency3: Fréquence 3
+        ManagementFeeFrequency4: Fréquence 4
+        ManagementFeeAmount1: Montant 1
+        ManagementFeeAmount2: Montant 2
+        ManagementFeeAmount3: Montant 3
+        ManagementFeeAmount4: Montant 4
         FollowUp:
             Add: Ajouter un suivi
             Add-tooltip: "Tenez à jour votre portefeuille d'offres selon l'actualité des échanges avec votre client. Une offre avec un suivi récent ne sera pas incluse dans les mails de relances d'offres sans mises à jour que vous recevrez"

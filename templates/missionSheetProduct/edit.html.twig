@@ -1,0 +1,354 @@
+{% extends "base_admin.html.twig" %}
+
+{% block title %}
+    {{ 'Catalog.MissionSheetProduct.Edit'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content_title %}
+    {{ 'Catalog.MissionSheetProduct.MissionSheetProducts'|trans }}
+{% endblock %}
+
+{% block main_content %}
+
+    <form id="catalogMissionSheetProductForm" action="" method="post">
+        <div class="col-md-12">
+            <!-- BOX -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fa fa-xs fa-pencil-alt"></i> {{ 'Catalog.MissionSheetProduct.Edit'|trans }}
+                        #{{ missionSheetProduct.id|formatId(6) }}
+                    </h4>
+                    <div class="float-right">
+
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-mission-sheet-product-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-mission-sheet-product-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProductLabel.Language.Language'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form2.language, {'attr': {'class': 'form-control missionSheetProduct-label-language-input'}}) }}
+                                        {{ form_errors(form2.language) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProductLabel.Name'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form2.name, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form2.name) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProductLabel.Short-description'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form2.shortDescription, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form2.shortDescription) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ 'Catalog.MissionSheetProduct.Details'|trans }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Code'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.code, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.code) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Capacity'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.capacity, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.capacity) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.CapacityUnit'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.capacityUnit, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.capacityUnit) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Position'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.position, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.position) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Dimensions'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.dimensions, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.dimensions) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Catalog.Label'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control catalog-field'}}) }}
+                                        {{ form_errors(form1.catalog) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Range'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.range, {'attr': {'class': 'form-control range-field'}}) }}
+                                        {{ form_errors(form1.range) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TransportType'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.transportType, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.transportType) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Frequency'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.frequency, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.frequency) }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label class="form-label">{{ 'Catalog.MissionSheetProduct.PassingFrequency'|trans }}</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.frequencyTimes) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.frequencyInterval) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.RentalUnitPrice'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.rentalUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.rentalUnitPrice) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TransportUnitPrice'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.transportUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.transportUnitPrice) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TreatmentUnitPrice'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.treatmentUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.treatmentUnitPrice) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TraceabilityUnitPrice'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.traceabilityUnitPrice, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.traceabilityUnitPrice) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.WasteClassification'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.wasteClassification, {'attr': {'class': 'form-control', 'maxlength': '10'}}) }}
+                                        {{ form_errors(form1.wasteClassification) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.BillingUnit'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.billingUnit, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.billingUnit) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.IsEnabled.IsEnabled'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.isEnabled.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Mercurial'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.mercurial, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.mercurial) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Reference-date'|trans }}</div>
+                                        <div class="form-content">
+                                            {{ form_widget(form1.referenceDate, {'type': 'month', 'attr': {'class': 'form-control'}}) }}
+                                            {{ form_errors(form1.referenceDate) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Comment'|trans }}</div>
+                                    <div class="form-content">
+                                        {{ form_widget(form1.comment, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_errors(form1.comment) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.HideFrequency.HideFrequency'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.hideFrequency.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form1.hideFrequency) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.HideCapacity.HideCapacity'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.hideCapacity.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form1.hideCapacity) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.HideDimension.HideDimension'|trans }}</div>
+                                    <div class="form-content checkbox-list">
+                                        {% for radio in form1.hideDimension.children %}
+                                            <div class="form__check ml-4">
+                                                {{ form_widget(radio) }}
+                                                {{ form_label(radio) }}
+                                            </div>
+                                        {% endfor %}
+                                        {{ form_errors(form1.hideDimension) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="float-right">
+                        <a href="javascript:void(0);" class="btn btn-sm btn-success catalog-mission-sheet-product-save-button"><i
+                                    class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-danger catalog-mission-sheet-product-cancel-button"><i
+                                    class="fa fa-xs fa-close"></i> {{ 'General.Cancel'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ form_rest(form1) }}
+        {{ form_rest(form2) }}
+    </form>
+
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+            $('.catalog-mission-sheet-product-save-button').on('click', function () {
+
+                $('#catalogMissionSheetProductForm').submit();
+
+            });
+
+            $('.catalog-mission-sheet-product-cancel-button').on('click', function () {
+
+                var url = "{{ path("paprec_mission_sheet_product_view", {id: missionSheetProduct.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'General.Confirm-cancel'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+            {% if missionSheetProductLabel.language == 'EN' %}
+            $('.missionSheetProduct-label-language-input option:not(:selected)').each(function () {
+                $(this).prop('disabled', true);
+            });
+            {% endif %}
+
+
+            //Gestion du champs Range qui change selon le catalog
+            var rangesByCatalog = {{ rangesByCatalog|json_encode|raw }};
+            var defaultRangeId = '{{ defaultRangeId }}';
+
+            $(document).ready(function () {
+                if (rangesByCatalog) {
+                    $('.range-field').empty();
+                    $('.range-field').append('<option value=""></option>');
+                    rangesByCatalog['{{ defaultCatalog }}'].forEach(function (element) {
+                        if(defaultRangeId && defaultRangeId == element.id){
+                            $('.range-field').append('<option value= ' + element.id + ' selected>' + element.name + '</option>');
+                        }else{
+                            $('.range-field').append('<option value= ' + element.id + ' >' + element.name + '</option>');
+                        }
+                    });
+                }
+            });
+
+            $('.catalog-field').on('change', function (e) {
+                console.log('t');
+                var catalog = $('.catalog-field input:checked').val();
+                if(rangesByCatalog[catalog]){
+                    $('.range-field').empty();
+                    $('.range-field').append('<option value="" checked></option>');
+                    rangesByCatalog[catalog].forEach(function (element) {
+                        $('.range-field').append('<option value= ' + element.id + ' >' + element.name + '</option>');
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
