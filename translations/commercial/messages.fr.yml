@@ -87,6 +87,7 @@ Commercial:
         Export: Export des devis
         BusinessName: Nom société
         TotalAmount: Montant total (€)
+        TotalAmountWithoutDiscount: Prix Total Standard (€)
         QuoteStatus: Status devis
         ServiceEndDate: Date de fin de la prestation
         Date-crea: Date créa.

@@ -500,12 +500,61 @@ class QuoteRequestController extends AbstractController
 
         $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
 
+
+        /**
+         * On calcule le prix sans les réductions
+         */
+        $total = 0;
+        if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
+            foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine){
+                $frequencyIntervalValue = 1;
+                if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
+                    $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
+                    if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
+                        $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
+                    }
+                }
+
+                $quantity = $quoteRequestLine->getQuantity();
+
+                /**
+                 * Nombre de Produit * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
+                 */
+                if ($quoteRequestLine->getRentalUnitPrice() > 0) {
+                    $total += $quantity * $quoteRequestLine->getRentalUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                }
+
+                /**
+                 * Transport : Nombre de passage par mois (fonction de la fréquence) * Cout Transport * Coefficient Transport précisé dans le champ produit du CP
+                 */
+                if ($quoteRequestLine->getTransportUnitPrice() > 0) {
+                    $total += $frequencyIntervalValue * $quoteRequestLine->getTransportUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                }
+
+                /**
+                 * Traitement :  (Nombre de Produit) * (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                 */
+                if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
+                    $total += $quantity * $quoteRequestLine->getTreatmentUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                }
+
+                /**
+                 * Matériel Additionnel :  (Nombre de Produit -1) * (PU Matériel Additionnel du Produit * Coefficient Matériel Additionnel du CP de l’adresse à collecter)
+                 */
+                if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
+                    $total += ($quantity - 1) * $quoteRequestLine->getTraceabilityUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                }
+            }
+        }
+
+
         return $this->render('quoteRequest/view.html.twig', array(
             'quoteRequest' => $quoteRequest,
             'hasContract' => $hasContract,
             'isAbleToSendContractEmail' => $isAbleToSendContractEmail,
             'formAddQuoteRequestFile' => $formAddQuoteRequestFile->createView(),
-            'monthlyCoefficientValues' => $monthlyCoefficientValues
+            'monthlyCoefficientValues' => $monthlyCoefficientValues,
+            'total' => $total
         ));
     }
 
@@ -892,7 +941,7 @@ class QuoteRequestController extends AbstractController
         if ($form->isSubmitted()) {
             $quoteRequestLine = $form->getData();
 
-            if($quoteRequestLine->getFrequency() !== 'REGULAR'){
+            if ($quoteRequestLine->getFrequency() !== 'REGULAR') {
                 $quoteRequestLine->setFrequencyTimes(null);
                 $quoteRequestLine->setFrequencyInterval(null);
             }
@@ -1586,7 +1635,8 @@ class QuoteRequestController extends AbstractController
 
         $locale = 'fr';
 
-        $fileName = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(), $locale);
+        $fileName = $this->quoteRequestManager->generateMissionSheetPDF($quoteRequest, $quoteRequest->getMissionSheet(),
+            $locale);
 
         // This should return the file to the browser as response
         $response = new BinaryFileResponse($fileName);
