@@ -122,8 +122,6 @@ class MissionSheet
      */
     private $status;
 
-
-    
     /**
      * #################################
      *              SYSTEM USER ASSOCIATION
@@ -160,6 +158,11 @@ class MissionSheet
      */
     private $quoteRequests;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MissionSheetLine", mappedBy="quoteRequest")
+     */
+    private $missionSheetLines;
+
 
     /**
      * Constructor
@@ -168,6 +171,7 @@ class MissionSheet
     {
         $this->dateCreation = new \DateTime();
         $this->quoteRequests = new ArrayCollection();
+        $this->missionSheetLines = new ArrayCollection();
     }
 
     /**
@@ -485,5 +489,41 @@ class MissionSheet
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Add missionSheetLine.
+     *
+     * @param MissionSheetLine $missionSheetLine
+     *
+     * @return MissionSheet
+     */
+    public function addMissionSheetLine(MissionSheetLine $missionSheetLine)
+    {
+        $this->missionSheetLines[] = $missionSheetLine;
+
+        return $this;
+    }
+
+    /**
+     * Remove missionSheetLine.
+     *
+     * @param MissionSheetLine $missionSheetLine
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeMissionSheetLine(MissionSheetLine $missionSheetLine)
+    {
+        return $this->missionSheetLines->removeElement($missionSheetLine);
+    }
+
+    /**
+     * Get missionSheetLines.
+     *
+     * @return Collection
+     */
+    public function getMissionSheetLines()
+    {
+        return $this->missionSheetLines;
     }
 }

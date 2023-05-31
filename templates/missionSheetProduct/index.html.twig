@@ -29,9 +29,6 @@
                         <a href="{{ path('paprec_mission_sheet_product_add') }}" class="btn btn-sm btn-outline-primary">
                             <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.MissionSheetProduct.Add'|trans }}
                         </a>
-                        <a href="{{ path('paprec_mission_sheet_product_material_add') }}" class="btn btn-sm btn-outline-primary">
-                            <i class="fa fa-xs fa-plus"></i> {{ 'Catalog.MissionSheetProduct.Add-material'|trans }}
-                        </a>
                         <a href="{{ path('paprec_mission_sheet_product_export') }}" class="btn btn-sm btn-primary ">
                             <i class="fa fa-xs fa-file-excel"></i> {{ 'Catalog.MissionSheetProduct.Export'|trans }}
                         </a>
@@ -111,12 +108,6 @@
                     {"data": "isEnabled"},
                     {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
                 ],
-                formatRow: function (row, data) {
-                    if (data['catalogLabel'] === 'MATERIAL') {
-                        var url = '{{ path('paprec_mission_sheet_product_material_edit', {'id': '0000'}) }}'.replace('0000', data['id']);
-                        $(row).find('.edit-button').attr('href', url);
-                    }
-                },
                 rowDblclick: {
                     type: 'open',
                     url: "{{ path('paprec_mission_sheet_product_view', {id: '__rowId__'}) }}"

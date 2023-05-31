@@ -47,6 +47,12 @@ class Picture
      */
     private $product;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\MissionSheetProduct", inversedBy="pictures")
+     * @ORM\JoinColumn(name="productId")
+     */
+    private $missionSheetProduct;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Range", inversedBy="pictures")
@@ -152,6 +158,30 @@ class Picture
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * Set missionSheetProduct.
+     *
+     * @param MissionSheetProduct|null $missionSheetProduct
+     *
+     * @return Picture
+     */
+    public function setMissionSheetProduct(MissionSheetProduct $missionSheetProduct = null)
+    {
+        $this->missionSheetProduct = $missionSheetProduct;
+
+        return $this;
+    }
+
+    /**
+     * Get missionSheetProduct.
+     *
+     * @return MissionSheetProduct|null
+     */
+    public function getMissionSheetProduct()
+    {
+        return $this->missionSheetProduct;
     }
 
     /**

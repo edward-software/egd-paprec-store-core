@@ -89,6 +89,11 @@ class BillingUnit
      */
     private $products;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MissionSheetProduct", mappedBy="range")
+     */
+    private $missionSheetProducts;
+
 
     /**
      * Constructor

@@ -84,6 +84,11 @@ class Setting
     private $products;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MissionSheetProduct", mappedBy="range")
+     */
+    private $missionSheetProducts;
+
+    /**
      * Constructor
      */
     public function __construct()

@@ -97,8 +97,9 @@
                                 <div class="dropdown-menu">
                                     {% if not quoteRequest.missionSheet %}
                                         {% if is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_COMMERCIAL_MULTISITES') %}
-                                            <a href="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
-                                               class="dropdown-item"
+                                            <a href="javascript:void(0)"
+                                               data-url="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
+                                               class="dropdown-item quote-request-add-mission-sheet-button"
                                                data-toggle="tooltip" data-placement="top"
                                                title="{{ 'Commercial.QuoteRequest.MissionSheet.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
                                             ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
@@ -1180,6 +1181,23 @@
                 Swal.fire({
                     title: "{{ 'General.Confirm'|trans }}",
                     text: "{{ 'General.Confirm-remove'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+
+            });
+
+            $('.quote-request-add-mission-sheet-button').on('click', function () {
+                var url = $(this).data('url');
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'Commercial.QuoteRequest.MissionSheet.Confirm-add'|trans }}",
                     showCancelButton: true,
                     confirmButtonText: "{{ 'General.Yes'|trans }}",
                     cancelButtonText: "{{ 'General.No'|trans }}"

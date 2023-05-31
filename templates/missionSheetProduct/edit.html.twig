@@ -150,34 +150,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.RentalUnitPrice'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.rentalUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.rentalUnitPrice) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TransportUnitPrice'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.transportUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.transportUnitPrice) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TreatmentUnitPrice'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.treatmentUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.treatmentUnitPrice) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TraceabilityUnitPrice'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.traceabilityUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.traceabilityUnitPrice) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.MissionSheetProduct.WasteClassification'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form1.wasteClassification, {'attr': {'class': 'form-control', 'maxlength': '10'}}) }}
@@ -225,42 +197,6 @@
                                     <div class="form-content">
                                         {{ form_widget(form1.comment, {'attr': {'class': 'form-control'}}) }}
                                         {{ form_errors(form1.comment) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.HideFrequency.HideFrequency'|trans }}</div>
-                                    <div class="form-content checkbox-list">
-                                        {% for radio in form1.hideFrequency.children %}
-                                            <div class="form__check ml-4">
-                                                {{ form_widget(radio) }}
-                                                {{ form_label(radio) }}
-                                            </div>
-                                        {% endfor %}
-                                        {{ form_errors(form1.hideFrequency) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.HideCapacity.HideCapacity'|trans }}</div>
-                                    <div class="form-content checkbox-list">
-                                        {% for radio in form1.hideCapacity.children %}
-                                            <div class="form__check ml-4">
-                                                {{ form_widget(radio) }}
-                                                {{ form_label(radio) }}
-                                            </div>
-                                        {% endfor %}
-                                        {{ form_errors(form1.hideCapacity) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.HideDimension.HideDimension'|trans }}</div>
-                                    <div class="form-content checkbox-list">
-                                        {% for radio in form1.hideDimension.children %}
-                                            <div class="form__check ml-4">
-                                                {{ form_widget(radio) }}
-                                                {{ form_label(radio) }}
-                                            </div>
-                                        {% endfor %}
-                                        {{ form_errors(form1.hideDimension) }}
                                     </div>
                                 </div>
                             </div>

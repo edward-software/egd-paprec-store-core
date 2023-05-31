@@ -41,48 +41,6 @@ class MissionSheetProductType extends AbstractType
                 },
                 "expanded" => true,
             ))
-            ->add('hideFrequency', ChoiceType::class, array(
-                "choices" => array(
-                    0,
-                    1
-                ),
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.' . $choiceValue;
-                },
-                "expanded" => true,
-            ))
-            ->add('hideCapacity', ChoiceType::class, array(
-                "choices" => array(
-                    0,
-                    1
-                ),
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.' . $choiceValue;
-                },
-                "expanded" => true,
-            ))
-            ->add('hideDimension', ChoiceType::class, array(
-                "choices" => array(
-                    0,
-                    1
-                ),
-                "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.' . $choiceValue;
-                },
-                "expanded" => true,
-            ))
-            ->add('rentalUnitPrice', TextType::class, [
-                "required" => true
-            ])
-            ->add('transportUnitPrice', TextType::class, [
-                "required" => true
-            ])
-            ->add('treatmentUnitPrice', TextType::class, [
-                "required" => true
-            ])
-            ->add('traceabilityUnitPrice', TextType::class, [
-                "required" => true
-            ])
             ->add('position')
             ->add('transportType', ChoiceType::class, array(
                 "choices" => $options['transportTypes'],

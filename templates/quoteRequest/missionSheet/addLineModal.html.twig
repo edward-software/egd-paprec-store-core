@@ -1,0 +1,40 @@
+<div class="p-md">
+    {{ form_start(form, {'attr': {'id': 'commercialMissionSheetLineForm'}}) }}
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">{{ form_errors(form) }}</div>
+    {% endif %}
+
+    <div class="col-md-12">
+        <!-- BOX -->
+
+        <div class="form-group{% if form_errors(form.missionSheetProduct) %} has-error{% endif %}">
+            <label class="form-label">{{ 'Commercial.MissionSheetLine.MissionSheetProduct'|trans }}</label>
+            <div class="form-content">
+                {{ form_widget(form.missionSheetProduct, {'attr': {'class': 'form-control select-missionSheetProduct'}}) }}
+                {{ form_errors(form.missionSheetProduct) }}
+            </div>
+        </div>
+
+        <div class="form-group{% if form_errors(form.agency) %} has-error{% endif %}">
+            <label class="form-label">{{ 'Commercial.MissionSheetLine.Agency'|trans }}</label>
+            <div class="form-content">
+                {{ form_widget(form.agency, {'attr': {'class': 'form-control select-agency'}}) }}
+                {{ form_errors(form.agency) }}
+            </div>
+        </div>
+
+    </div>
+
+    {{ form_end(form, {'render_rest': true}) }}
+
+    <div class="clearfix"></div>
+</div>
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+        });
+    </script>
+{% endblock %}

@@ -3,6 +3,11 @@ catalog_product:
     type:     annotation
     prefix:   product
 
+catalog_mission_sheet_product:
+    resource: App\Controller\MissionSheetProductController
+    type:     annotation
+    prefix:   missionSheetProduct
+
 catalog_range:
     resource: App\Controller\RangeController
     type:     annotation

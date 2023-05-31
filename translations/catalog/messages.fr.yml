@@ -193,6 +193,8 @@ Catalog:
         Information: Informations
         Remove: Supprimer
 
+    MissionSheetLine:
+        Agency: Agence
     MissionSheetProduct:
         View: Vue du produit
         MissionSheetProducts: Liste des produits de feuille de mission
@@ -200,7 +202,7 @@ Catalog:
         Add-material: Ajouter un matériel
         Edit: Modifier un produit
         Remove: Supprimer
-        List: Liste des produits
+        List: Liste des produits de feuille de mission
         Information: Information du produit
         Capacity: Volume
         Dimensions: Dimensions

@@ -97,6 +97,11 @@ class Range
     private $products;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MissionSheetProduct", mappedBy="range")
+     */
+    private $missionSheetProducts;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Picture", mappedBy="range", cascade={"all"})
      */
     private $pictures;

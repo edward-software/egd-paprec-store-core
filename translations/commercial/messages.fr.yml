@@ -135,6 +135,7 @@ Commercial:
         Send-contract: Envoi client
         Send-contract-tooltip: "Tout est OK ? … attention : toutes les pièces jointes à l'offre et accessibles dans le menu EDITION de l'OFFRE seront ajoutées en pièces jointes à l'envoi du contrat. Est-ce bien cela que vous souhaitez ? Alors Go !"
         ProductsList: Liste des produits
+        MissionSheetProductsList: Liste des produits de feuille de mission
         AddLine: Ajouter un produit
         Confirm-send-quote: Êtes-vous sûr de vouloir envoyer le devis au client ?
         Confirm-send-contract: Êtes-vous sûr de vouloir envoyer le contrat au client ?
@@ -178,6 +179,7 @@ Commercial:
             Edit: Modifier la feuille de mission
             SendPdf: Envoyer la feuille de mission
             Download: Télécharger la feuille de mission
+            Confirm-add: Voulez-vous ajouter une feuille de mission ?
         Error:
             generatedQuoteNotSent: Erreur lors de la génération et l'envoi du devis.
             generatedContractNotSent: Erreur lors de la génération et l'envoi du contrat.

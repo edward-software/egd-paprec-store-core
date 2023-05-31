@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -48,7 +49,8 @@ class MissionSheetProduct
     /**
      * @var string
      * Le volume du produit
-     * @ORM\Column(name="capacity", type="string", length=10, nullable=true)
+     * @ORM\Column(name="capacity", type="string", length=10)
+     * @Assert\NotBlank()
      */
     private $capacity;
 
@@ -63,7 +65,8 @@ class MissionSheetProduct
     /**
      * @var string
      *
-     * @ORM\Column(name="dimensions", type="string", length=500, nullable=true)
+     * @ORM\Column(name="dimensions", type="string", length=500)
+     * @Assert\NotBlank()
      */
     private $dimensions;
 
@@ -198,7 +201,6 @@ class MissionSheetProduct
      * @ORM\JoinColumn(name="mercurialId")
      */
     private $mercurial;
-
 
     /**
      * Constructor

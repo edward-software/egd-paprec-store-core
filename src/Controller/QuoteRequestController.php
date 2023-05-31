@@ -5,10 +5,13 @@ namespace App\Controller;
 use App\Entity\Agency;
 use App\Entity\FollowUp;
 use App\Entity\MissionSheet;
+use App\Entity\MissionSheetLine;
+use App\Entity\MissionSheetProduct;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
 use App\Form\FollowUpType;
+use App\Form\MissionSheetLineType;
 use App\Form\MissionSheetType;
 use App\Form\QuoteRequestFileType;
 use App\Form\QuoteRequestLineAddType;
@@ -1311,17 +1314,6 @@ class QuoteRequestController extends AbstractController
     public function addMissionSheetAction(Request $request, QuoteRequest $quoteRequest)
     {
         $user = $this->getUser();
-        $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
-
-        $agencies = $this->getDoctrine()->getManager()->getRepository(Agency::class)->findBy([
-            'deleted' => null
-        ]);
-        $agencyById = [];
-        if (is_array($agencies) && count($agencies)) {
-            foreach ($agencies as $a) {
-                $agencyById[$a->getId()] = $a;
-            }
-        }
 
         $missionSheet = new MissionSheet();
         $missionSheet->addQuoteRequest($quoteRequest);
@@ -1330,111 +1322,148 @@ class QuoteRequestController extends AbstractController
         $missionSheet->setMyPaprecAccess(0);
         $missionSheet->setWasteTrackingRegisterAccess(0);
         $missionSheet->setReportingAccess(0);
-        $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+        $missionSheet->setDateCreation(new \DateTime());
+        $missionSheet->setUserCreation($user);
+        $missionSheet->setStatus('NOT_VALIDATED');
+        $missionSheet->setContractNumber(null);
+        $missionSheet->setContractType('CREATION');
+        $missionSheet->setMnemonicNumber('');
+        $missionSheet->setBillingType('GLOBAL');
+
+        $this->em->persist($missionSheet);
+        $this->em->flush();
+
+
+        return $this->redirectToRoute('paprec_quote_request_mission_sheet_edit', [
+            'id' => $quoteRequest->getId(),
+            'missionSheetId' => $missionSheet->getId()
         ]);
 
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $formData = $form->all();
-            if (is_array($formData) && count($formData)) {
-                foreach ($formData as $key => $value) {
-                    $parameters[$key] = $value->getData();
-                }
-            }
-
-            $contractType = null;
-            $mnemonicNumber = null;
-            $contractNumber = null;
-            if (is_array($parameters) && count($parameters)) {
-                foreach ($parameters as $key => $value) {
-                    $$key = $value;
-                }
-            }
-
-            $errors = [];
-            if (isset($contractType) && strtoupper($contractType) === 'MODIFICATION') {
-//                if (!$mnemonicNumber) {
-//                    $errors['mnemonicNumber'] = array(
+//        $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
+//
+//        $agencies = $this->getDoctrine()->getManager()->getRepository(Agency::class)->findBy([
+//            'deleted' => null
+//        ]);
+//        $agencyById = [];
+//        if (is_array($agencies) && count($agencies)) {
+//            foreach ($agencies as $a) {
+//                $agencyById[$a->getId()] = $a;
+//            }
+//        }
+//
+//        $missionSheet = new MissionSheet();
+//        $missionSheet->addQuoteRequest($quoteRequest);
+//        $quoteRequest->setMissionSheet($missionSheet);
+//
+//        $missionSheet->setMyPaprecAccess(0);
+//        $missionSheet->setWasteTrackingRegisterAccess(0);
+//        $missionSheet->setReportingAccess(0);
+//        $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+//        ]);
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted()) {
+//            $formData = $form->all();
+//            if (is_array($formData) && count($formData)) {
+//                foreach ($formData as $key => $value) {
+//                    $parameters[$key] = $value->getData();
+//                }
+//            }
+//
+//            $contractType = null;
+//            $mnemonicNumber = null;
+//            $contractNumber = null;
+//            if (is_array($parameters) && count($parameters)) {
+//                foreach ($parameters as $key => $value) {
+//                    $$key = $value;
+//                }
+//            }
+//
+//            $errors = [];
+//            if (isset($contractType) && strtoupper($contractType) === 'MODIFICATION') {
+////                if (!$mnemonicNumber) {
+////                    $errors['mnemonicNumber'] = array(
+////                        'code' => 400,
+////                        'message' => 'La valeur ne doit pas être nulle'
+////                    );
+////                }
+//                if (!$contractNumber) {
+//                    $errors['contractNumber'] = array(
 //                        'code' => 400,
 //                        'message' => 'La valeur ne doit pas être nulle'
 //                    );
 //                }
-                if (!$contractNumber) {
-                    $errors['contractNumber'] = array(
-                        'code' => 400,
-                        'message' => 'La valeur ne doit pas être nulle'
-                    );
-                }
-            }
-
-            if ($errors && count($errors)) {
-                $form = $this->createForm(MissionSheetType::class, $missionSheet, [
-                ]);
-
-                if ($errors['contractNumber']) {
-                    $form->get('contractNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
-                }
-
-//                if ($errors['mnemonicNumber']) {
-//                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+//            }
+//
+//            if ($errors && count($errors)) {
+//                $form = $this->createForm(MissionSheetType::class, $missionSheet, [
+//                ]);
+//
+//                if ($errors['contractNumber']) {
+//                    $form->get('contractNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
 //                }
-
-                return $this->render('quoteRequest/missionSheet/add.html.twig', array(
-                    'form' => $form->createView(),
-                    'quoteRequest' => $quoteRequest,
-                    'errors' => $errors,
-                    'agencies' => $agencies,
-                    'monthlyCoefficientValues' => $monthlyCoefficientValues
-                ));
-            }
-
-            if ($form->isValid()) {
-
-                $missionSheet = $form->getData();
-
-                $missionSheet->setDateCreation(new \DateTime());
-                $missionSheet->setUserCreation($user);
-                $missionSheet->setStatus('NOT_VALIDATED');
-
-                if (strtoupper($missionSheet->getContractType()) === 'CREATION') {
-//                    $missionSheet->setMnemonicNumber(null);
-                    $missionSheet->setContractNumber(null);
-                }
-
-                $this->em->persist($missionSheet);
-
-                /**
-                 * On ajoute l'agence dans les quoteRequestLine
-                 */
-                $quoteRequestLineAgencies = $request->get('quoteRequestLineAgency');
-
-                if (count($quoteRequest->getQuoteRequestLines())) {
-                    foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
-                        if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
-                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()],
-                                $agencyById)) {
-                            $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
-                        }
-                    }
-                }
-
-                $this->em->flush();
-
-                return $this->redirectToRoute('paprec_quote_request_view', array(
-                    'id' => $quoteRequest->getId(),
-                    'monthlyCoefficientValues' => $monthlyCoefficientValues
-                ));
-
-            }
-        }
-
-        return $this->render('quoteRequest/missionSheet/add.html.twig', array(
-            'form' => $form->createView(),
-            'quoteRequest' => $quoteRequest,
-            'agencies' => $agencies,
-            'monthlyCoefficientValues' => $monthlyCoefficientValues
-        ));
+//
+////                if ($errors['mnemonicNumber']) {
+////                    $form->get('mnemonicNumber')->addError(new FormError('La valeur ne doit pas être nulle'));
+////                }
+//
+//                return $this->render('quoteRequest/missionSheet/add.html.twig', array(
+//                    'form' => $form->createView(),
+//                    'quoteRequest' => $quoteRequest,
+//                    'errors' => $errors,
+//                    'agencies' => $agencies,
+//                    'monthlyCoefficientValues' => $monthlyCoefficientValues
+//                ));
+//            }
+//
+//            if ($form->isValid()) {
+//
+//                $missionSheet = $form->getData();
+//
+//                $missionSheet->setDateCreation(new \DateTime());
+//                $missionSheet->setUserCreation($user);
+//                $missionSheet->setStatus('NOT_VALIDATED');
+//
+//                if (strtoupper($missionSheet->getContractType()) === 'CREATION') {
+////                    $missionSheet->setMnemonicNumber(null);
+//                    $missionSheet->setContractNumber(null);
+//                }
+//
+//                $this->em->persist($missionSheet);
+//
+//                /**
+//                 * On ajoute l'agence dans les quoteRequestLine
+//                 */
+//                $quoteRequestLineAgencies = $request->get('quoteRequestLineAgency');
+//
+//                if (count($quoteRequest->getQuoteRequestLines())) {
+//                    foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
+//                        if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
+//                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()],
+//                                $agencyById)) {
+//                            $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
+//                        }
+//                    }
+//                }
+//
+//                $this->em->flush();
+//
+//                return $this->redirectToRoute('paprec_quote_request_view', array(
+//                    'id' => $quoteRequest->getId(),
+//                    'monthlyCoefficientValues' => $monthlyCoefficientValues
+//                ));
+//
+//            }
+//        }
+//
+//        return $this->render('quoteRequest/missionSheet/add.html.twig', array(
+//            'form' => $form->createView(),
+//            'quoteRequest' => $quoteRequest,
+//            'agencies' => $agencies,
+//            'monthlyCoefficientValues' => $monthlyCoefficientValues
+//        ));
     }
 
     /**
@@ -1695,5 +1724,248 @@ class QuoteRequestController extends AbstractController
 
         return $response;
 
+    }
+
+
+    /**
+     * @Route("/{id}/missionSheet/{missionSheetId}/loadLineList", name="paprec_quote_request_mission_sheet_loadLineList")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function loadMissionSheetLineListAction(
+        Request $request,
+        DataTable $dataTable,
+        PaginatorInterface $paginator,
+        QuoteRequest $quoteRequest,
+        $missionSheetId
+    ) {
+        $return = [];
+
+        $filters = $request->get('filters');
+        $pageSize = $request->get('length');
+        $start = $request->get('start');
+        $orders = $request->get('order');
+        $search = $request->get('search');
+        $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
+
+        $cols['id'] = array('label' => 'id', 'id' => 'mSP.id', 'method' => array('getId'));
+        $cols['name'] = array(
+            'label' => 'name',
+            'id' => 'mSPL.name',
+            'method' => array('getMissionSheetProduct', array('getMissionSheetProductLabels', 0), 'getName')
+        );
+        $cols['range'] = array(
+            'label' => 'range',
+            'id' => 'rL.name',
+            'method' => array('getMissionSheetProduct', 'getRange', array(array('getRangeLabels', 0), 'getName'))
+        );
+        $cols['catalog'] = array(
+            'label' => 'catalog',
+            'id' => 'mSP.catalog',
+            'method' => ['getMissionSheetProduct', 'getCatalog']
+        );
+        $cols['catalogLabel'] = array(
+            'label' => 'catalogLabel',
+            'id' => 'mSP.catalog',
+            'method' => ['getMissionSheetProduct', 'getCatalog']
+        );
+        $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'mSP.isEnabled', 'method' => array('getMissionSheetProduct', 'getIsEnabled'));
+        $cols['agency'] = array('label' => 'agency', 'id' => 'a.name', 'method' => array('getAgency', 'getName'));
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(MissionSheetLine::class)->createQueryBuilder('mSL');
+
+        $queryBuilder->select(array('mSL', 'mSP', 'mSPL', 'r', 'rL'))
+            ->leftJoin('mSL.missionSheetProduct', 'mSP')
+            ->leftJoin('mSP.missionSheetProductLabels', 'mSPL')
+            ->leftJoin('mSP.range', 'r')
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->leftJoin('mSL.missionSheet', 'mS')
+            ->leftJoin('mSL.agency', 'a')
+            ->where('mSP.deleted IS NULL')
+            ->andWhere('mSPL.language = :language')
+            ->setParameter('language', 'FR')
+            ->andWhere('mS.id = :id')
+            ->setParameter('id', $missionSheetId);
+
+        if (is_array($search) && isset($search['value']) && $search['value'] != '') {
+            if (substr($search['value'], 0, 1) === '#') {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->eq('mSL.id', '?1')
+                ))->setParameter(1, substr($search['value'], 1));
+            } else {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->like('mSPL.name', '?1'),
+                    $queryBuilder->expr()->like('mSP.dimensions', '?1'),
+                    $queryBuilder->expr()->like('mSP.isEnabled', '?1'),
+                    $queryBuilder->expr()->like('rL.name', '?1'),
+                    $queryBuilder->expr()->like('a.name', '?1')
+                ))->setParameter(1, '%' . $search['value'] . '%');
+            }
+        }
+
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
+
+        // Reformatage de certaines données
+        $tmp = array();
+        foreach ($dt['data'] as $data) {
+            $line = $data;
+            $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
+            if ($line['catalog']) {
+                $line['catalog'] = $this->translator->trans('Catalog.MissionSheetProduct.Catalog.' . strtoupper($line['catalog']));
+            }
+            $tmp[] = $line;
+        }
+
+        $dt['data'] = $tmp;
+
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
+        $return['resultCode'] = 1;
+        $return['resultDescription'] = "success";
+
+        return new JsonResponse($return);
+
+    }
+
+
+    /**
+     * @Route("/{id}/missionSheet/{missionSheetId}/addLine", name="paprec_quote_request_mission_sheet_addLine")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @ParamConverter("id", options={"id" = "id"})
+     * @ParamConverter("missionSheet", options={"id" = "missionSheetId"})
+     */
+    public function addMissionSheetLineAction(Request $request, QuoteRequest $quoteRequest, MissionSheet $missionSheet)
+    {
+        if ($missionSheet->getDeleted() !== null) {
+            throw new NotFoundHttpException();
+        }
+
+        $missionSheetLine = new MissionSheetLine();
+
+        $form = $this->createForm(MissionSheetLineType::class, $missionSheetLine);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $missionSheetLine = $form->getData();
+                $missionSheetLine->setDateCreation(new \DateTime());
+                $missionSheetLine->setMissionSheet($missionSheet);
+
+                $this->em->persist($missionSheetLine);
+                $this->em->flush();
+
+                return new JsonResponse(array(
+                    'id' => $missionSheetLine->getId(),
+                    'resultCode' => 1
+                ));
+
+            }
+
+            return new JsonResponse(array(
+                'error' => true,
+                'data' => $this->renderView('quoteRequest/missionSheet/addLineModal.html.twig',
+                    array(
+                        'form' => $form->createView(),
+                        'quoteRequest' => $quoteRequest,
+                        'missionSheet' => $missionSheet
+                    )),
+                'resultCode' => 0
+            ));
+        }
+
+        return $this->render('quoteRequest/missionSheet/addLineModal.html.twig', array(
+            'form' => $form->createView(),
+            'quoteRequest' => $quoteRequest,
+            'missionSheet' => $missionSheet
+        ));
+    }
+
+    /**
+     * @Route("/{id}/missionSheet/{missionSheetId}/editLine/{missionSheetLineId}", name="paprec_quote_request_mission_sheet_editLine")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @ParamConverter("id", options={"id" = "id"})
+     * @ParamConverter("missionSheet", options={"id" = "missionSheetId"})
+     * @ParamConverter("missionSheetLine", options={"id" = "missionSheetLineId"})
+     */
+    public function editMissionSheetLineAction(
+        Request $request,
+        QuoteRequest $quoteRequest,
+        MissionSheet $missionSheet,
+        MissionSheetLine $missionSheetLine
+    ) {
+        if ($missionSheet->getDeleted() !== null) {
+            throw new NotFoundHttpException();
+        }
+
+        $form = $this->createForm(MissionSheetLineType::class, $missionSheetLine);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $missionSheetLine = $form->getData();
+                $missionSheetLine->setDateUpdate(new \DateTime());
+                $this->em->flush();
+                return new JsonResponse(array(
+                    'id' => $missionSheetLine->getId(),
+                    'resultCode' => 1
+                ));
+
+            }
+
+            return new JsonResponse(array(
+                'error' => true,
+                'data' => $this->renderView('quoteRequest/missionSheet/editLineModal.html.twig',
+                    array(
+                        'form' => $form->createView(),
+                        'quoteRequest' => $quoteRequest,
+                        'missionSheet' => $missionSheet
+                    )),
+                'resultCode' => 0
+            ));
+        }
+
+        return $this->render('quoteRequest/missionSheet/editLineModal.html.twig', array(
+            'form' => $form->createView(),
+            'quoteRequest' => $quoteRequest,
+            'missionSheet' => $missionSheet
+        ));
+    }
+
+    /**
+     * @Route("/{id}/missionSheet/{missionSheetId}/removeLine/{missionSheetLineId}", name="paprec_quote_request_mission_sheet_removeLine")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @ParamConverter("id", options={"id" = "id"})
+     * @ParamConverter("missionSheetId", options={"id" = "missionSheetId"})
+     * @ParamConverter("missionSheetLineId", options={"id" = "missionSheetLineId"})
+     */
+    public function removeMissionSheetLineAction(
+        Request $request,
+        QuoteRequest $quoteRequest,
+        MissionSheet $missionSheet,
+        MissionSheetLine $missionSheetLine
+    ) {
+        if ($missionSheet->getDeleted() !== null) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($missionSheetLine->getMissionSheet() !== $missionSheet) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->em->remove($missionSheetLine);
+        $this->em->flush();
+
+        $total = $this->missionSheetManager->calculateTotal($missionSheet);
+        $missionSheet->setTotalAmount($total);
+        $this->em->flush();
+
+
+        return $this->redirectToRoute('paprec_quote_request_view', array(
+            'id' => $missionSheet->getId()
+        ));
     }
 }

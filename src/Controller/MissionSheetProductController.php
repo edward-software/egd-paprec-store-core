@@ -9,7 +9,6 @@ use App\Entity\MissionSheetProductLabel;
 use App\Entity\Range;
 use App\Form\PictureMissionSheetProductType;
 use App\Form\MissionSheetProductLabelType;
-use App\Form\MissionSheetProductMaterialType;
 use App\Form\MissionSheetProductType;
 use App\Form\SettingType;
 use App\Service\NumberManager;
@@ -105,10 +104,10 @@ class MissionSheetProductController extends AbstractController
         $selectedRange = $request->get('selectedRange');
         $isEnabled = $request->get('isEnabled');
 
-        $cols['id'] = array('label' => 'id', 'id' => 'p.id', 'method' => array('getId'));
+        $cols['id'] = array('label' => 'id', 'id' => 'mSP.id', 'method' => array('getId'));
         $cols['name'] = array(
             'label' => 'name',
-            'id' => 'pL.name',
+            'id' => 'mSPL.name',
             'method' => array(array('getMissionSheetProductLabels', 0), 'getName')
         );
         $cols['range'] = array(
@@ -118,24 +117,24 @@ class MissionSheetProductController extends AbstractController
         );
         $cols['catalog'] = array(
             'label' => 'catalog',
-            'id' => 'p.catalog',
+            'id' => 'mSP.catalog',
             'method' => ['getCatalog']
         );
         $cols['catalogLabel'] = array(
             'label' => 'catalogLabel',
-            'id' => 'p.catalog',
+            'id' => 'mSP.catalog',
             'method' => ['getCatalog']
         );
-        $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'p.isEnabled', 'method' => array('getIsEnabled'));
+        $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'mSP.isEnabled', 'method' => array('getIsEnabled'));
 
-        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(MissionSheetProduct::class)->createQueryBuilder('p');
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(MissionSheetProduct::class)->createQueryBuilder('mSP');
 
-        $queryBuilder->select(array('p', 'pL', 'r', 'rL'))
-            ->leftJoin('p.missionSheetProductLabels', 'pL')
-            ->leftJoin('p.range', 'r')
+        $queryBuilder->select(array('mSP', 'mSPL', 'r', 'rL'))
+            ->leftJoin('mSP.missionSheetProductLabels', 'mSPL')
+            ->leftJoin('mSP.range', 'r')
             ->leftJoin('r.rangeLabels', 'rL')
-            ->where('p.deleted IS NULL')
-            ->andWhere('pL.language = :language')
+            ->where('mSP.deleted IS NULL')
+            ->andWhere('mSPL.language = :language')
             ->setParameter('language', 'FR');
 
         /**
@@ -143,7 +142,7 @@ class MissionSheetProductController extends AbstractController
          */
         if ($selectedCatalog !== null && $selectedCatalog !== '#') {
             $queryBuilder
-                ->andWhere('p.catalog = :catalog')
+                ->andWhere('mSP.catalog = :catalog')
                 ->setParameter('catalog', $selectedCatalog);
         }
         if ($selectedRange !== null && $selectedRange !== '#') {
@@ -153,20 +152,20 @@ class MissionSheetProductController extends AbstractController
         }
         if ($isEnabled !== null && $isEnabled !== '#') {
             $queryBuilder
-                ->andWhere('p.isEnabled = :isEnabled')
+                ->andWhere('mSP.isEnabled = :isEnabled')
                 ->setParameter('isEnabled', $isEnabled);
         }
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
             if (substr($search['value'], 0, 1) === '#') {
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
-                    $queryBuilder->expr()->eq('p.id', '?1')
+                    $queryBuilder->expr()->eq('mSP.id', '?1')
                 ))->setParameter(1, substr($search['value'], 1));
             } else {
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
-                    $queryBuilder->expr()->like('pL.name', '?1'),
-                    $queryBuilder->expr()->like('p.dimensions', '?1'),
-                    $queryBuilder->expr()->like('p.isEnabled', '?1'),
+                    $queryBuilder->expr()->like('mSPL.name', '?1'),
+                    $queryBuilder->expr()->like('mSP.dimensions', '?1'),
+                    $queryBuilder->expr()->like('mSP.isEnabled', '?1'),
                     $queryBuilder->expr()->like('rL.name', '?1')
                 ))->setParameter(1, '%' . $search['value'] . '%');
             }
@@ -209,9 +208,9 @@ class MissionSheetProductController extends AbstractController
         /** @var QueryBuilder $queryBuilder */
         $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
 
-        $queryBuilder->select(array('p'))
-            ->from('App:MissionSheetProduct', 'p')
-            ->where('p.deleted IS NULL');
+        $queryBuilder->select(array('mSP'))
+            ->from('App:MissionSheetProduct', 'mSP')
+            ->where('mSP.deleted IS NULL');
 
         $missionSheetProducts = $queryBuilder->getQuery()->getResult();
 
@@ -237,10 +236,6 @@ class MissionSheetProductController extends AbstractController
             'Capacity unit',
             'Dimensions',
             'is Enabled',
-            'Rental unit price',
-            'Transport UP',
-            'Treatment UP',
-            'Traceability UP',
             'Position',
             'User creation ID',
             'User update ID',
@@ -274,10 +269,6 @@ class MissionSheetProductController extends AbstractController
                 $missionSheetProduct->getCapacityUnit(),
                 $missionSheetProduct->getDimensions(),
                 $missionSheetProduct->getIsEnabled(),
-                $this->numberManager->denormalize($missionSheetProduct->getRentalUnitPrice()),
-                $this->numberManager->denormalize($missionSheetProduct->getTransportUnitPrice()),
-                $this->numberManager->denormalize($missionSheetProduct->getTreatmentUnitPrice()),
-                $this->numberManager->denormalize($missionSheetProduct->getTraceabilityUnitPrice()),
                 $missionSheetProduct->getPosition(),
                 $missionSheetProduct->getUserCreation(),
                 $missionSheetProduct->getUserUpdate(),
@@ -354,7 +345,6 @@ class MissionSheetProductController extends AbstractController
             'types' => $types
         ));
 
-
         return $this->render('missionSheetProduct/view.html.twig', array(
             'missionSheetProduct' => $missionSheetProduct,
             'missionSheetProductLabel' => $missionSheetProductLabel,
@@ -422,52 +412,9 @@ class MissionSheetProductController extends AbstractController
         $form1->handleRequest($request);
         $form2->handleRequest($request);
         if ($form1->isSubmitted()) {
-            $hideCapacity = $form1->get('hideCapacity')->getData();
-            $hideDimension = $form1->get('hideDimension')->getData();
-            $capacity = $form1->get('capacity')->getData();
-            $dimensions = $form1->get('dimensions')->getData();
-
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
-
             if ($form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
 
                 $missionSheetProduct = $form1->getData();
-
-
-                if($missionSheetProduct->getHideFrequency() === 1){
-                    $missionSheetProduct->setFrequency('UNKNOWN');
-                }
-
-                if($missionSheetProduct->getHideCapacity() === 1){
-                    $missionSheetProduct->setCapacity('');
-                }
-
-                if($missionSheetProduct->getHideDimension() === 1){
-                    $missionSheetProduct->setDimensions('');
-                }
-
-                $missionSheetProduct->setRentalUnitPrice($this->numberManager->normalize($missionSheetProduct->getRentalUnitPrice()));
-                $missionSheetProduct->setTransportUnitPrice($this->numberManager->normalize($missionSheetProduct->getTransportUnitPrice()));
-                $missionSheetProduct->setTreatmentUnitPrice($this->numberManager->normalize($missionSheetProduct->getTreatmentUnitPrice()));
-                $missionSheetProduct->setTraceabilityUnitPrice($this->numberManager->normalize($missionSheetProduct->getTraceabilityUnitPrice()));
 
                 $missionSheetProduct->setDateCreation(new \DateTime);
                 $missionSheetProduct->setUserCreation($user);
@@ -496,108 +443,6 @@ class MissionSheetProductController extends AbstractController
             'rangesByCatalog' => $rangesByCatalog,
             'defaultCatalog' => 'REGULAR',
             'defaultRangeId' => null
-        ));
-    }
-
-    /**
-     * @Route("/addMaterial",  name="paprec_mission_sheet_product_material_add")
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function addMaterialAction(Request $request)
-    {
-        $user = $this->getUser();
-
-        $languages = array();
-        foreach ($this->getParameter('paprec_languages') as $language) {
-            $languages[$language] = $language;
-        }
-
-        $missionSheetProduct = new MissionSheetProduct();
-        $missionSheetProductLabel = new MissionSheetProductLabel();
-        $missionSheetProduct->setCatalog('MATERIAL');
-        $missionSheetProduct->setTransportType(null);
-
-        $form1 = $this->createForm(MissionSheetProductMaterialType::class, $missionSheetProduct);
-        $form2 = $this->createForm(MissionSheetProductLabelType::class, $missionSheetProductLabel, array(
-            'languages' => $languages,
-            'language' => 'FR'
-        ));
-
-        $form1->handleRequest($request);
-        $form2->handleRequest($request);
-
-        if ($form1->isSubmitted()) {
-            $hideCapacity = $form1->get('hideCapacity')->getData();
-            $hideDimension = $form1->get('hideDimension')->getData();
-            $capacity = $form1->get('capacity')->getData();
-            $dimensions = $form1->get('dimensions')->getData();
-
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
-            if ($form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
-
-                $missionSheetProduct = $form1->getData();
-
-
-                if($missionSheetProduct->getHideFrequency() === 1){
-                    $missionSheetProduct->setFrequency('UNKNOWN');
-                }
-
-                if($missionSheetProduct->getHideCapacity() === 1){
-                    $missionSheetProduct->setCapacity('');
-                }
-
-                if($missionSheetProduct->getHideDimension() === 1){
-                    $missionSheetProduct->setDimensions('');
-                }
-
-                $missionSheetProduct->setRentalUnitPrice($this->numberManager->normalize($missionSheetProduct->getRentalUnitPrice()));
-                $missionSheetProduct->setTransportUnitPrice($this->numberManager->normalize($missionSheetProduct->getTransportUnitPrice()));
-                $missionSheetProduct->setTreatmentUnitPrice($this->numberManager->normalize($missionSheetProduct->getTreatmentUnitPrice()));
-                $missionSheetProduct->setTraceabilityUnitPrice($this->numberManager->normalize($missionSheetProduct->getTraceabilityUnitPrice()));
-                $missionSheetProduct->setMaterialUnitPrice($this->numberManager->normalize($missionSheetProduct->getMaterialUnitPrice()));
-
-                $missionSheetProduct->setDateCreation(new \DateTime);
-                $missionSheetProduct->setUserCreation($user);
-
-                $this->em->persist($missionSheetProduct);
-                $this->em->flush();
-
-                $missionSheetProductLabel = $form2->getData();
-                $missionSheetProductLabel->setDateCreation(new \DateTime);
-                $missionSheetProductLabel->setUserCreation($user);
-                $missionSheetProductLabel->setMissionSheetProduct($missionSheetProduct);
-
-                $this->em->persist($missionSheetProductLabel);
-                $this->em->flush();
-
-                return $this->redirectToRoute('paprec_mission_sheet_product_view', array(
-                    'id' => $missionSheetProduct->getId()
-                ));
-
-            }
-        }
-
-        return $this->render('missionSheetProduct/addMaterial.html.twig', array(
-            'form1' => $form1->createView(),
-            'form2' => $form2->createView()
         ));
     }
 
@@ -650,12 +495,6 @@ class MissionSheetProductController extends AbstractController
         $language = $request->getLocale();
         $missionSheetProductLabel = $this->missionSheetProductManager->getMissionSheetProductLabelByMissionSheetProductAndLocale($missionSheetProduct, strtoupper($language));
 
-        $missionSheetProduct->setRentalUnitPrice($this->numberManager->denormalize($missionSheetProduct->getRentalUnitPrice()));
-        $missionSheetProduct->setTransportUnitPrice($this->numberManager->denormalize($missionSheetProduct->getTransportUnitPrice()));
-        $missionSheetProduct->setTreatmentUnitPrice($this->numberManager->denormalize($missionSheetProduct->getTreatmentUnitPrice()));
-        $missionSheetProduct->setTraceabilityUnitPrice($this->numberManager->denormalize($missionSheetProduct->getTraceabilityUnitPrice()));
-
-
         $form1 = $this->createForm(MissionSheetProductType::class, $missionSheetProduct, array(
             'transportTypes' => $transportTypes,
             'defaultFrequencyTimes' => $missionSheetProduct->getFrequencyTimes()
@@ -670,51 +509,9 @@ class MissionSheetProductController extends AbstractController
 
 //        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
         if ($form1->isSubmitted()) {
-            $hideCapacity = $form1->get('hideCapacity')->getData();
-            $hideDimension = $form1->get('hideDimension')->getData();
-            $capacity = $form1->get('capacity')->getData();
-            $dimensions = $form1->get('dimensions')->getData();
-
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
             if ($form1->isValid() && $form2->isSubmitted()) {
 
                 $missionSheetProduct = $form1->getData();
-
-                if($missionSheetProduct->getHideFrequency() === 1){
-                    $missionSheetProduct->setFrequency('UNKNOWN');
-                }
-
-                if($missionSheetProduct->getHideCapacity() === 1){
-                    $missionSheetProduct->setCapacity('');
-                }
-
-                if($missionSheetProduct->getHideDimension() === 1){
-                    $missionSheetProduct->setDimensions('');
-                }
-
-                $missionSheetProduct->setRentalUnitPrice($this->numberManager->normalize($missionSheetProduct->getRentalUnitPrice()));
-                $missionSheetProduct->setTransportUnitPrice($this->numberManager->normalize($missionSheetProduct->getTransportUnitPrice()));
-                $missionSheetProduct->setTreatmentUnitPrice($this->numberManager->normalize($missionSheetProduct->getTreatmentUnitPrice()));
-                $missionSheetProduct->setTraceabilityUnitPrice($this->numberManager->normalize($missionSheetProduct->getTraceabilityUnitPrice()));
-
 
                 $missionSheetProduct->setDateUpdate(new \DateTime);
                 $missionSheetProduct->setUserUpdate($user);
@@ -749,116 +546,6 @@ class MissionSheetProductController extends AbstractController
     }
 
     /**
-     * @Route("/editMaterial/{id}",  name="paprec_mission_sheet_product_material_edit")
-     * @Security("has_role('ROLE_ADMIN')")
-     * @throws \Doctrine\ORM\EntityNotFoundException
-     * @throws \Exception
-     */
-    public function editMaterialAction(Request $request, MissionSheetProduct $missionSheetProduct)
-    {
-        $this->missionSheetProductManager->isDeleted($missionSheetProduct, true);
-
-        $user = $this->getUser();
-
-        $languages = array();
-        foreach ($this->getParameter('paprec_languages') as $language) {
-            $languages[$language] = $language;
-        }
-
-        $language = $request->getLocale();
-        $missionSheetProductLabel = $this->missionSheetProductManager->getMissionSheetProductLabelByMissionSheetProductAndLocale($missionSheetProduct, strtoupper($language));
-
-        $missionSheetProduct->setRentalUnitPrice($this->numberManager->denormalize($missionSheetProduct->getRentalUnitPrice()));
-        $missionSheetProduct->setTransportUnitPrice($this->numberManager->denormalize($missionSheetProduct->getTransportUnitPrice()));
-        $missionSheetProduct->setTreatmentUnitPrice($this->numberManager->denormalize($missionSheetProduct->getTreatmentUnitPrice()));
-        $missionSheetProduct->setTraceabilityUnitPrice($this->numberManager->denormalize($missionSheetProduct->getTraceabilityUnitPrice()));
-        $missionSheetProduct->setMaterialUnitPrice($this->numberManager->denormalize($missionSheetProduct->getMaterialUnitPrice()));
-
-
-        $form1 = $this->createForm(MissionSheetProductMaterialType::class, $missionSheetProduct);
-        $form2 = $this->createForm(MissionSheetProductLabelType::class, $missionSheetProductLabel, array(
-            'languages' => $languages,
-            'language' => $missionSheetProductLabel->getLanguage()
-        ));
-
-        $form1->handleRequest($request);
-        $form2->handleRequest($request);
-
-//        if ($form1->isSubmitted() && $form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
-        if ($form1->isSubmitted()) {
-            $hideCapacity = $form1->get('hideCapacity')->getData();
-            $hideDimension = $form1->get('hideDimension')->getData();
-            $capacity = $form1->get('capacity')->getData();
-            $dimensions = $form1->get('dimensions')->getData();
-
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
-            if ($form1->isValid() && $form2->isSubmitted()) {
-
-                $missionSheetProduct = $form1->getData();
-
-                if($missionSheetProduct->getHideFrequency() === 1){
-                    $missionSheetProduct->setFrequency('UNKNOWN');
-                }
-
-                if($missionSheetProduct->getHideCapacity() === 1){
-                    $missionSheetProduct->setCapacity('');
-                }
-
-                if($missionSheetProduct->getHideDimension() === 1){
-                    $missionSheetProduct->setDimensions('');
-                }
-
-                $missionSheetProduct->setRentalUnitPrice($this->numberManager->normalize($missionSheetProduct->getRentalUnitPrice()));
-                $missionSheetProduct->setTransportUnitPrice($this->numberManager->normalize($missionSheetProduct->getTransportUnitPrice()));
-                $missionSheetProduct->setTreatmentUnitPrice($this->numberManager->normalize($missionSheetProduct->getTreatmentUnitPrice()));
-                $missionSheetProduct->setTraceabilityUnitPrice($this->numberManager->normalize($missionSheetProduct->getTraceabilityUnitPrice()));
-                $missionSheetProduct->setMaterialUnitPrice($this->numberManager->normalize($missionSheetProduct->getMaterialUnitPrice()));
-
-
-                $missionSheetProduct->setDateUpdate(new \DateTime);
-                $missionSheetProduct->setUserUpdate($user);
-                $this->em->flush();
-
-                $missionSheetProductLabel = $form2->getData();
-                $missionSheetProductLabel->setDateUpdate(new \DateTime);
-                $missionSheetProductLabel->setUserUpdate($user);
-                $missionSheetProductLabel->setMissionSheetProduct($missionSheetProduct);
-
-                $this->em->flush();
-
-                return $this->redirectToRoute('paprec_mission_sheet_product_view', array(
-                    'id' => $missionSheetProduct->getId()
-                ));
-            }
-        }
-
-        return $this->render('missionSheetProduct/editMaterial.html.twig', array(
-            'form1' => $form1->createView(),
-            'form2' => $form2->createView(),
-            'missionSheetProduct' => $missionSheetProduct,
-            'missionSheetProductLabel' => $missionSheetProductLabel
-        ));
-    }
-
-    /**
      * @Route("/remove/{id}", name="paprec_mission_sheet_product_remove")
      * @Security("has_role('ROLE_ADMIN')")
      */
@@ -868,7 +555,7 @@ class MissionSheetProductController extends AbstractController
          * Suppression des images
          */
         foreach ($missionSheetProduct->getPictures() as $picture) {
-            $this->removeFile($this->getParameter('paprec.missionSheetProduct.picto_path') . '/' . $picture->getPath());
+            $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
             $missionSheetProduct->removePicture($picture);
         }
 
@@ -897,7 +584,7 @@ class MissionSheetProductController extends AbstractController
             $missionSheetProducts = $this->em->getRepository('App:MissionSheetProduct')->findById($ids);
             foreach ($missionSheetProducts as $missionSheetProduct) {
                 foreach ($missionSheetProduct->getPictures() as $picture) {
-                    $this->removeFile($this->getParameter('paprec.missionSheetProduct.picto_path') . '/' . $picture->getPath());
+                    $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
                     $missionSheetProduct->removePicture($picture);
                 }
 
@@ -1125,7 +812,7 @@ class MissionSheetProductController extends AbstractController
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec.missionSheetProduct.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
                 $picture->setType($request->get('type'));
@@ -1177,10 +864,10 @@ class MissionSheetProductController extends AbstractController
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
 
-                $pic->move($this->getParameter('paprec.missionSheetProduct.picto_path'), $pictoFileName);
+                $pic->move($this->getParameter('paprec.product.picto_path'), $pictoFileName);
 
                 $picture->setPath($pictoFileName);
-                $this->removeFile($this->getParameter('paprec.missionSheetProduct.picto_path') . '/' . $oldPath);
+                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $oldPath);
                 $this->em->flush();
             }
 
@@ -1208,7 +895,7 @@ class MissionSheetProductController extends AbstractController
         foreach ($pictures as $picture) {
             if ($picture->getId() == $pictureID) {
                 $missionSheetProduct->setDateUpdate(new \DateTime());
-                $this->removeFile($this->getParameter('paprec.missionSheetProduct.picto_path') . '/' . $picture->getPath());
+                $this->removeFile($this->getParameter('paprec.product.picto_path') . '/' . $picture->getPath());
                 $this->em->remove($picture);
                 continue;
             }
