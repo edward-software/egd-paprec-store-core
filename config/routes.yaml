@@ -17,3 +17,7 @@ paprec_commercial:
 paprec_public:
     resource: 'routes/public.yaml'
     prefix: '/'
+
+paprec_api:
+    resource: 'routes/api.yaml'
+    prefix: 'api'

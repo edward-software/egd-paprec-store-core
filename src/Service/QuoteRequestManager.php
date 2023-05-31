@@ -1592,6 +1592,7 @@ class QuoteRequestManager
                     'quoteRequest' => $quoteRequest,
                     'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                     'missionSheet' => $missionSheet,
+                    'missionSheetLines' => $missionSheet->getMissionSheetLines(),
                     'date' => $today,
                     'locale' => $locale
                 )

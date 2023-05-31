@@ -35,6 +35,10 @@ security:
             logout: true
             anonymous: true
 
+        api:
+            pattern: ^/api
+            security: false
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -46,3 +50,4 @@ security:
     access_control:
         - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_USER }
+        - { path: ^/api, role: IS_AUTHENTICATED_ANONYMOUSLY }

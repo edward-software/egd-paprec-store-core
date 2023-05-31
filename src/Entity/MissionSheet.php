@@ -154,12 +154,12 @@ class MissionSheet
 
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequest", mappedBy="quoteRequest")
+     * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequest", mappedBy="missionSheet")
      */
     private $quoteRequests;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\MissionSheetLine", mappedBy="quoteRequest")
+     * @ORM\OneToMany(targetEntity="App\Entity\MissionSheetLine", mappedBy="missionSheet")
      */
     private $missionSheetLines;
 
