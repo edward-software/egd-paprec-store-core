@@ -711,7 +711,7 @@
                                                 {#                                                <span class="small" #}
                                                 {#                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
                                             </td>
-                                            <td class="text-center">
+                                            <td class="text-center" style="width: 7%">
                                                 <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"
                                                    class="btn btn-sm btn-warning btn-sm mx-1"
                                                    data-id="{{ quoteRequestLine.id }}">
