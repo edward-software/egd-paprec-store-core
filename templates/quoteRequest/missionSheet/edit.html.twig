@@ -190,9 +190,11 @@
                                                 {% if quoteRequestLine.frequency == 'UNKNOWN' %}
                                                     {{ 'General.Frequency.UNKNOWN'|trans({}, "messages", app.request.locale) }}
                                                 {% else %}
-                                                    {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
-                                                    {{ quoteRequestLine.frequencyTimes }}
-                                                    x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                                    {% if quoteRequestLine.frequencyInterval is not empty %}
+                                                        {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
+                                                        {{ quoteRequestLine.frequencyTimes }}
+                                                        x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                             <td>
