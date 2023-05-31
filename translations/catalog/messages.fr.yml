@@ -195,6 +195,7 @@ Catalog:
 
     MissionSheetLine:
         Agency: Agence
+        MissionSheetProduct: Produit
     MissionSheetProduct:
         View: Vue du produit
         MissionSheetProducts: Liste des produits de feuille de mission

@@ -4,6 +4,9 @@ Commercial:
     Bundle-name: Gestion commerciale
     QuoteRequests: Demandes de devis
     Settings: Paramétrage
+    MissionSheetLine:
+        Agency: Agence
+        MissionSheetProduct: Produit
     MissionSheet:
         Validate: Valider la feuille de mission
         View: Vue de la feuille de mission
