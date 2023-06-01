@@ -24,7 +24,6 @@ class MissionSheet
      */
     private $id;
 
-
     /**
      * @var \DateTime
      *
@@ -57,8 +56,7 @@ class MissionSheet
     /**
      * @var string
      *
-     * @ORM\Column(name="mnemonicNumber", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="mnemonicNumber", type="string", length=255, nullable=true)
      */
     private $mnemonicNumber;
 

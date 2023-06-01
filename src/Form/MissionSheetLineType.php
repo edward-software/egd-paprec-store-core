@@ -31,7 +31,6 @@ class MissionSheetLineType extends AbstractType
                         ->leftJoin('mSP.missionSheetProductLabels', 'mSPL')
                         ->where('mSP.deleted IS NULL')
                         ->andWhere('mSPL.language = :language')
-                        ->orderBy('mSP.position', 'ASC')
                         ->setParameter('language', 'FR');
                 },
                 'choice_label' => 'missionSheetProductLabels[0].name',

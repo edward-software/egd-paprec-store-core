@@ -1749,36 +1749,22 @@ class QuoteRequestController extends AbstractController
         $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'mSP.id', 'method' => array('getId'));
+        $cols['code'] = array(
+            'label' => 'code',
+            'id' => 'mSP.code',
+            'method' => ['getMissionSheetProduct', 'getCode']
+        );
         $cols['name'] = array(
             'label' => 'name',
             'id' => 'mSPL.name',
             'method' => array('getMissionSheetProduct', array('getMissionSheetProductLabels', 0), 'getName')
         );
-        $cols['range'] = array(
-            'label' => 'range',
-            'id' => 'rL.name',
-            'method' => array('getMissionSheetProduct', 'getRange', array(array('getRangeLabels', 0), 'getName'))
-        );
-        $cols['catalog'] = array(
-            'label' => 'catalog',
-            'id' => 'mSP.catalog',
-            'method' => ['getMissionSheetProduct', 'getCatalog']
-        );
-        $cols['catalogLabel'] = array(
-            'label' => 'catalogLabel',
-            'id' => 'mSP.catalog',
-            'method' => ['getMissionSheetProduct', 'getCatalog']
-        );
-        $cols['isEnabled'] = array('label' => 'isEnabled', 'id' => 'mSP.isEnabled', 'method' => array('getMissionSheetProduct', 'getIsEnabled'));
-        $cols['agency'] = array('label' => 'agency', 'id' => 'a.name', 'method' => array('getAgency', 'getName'));
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(MissionSheetLine::class)->createQueryBuilder('mSL');
 
-        $queryBuilder->select(array('mSL', 'mSP', 'mSPL', 'r', 'rL'))
+        $queryBuilder->select(array('mSL', 'mSP', 'mSPL'))
             ->leftJoin('mSL.missionSheetProduct', 'mSP')
             ->leftJoin('mSP.missionSheetProductLabels', 'mSPL')
-            ->leftJoin('mSP.range', 'r')
-            ->leftJoin('r.rangeLabels', 'rL')
             ->leftJoin('mSL.missionSheet', 'mS')
             ->leftJoin('mSL.agency', 'a')
             ->where('mSP.deleted IS NULL')
@@ -1796,8 +1782,6 @@ class QuoteRequestController extends AbstractController
                 $queryBuilder->andWhere($queryBuilder->expr()->orx(
                     $queryBuilder->expr()->like('mSPL.name', '?1'),
                     $queryBuilder->expr()->like('mSP.dimensions', '?1'),
-                    $queryBuilder->expr()->like('mSP.isEnabled', '?1'),
-                    $queryBuilder->expr()->like('rL.name', '?1'),
                     $queryBuilder->expr()->like('a.name', '?1')
                 ))->setParameter(1, '%' . $search['value'] . '%');
             }
@@ -1805,19 +1789,6 @@ class QuoteRequestController extends AbstractController
 
         $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
             $paginator, $rowPrefix);
-
-        // Reformatage de certaines données
-        $tmp = array();
-        foreach ($dt['data'] as $data) {
-            $line = $data;
-            $line['isEnabled'] = $data['isEnabled'] ? $this->translator->trans('General.1') : $this->translator->trans('General.0');
-            if ($line['catalog']) {
-                $line['catalog'] = $this->translator->trans('Catalog.MissionSheetProduct.Catalog.' . strtoupper($line['catalog']));
-            }
-            $tmp[] = $line;
-        }
-
-        $dt['data'] = $tmp;
 
         $return['recordsTotal'] = $dt['recordsTotal'];
         $return['recordsFiltered'] = $dt['recordsTotal'];

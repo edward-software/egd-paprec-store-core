@@ -90,13 +90,6 @@
                                             {{ form_errors(form1.capacityUnit) }}
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Position'|trans }}</div>
-                                        <div class="form-content">
-                                            {{ form_widget(form1.position, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form1.position) }}
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.MissionSheetProduct.Dimensions'|trans }}</div>
@@ -106,89 +99,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Catalog.Label'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.catalog, {'attr': {'class': 'form-control catalog-field'}}) }}
-                                        {{ form_errors(form1.catalog) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Range'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.range, {'attr': {'class': 'form-control range-field'}}) }}
-                                        {{ form_errors(form1.range) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.TransportType'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.transportType, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.transportType) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.Frequency'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.frequency, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.frequency) }}
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-6">
-                                        <label class="form-label">{{ 'Catalog.MissionSheetProduct.PassingFrequency'|trans }}</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form1.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form1.frequencyTimes) }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <label class="form-label">&nbsp;</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form1.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form1.frequencyInterval) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.MissionSheetProduct.WasteClassification'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form1.wasteClassification, {'attr': {'class': 'form-control', 'maxlength': '10'}}) }}
                                         {{ form_errors(form1.wasteClassification) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.BillingUnit'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.billingUnit, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form1.billingUnit) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.MissionSheetProduct.IsEnabled.IsEnabled'|trans }}</div>
-                                    <div class="form-content checkbox-list">
-                                        {% for radio in form1.isEnabled.children %}
-                                            <div class="form__check ml-4">
-                                                {{ form_widget(radio) }}
-                                                {{ form_label(radio) }}
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-6">
-                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Mercurial'|trans }}</div>
-                                        <div class="form-content">
-                                            {{ form_widget(form1.mercurial, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form1.mercurial) }}
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-6">
-                                        <div class="form-label">{{ 'Catalog.MissionSheetProduct.Reference-date'|trans }}</div>
-                                        <div class="form-content">
-                                            {{ form_widget(form1.referenceDate, {'type': 'month', 'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form1.referenceDate) }}
-                                        </div>
                                     </div>
                                 </div>
 
@@ -254,37 +168,6 @@
                 $(this).prop('disabled', true);
             });
             {% endif %}
-
-
-            //Gestion du champs Range qui change selon le catalog
-            var rangesByCatalog = {{ rangesByCatalog|json_encode|raw }};
-            var defaultRangeId = '{{ defaultRangeId }}';
-
-            $(document).ready(function () {
-                if (rangesByCatalog) {
-                    $('.range-field').empty();
-                    $('.range-field').append('<option value=""></option>');
-                    rangesByCatalog['{{ defaultCatalog }}'].forEach(function (element) {
-                        if(defaultRangeId && defaultRangeId == element.id){
-                            $('.range-field').append('<option value= ' + element.id + ' selected>' + element.name + '</option>');
-                        }else{
-                            $('.range-field').append('<option value= ' + element.id + ' >' + element.name + '</option>');
-                        }
-                    });
-                }
-            });
-
-            $('.catalog-field').on('change', function (e) {
-                console.log('t');
-                var catalog = $('.catalog-field input:checked').val();
-                if(rangesByCatalog[catalog]){
-                    $('.range-field').empty();
-                    $('.range-field').append('<option value="" checked></option>');
-                    rangesByCatalog[catalog].forEach(function (element) {
-                        $('.range-field').append('<option value= ' + element.id + ' >' + element.name + '</option>');
-                    });
-                }
-            });
         });
     </script>
 {% endblock %}

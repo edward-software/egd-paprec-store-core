@@ -89,7 +89,7 @@ Commercial:
         Add: Ajout d'un devis
         Export: Export des devis
         BusinessName: Nom société
-        TotalAmount: Montant total (€)
+        TotalAmount: Montant total des produits (€)
         TotalAmountWithoutDiscount: Prix Total Standard (€)
         QuoteStatus: Status devis
         ServiceEndDate: Date de fin de la prestation
@@ -121,7 +121,7 @@ Commercial:
         Reference: Référence de l'offre
         PonctualDate: Date de collecte souhaitée
         IsMultisite: Prestation multi-sites
-        Comment: Commentaire
+        Comment: Commentaire (contrat "4.Remarques")
         OverallDiscount: Ajustement prix (+/- en %)
         TollFees: Frais de péages
         Customer: Client
@@ -152,7 +152,7 @@ Commercial:
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
-        ManagementFee: Frais de gestion
+        ManagementFee: Autres informations du contrat
         ManagementFeeCode: Code
         ManagementFeeDescription: Description
         ManagementFeeFrequency: Fréquence
