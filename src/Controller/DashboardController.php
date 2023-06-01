@@ -1112,20 +1112,20 @@ class DashboardController extends AbstractController
                 }
 
                 $isMultisite = 'Non';
-                if($quoteRequest->getIsMultisite() == 1){
+                if ($quoteRequest->getIsMultisite() == 1) {
                     $isMultisite = 'Oui';
                 }
 
                 $userInCharge = '';
                 $manager = '';
                 $agency = '';
-                if($quoteRequest->getUserInCharge()){
+                if ($quoteRequest->getUserInCharge()) {
                     $userInCharge = $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName();
-                    if($quoteRequest->getUserInCharge()->getAgency()){
+                    if ($quoteRequest->getUserInCharge()->getAgency()) {
                         $agency = $quoteRequest->getUserInCharge()->getAgency()->getName();
                     }
 
-                    if($quoteRequest->getUserInCharge()->getManager()){
+                    if ($quoteRequest->getUserInCharge()->getManager()) {
                         $manager = $quoteRequest->getUserInCharge()->getManager()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getManager()->getLastName();
                     }
                 }
@@ -1137,9 +1137,9 @@ class DashboardController extends AbstractController
                     0 + $quoteRequest->getDateCreation()->format('Y'),
                     0 + $quoteRequest->getDateCreation()->format('m'),
                     0 + $quoteRequest->getDateCreation()->format('d'),
-                     ($quoteRequest->getDateUpdate() ? 0 +$quoteRequest->getDateUpdate()->format('Y') : ''),
-                     ($quoteRequest->getDateUpdate() ? 0 +$quoteRequest->getDateUpdate()->format('m') : ''),
-                     ($quoteRequest->getDateUpdate() ? 0 +$quoteRequest->getDateUpdate()->format('d') : ''),
+                    ($quoteRequest->getDateUpdate() ? 0 + $quoteRequest->getDateUpdate()->format('Y') : ''),
+                    ($quoteRequest->getDateUpdate() ? 0 + $quoteRequest->getDateUpdate()->format('m') : ''),
+                    ($quoteRequest->getDateUpdate() ? 0 + $quoteRequest->getDateUpdate()->format('d') : ''),
                     $quoteRequest->getLocale(),
                     $userInCharge,
                     $manager,

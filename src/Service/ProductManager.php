@@ -205,7 +205,9 @@ class ProductManager
             $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
             $traceability = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTraceabilityUnitPrice');
 
-            $result = ($transport + $traceability) / ($frequencyIntervalValue * $quantity);
+            if ($frequencyIntervalValue * $quantity > 0) {
+                $result = ($transport + $traceability) / ($frequencyIntervalValue * $quantity);
+            }
 
         } elseif ($fieldName === 'totalAmount') {
 
