@@ -7,6 +7,7 @@ use App\Entity\QuoteRequestLine;
 use App\Entity\Setting;
 use App\Entity\User;
 use App\Service\NumberManager;
+use App\Service\ProductManager;
 use App\Tools\DataTable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -27,15 +28,18 @@ class DashboardController extends AbstractController
     private $em;
     private $translator;
     private $numberManager;
+    private $productManager;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
-        NumberManager $numberManager
+        NumberManager $numberManager,
+        ProductManager $productManager
     ) {
         $this->em = $em;
         $this->translator = $translator;
         $this->numberManager = $numberManager;
+        $this->productManager = $productManager;
     }
 
     /**
@@ -1045,39 +1049,44 @@ class DashboardController extends AbstractController
         // Labels
         $sheetLabels = [
             'ID',
-            'Date créa.',
-            'Dernière modification',
+            'Agence',
+            'Catalogue',
+            'Année création',
+            'Mois création',
+            'Jour création',
+            'Année dernière création',
+            'Mois dernière création',
+            'Jour dernière création',
             'Langue',
+            'Commercial en charge',
+            'Staff',
             'Numéro offre du devis',
+            'Référence de l\'offre',
+            'Statut',
+            'Numéro client',
             'Nom société',
+            'Adresse',
+            'Code postal',
+            'Ville',
             'Civilité',
             'Nom',
             'Prénom',
             'Email',
             'Téléphone',
             'Prestation multi-sites',
-            'Staff',
             'Accès',
-            'Adresse',
-            'Ville',
             'Remarques',
-            'Statut',
-            'Montant total (€)',
             'Commentaire commercial',
-            'Budget annuel',
-            'Numéro client',
-            'Référence de l\'offre',
-            'Commercial en charge',
-            'Code postal',
-            'Date de fin de la prestation',
             'Produit',
             'Quantité',
-            'Location',
             'Transport/passage',
             'Fréquence de passage',
-            'Traitement',
-            'Matériel additionnel',
-            'Montant'
+            'PU Location',
+            'PU Collecte',
+            'PU Traitement',
+            'Budget mensuel Produit',
+            'Frais de Gestion',
+            'Date de fin de la prestation'
         ];
 
         $xAxe = 'A';
@@ -1093,42 +1102,11 @@ class DashboardController extends AbstractController
 
             if ($quoteRequest) {
                 $productName = '';
-                if ($quoteRequestLine->getProduct()->getProductLabels() && is_array($quoteRequestLine->getProduct()->getProductLabels()) && count($quoteRequestLine->getProduct()->getProductLabels())) {
+                if ($quoteRequestLine->getProduct()->getProductLabels() && is_iterable($quoteRequestLine->getProduct()->getProductLabels()) && count($quoteRequestLine->getProduct()->getProductLabels())) {
                     $productName = $quoteRequestLine->getProduct()->getProductLabels()[0]->getName();
                 }
 
-                $frequencyIntervalValue = 1;
-                if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
-                    $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
-                    $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
-                    if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
-                        $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
-                    }
-                }
-
-                $quantity = $quoteRequestLine->getQuantity();
-
-                $editableRentalUnitPrice = 0;
-                if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
-                    $editableRentalUnitPrice = $quantity * $this->numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
-                }
-
-                $editableTransportUnitPrice = 0;
-                if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
-                    $editableTransportUnitPrice = $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                }
-
-                $editableTreatmentUnitPrice = 0;
-                if ($quoteRequestLine->getEditableTreatmentUnitPrice() !== null) {
-                    $editableTreatmentUnitPrice = $quantity * $this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
-                }
-
-                $editableTraceabilityUnitPrice = 0;
-                if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
-                    $editableTraceabilityUnitPrice = ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
-                }
-
-                $frequency = $quoteRequestLine->getFrequencyTimes() . ' x/ ' . $this->translator->trans('General.Frequency.' . $quoteRequestLine->getFrequencyInterval());
+                $frequency = $this->translator->trans('General.Frequency.' . $quoteRequestLine->getFrequencyInterval());
                 if ($quoteRequestLine->getFrequency() !== 'REGULAR') {
                     $frequency = $this->translator->trans('General.Frequency.' . $quoteRequestLine->getFrequency());
                 }
@@ -1138,41 +1116,60 @@ class DashboardController extends AbstractController
                     $isMultisite = 'Oui';
                 }
 
+                $userInCharge = '';
+                $manager = '';
+                $agency = '';
+                if($quoteRequest->getUserInCharge()){
+                    $userInCharge = $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName();
+                    if($quoteRequest->getUserInCharge()->getAgency()){
+                        $agency = $quoteRequest->getUserInCharge()->getAgency()->getName();
+                    }
+
+                    if($quoteRequest->getUserInCharge()->getManager()){
+                        $manager = $quoteRequest->getUserInCharge()->getManager()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getManager()->getLastName();
+                    }
+                }
+
                 $getters = [
                     $quoteRequest->getId(),
-                    $quoteRequest->getDateCreation()->format('Y-m-d'),
-                    $quoteRequest->getDateUpdate() ? $quoteRequest->getDateUpdate()->format('Y-m-d') : '',
+                    $agency,
+                    $this->translator->trans('Commercial.QuoteRequest.Catalog.' . $quoteRequest->getCatalog()),
+                    0 + $quoteRequest->getDateCreation()->format('Y'),
+                    0 + $quoteRequest->getDateCreation()->format('m'),
+                    0 + $quoteRequest->getDateCreation()->format('d'),
+                     ($quoteRequest->getDateUpdate() ? 0 +$quoteRequest->getDateUpdate()->format('Y') : ''),
+                     ($quoteRequest->getDateUpdate() ? 0 +$quoteRequest->getDateUpdate()->format('m') : ''),
+                     ($quoteRequest->getDateUpdate() ? 0 +$quoteRequest->getDateUpdate()->format('d') : ''),
                     $quoteRequest->getLocale(),
+                    $userInCharge,
+                    $manager,
                     $quoteRequest->getNumber(),
+                    $quoteRequest->getReference(),
+                    $this->translator->trans('Commercial.QuoteStatusList.' . $quoteRequest->getQuoteStatus()),
+                    $quoteRequest->getCustomerId(),
                     $quoteRequest->getBusinessName(),
+                    $quoteRequest->getAddress(),
+                    $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
+                    $quoteRequest->getCity(),
                     $quoteRequest->getCivility(),
                     $quoteRequest->getLastName(),
                     $quoteRequest->getFirstName(),
                     $quoteRequest->getEmail(),
                     $quoteRequest->getPhone(),
                     $isMultisite,
-                    $this->translator->trans('Commercial.StaffList.' . $quoteRequest->getStaff()),
                     $this->translator->trans('Commercial.AccessList.' . $quoteRequest->getAccess()),
-                    $quoteRequest->getAddress(),
-                    $quoteRequest->getCity(),
                     $quoteRequest->getComment(),
-                    $this->translator->trans('Commercial.QuoteStatusList.' . $quoteRequest->getQuoteStatus()),
-                    $this->numberManager->denormalize($quoteRequest->getTotalAmount()),
                     $quoteRequest->getSalesmanComment(),
-                    $this->numberManager->denormalize($quoteRequest->getAnnualBudget()),
-                    $quoteRequest->getCustomerId(),
-                    $quoteRequest->getReference(),
-                    $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
-                    $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
-                    $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : '',
                     $quoteRequestLine->getProduct()->getCode() . ' - ' . $productName,
                     $quoteRequestLine->getQuantity(),
-                    $editableRentalUnitPrice,
-                    $editableTransportUnitPrice,
+                    $quoteRequestLine->getFrequencyTimes(),
                     $frequency,
-                    $editableTreatmentUnitPrice,
-                    $editableTraceabilityUnitPrice,
-                    $this->numberManager->denormalize($quoteRequestLine->getTotalAmount())
+                    $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice'),
+                    $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'treatmentCollectPrice'),
+                    $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice'),
+                    $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'totalAmount'),
+                    '',
+                    $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : ''
                 ];
 
                 $xAxe = 'A';
