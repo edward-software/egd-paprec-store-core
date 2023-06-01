@@ -264,7 +264,10 @@ Commercial:
         Wastes: Déchets
         Materials: Matériels
         Quantities: Quantités
+        ProductCode: Code opération
+        ProductRange: Code déchet
         ProductName: Nom du produit
+        ProductBillingUnit: Unité de facturation du produit
         UnitPrice: Prix unitaire
         Quantity: Quantité
         RentalUnitPrice: PU location
@@ -272,16 +275,16 @@ Commercial:
         TreatmentUnitPrice: PU Traitement
         TraceabilityUnitPrice: PU Matériel Additionnel
         BasePrice: PU de base
-        RentalPrice: Location
+        RentalPrice: PU Location
         Transport: Transport/passage
         Frequency: Fréquence
         PassingFrequency: Fréquence de passage
         RegularPassingFrequency: Fréquence de passage (si régulier)
-        Treatment: Traitement
+        Treatment: PU Traitement
         Traceability: Matériel Additionnel
-        TreatmentCollect: PU Collecte et traitement/contenant
+        TreatmentCollect: PU Collecte
         Access: Accès
-        TotalAmount: Montant total
+        TotalAmount: Budget Mensuel
         SelectAgency: Choisir l'agence
         Add: Ajout d'un produit
         Edit: Modification d'un produit
@@ -416,6 +419,8 @@ Commercial:
         Email: Email
         ServiceTitle: Résumé de la prestation
         CommentTitle: Remarques
+        Acceptance: Acceptation du devis et contrat
+        Acceptance-text: Acceptation du devis et contrat
         NoComment: Pas de remarques
         OtherContractualTitle: Autres infos contractuelles
         BillingSubTitle: Facturation
@@ -434,6 +439,7 @@ Commercial:
         SignatureQuality: Qualité
         MentionTitle: CGV
         ContractDuration: Durée du contrat
+        OurIntervention: Notre intervention
         PonctualDate: Date de prestation
         StartDateContract: Démarrage du contrat
         ContractProduct: Matériel

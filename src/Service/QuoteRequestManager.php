@@ -598,45 +598,7 @@ class QuoteRequestManager
      */
     public function calculateTreatmentCollectPrice(QuoteRequestLine $quoteRequestLine)
     {
-        $numberManager = $this->numberManager;
-
-        $frequencyIntervalValue = 1;
-        if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
-            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
-            $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
-            if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
-                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
-            }
-        }
-
-        $quantity = $quoteRequestLine->getQuantity();
-
-        /**
-         * Transport : Nombre de passage par mois (fonction de la fréquence) * Cout Transport * Coefficient Transport précisé dans le champ produit du CP
-         */
-        $editableTransportUnitPrice = 0;
-        if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
-            $editableTransportUnitPrice = $frequencyIntervalValue * $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
-        }
-
-        /**
-         * Traitement :  (Nombre de Produit) * (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
-         */
-        $editableTreatmentUnitPrice = 0;
-        if ($quoteRequestLine->getEditableTreatmentUnitPrice() !== null) {
-            $editableTreatmentUnitPrice = $quantity * $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
-        }
-
-        /**
-         * Matériel Additionnel :  (Nombre de Produit -1) * (PU Matériel Additionnel du Produit * Coefficient Matériel Additionnel du CP de l’adresse à collecter)
-         */
-        $editableTraceabilityUnitPrice = 0;
-        if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
-            $editableTraceabilityUnitPrice = ($quantity - 1) * $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
-        }
-
-        return $numberManager->normalize($editableTransportUnitPrice + $editableTreatmentUnitPrice + $editableTraceabilityUnitPrice);
-
+        return $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'editableCollectUnitPrice', true);
     }
 
 
@@ -1218,6 +1180,18 @@ class QuoteRequestManager
                 $filenameOffer
             );
 
+//            echo $this->container->get('templating')->render(
+//                $templateDir . '/printQuoteOffer.html.twig',
+//                array(
+//                    'quoteRequest' => $quoteRequest,
+//                    'date' => $today,
+//                    'locale' => $locale,
+//                    'products' => $products,
+//                    'monthlyCoefValues' => $monthlyCoefficientValues
+//                )
+//            );
+//            exit;
+
             /**
              * Concaténation des fichiers
              */
@@ -1253,7 +1227,7 @@ class QuoteRequestManager
                 }
             }
 
-            if (!empty($agency->getAgencyFiles()) && is_iterable($agency->getAgencyFiles())) {
+            if ($agency && !empty($agency->getAgencyFiles()) && is_iterable($agency->getAgencyFiles())) {
                 $agencyFileDirectory = $this->container->getParameter('paprec.agency_file.directory');
 
                 foreach ($agency->getAgencyFiles() as $agencyFile) {
