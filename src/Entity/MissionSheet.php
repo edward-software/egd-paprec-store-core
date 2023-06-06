@@ -85,7 +85,7 @@ class MissionSheet
     /**
      * @var string
      *
-     * @ORM\Column(name="comment", type="string", length=500, nullable=true)
+     * @ORM\Column(name="comment", type="string", length=1000, nullable=true)
      */
     private $comment;
 

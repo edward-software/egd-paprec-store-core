@@ -43,6 +43,18 @@ class MissionSheetLine
      */
     private $deleted;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="quantity", type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Type(
+     *     type="integer",
+     *     message="La quantité doit être un nombre entier"
+     * )
+     */
+    private $quantity;
+
     /**************************************************************************************************
      * RELATIONS
      */
@@ -226,5 +238,29 @@ class MissionSheetLine
     public function getMissionSheet()
     {
         return $this->missionSheet;
+    }
+
+    /**
+     * Set quantity.
+     *
+     * @param int $quantity
+     *
+     * @return MissionSheetLine
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity.
+     *
+     * @return int
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 }

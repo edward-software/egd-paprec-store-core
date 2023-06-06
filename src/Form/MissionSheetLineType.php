@@ -23,6 +23,7 @@ class MissionSheetLineType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('quantity')
             ->add('missionSheetProduct', EntityType::class, array(
                 'class' => MissionSheetProduct::class,
                 'query_builder' => function (MissionSheetProductRepository $er) {

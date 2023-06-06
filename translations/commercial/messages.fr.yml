@@ -7,6 +7,7 @@ Commercial:
     MissionSheetLine:
         Agency: Agence
         MissionSheetProduct: Produit
+        Quantity: Quantité
     MissionSheet:
         Validate: Valider la feuille de mission
         View: Vue de la feuille de mission
@@ -275,14 +276,14 @@ Commercial:
         TreatmentUnitPrice: PU Traitement
         TraceabilityUnitPrice: PU Matériel Additionnel
         BasePrice: PU de base
-        RentalPrice: PU Location
+        RentalPrice: PU Location (€/mois)
         Transport: Transport/passage
         Frequency: Fréquence
         PassingFrequency: Fréquence de passage
         RegularPassingFrequency: Fréquence de passage (si régulier)
-        Treatment: PU Traitement
+        Treatment: PU Traitement (€/Tonne)
         Traceability: Matériel Additionnel
-        TreatmentCollect: PU Collecte
+        TreatmentCollect: PU Collecte (€/unité)
         Access: Accès
         TotalAmount: Budget Mensuel
         SelectAgency: Choisir l'agence
@@ -424,11 +425,13 @@ Commercial:
         NoComment: Pas de remarques
         OtherContractualTitle: Autres infos contractuelles
         BillingSubTitle: Facturation
-        SiteSubTitle: Site
+        SiteSubTitle: Site de prestation
         CorporateName: Raison sociale
         City: Ville
         TVAIntracomNumber: N° TVA intracom
         CommandNumber: N° de commande
+        SiretNumber: N° de SIRET
+        CompanyType: Type de Société
         SignatureTitle: Signatures
         SignatureSubTitle1: PAPREC - (nom Agence)
         SignatureSubTitle2: CLIENT - (nom + signature + cachet)

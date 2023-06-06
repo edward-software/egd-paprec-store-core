@@ -553,7 +553,10 @@ class QuoteRequestController extends AbstractController
         /**
          * Frais de gestion
          */
-
+        $quoteRequest->setManagementFeeAmount1($this->numberManager->denormalize($quoteRequest->getManagementFeeAmount1()));
+        $quoteRequest->setManagementFeeAmount2($this->numberManager->denormalize($quoteRequest->getManagementFeeAmount2()));
+        $quoteRequest->setManagementFeeAmount3($this->numberManager->denormalize($quoteRequest->getManagementFeeAmount3()));
+        $quoteRequest->setManagementFeeAmount4($this->numberManager->denormalize($quoteRequest->getManagementFeeAmount4()));
         $formAddManagementFee = $this->createForm(QuoteRequestManagementFeeType::class, $quoteRequest, []);
 
         return $this->render('quoteRequest/view.html.twig', array(
@@ -1183,15 +1186,23 @@ class QuoteRequestController extends AbstractController
         $form = $this->createForm(QuoteRequestManagementFeeType::class, $quoteRequest, array());
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
-            $quoteRequest->setDateUpdate(new \DateTime());
 
-            $this->em->flush();
+            $quoteRequest->setManagementFeeAmount1($this->numberManager->normalize($quoteRequest->getManagementFeeAmount1()));
+            $quoteRequest->setManagementFeeAmount2($this->numberManager->normalize($quoteRequest->getManagementFeeAmount2()));
+            $quoteRequest->setManagementFeeAmount3($this->numberManager->normalize($quoteRequest->getManagementFeeAmount3()));
+            $quoteRequest->setManagementFeeAmount4($this->numberManager->normalize($quoteRequest->getManagementFeeAmount4()));
 
-            return $this->redirectToRoute('paprec_quote_request_view', array(
-                'id' => $quoteRequest->getId()
-            ));
+            if ($form->isValid()) {
+                $quoteRequest->setDateUpdate(new \DateTime());
+
+                $this->em->flush();
+
+                return $this->redirectToRoute('paprec_quote_request_view', array(
+                    'id' => $quoteRequest->getId()
+                ));
+            }
         }
 
         return $this->redirectToRoute('paprec_quote_request_view', array(
@@ -1749,6 +1760,11 @@ class QuoteRequestController extends AbstractController
         $rowPrefix = $request->get('rowPrefix');
 
         $cols['id'] = array('label' => 'id', 'id' => 'mSP.id', 'method' => array('getId'));
+        $cols['quantity'] = array(
+            'label' => 'quantity',
+            'id' => 'mSL.quantity',
+            'method' => array('getQuantity')
+        );
         $cols['code'] = array(
             'label' => 'code',
             'id' => 'mSP.code',
@@ -1758,6 +1774,11 @@ class QuoteRequestController extends AbstractController
             'label' => 'name',
             'id' => 'mSPL.name',
             'method' => array('getMissionSheetProduct', array('getMissionSheetProductLabels', 0), 'getName')
+        );
+        $cols['agencyName'] = array(
+            'label' => 'agencyName',
+            'id' => 'a.name',
+            'method' => array('getAgency', 'getName')
         );
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(MissionSheetLine::class)->createQueryBuilder('mSL');

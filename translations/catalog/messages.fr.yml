@@ -194,6 +194,7 @@ Catalog:
         Remove: Supprimer
 
     MissionSheetLine:
+        Quantity: Quantité
         Agency: Agence
         MissionSheetProduct: Produit
     MissionSheetProduct:
@@ -211,6 +212,7 @@ Catalog:
         TransportType: Type de transport
         WasteClassification: Qualité
         Code: Code
+        Agency: Agence
         BillingUnit: Unité de facturation
         Mercurial: Mercuriale
         Reference-date: Mois et année de référence

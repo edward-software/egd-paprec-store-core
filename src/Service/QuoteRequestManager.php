@@ -1350,6 +1350,7 @@ class QuoteRequestManager
                             'quoteRequest' => $quoteRequest,
                             'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                             'missionSheet' => $missionSheet,
+                            'missionSheetLines' => $missionSheet->getMissionSheetLines(),
                             'date' => $today,
                             'locale' => $locale
                         )
@@ -1438,6 +1439,15 @@ class QuoteRequestManager
                             $logoName = 'logo-insitu.png';
                         }
 
+                        $agencyMissionSheetLines = [];
+                        if (is_iterable($missionSheet->getMissionSheetLines()) && count($missionSheet->getMissionSheetLines())) {
+                            foreach ($missionSheet->getMissionSheetLines() as $mS) {
+                                if ($mS->getAgency()->getId() === $agency->getId()) {
+                                    $agencyMissionSheetLines[] = $mS;
+                                }
+                            }
+                        }
+
                         $snappy->generateFromHtml(
                             array(
                                 $this->container->get('templating')->render(
@@ -1448,8 +1458,10 @@ class QuoteRequestManager
                                         'sheetName' => $sheetName,
                                         'quoteRequestLines' => $quoteRequestLines,
                                         'missionSheet' => $missionSheet,
+                                        'missionSheetLines' => $agencyMissionSheetLines,
                                         'date' => $today,
-                                        'locale' => $locale
+                                        'locale' => $locale,
+                                        'agency' => $agency
                                     )
                                 )
                             ),
@@ -1503,6 +1515,25 @@ class QuoteRequestManager
             $message->attach(new \Swift_Attachment(file_get_contents($pdfFile), $pdfFilename,
                 'application/pdf'));
 
+            $contracts = $this->em->getRepository('App:QuoteRequestFile')->findBy([
+                'quoteRequest' => $quoteRequest->getId(),
+                'type' => 'CONTRACT'
+            ]);
+
+            if (is_array($contracts) && count($contracts)) {
+                $quoteRequestFileFolder = $this->container->getParameter('paprec.quote_request_file.directory');
+                foreach ($contracts as $contract) {
+                    $quoteRequestFilePath = $quoteRequestFileFolder . '/' . $contract->getSystemName();
+
+                    if (file_exists($quoteRequestFilePath)) {
+                        $message->attach(new \Swift_Attachment(file_get_contents($quoteRequestFilePath),
+                            $contract->getOriginalFileName(),
+                            $contract->getMimeType()));
+                    }
+                }
+            }
+
+
             $return = true;
             if (!$this->container->get('mailer')->send($message)) {
                 $return = false;
@@ -1511,6 +1542,7 @@ class QuoteRequestManager
             return $return;
 
         } catch (ORMException $e) {
+            dd($e->getMessage());
             throw new Exception('unableToGenerateProductQuote', 500);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -1614,6 +1646,15 @@ class QuoteRequestManager
                             $logoName = 'logo-insitu.png';
                         }
 
+                        $agencyMissionSheetLines = [];
+                        if (is_iterable($missionSheet->getMissionSheetLines()) && count($missionSheet->getMissionSheetLines())) {
+                            foreach ($missionSheet->getMissionSheetLines() as $mS) {
+                                if ($mS->getAgency()->getId() === $agency->getId()) {
+                                    $agencyMissionSheetLines[] = $mS;
+                                }
+                            }
+                        }
+
                         $pdfs[] = $this->container->get('templating')->render(
                             $dir . '/printMissionSheet.html.twig',
                             array(
@@ -1622,8 +1663,10 @@ class QuoteRequestManager
                                 'sheetName' => $sheetName,
                                 'quoteRequestLines' => $quoteRequestLines,
                                 'missionSheet' => $missionSheet,
+                                'missionSheetLines' => $agencyMissionSheetLines,
                                 'date' => $today,
-                                'locale' => $locale
+                                'locale' => $locale,
+                                'agency' => $agency
                             )
                         );
                     }

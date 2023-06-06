@@ -3,9 +3,11 @@
 namespace App\Form;
 
 use App\Entity\QuoteRequest;
+use Doctrine\DBAL\Types\FloatType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,7 +36,7 @@ class QuoteRequestManagementFeeType extends AbstractType
                 'expanded' => false,
                 'multiple' => false
             ))
-            ->add('managementFeeAmount1', IntegerType::class)
+            ->add('managementFeeAmount1', NumberType::class)
             ->add('managementFeeCode2', TextType::class)
             ->add('managementFeeDescription2', TextType::class)
             ->add('managementFeeFrequency2', ChoiceType::class, array(
@@ -51,7 +53,7 @@ class QuoteRequestManagementFeeType extends AbstractType
                 'expanded' => false,
                 'multiple' => false
             ))
-            ->add('managementFeeAmount2', IntegerType::class)
+            ->add('managementFeeAmount2', NumberType::class)
             ->add('managementFeeCode3', TextType::class)
             ->add('managementFeeDescription3', TextType::class)
             ->add('managementFeeFrequency3', ChoiceType::class, array(
@@ -68,7 +70,7 @@ class QuoteRequestManagementFeeType extends AbstractType
                 'expanded' => false,
                 'multiple' => false
             ))
-            ->add('managementFeeAmount3', IntegerType::class)
+            ->add('managementFeeAmount3', NumberType::class)
             ->add('managementFeeCode4', TextType::class)
             ->add('managementFeeDescription4', TextType::class)
             ->add('managementFeeFrequency4', ChoiceType::class, array(
@@ -85,7 +87,7 @@ class QuoteRequestManagementFeeType extends AbstractType
                 'expanded' => false,
                 'multiple' => false
             ))
-            ->add('managementFeeAmount4', IntegerType::class)
+            ->add('managementFeeAmount4', NumberType::class)
         ;
     }
 
