@@ -1120,7 +1120,6 @@ class ProductController extends AbstractController
         if ($form->isValid()) {
             $product->setDateUpdate(new \DateTime());
             $picture = $form->getData();
-
             if ($picture->getPath() instanceof UploadedFile) {
                 $pic = $picture->getPath();
                 $pictoFileName = md5(uniqid('', true)) . '.' . $pic->guessExtension();
@@ -1129,8 +1128,9 @@ class ProductController extends AbstractController
 
                 $picture->setPath($pictoFileName);
                 $picture->setType($request->get('type'));
-                $picture->setProduct($product);
                 $product->addPicture($picture);
+                $picture->setProduct($product);
+
                 $this->em->persist($picture);
                 $this->em->flush();
             }

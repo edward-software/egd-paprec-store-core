@@ -49,7 +49,7 @@ class Picture
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\MissionSheetProduct", inversedBy="pictures")
-     * @ORM\JoinColumn(name="productId")
+     * @ORM\JoinColumn(name="missionSheetProductId")
      */
     private $missionSheetProduct;
 
