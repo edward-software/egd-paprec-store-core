@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QuoteRequestLineAddType extends AbstractType
 {
@@ -27,14 +28,35 @@ class QuoteRequestLineAddType extends AbstractType
                 'class' => Product::class,
                 'query_builder' => function (ProductRepository $er) {
                     return $er->createQueryBuilder('p')
-                        ->select(array('p', 'pL'))
+                        ->select(array('p', 'pL', 'r', 'rL'))
                         ->leftJoin('p.productLabels', 'pL')
+                        ->leftJoin('p.range', 'r')
+                        ->leftJoin('r.rangeLabels', 'rL')
                         ->where('p.deleted IS NULL')
                         ->andWhere('pL.language = :language')
                         ->orderBy('p.position', 'ASC')
                         ->setParameter('language', 'FR');
                 },
-                'choice_label' => 'productLabels[0].name',
+                'choice_label' => function ($product) {
+
+                    $name = $product->getProductLabels()[0]->getName();
+                    if ($product->getRange() && is_iterable($product->getRange()->getRangeLabels())) {
+                        $name .= ' - ' . $product->getRange()->getRangeLabels()[0]->getName();
+                    }
+                    if ($product->getCatalog()) {
+
+                        $catalog = 'Régulier';
+                        if(strtoupper($product->getCatalog()) === 'PONCTUAL'){
+                            $catalog = 'Ponctuel';
+                        }elseif(strtoupper($product->getCatalog()) === 'MATERIAL'){
+                            $catalog = 'Matériel';
+                        }
+
+                        $name .= ' - ' . $catalog;
+                    }
+
+                    return $name;
+                },
                 'placeholder' => '',
                 'empty_data' => null,
             ))

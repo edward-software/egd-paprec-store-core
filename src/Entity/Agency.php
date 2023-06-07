@@ -132,7 +132,6 @@ class Agency
      * @var string
      *
      * @ORM\Column(name="faxNumber", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"public"})
      */
     private $faxNumber;
 
@@ -623,10 +622,12 @@ class Agency
 
     /**
      * @param string $phoneNumber
+     * @return Agency
      */
-    public function setPhoneNumber(string $phoneNumber): void
+    public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
+        return $this;
     }
 
     /**
@@ -639,10 +640,12 @@ class Agency
 
     /**
      * @param string $faxNumber
+     * @return Agency
      */
-    public function setFaxNumber(string $faxNumber): void
+    public function setFaxNumber($faxNumber)
     {
         $this->faxNumber = $faxNumber;
+        return $this;
     }
 
     /**

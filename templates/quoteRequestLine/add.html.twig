@@ -41,7 +41,7 @@
                                 <div class="form-group">
                                     <label class="form-label">{{ 'Commercial.QuoteRequestLine.Product'|trans }}</label>
                                     <div class="form-content">
-                                        {{ form_widget(form.product, {'attr': {'class': 'form-control select-product'}}) }}
+                                        {{ form_widget(form.product, {'attr': {'class': 'form-control product-field'}}) }}
                                         {{ form_errors(form.product) }}
                                     </div>
                                 </div>
@@ -103,6 +103,12 @@
 
     <script>
         $(function () {
+
+            $('.product-field').select2({
+                language: "fr",
+                placeholder: "Ajouter une intégration",
+                width: '100%'
+            });
 
             $('.commercial-quoteRequestLine-save-button').on('click', function () {
                 $('#commercialQuoteRequestForm').submit();

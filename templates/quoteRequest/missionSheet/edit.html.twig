@@ -427,7 +427,30 @@
                     {"data": "agencyName"},
                     {"data": "id", "width": "3%", "bSortable": false, "className": "cell-action-button"}
                 ],
-                rowDblclick: {},
+                rowDblclick: {
+                    type: "ajax",
+                    url: "{{ path('paprec_quote_request_mission_sheet_editLine', {id: quoteRequest.id, missionSheetId: missionSheet.id, missionSheetLineId: '__rowId__'}) }}",
+                    prompt: {
+                        type: 'custom',
+                        size: 'large',
+                        title: 'Ajouter',
+                        modalClassName: 'mission-sheet-line-edit',
+                        formName: '#commercialMissionSheetLineForm',
+                        cancelButton: {
+                            label: '{{ 'General.Cancel'|trans }}',
+                            className: 'btn btn-danger btn-sm',
+                            callback: function () {
+
+                            }
+                        },
+                        submitButton: {
+                            label: '{{ 'General.Save'|trans }}',
+                            className: 'btn btn-primary btn-sm',
+                            callback: function () {
+                            }
+                        }
+                    }
+                },
                 buttons: [],
                 rowButtons: [
                     {

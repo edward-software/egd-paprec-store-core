@@ -22,7 +22,7 @@ security:
         # Par-feu du BackOffice
         admin:
             anonymous: lazy
-            pattern: ^/admin/
+            pattern: ^/admin
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator

@@ -12,12 +12,16 @@ use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
+use iio\libmergepdf\Driver\TcpdiDriver;
 use iio\libmergepdf\Merger;
 use Knp\Snappy\Pdf;
+use setasign\Fpdi\Fpdi;
 use Swift_Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tomsgu\PdfMerger\PdfCollection;
+use Tomsgu\PdfMerger\PdfMerger;
 use function PHPUnit\Framework\isEmpty;
 
 class QuoteRequestManager
@@ -1236,7 +1240,8 @@ class QuoteRequestManager
             }
 
             if (count($pdfArray)) {
-                $merger = new Merger();
+
+                $merger = new Merger(new TcpdiDriver());
                 $merger->addIterator($pdfArray);
                 file_put_contents($filename, $merger->merge());
             }

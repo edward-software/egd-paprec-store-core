@@ -118,9 +118,6 @@
     "hackzilla/password-generator-bundle": {
         "version": "4.1.0"
     },
-    "iio/libmergepdf": {
-        "version": "4.0.4"
-    },
     "jean85/pretty-package-versions": {
         "version": "1.6.0"
     },
@@ -243,9 +240,6 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
-    },
-    "setasign/fpdi": {
-        "version": "v2.3.6"
     },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.7"
@@ -608,9 +602,6 @@
     },
     "symfony/yaml": {
         "version": "v4.4.22"
-    },
-    "tecnickcom/tcpdf": {
-        "version": "6.4.1"
     },
     "twig/extensions": {
         "version": "1.0",

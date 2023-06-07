@@ -18,7 +18,6 @@
     "friendsofsymfony/ckeditor-bundle": "^2.3",
     "gedmo/doctrine-extensions": "^2.4",
     "hackzilla/password-generator-bundle": "^4.1",
-    "iio/libmergepdf": "^4.0",
     "knplabs/knp-paginator-bundle": "^5.4",
     "knplabs/knp-snappy-bundle": "^1.8",
     "mongodb/mongodb": "^1.6",

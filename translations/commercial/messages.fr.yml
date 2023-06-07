@@ -406,7 +406,7 @@ Commercial:
             Content: Contenu
 
     PDF:
-        Title: Devis de Prestation valable %number% mois
+        Title: Devis de Prestation valable 3 mois
         Company: Nom de la société
         Address: Adresse
         PostalCode: CP / Ville

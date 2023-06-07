@@ -34,7 +34,8 @@ import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/widgets/autocomplete';
 import 'jquery-ui/ui/disable-selection';
 import 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min';
-import 'select2/dist/js/select2.min'
+import 'select2/dist/js/select2.min';
+import 'select2/dist/js/i18n/fr.js';
 import 'bootstrap-select/dist/js/bootstrap-select.min'
 import 'bootstrap-select/dist/js/i18n/defaults-fr_FR.min'
 import 'bootstrap-select/dist/js/i18n/defaults-en_US.min'
