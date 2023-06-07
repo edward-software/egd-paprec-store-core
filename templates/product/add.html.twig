@@ -337,7 +337,6 @@
             });
 
             $('.catalog-field').on('change', function (e) {
-                console.log('t');
                 var catalog = $('.catalog-field input:checked').val();
                 if(rangesByCatalog[catalog]){
                     $('.range-field').empty();

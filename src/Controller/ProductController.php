@@ -399,7 +399,7 @@ class ProductController extends AbstractController
         if (is_array($ranges) && count($ranges)) {
             foreach ($ranges as $range) {
                 if (is_iterable($range->getRangeLabels()) && $range->getRangeLabels()[0]) {
-                    $rangesByCatalog[$range->getCatalog()][] = [
+                    $rangesByCatalog[strtoupper($range->getCatalog())][] = [
                         'id' => $range->getId(),
                         'name' => $range->getRangeLabels()[0]->getName()
                     ];
@@ -639,7 +639,7 @@ class ProductController extends AbstractController
         if (is_array($ranges) && count($ranges)) {
             foreach ($ranges as $range) {
                 if (is_iterable($range->getRangeLabels()) && $range->getRangeLabels()[0]) {
-                    $rangesByCatalog[$range->getCatalog()][] = [
+                    $rangesByCatalog[strtoupper($range->getCatalog())][] = [
                         'id' => $range->getId(),
                         'name' => $range->getRangeLabels()[0]->getName()
                     ];
