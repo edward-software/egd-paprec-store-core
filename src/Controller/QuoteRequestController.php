@@ -19,6 +19,7 @@ use App\Form\QuoteRequestLineEditType;
 use App\Form\QuoteRequestManagementFeeType;
 use App\Form\QuoteRequestType;
 use App\Service\NumberManager;
+use App\Service\ProductManager;
 use App\Service\QuoteRequestManager;
 use App\Service\UserManager;
 use App\Tools\DataTable;
@@ -51,18 +52,21 @@ class QuoteRequestController extends AbstractController
     private $userManager;
     private $quoteRequestManager;
     private $translator;
+    private $productManager;
 
     public function __construct(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
         NumberManager $numberManager,
         UserManager $userManager,
-        QuoteRequestManager $quoteRequestManager
+        QuoteRequestManager $quoteRequestManager,
+        ProductManager $productManager
     ) {
         $this->em = $em;
         $this->userManager = $userManager;
         $this->numberManager = $numberManager;
         $this->quoteRequestManager = $quoteRequestManager;
+        $this->productManager = $productManager;
         $this->translator = $translator;
     }
 
@@ -510,8 +514,11 @@ class QuoteRequestController extends AbstractController
         $total = 0;
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
+
+
                 $frequencyIntervalValue = 1;
                 if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
+                    $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
                     $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
                     if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
                         $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
@@ -521,33 +528,33 @@ class QuoteRequestController extends AbstractController
                 $quantity = $quoteRequestLine->getQuantity();
 
                 /**
-                 * Nombre de Produit * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
+                 * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
                  */
                 if ($quoteRequestLine->getRentalUnitPrice() > 0) {
-                    $total += $quantity * $quoteRequestLine->getRentalUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
                 }
 
                 /**
-                 * Transport : Nombre de passage par mois (fonction de la fréquence) * Cout Transport * Coefficient Transport précisé dans le champ produit du CP
-                 */
-                if ($quoteRequestLine->getTransportUnitPrice() > 0) {
-                    $total += $frequencyIntervalValue * $quoteRequestLine->getTransportUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                }
-
-                /**
-                 * Traitement :  (Nombre de Produit) * (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                 * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
                  */
                 if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
-                    $total += $quantity * $quoteRequestLine->getTreatmentUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                    $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                }
+                /**
+                 * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
+                 */
+                if ($quoteRequestLine->getTransportUnitPrice() > 0) {
+                    $total += $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
                 }
 
                 /**
-                 * Matériel Additionnel :  (Nombre de Produit -1) * (PU Matériel Additionnel du Produit * Coefficient Matériel Additionnel du CP de l’adresse à collecter)
+                 * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
                  */
                 if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
-                    $total += ($quantity - 1) * $quoteRequestLine->getTraceabilityUnitPrice() * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                    $total += $frequencyIntervalValue * ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
                 }
             }
+            $total = $this->numberManager->normalize($total);
         }
 
         /**

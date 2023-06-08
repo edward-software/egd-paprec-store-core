@@ -81,6 +81,7 @@ class UserController extends AbstractController
         $columns = $request->get('columns');
         $rowPrefix = $request->get('rowPrefix');
 
+        $cols['id'] = ['label' => 'id', 'id' => 'u.id', 'method' => ['getId']];
         $cols['username'] = ['label' => 'username', 'id' => 'u.username', 'method' => ['getUsername']];
         $cols['firstName'] = ['label' => 'firstName', 'id' => 'u.firstName', 'method' => ['getFirstName']];
         $cols['lastName'] = ['label' => 'lastName', 'id' => 'u.lastName', 'method' => ['getLastName']];
@@ -89,7 +90,6 @@ class UserController extends AbstractController
         $cols['dateCreation'] = ['label' => 'dateCreation', 'id' => 'u.dateCreation', 'method' => ['getDateCreation'], 'filter' => [
             ['name' => 'format', 'args' => ['Y-m-d H:i:s']]]
         ];
-        $cols['id'] = ['label' => 'id', 'id' => 'u.id', 'method' => ['getId']];
         
 
         /** @var QueryBuilder $queryBuilder */

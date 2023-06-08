@@ -1630,7 +1630,7 @@ class QuoteRequestManager
 
                         $sheetName = '';
                         $pdfExploitName = 'Exploitation';
-                        $logoName = '';
+                        $logoName = null;
                         if ($agency->getTemplate() === 'LCB') {
                             $sheetName = 'Exploitation LCB';
                             $logoName = 'logo-lcb.jpg';
