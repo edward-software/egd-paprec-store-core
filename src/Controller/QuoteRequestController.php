@@ -12,6 +12,7 @@ use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
 use App\Form\FollowUpType;
 use App\Form\MissionSheetLineType;
+use App\Form\MissionSheetQuoteRequestLineEditType;
 use App\Form\MissionSheetType;
 use App\Form\QuoteRequestFileType;
 use App\Form\QuoteRequestLineAddType;
@@ -950,7 +951,9 @@ class QuoteRequestController extends AbstractController
 
         $quoteRequestLine = new QuoteRequestLine();
 
-        $form = $this->createForm(QuoteRequestLineAddType::class, $quoteRequestLine);
+        $form = $this->createForm(QuoteRequestLineAddType::class, $quoteRequestLine, [
+            'quoteRequestCatalog' => $quoteRequest->getCatalog()
+        ]);
 
         $form->handleRequest($request);
 
@@ -1028,6 +1031,7 @@ class QuoteRequestController extends AbstractController
             'quoteRequestLine' => $quoteRequestLine
         ));
     }
+
 
     /**
      * @Route("/{id}/removeLine/{quoteLineId}", name="paprec_quoteRequest_removeLine")
@@ -1577,20 +1581,20 @@ class QuoteRequestController extends AbstractController
                     $missionSheet->setContractNumber(null);
                 }
 
-                /**
-                 * On ajoute l'agence dans les quoteRequestLine
-                 */
-                $quoteRequestLineAgencies = $request->get('quoteRequestLineAgency');
-
-                if (count($quoteRequest->getQuoteRequestLines())) {
-                    foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
-                        if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
-                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()],
-                                $agencyById)) {
-                            $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
-                        }
-                    }
-                }
+//                /**
+//                 * On ajoute l'agence dans les quoteRequestLine
+//                 */
+//                $quoteRequestLineAgencies = $request->get('quoteRequestLineAgency');
+//
+//                if (count($quoteRequest->getQuoteRequestLines())) {
+//                    foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
+//                        if (array_key_exists($quoteRequestLine->getId(), $quoteRequestLineAgencies)
+//                            && array_key_exists((int)$quoteRequestLineAgencies[$quoteRequestLine->getId()],
+//                                $agencyById)) {
+//                            $quoteRequestLine->setAgency($agencyById[(int)$quoteRequestLineAgencies[$quoteRequestLine->getId()]]);
+//                        }
+//                    }
+//                }
 
                 $this->em->flush();
 
@@ -1742,6 +1746,251 @@ class QuoteRequestController extends AbstractController
 
         return $response;
 
+    }
+
+    /**
+     * @Route("/{id}/missionSheet/{missionSheetId}/loadQuoteRequestLineList", name="paprec_quote_request_mission_sheet_load_quote_request_line_list")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function loadMissionSheetQuoteRequestLineListAction(
+        Request $request,
+        DataTable $dataTable,
+        PaginatorInterface $paginator,
+        QuoteRequest $quoteRequest,
+        $missionSheetId
+    ) {
+        $return = [];
+
+        $filters = $request->get('filters');
+        $pageSize = $request->get('length');
+        $start = $request->get('start');
+        $orders = $request->get('order');
+        $search = $request->get('search');
+        $columns = $request->get('columns');
+        $rowPrefix = $request->get('rowPrefix');
+
+        $cols['productCode'] = array(
+            'label' => 'productCode',
+            'id' => 'p.code',
+            'method' => ['getProduct', 'getCode']
+        );
+        $cols['productRange'] = array(
+            'label' => 'productRange',
+            'id' => 'rL.name',
+            'method' => ['getProduct', 'getRange', ['getRangeLabels', 0], 'getName']
+        );
+        $cols['productName'] = array(
+            'label' => 'productName',
+            'id' => 'pL.name',
+            'method' => ['getProduct', ['getProductLabels', 0], 'getName']
+        );
+        $cols['productBillingUnit'] = array(
+            'label' => 'productBillingUnit',
+            'id' => 'bU.name',
+            'method' => ['getProduct', 'getBillingUnit', 'getName']
+        );
+        $cols['quantity'] = array(
+            'label' => 'quantity',
+            'id' => 'qRL.quantity',
+            'method' => ['getQuantity']
+        );
+        $cols['passingFrequency'] = array(
+            'label' => 'passingFrequency',
+            'id' => 'qRL.frequency',
+            'method' => ['getFrequency']
+        );
+        $cols['rentalPrice'] = array(
+            'label' => 'rentalPrice',
+            'id' => 'qRL.rentalRate',
+            'method' => ['getRentalRate']
+        );
+        $cols['treatmentCollect'] = array(
+            'label' => 'treatmentCollect',
+            'id' => 'qRL.treatmentCollectPrice',
+            'method' => ['getTreatmentCollectPrice']
+        );
+        $cols['treatment'] = array(
+            'label' => 'treatment',
+            'id' => 'qRL.treatmentRate',
+            'method' => ['getTreatmentRate']
+        );
+        $cols['movement'] = array(
+            'label' => 'movement',
+            'id' => 'qRL.movement',
+            'method' => ['getMovement']
+        );
+        $cols['agencyName'] = array(
+            'label' => 'agencyName',
+            'id' => 'a.name',
+            'method' => array('getAgency', 'getName')
+        );
+        $cols['comment'] = array(
+            'label' => 'comment',
+            'id' => 'qRL.comment',
+            'method' => ['getComment']
+        );
+        $cols['id'] = array('label' => 'id', 'id' => 'mSP.id', 'method' => array('getId'));
+        $cols['frequencyInterval'] = array(
+            'label' => 'frequencyInterval',
+            'id' => 'qRL.frequencyInterval',
+            'method' => ['getFrequencyInterval']
+        );
+        $cols['frequencyTimes'] = array(
+            'label' => 'frequencyTimes',
+            'id' => 'qRL.frequencyTimes',
+            'method' => ['getFrequencyTimes']
+        );
+        $cols['editableRentalUnitPrice'] = array(
+            'label' => 'editableRentalUnitPrice',
+            'id' => 'qRL.editableRentalUnitPrice',
+            'method' => ['getEditableRentalUnitPrice']
+        );
+        $cols['editableTreatmentUnitPrice'] = array(
+            'label' => 'editableTreatmentUnitPrice',
+            'id' => 'qRL.editableTreatmentUnitPrice',
+            'method' => ['getEditableTreatmentUnitPrice']
+        );
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(QuoteRequestLine::class)->createQueryBuilder('qRL');
+
+        $queryBuilder->select(array('qRL', 'qR', 'p', 'pL', 'a', 'mS', 'r', 'rL'))
+            ->leftJoin('qRL.agency', 'a')
+            ->leftJoin('qRL.quoteRequest', 'qR')
+            ->leftJoin('qR.missionSheet', 'mS')
+            ->leftJoin('qRL.product', 'p')
+            ->leftJoin('p.billingUnit', 'bU')
+            ->leftJoin('p.productLabels', 'pL')
+            ->leftJoin('p.range', 'r')
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->where('qRL.deleted IS NULL')
+            ->andWhere('pL.language = :language')
+            ->setParameter('language', 'FR')
+            ->andWhere('rL.language = :language')
+            ->setParameter('language', 'FR')
+            ->andWhere('mS.id = :id')
+            ->setParameter('id', $missionSheetId);
+
+        $quoteRequestLines = $queryBuilder->getQuery()->getResult();
+
+        if (is_array($search) && isset($search['value']) && $search['value'] != '') {
+            if (substr($search['value'], 0, 1) === '#') {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->eq('qRL.id', '?1')
+                ))->setParameter(1, substr($search['value'], 1));
+            } else {
+                $queryBuilder->andWhere($queryBuilder->expr()->orx(
+                    $queryBuilder->expr()->like('p.code', '?1'),
+                    $queryBuilder->expr()->like('p.name', '?1'),
+                    $queryBuilder->expr()->like('a.name', '?1')
+                ))->setParameter(1, '%' . $search['value'] . '%');
+            }
+        }
+
+        $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
+            $paginator, $rowPrefix);
+
+        $quoteRequestLinesById = [];
+        if (is_array($quoteRequestLines) && count($quoteRequestLines)) {
+            foreach ($quoteRequestLines as $quoteRequestLine) {
+                $quoteRequestLinesById[$quoteRequestLine->getId()] = $quoteRequestLine;
+            }
+        }
+
+        // Reformatage de certaines données
+        $tmp = [];
+        foreach ($dt['data'] as $data) {
+            $line = $data;
+
+            if (strtoupper($line['passingFrequency']) != 'REGULAR') {
+                $line['passingFrequency'] = $this->translator->trans('General.Frequency.' . $line['passingFrequency']);
+            } else {
+                if (!empty($line['frequencyInterval'])) {
+                    $frequencyInterval = $this->translator->trans('General.Frequency.' . $line['frequencyInterval']);
+
+                    $line['passingFrequency'] = $line['frequencyTimes'] . ' x/ ' . $frequencyInterval;
+                }
+            }
+
+            $qR = $quoteRequestLinesById[$line['id']];
+
+            if ($line['editableRentalUnitPrice'] === 0) {
+                $line['rentalPrice'] = 0;
+            } else {
+                $line['rentalPrice'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qR,
+                    'editableRentalUnitPrice', true), 'EUR', $request->getLocale());
+            }
+
+            if ($line['editableTreatmentUnitPrice'] === 0) {
+                $line['treatment'] = 0;
+            } else {
+                $line['treatment'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qR,
+                    'editableTreatmentUnitPrice', true), 'EUR', $request->getLocale());
+            }
+
+            $line['treatmentCollect'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qR,
+                'treatmentCollectPrice', true), 'EUR', $request->getLocale());
+
+            $tmp[] = $line;
+        }
+        $dt['data'] = $tmp;
+
+
+        $return['recordsTotal'] = $dt['recordsTotal'];
+        $return['recordsFiltered'] = $dt['recordsTotal'];
+        $return['data'] = $dt['data'];
+        $return['resultCode'] = 1;
+        $return['resultDescription'] = "success";
+
+        return new JsonResponse($return);
+
+    }
+
+    /**
+     * @Route("/{id}/missionSheet/{missionSheetId}/quoteRequestLine/{quoteRequestLineId}/edit", name="paprec_quote_request_mission_sheet_quote_request_line_edit")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @ParamConverter("id", options={"id" = "id"})
+     * @ParamConverter("missionSheet", options={"id" = "missionSheetId"})
+     * @ParamConverter("quoteRequestLine", options={"id" = "quoteRequestLineId"})
+     */
+    public function missionSheetEditQuoteRequestLineAction(
+        Request $request,
+        QuoteRequest $quoteRequest,
+        MissionSheet $missionSheet,
+        QuoteRequestLine $quoteRequestLine
+    ) {
+        if ($missionSheet->getDeleted() !== null) {
+            throw new NotFoundHttpException();
+        }
+
+        $form = $this->createForm(MissionSheetQuoteRequestLineEditType::class, $quoteRequestLine);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $quoteRequestLine = $form->getData();
+                $quoteRequestLine->setDateUpdate(new \DateTime());
+                $this->em->flush();
+                return new JsonResponse(array(
+                    'id' => $quoteRequestLine->getId(),
+                    'resultCode' => 1
+                ));
+
+            }
+
+            return new JsonResponse(array(
+                'error' => true,
+                'data' => $this->renderView('quoteRequest/missionSheet/editQuoteRequestLineModal.html.twig',
+                    array(
+                        'form' => $form->createView()
+                    )),
+                'resultCode' => 0
+            ));
+        }
+
+        return $this->render('quoteRequest/missionSheet/editQuoteRequestLineModal.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 
 

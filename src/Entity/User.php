@@ -518,7 +518,7 @@ class User implements UserInterface
     /**
      * @return null|string
      */
-    public function getPhoneNumber(): ?string
+    public function getPhoneNumber()
     {
         return $this->phoneNumber;
     }
@@ -527,7 +527,7 @@ class User implements UserInterface
      * @param string $phoneNumber
      * @return User
      */
-    public function setPhoneNumber(string $phoneNumber): self
+    public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
         return $this;

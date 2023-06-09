@@ -22,12 +22,16 @@ class QuoteRequestLineAddType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->options = $options;
+
         $builder
             ->add('quantity')
             ->add('product', EntityType::class, array(
                 'class' => Product::class,
                 'query_builder' => function (ProductRepository $er) {
-                    return $er->createQueryBuilder('p')
+
+                    $qb = $er->createQueryBuilder('p')
                         ->select(array('p', 'pL', 'r', 'rL'))
                         ->leftJoin('p.productLabels', 'pL')
                         ->leftJoin('p.range', 'r')
@@ -36,6 +40,13 @@ class QuoteRequestLineAddType extends AbstractType
                         ->andWhere('pL.language = :language')
                         ->orderBy('p.position', 'ASC')
                         ->setParameter('language', 'FR');
+
+                    if ($this->options['quoteRequestCatalog'] && $this->options['quoteRequestCatalog'] !== 'UNKNOWN') {
+                        $qb->andWhere('p.catalog = :catalog')
+                            ->setParameter('catalog', $this->options['quoteRequestCatalog']);
+                    }
+
+                    return $qb;
                 },
                 'choice_label' => function ($product) {
 
@@ -43,17 +54,17 @@ class QuoteRequestLineAddType extends AbstractType
                     if ($product->getRange() && is_iterable($product->getRange()->getRangeLabels())) {
                         $name .= ' - ' . $product->getRange()->getRangeLabels()[0]->getName();
                     }
-                    if ($product->getCatalog()) {
-
-                        $catalog = 'Régulier';
-                        if(strtoupper($product->getCatalog()) === 'PONCTUAL'){
-                            $catalog = 'Ponctuel';
-                        }elseif(strtoupper($product->getCatalog()) === 'MATERIAL'){
-                            $catalog = 'Matériel';
-                        }
-
-                        $name .= ' - ' . $catalog;
-                    }
+//                    if ($product->getCatalog()) {
+//
+//                        $catalog = 'Régulier';
+//                        if(strtoupper($product->getCatalog()) === 'PONCTUAL'){
+//                            $catalog = 'Ponctuel';
+//                        }elseif(strtoupper($product->getCatalog()) === 'MATERIAL'){
+//                            $catalog = 'Matériel';
+//                        }
+//
+//                        $name .= ' - ' . $catalog;
+//                    }
 
                     return $name;
                 },
@@ -112,6 +123,7 @@ class QuoteRequestLineAddType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => QuoteRequestLine::class,
+            'quoteRequestCatalog' => null
         ));
     }
 }

@@ -139,95 +139,91 @@
                                         <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
-                                        <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
-                                        <th>{{ 'Commercial.QuoteRequestLine.SelectAgency'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Movement'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Agency'|trans }}</th>
+                                        <th>{{ 'Commercial.QuoteRequestLine.Comment'|trans }}</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for quoteRequestLine in quoteRequest.quoteRequestLines %}
-                                        <tr>
-                                            <td>
-                                                {{ quoteRequestLine.product.code }}
-                                            </td>
-                                            <td>
-                                                {{ quoteRequestLine.product|productLabelTranslation(app.user.lang) }}
-                                            </td>
-                                            <td>
-                                                {% if quoteRequestLine.product.range %}
-                                                    {{ quoteRequestLine.product.range|rangeLabelTranslation(app.user.lang) }}
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if quoteRequestLine.product.billingUnit %}
-                                                    {{ quoteRequestLine.product.billingUnit.name }}
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ quoteRequestLine.quantity }}</td>
-                                            <td>
-                                                {% if quoteRequestLine.frequency != 'REGULAR' %}
-                                                    {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
-                                                {% else %}
-                                                    {% if quoteRequestLine.frequencyInterval is not empty %}
-                                                        {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
-                                                        {{ quoteRequestLine.frequencyTimes }}
-                                                        x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
-                                                    {% endif %}
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
-                                                    0
-                                                {% else %}
+{#                                    {% for quoteRequestLine in quoteRequest.quoteRequestLines %}#}
+{#                                        <tr>#}
+{#                                            <td>#}
+{#                                                {{ quoteRequestLine.product.code }}#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                {{ quoteRequestLine.product|productLabelTranslation(app.user.lang) }}#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                {% if quoteRequestLine.product.range %}#}
+{#                                                    {{ quoteRequestLine.product.range|rangeLabelTranslation(app.user.lang) }}#}
+{#                                                {% endif %}#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                {% if quoteRequestLine.product.billingUnit %}#}
+{#                                                    {{ quoteRequestLine.product.billingUnit.name }}#}
+{#                                                {% endif %}#}
+{#                                            </td>#}
+{#                                            <td>{{ quoteRequestLine.quantity }}</td>#}
+{#                                            <td>#}
+{#                                                {% if quoteRequestLine.frequency != 'REGULAR' %}#}
+{#                                                    {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}#}
+{#                                                {% else %}#}
+{#                                                    {% if quoteRequestLine.frequencyInterval is not empty %}#}
+{#                                                        {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}#}
+{#                                                        {{ quoteRequestLine.frequencyTimes }}#}
+{#                                                        x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}#}
+{#                                                    {% endif %}#}
+{#                                                {% endif %}#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                {% if quoteRequestLine.editableRentalUnitPrice == 0 %}#}
+{#                                                    0#}
+{#                                                {% else %}#}
 
-                                                    {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableRentalUnitPrice'))|formatAmount('EUR', app.request.locale) }}
+{#                                                    {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableRentalUnitPrice'))|formatAmount('EUR', app.request.locale) }}#}
 
-                                                    {#                                                    {{ ((quoteRequestLine.rentalRate / 1000000000000000) *(quoteRequestLine.editableRentalUnitPrice))|formatAmount('EUR', app.request.locale) }} #}
+{#                                                                                                        {{ ((quoteRequestLine.rentalRate / 1000000000000000) *(quoteRequestLine.editableRentalUnitPrice))|formatAmount('EUR', app.request.locale) }} #}
 
-                                                    {#                                                    <span class="small"      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {{ (quoteRequestLine|quoteRequestLineCalculatePrices('treatmentCollectPrice'))|formatAmount('EUR', app.request.locale) }}
+{#                                                                                                        <span class="small"      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
+{#                                                {% endif %}#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                {{ (quoteRequestLine|quoteRequestLineCalculatePrices('treatmentCollectPrice'))|formatAmount('EUR', app.request.locale) }}#}
+{#                                            </td>#}
+{#                                            <td>#}
+{#                                                {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}#}
+{#                                                    0#}
+{#                                                {% else %}#}
 
-                                                {#                                                {{ quoteRequestLine.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }} #}
-                                                {#                                                <span class="small" #}
-                                                {#                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
-                                            </td>
-                                            <td>
-                                                {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
-                                                    0
-                                                {% else %}
-                                                    {% if quoteRequestLine.editableTreatmentUnitPrice < 0 %}
-                                                        <i class="fas fa-exclamation-triangle" data-toggle="tooltip"
-                                                           data-placement="top"
-                                                           title="Le prix sera indexé mensuellement à la variation de la mercuriale Mercuriale choisie, référence Mois et Année de Référence"></i>
-                                                    {% endif %}
-
-
-                                                    {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableTreatmentUnitPrice'))|formatAmount('EUR', app.request.locale) }}
+{#                                                    {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableTreatmentUnitPrice'))|formatAmount('EUR', app.request.locale) }}#}
+{#                                                {% endif %}#}
+{#                                            </td>#}
+{#                                            <td class="text-center">#}
+{#                                                <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"#}
+{#                                                   class="btn btn-sm btn-warning btn-sm mx-1"#}
+{#                                                   data-id="{{ quoteRequestLine.id }}">#}
+{#                                                    <i class="fa fa-xs fa-edit"></i>#}
+{#                                                </a>#}
 
 
-                                                    {#                                                    {{ ((quoteRequestLine.treatmentRate / 1000000000000000) *(quoteRequestLine.editableTreatmentUnitPrice))|formatAmount('EUR', app.request.locale) }} #}
-                                                    {#                                                    <span class="small" #}
-                                                    {#                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
-                                                {% endif %}
-                                            </td>
-                                            <td class="text-center">
-                                                <select name="quoteRequestLineAgency[{{ quoteRequestLine.id }}]"
-                                                        class="form-control">
-                                                    {% for agency in agencies %}
-                                                        <option value="{{ agency.id }}"
-                                                                {% if quoteRequestLine.agency is not null %}
-                                                                    {% if quoteRequestLine.agency.id == agency.id %} selected{% endif %}
-                                                                {% else %}
-                                                                    {% if quoteRequest.userInCharge and quoteRequest.userInCharge.agency and quoteRequest.userInCharge.agency.id == agency.id %} selected{% endif %}
-                                                                {% endif %}
-                                                        >{{ agency.name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
+
+{#                                                <select name="quoteRequestLineAgency[{{ quoteRequestLine.id }}]"#}
+{#                                                        class="form-control">#}
+{#                                                    {% for agency in agencies %}#}
+{#                                                        <option value="{{ agency.id }}"#}
+{#                                                                {% if quoteRequestLine.agency is not null %}#}
+{#                                                                    {% if quoteRequestLine.agency.id == agency.id %} selected{% endif %}#}
+{#                                                                {% else %}#}
+{#                                                                    {% if quoteRequest.userInCharge and quoteRequest.userInCharge.agency and quoteRequest.userInCharge.agency.id == agency.id %} selected{% endif %}#}
+{#                                                                {% endif %}#}
+{#                                                        >{{ agency.name }}</option>#}
+{#                                                    {% endfor %}#}
+{#                                                </select>#}
+{#                                            </td>#}
+{#                                        </tr>#}
+{#                                    {% endfor %}#}
                                     </tbody>
                                 </table>
                             </div>
@@ -465,6 +461,80 @@
                             title: 'Ajouter',
                             modalClassName: 'mission-sheet-line-edit',
                             formName: '#commercialMissionSheetLineForm',
+                            cancelButton: {
+                                label: '{{ 'General.Cancel'|trans }}',
+                                className: 'btn btn-danger btn-sm',
+                                callback: function () {
+
+                                }
+                            },
+                            submitButton: {
+                                label: '{{ 'General.Save'|trans }}',
+                                className: 'btn btn-primary btn-sm',
+                                callback: function () {
+                                }
+                            }
+                        }
+                    },
+                ]
+            });
+
+
+            $('#quoteRequestLinesDatatable').EgdDatatable({
+                url: "{{ path('paprec_quote_request_mission_sheet_load_quote_request_line_list', {id: quoteRequest.id, missionSheetId: missionSheet.id}) }}",
+                columns: [
+                    {"data": "productCode"},
+                    {"data": "productRange"},
+                    {"data": "productName"},
+                    {"data": "productBillingUnit"},
+                    {"data": "quantity"},
+                    {"data": "passingFrequency"},
+                    {"data": "rentalPrice"},
+                    {"data": "treatmentCollect"},
+                    {"data": "treatment"},
+                    {"data": "movement"},
+                    {"data": "agencyName"},
+                    {"data": "comment"},
+                    {"data": "id", "width": "3%", "bSortable": false, "className": "cell-action-button"}
+                ],
+                rowDblclick: {
+                    {#type: "ajax",#}
+                    {#url: "{{ path('paprec_quote_request_mission_sheet_editLine', {id: quoteRequest.id, missionSheetId: missionSheet.id, missionSheetLineId: '__rowId__'}) }}",#}
+                    {#prompt: {#}
+                    {#    type: 'custom',#}
+                    {#    size: 'large',#}
+                    {#    title: 'Ajouter',#}
+                    {#    modalClassName: 'mission-sheet-line-edit',#}
+                    {#    formName: '#commercialMissionSheetLineForm',#}
+                    {#    cancelButton: {#}
+                    {#        label: '{{ 'General.Cancel'|trans }}',#}
+                    {#        className: 'btn btn-danger btn-sm',#}
+                    {#        callback: function () {#}
+
+                    {#        }#}
+                    {#    },#}
+                    {#    submitButton: {#}
+                    {#        label: '{{ 'General.Save'|trans }}',#}
+                    {#        className: 'btn btn-primary btn-sm',#}
+                    {#        callback: function () {#}
+                    {#        }#}
+                    {#    }#}
+                    {#}#}
+                },
+                buttons: [],
+                rowButtons: [
+                    {
+                        label: "Modification",
+                        type: "ajax",
+                        className: "btn btn-warning btn-sm",
+                        icon: "fa fa-pencil-alt",
+                        url: "{{ path('paprec_quote_request_mission_sheet_quote_request_line_edit', {id: quoteRequest.id, missionSheetId: missionSheet.id, quoteRequestLineId: '__rowId__'}) }}",
+                        prompt: {
+                            type: 'custom',
+                            size: 'large',
+                            title: 'Ajouter',
+                            modalClassName: 'quote-request-line-edit',
+                            formName: '#commercialMissionSheetQuoteRequestLineForm',
                             cancelButton: {
                                 label: '{{ 'General.Cancel'|trans }}',
                                 className: 'btn btn-danger btn-sm',

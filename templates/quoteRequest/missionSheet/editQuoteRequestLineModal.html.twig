@@ -1,0 +1,59 @@
+<div class="p-md">
+    {{ form_start(form, {'attr': {'id': 'commercialMissionSheetQuoteRequestLineForm'}}) }}
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">{{ form_errors(form) }}</div>
+    {% endif %}
+
+    <div class="col-md-12">
+        <!-- BOX -->
+
+        <div class="row">
+
+            <div class="col-2 form-group{% if form_errors(form.quantity) %} has-error{% endif %}">
+                <label class="form-label">{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</label>
+                <div class="form-content">
+                    {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.quantity) }}
+                </div>
+            </div>
+
+            <div class="col-4 form-group{% if form_errors(form.agency) %} has-error{% endif %}">
+                <label class="form-label">{{ 'Commercial.QuoteRequestLine.Agency'|trans }}</label>
+                <div class="form-content">
+                    {{ form_widget(form.agency, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.agency) }}
+                </div>
+            </div>
+
+            <div class="col-6 form-group{% if form_errors(form.movement) %} has-error{% endif %}">
+                <label class="form-label">{{ 'Commercial.QuoteRequestLine.Movement'|trans }}</label>
+                <div class="form-content">
+                    {{ form_widget(form.movement, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.movement) }}
+                </div>
+            </div>
+
+            <div class="col-12 form-group{% if form_errors(form.comment) %} has-error{% endif %}">
+                <label class="form-label">{{ 'Commercial.QuoteRequestLine.Comment'|trans }}</label>
+                <div class="form-content">
+                    {{ form_widget(form.comment, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.comment) }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {{ form_end(form, {'render_rest': true}) }}
+
+    <div class="clearfix"></div>
+</div>
+
+{% block javascripts %}
+
+    <script>
+        $(function () {
+
+        });
+    </script>
+{% endblock %}

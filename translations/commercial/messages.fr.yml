@@ -218,6 +218,14 @@ Commercial:
         CONTRACT_SIGNED: Contrat signé
         CONTRACT_LOST: Contact non gagné
 
+    File:
+        AddTitle: Ajout d'un fichier joint
+        BtnAddLabel: Ajouter un fichier
+        MaxSize: '(Taille maximale du fichier : 5Mo)'
+        FileListTitle: Liste de fichiers d'aide
+        FileNameColumn: Nom
+        FileTypeColumn: Format
+
     QuoteRequestFile:
         AddTitle: Ajout d'un fichier joint
         BtnAddLabel: Ajouter un fichier
@@ -271,6 +279,9 @@ Commercial:
         ProductBillingUnit: Unité de facturation du produit
         UnitPrice: Prix unitaire
         Quantity: Quantité
+        Comment: Commentaire
+        Movement: Mouvement
+        Agency: Agence
         RentalUnitPrice: PU location
         TransportUnitPrice: PU Transport
         TreatmentUnitPrice: PU Traitement

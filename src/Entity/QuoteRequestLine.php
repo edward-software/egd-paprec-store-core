@@ -141,7 +141,6 @@ class QuoteRequestLine
      * @var string
      *
      * @ORM\Column(name="frequency", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $frequency;
 
@@ -149,7 +148,6 @@ class QuoteRequestLine
      * @var string
      *
      * @ORM\Column(name="frequencyTimes", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $frequencyTimes;
 
@@ -157,7 +155,6 @@ class QuoteRequestLine
      * @var string
      *
      * @ORM\Column(name="frequencyInterval", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $frequencyInterval;
 
@@ -193,6 +190,20 @@ class QuoteRequestLine
      * )
      */
     private $quantity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="string", length=500, nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="movement", type="string", length=255, nullable=true)
+     */
+    private $movement;
 
     /**************************************************************************************************
      * RELATIONS
@@ -828,6 +839,38 @@ class QuoteRequestLine
         $this->treatmentCollectPrice = $treatmentCollectPrice;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMovement()
+    {
+        return $this->movement;
+    }
+
+    /**
+     * @param string $movement
+     */
+    public function setMovement($movement)
+    {
+        $this->movement = $movement;
     }
 
 }
