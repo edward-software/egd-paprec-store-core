@@ -163,6 +163,13 @@ class Product
     /**
      * @var string
      *
+     * @ORM\Column(name="calculationFormula", type="string", length=255, nullable=true)
+     */
+    private $calculationFormula;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="frequency", type="string", length=255, nullable=true)
      */
     private $frequency;
@@ -299,6 +306,7 @@ class Product
         $this->productLabels = new ArrayCollection();
         $this->transportType = 'LIVRAISON';
         $this->catalog = 'REGULAR';
+        $this->calculationFormula = 'REGULAR';
     }
 
 
@@ -786,6 +794,24 @@ class Product
     public function setFrequency(string $frequency): self
     {
         $this->frequency = $frequency;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCalculationFormula()
+    {
+        return $this->calculationFormula;
+    }
+
+    /**
+     * @param string $calculationFormula
+     * @return Product
+     */
+    public function setCalculationFormula($calculationFormula)
+    {
+        $this->calculationFormula = $calculationFormula;
         return $this;
     }
 

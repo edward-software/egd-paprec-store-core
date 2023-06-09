@@ -83,6 +83,14 @@ class ProductType extends AbstractType
                 "required" => true
             ])
             ->add('position')
+            ->add('calculationFormula', ChoiceType::class, array(
+                "choices" => $options['calculationFormulas'],
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.CalculationFormula.' . $choiceValue;
+                },
+                "expanded" => false,
+                "multiple" => false
+            ))
             ->add('transportType', ChoiceType::class, array(
                 "choices" => $options['transportTypes'],
                 "choice_label" => function ($choiceValue, $key, $value) {
@@ -212,6 +220,7 @@ class ProductType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Product::class,
             'transportTypes' => null,
+            'calculationFormulas' => null,
             'defaultFrequencyTimes' => null
         ));
     }

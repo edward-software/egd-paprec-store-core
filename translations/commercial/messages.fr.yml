@@ -84,6 +84,7 @@ Commercial:
             PRODUCT_MERCURIAL: Mercuriale
         Value: Valeur
     QuoteRequest:
+        Parent: Ce devis se rapporte au devis
         QuoteRequest: Devis
         QuoteRequests: Demandes de devis
         List: Liste des demandes de devis
@@ -209,6 +210,8 @@ Commercial:
         SignatoryFirstName1: Prénom signataire 1
         SignatoryLastName1: Nom signataire 1
         SignatoryTitle1: Titre signataire 1
+        Duplicate: Dupliquer
+        Confirm-duplicate: Dupliquer le devis ?
 
     QuoteStatusList:
         ALL: Toutes les offres
@@ -293,14 +296,17 @@ Commercial:
         PassingFrequency: Fréquence de passage
         RegularPassingFrequency: Fréquence de passage (si régulier)
         Treatment: PU Traitement (€/Tonne)
+        Exploitation: Entité d'exploitation
         Traceability: Matériel Additionnel
         TreatmentCollect: PU Collecte (€/unité)
         Access: Accès
         TotalAmount: Budget Mensuel
+        TotalAmountOrPackage: Budget Mensuel/Forfait
         SelectAgency: Choisir l'agence
         Add: Ajout d'un produit
         Edit: Modification d'un produit
         Product: Produit
+        Package: Forfait
 
     GeneralEmail:
         Address1: BALE, Schlachthofstrasse 18, CH-4056 Bâle, +41 61 386 96 70

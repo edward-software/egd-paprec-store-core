@@ -115,6 +115,11 @@ parameters:
         - PENDING
         - CLOSED
 
+    paprec.product.calculation_formula:
+        - REGULAR
+        - PACKAGE
+        - UNIT_PRICE
+
     paprec.setting.keys:
         - FOLLOW_UP_RELAUNCHED_DAYS
         - DASHBOARD_FOLLOW_UP_FILTER_PRICE

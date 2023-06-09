@@ -351,6 +351,13 @@ class QuoteRequest
     /**
      * @var \DateTime
      *
+     * @ORM\Column(name="depositDate", type="datetime", nullable=true)
+     */
+    private $depositDate;
+
+    /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="serviceEndDate", type="datetime", nullable=true)
      */
     private $serviceEndDate;
@@ -486,6 +493,12 @@ class QuoteRequest
     private $userInCharge;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\QuoteRequest", inversedBy="children")
+     * @ORM\JoinColumn(name="parentId", nullable=true)
+     */
+    private $parent;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\MissionSheet", inversedBy="quoteRequests")
      * @ORM\JoinColumn(name="missionSheetId")
      */
@@ -497,6 +510,11 @@ class QuoteRequest
      * @Assert\NotBlank(groups={"public_multisite"})
      */
     private $postalCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequest", mappedBy="parent")
+     */
+    private $children;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\QuoteRequestLine", mappedBy="quoteRequest")
@@ -530,6 +548,7 @@ class QuoteRequest
     {
         $this->dateCreation = new \DateTime();
         $this->quoteRequestLines = new ArrayCollection();
+        $this->children = new ArrayCollection();
         $this->otherNeeds = new ArrayCollection();
         $this->overallDiscount = 0;
         $this->isSameSignatory = false;
@@ -1111,6 +1130,30 @@ class QuoteRequest
     }
 
     /**
+     * Set parent.
+     *
+     * @param QuoteRequest|null $parent
+     *
+     * @return QuoteRequest
+     */
+    public function setParent(QuoteRequest $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent.
+     *
+     * @return User|null
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
      * Add quoteRequestLine.
      *
      * @param QuoteRequestLine $quoteRequestLine
@@ -1144,6 +1187,42 @@ class QuoteRequest
     public function getQuoteRequestLines()
     {
         return $this->quoteRequestLines;
+    }
+
+    /**
+     * Add child.
+     *
+     * @param QuoteRequest $child
+     *
+     * @return QuoteRequest
+     */
+    public function addChild(QuoteRequest $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child.
+     *
+     * @param QuoteRequest $child
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeChild(QuoteRequest $child)
+    {
+        return $this->children->removeElement($child);
+    }
+
+    /**
+     * Get children.
+     *
+     * @return Collection
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 
     /**
@@ -1615,6 +1694,18 @@ class QuoteRequest
     public function setStartDate($startDate): self
     {
         $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    public function getDepositDate(): ?\DateTime
+    {
+        return $this->depositDate;
+    }
+
+    public function setDepositDate($depositDate): self
+    {
+        $this->depositDate = $depositDate;
 
         return $this;
     }

@@ -137,7 +137,12 @@
                             </div>
                         {% endif %}
 
-                        <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);"
+
+                        <a id="commercialQuoteRequestDuplicateButton" href="javascript:void(0);"
+                           class="btn btn-sm btn-primary">
+                            <i class="fa fa-xs fa-trash"></i> {{ 'Commercial.QuoteRequest.Duplicate'|trans }}</a>
+
+                        <a id="commercialQuoteRequestRemoveButton" href="javascript:void(0);"
                            class="btn btn-sm btn-danger"
                            data-toggle="tooltip" data-placement="top"
                            title="{{ 'Commercial.QuoteRequest.Remove-tooltip'|trans }}">
@@ -204,7 +209,7 @@
                         {#                        <a href="{{ path("paprec_quoteRequest_edit", {id: quoteRequest.id}) }}" #}
                         {#                           class="btn btn-sm btn-warning"><i #}
                         {#                                    class="fa fa-xs fa-edit"></i> {{ 'Commercial.QuoteRequest.Edit'|trans }}</a> #}
-                        {#                        <a id="commmecialQuoteRequestRemoveButton" href="javascript:void(0);" #}
+                        {#                        <a id="commercialQuoteRequestRemoveButton" href="javascript:void(0);" #}
                         {#                           class="btn btn-sm btn-danger"><i #}
                         {#                                    class="fa fa-xs fa-trash"></i> {{ 'General.Remove'|trans }}</a> #}
                         <!-- Modal d'ajout de fichiers au mail -->
@@ -274,6 +279,14 @@
                             </div>
                             <div class="card-body row">
                                 <div class="col-md-6">
+                                    {% if quoteRequest.parent %}
+                                        <div class="form-group row">
+                                            <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Parent'|trans }}</label>
+                                            <label class="col-form-label">
+                                                <a href="{{ path('paprec_quote_request_view', {id: quoteRequest.parent.id}) }}">{{ quoteRequest.parent.id }}</a>
+                                            </label>
+                                        </div>
+                                    {% endif %}
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Catalog.Catalog'|trans }}</label>
                                         <label class="col-form-label">
@@ -612,20 +625,11 @@
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
-                                        <th>{{ 'Commercial.QuoteRequestLine.TotalAmount'|trans }}</th>
-
+                                        <th>{{ 'Commercial.QuoteRequestLine.TotalAmountOrPackage'|trans }}</th>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {#                                    {% set color = null %} #}
-                                    {#                                    {% if quoteRequest.overallDiscount == 0 %} #}
-                                    {#                                        {% set color = 'black' %} #}
-                                    {#                                    {% elseif quoteRequest.overallDiscount > 0 %} #}
-                                    {#                                        {% set color = 'green' %} #}
-                                    {#                                    {% elseif quoteRequest.overallDiscount < 0 %} #}
-                                    {#                                        {% set color = 'red' %} #}
-                                    {#                                    {% endif %} #}
                                     {% for quoteRequestLine in quoteRequest.quoteRequestLines %}
                                         <tr>
                                             <td>{{ quoteRequestLine.id|formatId(6) }}</td>
@@ -660,46 +664,38 @@
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {% if quoteRequestLine.editableRentalUnitPrice == 0 %}
-                                                    0
-                                                {% else %}
-
+                                                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                                                    {# RESTE NULL #}
+                                                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
                                                     {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableRentalUnitPrice'))|formatAmount('EUR', app.request.locale) }}
-
-                                                    {#                                                    {{ ((quoteRequestLine.rentalRate / 1000000000000000) *(quoteRequestLine.editableRentalUnitPrice))|formatAmount('EUR', app.request.locale) }} #}
-
-                                                    {#                                                    <span class="small"      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
+                                                {% else %}
+                                                    {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableRentalUnitPrice'))|formatAmount('EUR', app.request.locale) }}
                                                 {% endif %}
                                             </td>
                                             <td>
-                                                {{ (quoteRequestLine|quoteRequestLineCalculatePrices('treatmentCollectPrice'))|formatAmount('EUR', app.request.locale) }}
-
-                                                {#                                                {{ quoteRequestLine.treatmentCollectPrice|formatAmount('EUR', app.request.locale) }} #}
-                                                {#                                                <span class="small" #}
-                                                {#                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
+                                                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                                                    {# RESTE NULL #}
+                                                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
+                                                    {# RESTE NULL #}
+                                                {% else %}
+                                                    {{ (quoteRequestLine|quoteRequestLineCalculatePrices('treatmentCollectPrice'))|formatAmount('EUR', app.request.locale) }}
+                                                {% endif %}
                                             </td>
                                             <td>
-                                                {% if quoteRequestLine.editableTreatmentUnitPrice == 0 %}
-                                                    0
+                                                {% if quoteRequestLine.editableTreatmentUnitPrice < 0 %}
+                                                    <i class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                                                       data-placement="top"
+                                                       title="Le prix sera indexé mensuellement à la variation de la mercuriale Mercuriale choisie, référence Mois et Année de Référence"></i>
+                                                {% endif %}
+                                                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                                                    {# RESTE NULL #}
+                                                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
+                                                    {# RESTE NULL #}
                                                 {% else %}
-                                                    {% if quoteRequestLine.editableTreatmentUnitPrice < 0 %}
-                                                        <i class="fas fa-exclamation-triangle" data-toggle="tooltip"
-                                                           data-placement="top"
-                                                           title="Le prix sera indexé mensuellement à la variation de la mercuriale Mercuriale choisie, référence Mois et Année de Référence"></i>
-                                                    {% endif %}
-
-
                                                     {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableTreatmentUnitPrice'))|formatAmount('EUR', app.request.locale) }}
-
-
-                                                    {#                                                    {{ ((quoteRequestLine.treatmentRate / 1000000000000000) *(quoteRequestLine.editableTreatmentUnitPrice))|formatAmount('EUR', app.request.locale) }} #}
-                                                    {#                                                    <span class="small" #}
-                                                    {#                                                          style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
                                                 {% endif %}
                                             </td>
                                             <td>{{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }}
-                                                {#                                                <span class="small" #}
-                                                {#                                                      style="color: {{ color }}">({{ quoteRequest.overallDiscount|formatAmount('PERCENTAGE', app.request.locale) }})</span> #}
                                             </td>
                                             <td class="text-center" style="width: 7%">
                                                 <a href="{{ path('paprec_quoteRequest_editLine', {id: quoteRequest.id, quoteLineId: quoteRequestLine.id}) }}"
@@ -1097,7 +1093,26 @@
                 ]
             });
 
-            $('#commmecialQuoteRequestRemoveButton').on('click', function () {
+            $('#commercialQuoteRequestDuplicateButton').on('click', function () {
+
+
+                var url = "{{ path("paprec_quoteRequest_duplicate", {id: quoteRequest.id}) }}";
+
+                Swal.fire({
+                    title: "{{ 'General.Confirm'|trans }}",
+                    text: "{{ 'Commercial.QuoteRequest.Confirm-duplicate'|trans }}",
+                    showCancelButton: true,
+                    confirmButtonText: "{{ 'General.Yes'|trans }}",
+                    cancelButtonText: "{{ 'General.No'|trans }}"
+                }).then(function (result) {
+                    if (result.value) {
+                        $(location).attr('href', url);
+                    }
+                });
+            });
+
+
+            $('#commercialQuoteRequestRemoveButton').on('click', function () {
 
                 {% if is_granted('ROLE_ADMIN') %}
 

@@ -382,6 +382,11 @@ class ProductController extends AbstractController
             $transportTypes[$transportType] = $transportType;
         }
 
+        $calculationFormulas = [];
+        foreach ($this->getParameter('paprec.product.calculation_formula') as $calculationFormula) {
+            $calculationFormulas[$calculationFormula] = $calculationFormula;
+        }
+
         $qb = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
 
         $qb
@@ -412,6 +417,7 @@ class ProductController extends AbstractController
 
         $form1 = $this->createForm(ProductType::class, $product, array(
             'transportTypes' => $transportTypes,
+            'calculationFormulas' => $calculationFormulas,
             'defaultFrequencyTimes' => '5'
         ));
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
@@ -512,12 +518,19 @@ class ProductController extends AbstractController
             $languages[$language] = $language;
         }
 
+        $calculationFormulas = [];
+        foreach ($this->getParameter('paprec.product.calculation_formula') as $calculationFormula) {
+            $calculationFormulas[$calculationFormula] = $calculationFormula;
+        }
+
         $product = new Product();
         $productLabel = new ProductLabel();
         $product->setCatalog('MATERIAL');
         $product->setTransportType(null);
 
-        $form1 = $this->createForm(ProductMaterialType::class, $product);
+        $form1 = $this->createForm(ProductMaterialType::class, $product, [
+            'calculationFormulas' => $calculationFormulas
+        ]);
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,
             'language' => 'FR'
@@ -622,6 +635,11 @@ class ProductController extends AbstractController
             $transportTypes[$transportType] = $transportType;
         }
 
+        $calculationFormulas = [];
+        foreach ($this->getParameter('paprec.product.calculation_formula') as $calculationFormula) {
+            $calculationFormulas[$calculationFormula] = $calculationFormula;
+        }
+
         $qb = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
 
         $qb
@@ -658,6 +676,7 @@ class ProductController extends AbstractController
 
         $form1 = $this->createForm(ProductType::class, $product, array(
             'transportTypes' => $transportTypes,
+            'calculationFormulas' => $calculationFormulas,
             'defaultFrequencyTimes' => $product->getFrequencyTimes()
         ));
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
@@ -765,6 +784,11 @@ class ProductController extends AbstractController
             $languages[$language] = $language;
         }
 
+        $calculationFormulas = [];
+        foreach ($this->getParameter('paprec.product.calculation_formula') as $calculationFormula) {
+            $calculationFormulas[$calculationFormula] = $calculationFormula;
+        }
+
         $language = $request->getLocale();
         $productLabel = $this->productManager->getProductLabelByProductAndLocale($product, strtoupper($language));
 
@@ -775,7 +799,9 @@ class ProductController extends AbstractController
         $product->setMaterialUnitPrice($this->numberManager->denormalize($product->getMaterialUnitPrice()));
 
 
-        $form1 = $this->createForm(ProductMaterialType::class, $product);
+        $form1 = $this->createForm(ProductMaterialType::class, $product, [
+            'calculationFormulas' => $calculationFormulas
+        ]);
         $form2 = $this->createForm(ProductLabelType::class, $productLabel, array(
             'languages' => $languages,
             'language' => $productLabel->getLanguage()

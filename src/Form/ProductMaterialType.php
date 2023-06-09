@@ -26,6 +26,7 @@ class ProductMaterialType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('calculationFormula')
             ->add('capacity')
             ->add('capacityUnit')
             ->add('dimensions', TextareaType::class)
@@ -119,6 +120,14 @@ class ProductMaterialType extends AbstractType
             ->add('comment', TextareaType::class)
             ->add('referenceDate', TextType::class, [
             ])
+            ->add('calculationFormula', ChoiceType::class, array(
+                "choices" => $options['calculationFormulas'],
+                "choice_label" => function ($choiceValue, $key, $value) {
+                    return 'General.CalculationFormula.' . $choiceValue;
+                },
+                "expanded" => false,
+                "multiple" => false
+            ))
         ;
     }
 
@@ -130,6 +139,7 @@ class ProductMaterialType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => Product::class,
             'transportTypes' => null,
+            'calculationFormulas' => null,
         ));
     }
 

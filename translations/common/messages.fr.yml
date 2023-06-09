@@ -110,3 +110,8 @@ General:
         BOM: BOM
         PL_PONCT: Ponctuel PL
         MATERIAL: Vente de Matériel
+
+    CalculationFormula:
+        REGULAR: Régulier
+        PACKAGE: Forfait
+        UNIT_PRICE: Affichage PU

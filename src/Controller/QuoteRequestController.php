@@ -794,6 +794,41 @@ class QuoteRequestController extends AbstractController
     }
 
     /**
+     * @Route("/duplicate/{id}", name="paprec_quoteRequest_duplicate")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     */
+    public function duplicateAction(Request $request, QuoteRequest $quoteRequest)
+    {
+
+        $newQuoteRequest = clone $quoteRequest;
+        $this->em->persist($newQuoteRequest);
+        $newQuoteRequest->setDateUpdate(null);
+        $newQuoteRequest->setUserUpdate(null);
+        $newQuoteRequest->setDateCreation(new \DateTime());
+        $newQuoteRequest->setParent($quoteRequest);
+        $newQuoteRequest->setMissionSheet(null);
+        $newQuoteRequest->setQuoteStatus('QUOTE_CREATED');
+
+        if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
+            foreach ($quoteRequest->getQuoteRequestLines() as $qL) {
+                $newQuoteRequestLine = clone $qL;
+                $this->em->persist($newQuoteRequestLine);
+
+                $newQuoteRequestLine->setQuoteRequest($newQuoteRequest);
+                $newQuoteRequestLine->setDateUpdate(null);
+                $newQuoteRequestLine->setUserUpdate(null);
+                $newQuoteRequestLine->setDateCreation(new \DateTime());
+                $newQuoteRequest->addQuoteRequestLine($newQuoteRequestLine);
+            }
+        }
+        $this->em->flush();
+
+        return $this->redirectToRoute('paprec_quote_request_view', array(
+            'id' => $newQuoteRequest->getId()
+        ));
+    }
+
+    /**
      * @Route("/{id}/addFollowUp", name="paprec_quote_request_follow_up_add")
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
@@ -1853,7 +1888,7 @@ class QuoteRequestController extends AbstractController
 
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(QuoteRequestLine::class)->createQueryBuilder('qRL');
 
-        $queryBuilder->select(array('qRL', 'qR', 'p', 'pL', 'a', 'mS', 'r', 'rL'))
+        $queryBuilder->select(array('qRL', 'qR', 'p', 'pL', 'a', 'mS'))
             ->leftJoin('qRL.agency', 'a')
             ->leftJoin('qRL.quoteRequest', 'qR')
             ->leftJoin('qR.missionSheet', 'mS')
@@ -1864,8 +1899,6 @@ class QuoteRequestController extends AbstractController
             ->leftJoin('r.rangeLabels', 'rL')
             ->where('qRL.deleted IS NULL')
             ->andWhere('pL.language = :language')
-            ->setParameter('language', 'FR')
-            ->andWhere('rL.language = :language')
             ->setParameter('language', 'FR')
             ->andWhere('mS.id = :id')
             ->setParameter('id', $missionSheetId);
@@ -1911,24 +1944,40 @@ class QuoteRequestController extends AbstractController
                 }
             }
 
-            $qR = $quoteRequestLinesById[$line['id']];
+            $qRL = $quoteRequestLinesById[$line['id']];
+            $product = $qRL->getProduct();
 
-            if ($line['editableRentalUnitPrice'] === 0) {
-                $line['rentalPrice'] = 0;
+            if ($product->getCalculationFormula() === 'PACKAGE') {
+                $line['rentalPrice'] = null;
+            } elseif ($product->getCalculationFormula() === 'UNIT_PACKAGE') {
+                $line['rentalPrice'] = null;
+
             } else {
-                $line['rentalPrice'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qR,
+                $line['rentalPrice'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qRL,
                     'editableRentalUnitPrice', true), 'EUR', $request->getLocale());
             }
 
-            if ($line['editableTreatmentUnitPrice'] === 0) {
-                $line['treatment'] = 0;
+
+            if ($product->getCalculationFormula() === 'PACKAGE') {
+                $line['treatment'] = null;
+
+            } elseif ($product->getCalculationFormula() === 'UNIT_PACKAGE') {
+                $line['treatment'] = null;
+
             } else {
-                $line['treatment'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qR,
+                $line['treatment'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qRL,
                     'editableTreatmentUnitPrice', true), 'EUR', $request->getLocale());
             }
+            if ($product->getCalculationFormula() === 'PACKAGE') {
+                $line['treatmentCollect'] = null;
 
-            $line['treatmentCollect'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qR,
-                'treatmentCollectPrice', true), 'EUR', $request->getLocale());
+            } elseif ($product->getCalculationFormula() === 'UNIT_PACKAGE') {
+                $line['treatmentCollect'] = null;
+
+            } else {
+                $line['treatmentCollect'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qRL,
+                    'treatmentCollectPrice', true), 'EUR', $request->getLocale());
+            }
 
             $tmp[] = $line;
         }
