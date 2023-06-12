@@ -47,7 +47,8 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.Catalog.Catalog'|trans }}*</label>
+                                        <label class="form-label">{{ 'Commercial.QuoteRequest.Catalog.Catalog'|trans }}
+                                            *</label>
                                         <div class="form-content">
                                             {% for radio in form.catalog.children %}
                                                 <div class="form__check ml-4">
@@ -164,7 +165,7 @@
                                     </div>
 
                                     <div class="form-group">
-{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label>#}
+                                        {#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label> #}
                                         <div class="form-content">
                                             {{ form_widget(form.city, {'id': 'cityField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.city) }}
@@ -193,7 +194,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>#}
+                                        {#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label> #}
                                         <div class="form-content">
                                             {{ form_widget(form.billingCity, {'id': 'billingCityField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.billingCity) }}
@@ -285,20 +286,36 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.StartDate'|trans }}</label>
-                                        <div class="form-content">
-                                            {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
-                                            {{ form_errors(form.startDate) }}
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label class="form-label">{{ 'Commercial.QuoteRequest.StartDate'|trans }}</label>
+                                            <div class="form-content">
+                                                {{ form_widget(form.startDate, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(form.startDate) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="form-label">{{ 'Commercial.QuoteRequest.DepositDate'|trans }}</label>
+                                            <div class="form-content">
+                                                {{ form_widget(form.depositDate, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(form.depositDate) }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="form-label">{{ 'Commercial.QuoteRequest.ResumptionDate'|trans }}</label>
+                                            <div class="form-content">
+                                                {{ form_widget(form.resumptionDate, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(form.resumptionDate) }}
+                                            </div>
                                         </div>
                                     </div>
-{#                                    <div class="form-group">#}
-{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>#}
-{#                                        <div class="form-content">#}
-{#                                            {{ form_widget(form.overallDiscount, {'attr': {'class': 'form-control'}}) }}#}
-{#                                            {{ form_errors(form.overallDiscount) }}#}
-{#                                        </div>#}
-{#                                    </div>#}
+                                    {#                                    <div class="form-group"> #}
+                                    {#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label> #}
+                                    {#                                        <div class="form-content"> #}
+                                    {#                                            {{ form_widget(form.overallDiscount, {'attr': {'class': 'form-control'}}) }} #}
+                                    {#                                            {{ form_errors(form.overallDiscount) }} #}
+                                    {#                                        </div> #}
+                                    {#                                    </div> #}
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.AnnualBudget'|trans }}</label>
                                         <div class="form-content">

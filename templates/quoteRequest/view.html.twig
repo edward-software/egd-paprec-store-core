@@ -512,6 +512,22 @@
                                         </label>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.DepositDate'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.depositDate is not null %}
+                                                {{ quoteRequest.depositDate|localizeddate('short', 'none', app.request.locale) }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.ResumptionDate'|trans }}</label>
+                                        <label class="col-form-label">
+                                            {% if quoteRequest.resumptionDate is not null %}
+                                                {{ quoteRequest.resumptionDate|localizeddate('short', 'none', app.request.locale) }}
+                                            {% endif %}
+                                        </label>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.CustomerId'|trans }}</label>
                                         <label class="col-form-label">
                                             {{ quoteRequest.customerId }}

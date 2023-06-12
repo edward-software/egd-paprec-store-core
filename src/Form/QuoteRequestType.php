@@ -168,6 +168,12 @@ class QuoteRequestType extends AbstractType
             ->add('startDate', DateType::class, array(
                 'widget' => 'single_text'
             ))
+            ->add('depositDate', DateType::class, array(
+                'widget' => 'single_text'
+            ))
+            ->add('resumptionDate', DateType::class, array(
+                'widget' => 'single_text'
+            ))
             ->add('serviceEndDate', DateType::class, array(
                 'widget' => 'single_text'
             ))
@@ -178,8 +184,7 @@ class QuoteRequestType extends AbstractType
             ->add('billingPostalCodeString', HiddenType::class, [
                 'data' => $options['billingPostalCodeString'],
                 'mapped' => false
-            ])
-        ;
+            ]);
         $builder->get('postalCode')
             ->addModelTransformer($this->transformer);
 //        $builder->get('billingPostalCode')

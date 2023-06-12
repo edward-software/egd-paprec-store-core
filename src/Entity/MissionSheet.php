@@ -90,6 +90,13 @@ class MissionSheet
     private $comment;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="exploitationComment", type="string", length=1000, nullable=true)
+     */
+    private $exploitationComment;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="myPaprecAccess", type="boolean")
@@ -435,9 +442,25 @@ class MissionSheet
     /**
      * @param string $comment
      */
-    public function setComment(string $comment)
+    public function setComment($comment)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExploitationComment()
+    {
+        return $this->exploitationComment;
+    }
+
+    /**
+     * @param string $exploitationComment
+     */
+    public function setExploitationComment($exploitationComment)
+    {
+        $this->exploitationComment = $exploitationComment;
     }
 
     /**

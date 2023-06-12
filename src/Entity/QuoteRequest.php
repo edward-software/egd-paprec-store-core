@@ -358,6 +358,13 @@ class QuoteRequest
     /**
      * @var \DateTime
      *
+     * @ORM\Column(name="resumptionDate", type="datetime", nullable=true)
+     */
+    private $resumptionDate;
+
+    /**
+     * @var \DateTime
+     *
      * @ORM\Column(name="serviceEndDate", type="datetime", nullable=true)
      */
     private $serviceEndDate;
@@ -1706,6 +1713,20 @@ class QuoteRequest
     public function setDepositDate($depositDate): self
     {
         $this->depositDate = $depositDate;
+
+        return $this;
+    }
+
+
+
+    public function getResumptionDate(): ?\DateTime
+    {
+        return $this->resumptionDate;
+    }
+
+    public function setResumptionDate($resumptionDate): self
+    {
+        $this->resumptionDate = $resumptionDate;
 
         return $this;
     }

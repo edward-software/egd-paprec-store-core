@@ -89,6 +89,7 @@ class MissionSheetType extends AbstractType
                 }
             ))
             ->add('comment', TextareaType::class)
+            ->add('exploitationComment', TextareaType::class)
             ->add('secondUserInCharge', EntityType::class, array(
                 'class' => User::class,
                 'multiple' => false,

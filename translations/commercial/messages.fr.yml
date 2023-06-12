@@ -28,6 +28,7 @@ Commercial:
         ContractNumber: N° de contrat
         SecondUserInCharge: Assistant
         Comment: Commentaire et imperatifs de facturation
+        ExploitationComment: Commentaire et impératifs d’Exploitation
         MyPaprecAccess: MyPaprec
         WasteTrackingRegisterAccess: Registre
         ReportingAccess: Reporting
@@ -154,6 +155,8 @@ Commercial:
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
         StartDate: Date de démarrage
+        DepositDate: Date de dépose
+        ResumptionDate: Date de reprise
         ManagementFee: Autres informations du contrat
         ManagementFeeCode: Code
         ManagementFeeDescription: Description
