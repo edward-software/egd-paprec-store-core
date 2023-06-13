@@ -51,9 +51,9 @@ class QuoteRequestLineAddType extends AbstractType
                 'choice_label' => function ($product) {
 
                     $name = $product->getProductLabels()[0]->getName();
-                    if ($product->getRange() && is_iterable($product->getRange()->getRangeLabels())) {
-                        $name .= ' - ' . $product->getRange()->getRangeLabels()[0]->getName();
-                    }
+//                    if ($product->getRange() && is_iterable($product->getRange()->getRangeLabels())) {
+//                        $name .= ' - ' . $product->getRange()->getRangeLabels()[0]->getName();
+//                    }
 //                    if ($product->getCatalog()) {
 //
 //                        $catalog = 'Régulier';

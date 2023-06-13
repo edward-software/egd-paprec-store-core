@@ -428,7 +428,7 @@
                     {"data": "code"},
                     {"data": "name"},
                     {"data": "agencyName"},
-                    {"data": "id", "width": "3%", "bSortable": false, "className": "cell-action-button"}
+                    {"data": "id", "width": "5%", "bSortable": false, "className": "cell-action-button"}
                 ],
                 rowDblclick: {
                     type: "ajax",
@@ -483,6 +483,14 @@
                             }
                         }
                     },
+                    {
+                        label: '{{ "General.Remove"|trans }}',
+                        type: 'ajax',
+                        url: "{{ path("paprec_quote_request_mission_sheet_removeLine", {id: quoteRequest.id, missionSheetId: missionSheet.id, missionSheetLineId: '__rowId__'}) }}",
+                        confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
+                        className: 'btn btn-danger btn-sm',
+                        icon: "fa fa-times"
+                    }
                 ]
             });
 

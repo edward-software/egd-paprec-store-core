@@ -288,7 +288,7 @@ class SubscriptionController extends AbstractController
 
             $postalCodeString = $form->get('postalCodeString')->getData();
 
-            if ($quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+            if ($quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
                 $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
             }
 
@@ -441,7 +441,7 @@ class SubscriptionController extends AbstractController
         $entities = $this->postalCodeManager->getActivesFromCode($code);
 
         foreach ($entities as $entity) {
-            $codes[] = $entity->getCode() . ' - ' . $entity->getCity();
+            $codes[] = $entity->getCode();
         }
 
         $response = new JsonResponse();

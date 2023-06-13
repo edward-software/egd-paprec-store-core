@@ -633,7 +633,7 @@ class QuoteRequestController extends AbstractController
             $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
 
-            if ($quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+            if ($quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
                 $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
             }
 
@@ -706,6 +706,11 @@ class QuoteRequestController extends AbstractController
 //        $quoteRequest->setOverallDiscount($this->numberManager->denormalize($quoteRequest->getOverallDiscount()));
         $quoteRequest->setAnnualBudget($this->numberManager->denormalize($quoteRequest->getAnnualBudget()));
 
+        $postalCode = null;
+        if ($quoteRequest->getPostalCode()) {
+            $postalCode = $quoteRequest->getPostalCode()->getCode();
+        }
+
         $form = $this->createForm(QuoteRequestType::class, $quoteRequest, array(
             'status' => $status,
             'locales' => $locales,
@@ -714,7 +719,7 @@ class QuoteRequestController extends AbstractController
             'floorNumber' => $floorNumber,
             'catalog' => $quoteRequest->getCatalog(),
             'civility' => $quoteRequest->getCivility(),
-            'postalCodeString' => $quoteRequest->getPostalCode()->getCode(),
+            'postalCodeString' => $postalCode,
             'billingPostalCodeString' => $quoteRequest->getBillingPostalCode()
         ));
 
@@ -729,7 +734,7 @@ class QuoteRequestController extends AbstractController
             $postalCodeString = $form->get('postalCodeString')->getData();
             $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
-            if ($quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+            if ($quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
                 $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
             }
 
@@ -816,7 +821,6 @@ class QuoteRequestController extends AbstractController
 
                 $newQuoteRequestLine->setQuoteRequest($newQuoteRequest);
                 $newQuoteRequestLine->setDateUpdate(null);
-                $newQuoteRequestLine->setUserUpdate(null);
                 $newQuoteRequestLine->setDateCreation(new \DateTime());
                 $newQuoteRequest->addQuoteRequestLine($newQuoteRequestLine);
             }
@@ -2236,8 +2240,8 @@ class QuoteRequestController extends AbstractController
      * @Route("/{id}/missionSheet/{missionSheetId}/removeLine/{missionSheetLineId}", name="paprec_quote_request_mission_sheet_removeLine")
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @ParamConverter("id", options={"id" = "id"})
-     * @ParamConverter("missionSheetId", options={"id" = "missionSheetId"})
-     * @ParamConverter("missionSheetLineId", options={"id" = "missionSheetLineId"})
+     * @ParamConverter("missionSheet", options={"id" = "missionSheetId"})
+     * @ParamConverter("missionSheetLine", options={"id" = "missionSheetLineId"})
      */
     public function removeMissionSheetLineAction(
         Request $request,
@@ -2256,13 +2260,8 @@ class QuoteRequestController extends AbstractController
         $this->em->remove($missionSheetLine);
         $this->em->flush();
 
-        $total = $this->missionSheetManager->calculateTotal($missionSheet);
-        $missionSheet->setTotalAmount($total);
-        $this->em->flush();
-
-
-        return $this->redirectToRoute('paprec_quote_request_view', array(
-            'id' => $missionSheet->getId()
-        ));
+        return new JsonResponse([
+            'resultCode' => 1
+        ]);
     }
 }
