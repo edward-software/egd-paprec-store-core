@@ -222,10 +222,10 @@ class ProductManager
                  * Budget mensuel Matériel Additionnel +
                  * quantité * PU Traitement
                  */
-                $rental = $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
+                $rental = $quantity * $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
                 $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
                 $traceability = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTraceabilityUnitPrice');
-                $treatment = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
+                $treatment = $quantity * $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
                 $result = $rental + $transport + $traceability + $treatment;
             }
 

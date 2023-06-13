@@ -110,7 +110,7 @@ Public:
         FirstName: Prénom
         Email: E-mail
         Phone: Téléphone
-        PhoneNumberInfo: "Suivre la mise en forme  : +33 01 02 03 04 05"
+        PhoneNumberInfo: "Suivre la mise en forme  : 00 00 00 00 00"
         RecallDate: Heure souhaitée pour le rappel
         CoworkerNumber: Effectif
         IsMultisite: Prestation multi-sites
@@ -125,7 +125,7 @@ Public:
         AddressDetail: Précision de l'adresse
         PostalCode: Code postal ou Ville
         City: Ville
-        Comment: Précision
+        Comment: Précisions
         Need: Besoin
         SendRequest: Envoyer la demande
         BreadcrumbContent: Coordonnées du client

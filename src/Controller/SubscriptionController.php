@@ -441,7 +441,7 @@ class SubscriptionController extends AbstractController
         $entities = $this->postalCodeManager->getActivesFromCode($code);
 
         foreach ($entities as $entity) {
-            $codes[] = $entity->getCode();
+            $codes[] = $entity->getCode() . ' - ' . $entity->getCity();
         }
 
         $response = new JsonResponse();
