@@ -46,6 +46,11 @@ class QuoteRequestLineAddType extends AbstractType
                             ->setParameter('catalog', $this->options['quoteRequestCatalog']);
                     }
 
+                    if ($this->options['rangeId']) {
+                        $qb->andWhere('r.id = :rangeId')
+                            ->setParameter('rangeId', $this->options['rangeId']);
+                    }
+
                     return $qb;
                 },
                 'choice_label' => function ($product) {
@@ -123,7 +128,8 @@ class QuoteRequestLineAddType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => QuoteRequestLine::class,
-            'quoteRequestCatalog' => null
+            'quoteRequestCatalog' => null,
+            'rangeId' => null
         ));
     }
 }

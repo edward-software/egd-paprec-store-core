@@ -10,6 +10,7 @@ use App\Entity\MissionSheetProduct;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
+use App\Entity\Range;
 use App\Form\FollowUpType;
 use App\Form\MissionSheetLineType;
 use App\Form\MissionSheetQuoteRequestLineEditType;
@@ -982,6 +983,9 @@ class QuoteRequestController extends AbstractController
     public function addLineAction(Request $request, QuoteRequest $quoteRequest)
     {
 
+        $selectedCatalog = $request->get('selectedCatalog');
+        $selectedRangeId = $request->get('selectedRangeId');
+
         $user = $this->getUser();
 
         if ($quoteRequest->getDeleted() !== null) {
@@ -990,8 +994,17 @@ class QuoteRequestController extends AbstractController
 
         $quoteRequestLine = new QuoteRequestLine();
 
+        if ($selectedCatalog === '') {
+            $selectedCatalog = null;
+        }
+
+        if ($selectedRangeId === '') {
+            $selectedRangeId = null;
+        }
+
         $form = $this->createForm(QuoteRequestLineAddType::class, $quoteRequestLine, [
-            'quoteRequestCatalog' => $quoteRequest->getCatalog()
+            'quoteRequestCatalog' => $selectedCatalog,
+            'rangeId' => $selectedRangeId
         ]);
 
         $form->handleRequest($request);
@@ -1007,7 +1020,9 @@ class QuoteRequestController extends AbstractController
                 $quoteRequestLine->setFrequencyInterval(null);
             }
 
-            $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
+            if ($quoteRequestLine->getProduct()) {
+                $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
+            }
 
             return $this->redirectToRoute('paprec_quote_request_view', array(
                 'id' => $quoteRequest->getId()
@@ -1015,9 +1030,22 @@ class QuoteRequestController extends AbstractController
 
         }
 
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Range::class)->createQueryBuilder('r');
+
+        $queryBuilder->select('r')
+            ->leftJoin('r.rangeLabels', 'rL')
+            ->where('r.deleted IS NULL')
+            ->andWhere('rL.language = :language')
+            ->setParameter('language', 'FR');
+
+        $ranges = $queryBuilder->getQuery()->getResult();
+
         return $this->render('quoteRequestLine/add.html.twig', array(
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
+            'selectedCatalog' => $selectedCatalog,
+            'selectedRangeId' => $selectedRangeId,
+            'ranges' => $ranges
         ));
     }
 

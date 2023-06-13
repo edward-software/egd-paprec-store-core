@@ -38,6 +38,35 @@
                                 <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
                             </div>
                             <div class="card-body">
+                                <div class="paprec-flex mb-2">
+                                    <select id="selectedCatalog" class="form-control mr-2 input-sm col-4">
+                                        <option value="#">Sélectionner catalogue</option>
+                                        <option value="REGULAR"{% if selectedCatalog and selectedCatalog == 'REGULAR' %} selected{% endif %}>{{ 'Commercial.QuoteRequest.REGULAR'|trans }}</option>
+                                        <option value="PONCTUAL"{% if selectedCatalog and selectedCatalog == 'PONCTUAL' %} selected{% endif %}>{{ 'Commercial.QuoteRequest.PONCTUAL'|trans }}</option>
+                                        <option value="MATERIAL"{% if selectedCatalog and selectedCatalog == 'MATERIAL' %} selected{% endif %}>{{ 'Commercial.QuoteRequest.MATERIAL'|trans }}</option>
+                                    </select>
+                                    <select id="selectedRange" class="form-control mr-2 input-sm col-4">
+                                        <option value="#">Sélectionner une gamme</option>
+                                        {% if ranges and ranges|length > 0 %}
+                                            {% for range in ranges %}
+                                                {% if range.rangeLabels and range.rangeLabels|length %}
+                                                    <option value="{{ range.id }}"{% if selectedRangeId and selectedRangeId == range.id %} selected{% endif %}>{{ range.rangeLabels[0].name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+
+                                    </select>
+                                    <button
+                                            id="applyFilterButton"
+                                            class="btn btn-outline-primary mr-2">
+                                        Appliquer les filtres
+                                    </button>
+                                    <button
+                                            id="resetFilterButton"
+                                            class="btn btn-outline-secondary">
+                                        Réinitialiser
+                                    </button>
+                                </div>
                                 <div class="form-group">
                                     <label class="form-label">{{ 'Commercial.QuoteRequestLine.Product'|trans }}</label>
                                     <div class="form-content">
@@ -125,12 +154,41 @@
                     showCancelButton: true,
                     confirmButtonText: "{{ 'General.Yes'|trans }}",
                     cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function(result) {
+                }).then(function (result) {
                     if (result.value) {
                         $(location).attr('href', url);
                     }
                 });
 
+            });
+
+            $('#applyFilterButton').on('click', function () {
+
+                var selectedCatalog = '';
+                if($('#selectedCatalog').val() && $('#selectedCatalog').val() !== '#'){
+                    selectedCatalog = $('#selectedCatalog').val();
+                }
+
+                var selectedRange = '';
+                if($('#selectedRange').val() && $('#selectedRange').val() !== '#'){
+                    selectedRange = $('#selectedRange').val();
+                }
+
+                {% autoescape false %}
+                var url = '{{ path('paprec_quoteRequest_addLine', {id: quoteRequest.id, selectedCatalog: '0000', selectedRangeId: '1111'}) }}'.replace('0000', selectedCatalog).replace('1111', selectedRange);
+                {% endautoescape %}
+
+                location.href = url;
+                return false;
+            });
+
+            $('#resetFilterButton').on('click', function () {
+                {% autoescape false %}
+                var url = '{{ path('paprec_quoteRequest_addLine', {id: quoteRequest.id}) }}';
+                {% endautoescape %}
+
+                location.href = url;
+                return false;
             });
 
         });
