@@ -279,12 +279,12 @@ Commercial:
         Wastes: Déchets
         Materials: Matériels
         Quantities: Quantités
-        ProductCode: Code opé.
+        ProductCode: Code opération
         ProductRange: Code déchet
         ProductName: Produit
         ProductBillingUnit: Unité de facturation du produit
         UnitPrice: Prix unitaire
-        Quantity: Qté
+        Quantity: Quantité
         Comment: Commentaire
         Movement: Mouvement
         Agency: Agence
@@ -310,7 +310,9 @@ Commercial:
         Edit: Modification d'un produit
         Product: Produit
         Package: Forfait
-
+        PDF:
+            Quantity: Qté
+            ProductCode: Code opé.
     GeneralEmail:
         Address1: BALE, Schlachthofstrasse 18, CH-4056 Bâle, +41 61 386 96 70
         Address2: LUCERNE, Kantonsstrasse 5, CH-6033 Buchrain, +41 41 448 38 62

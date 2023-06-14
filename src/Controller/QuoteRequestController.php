@@ -1072,7 +1072,9 @@ class QuoteRequestController extends AbstractController
         $quoteRequestLine->setEditableTreatmentUnitPrice($this->numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()));
         $quoteRequestLine->setEditableTraceabilityUnitPrice($this->numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()));
 
-        $form = $this->createForm(QuoteRequestLineEditType::class, $quoteRequestLine);
+        $form = $this->createForm(QuoteRequestLineEditType::class, $quoteRequestLine, [
+            'productCatalog' => $quoteRequestLine->getProduct()->getCatalog()
+        ]);
 
         $form->handleRequest($request);
 
