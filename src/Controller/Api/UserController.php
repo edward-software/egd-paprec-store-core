@@ -76,6 +76,7 @@ class UserController extends AbstractController
                         'mobile_number' => $user->getMobileNumber(),
                         'job_title' => $user->getJobTitle(),
                         'nick_name' => $user->getNickName(),
+                        'email' => $user->getEmail(),
                         'postal_codes' => $codes
                     ];
                 }
