@@ -106,6 +106,7 @@
                 {% autoescape false %}
                 url: "{{ path('paprec_quoteRequest_loadList', {userIds: userIds, periodStartDate: periodStartDate, periodEndDate: periodEndDate, selectedStatus: selectedStatus}) }}",
                 {% endautoescape %}
+                order: [[7, "desc"]],
                 columns: [
                     {"data": "id"},
                     {"data": "reference"},

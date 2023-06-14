@@ -97,13 +97,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-label">{{ 'Catalog.Product.CalculationFormula.CalculationFormula'|trans }}</div>
-                                    <div class="form-content">
-                                        {{ form_widget(form1.calculationFormula, {'attr': {'class': 'form-control calculation-formula-field'}}) }}
-                                        {{ form_errors(form1.calculationFormula) }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <div class="form-label">{{ 'Catalog.Product.Dimensions'|trans }}</div>
                                     <div class="form-content">
                                         {{ form_widget(form1.dimensions, {'attr': {'class': 'form-control'}}) }}
@@ -242,26 +235,7 @@
         $(function () {
 
             $('.catalog-product-save-button').on('click', function () {
-                var value = $('.calculation-formula-field').val();
-                var message = '{{ 'Catalog.Product.CalculationFormula.REGULAR-message'| trans({}, "messages", app.request.locale) }}';
-
-                if (value === 'PACKAGE') {
-                    message = '{{ 'Catalog.Product.CalculationFormula.PACKAGE-message'| trans({}, "messages", app.request.locale) }}';
-                } else if (value === 'UNIT_PRICE') {
-                    message = '{{ 'Catalog.Product.CalculationFormula.UNIT_PRICE-message'| trans({}, "messages", app.request.locale) }}';
-                }
-
-                Swal.fire({
-                    title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
-                    text: message,
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
-                    cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $('#catalogProductForm').submit();
-                    }
-                });
+                $('#catalogProductForm').submit();
             });
 
             $('.catalog-product-cancel-button').on('click', function () {

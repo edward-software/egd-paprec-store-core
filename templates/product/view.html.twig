@@ -106,7 +106,7 @@
                                         </label>
                                     </div>
                                 {% endif %}
-                                {% if product.calculationFormula %}
+                                {% if product.catalog != 'MATERIAL' and product.calculationFormula %}
                                     <div class="form-group row">
                                         <div class="alert alert-danger">
                                             {{ ('Catalog.Product.CalculationFormula.' ~ product.calculationFormula ~ '-message')| trans({}, "messages", app.request.locale) }}
@@ -116,7 +116,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'Catalog.Product.CalculationFormula.CalculationFormula'| trans({}, "messages", app.request.locale) }}</label>
                                     <label class="col-form-label col-md-8">
-                                        {% if product.calculationFormula %}
+                                        {% if product.catalog != 'MATERIAL' and product.calculationFormula %}
                                             {{ ('General.CalculationFormula.' ~ product.calculationFormula) |trans }}
                                         {% endif %}
                                     </label>

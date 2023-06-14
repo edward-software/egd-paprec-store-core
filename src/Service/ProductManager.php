@@ -169,166 +169,183 @@ class ProductManager
 
         $result = 0;
 
-        if (!$calculationFormula || $calculationFormula === 'REGULAR') {
-            if ($fieldName === 'editableRentalUnitPrice') {
-                /**
-                 * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
-                 */
-                if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
-                }
+        if ($product->getCatalog() === 'MATERIAL') {
 
-            } elseif ($fieldName === 'editableTreatmentUnitPrice') {
-                /**
-                 * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
-                 */
-                if ($quoteRequestLine->getEditableTreatmentUnitPrice() !== null) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
-                }
-            } elseif ($fieldName === 'editableTransportUnitPrice') {
-                /**
-                 * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
-                 */
-                if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
-                    $result = $frequencyIntervalValue * $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                }
+            if ($fieldName === 'totalAmount') {
 
-            } elseif ($fieldName === 'editableTraceabilityUnitPrice') {
-                /**
-                 * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
-                 */
-                if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
-                    $result = $frequencyIntervalValue * ($quantity - 1) * $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
-                }
-
-            } elseif ($fieldName === 'treatmentCollectPrice') {
-                /**
-                 * PU Collecte
-                 * (Budget mensuel Transport et Traitement + Budget mensuel Matériel Additionnel) / (Nombre de passage par mois * Quantité de Produit saisie)
-                 */
-                $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
-                $traceability = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTraceabilityUnitPrice');
-
-                if ($frequencyIntervalValue * $quantity > 0) {
-                    $result = ($transport + $traceability) / ($frequencyIntervalValue * $quantity);
-                }
-
-            } elseif ($fieldName === 'totalAmount') {
-
-                /**
-                 * Budget Mensuel par produit  (calcul) :
-                 * quantité * PU Location +
-                 * Budget mensuel Transport et Traitement +
-                 * Budget mensuel Matériel Additionnel +
-                 * quantité * PU Traitement
-                 */
-                $rental = $quantity * $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
-                $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
-                $traceability = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTraceabilityUnitPrice');
-                $treatment = $quantity * $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
-                $result = $rental + $transport + $traceability + $treatment;
+                $result = $quantity * $numberManager->denormalize($product->getMaterialUnitPrice());
             }
 
-        } elseif ($calculationFormula === 'PACKAGE') {
-            if ($fieldName === 'editableRentalUnitPrice') {
-                /**
-                 * PU Location : PU Location * coeff CP
-                 */
-                if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
+        } else {
+
+
+            if (!$calculationFormula || $calculationFormula === 'REGULAR') {
+                if ($fieldName === 'editableRentalUnitPrice') {
+                    /**
+                     * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
+                     */
+                    if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    }
+
+                } elseif ($fieldName === 'editableTreatmentUnitPrice') {
+                    /**
+                     * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                     */
+                    if ($quoteRequestLine->getEditableTreatmentUnitPrice() !== null) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                    }
+                } elseif ($fieldName === 'editableTransportUnitPrice') {
+                    /**
+                     * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
+                     */
+                    if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+                        $result = $frequencyIntervalValue * $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                    }
+
+                } elseif ($fieldName === 'editableTraceabilityUnitPrice') {
+                    /**
+                     * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
+                     */
+                    if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
+                        $result = $frequencyIntervalValue * ($quantity - 1) * $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                    }
+
+                } elseif ($fieldName === 'treatmentCollectPrice') {
+                    /**
+                     * PU Collecte
+                     * (Budget mensuel Transport et Traitement + Budget mensuel Matériel Additionnel) / (Nombre de passage par mois * Quantité de Produit saisie)
+                     */
+                    $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
+                    $traceability = $this->calculatePriceByFieldName($quoteRequestLine,
+                        'editableTraceabilityUnitPrice');
+
+                    if ($frequencyIntervalValue * $quantity > 0) {
+                        $result = ($transport + $traceability) / ($frequencyIntervalValue * $quantity);
+                    }
+
+                } elseif ($fieldName === 'totalAmount') {
+
+                    /**
+                     * Budget Mensuel par produit  (calcul) :
+                     * quantité * PU Location +
+                     * Budget mensuel Transport et Traitement +
+                     * Budget mensuel Matériel Additionnel +
+                     * quantité * PU Traitement
+                     */
+                    $rental = $quantity * $this->calculatePriceByFieldName($quoteRequestLine,
+                            'editableRentalUnitPrice');
+                    $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
+                    $traceability = $this->calculatePriceByFieldName($quoteRequestLine,
+                        'editableTraceabilityUnitPrice');
+                    $treatment = $quantity * $this->calculatePriceByFieldName($quoteRequestLine,
+                            'editableTreatmentUnitPrice');
+                    $result = $rental + $transport + $traceability + $treatment;
                 }
 
-            } elseif ($fieldName === 'editableTreatmentUnitPrice') {
-                /**
-                 * PU traitement :  PU Traitement * coeff CP
-                 */
-                if ($quoteRequestLine->getEditableTreatmentUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+            } elseif ($calculationFormula === 'PACKAGE') {
+                if ($fieldName === 'editableRentalUnitPrice') {
+                    /**
+                     * PU Location : PU Location * coeff CP
+                     */
+                    if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    }
+
+                } elseif ($fieldName === 'editableTreatmentUnitPrice') {
+                    /**
+                     * PU traitement :  PU Traitement * coeff CP
+                     */
+                    if ($quoteRequestLine->getEditableTreatmentUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                    }
+
+                } elseif ($fieldName === 'editableTransportUnitPrice') {
+                    /**
+                     * PU transport : PU Transport * coeff CP
+                     */
+                    if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                    }
+
+                } elseif ($fieldName === 'editableTraceabilityUnitPrice') {
+
+                    /**
+                     * PU Mat additionnel * Coeff
+                     */
+                    if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                    }
+
+
+                } elseif ($fieldName === 'treatmentCollectPrice') {
+
+
+                } elseif ($fieldName === 'totalAmount') {
+
+                    /**
+                     * Budget Mensuel par produit  (calcul)
+                     * (PU Loc * Coef Loc + PU Transport * Coeff + PU Traitement * Coeff + PU Mat additionnel * Coeff
+                     */
+                    $rental = $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
+                    $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
+                    $traceability = $this->calculatePriceByFieldName($quoteRequestLine,
+                        'editableTraceabilityUnitPrice');
+                    $treatment = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
+                    $result = $rental + $transport + $traceability + $treatment;
                 }
 
-            } elseif ($fieldName === 'editableTransportUnitPrice') {
-                /**
-                 * PU transport : PU Transport * coeff CP
-                 */
-                if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+            } elseif ($calculationFormula === 'UNIT_PRICE') {
+                if ($fieldName === 'editableRentalUnitPrice') {
+                    /**
+                     * PU Location : PU Location * coeff CP
+                     */
+                    if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    }
+
+                } elseif ($fieldName === 'editableTreatmentUnitPrice') {
+                    /**
+                     * PU traitement :  PU Traitement * coeff CP
+                     */
+                    if ($quoteRequestLine->getEditableTreatmentUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                    }
+
+                } elseif ($fieldName === 'editableTransportUnitPrice') {
+                    /**
+                     * PU transport : PU Transport * coeff CP
+                     */
+                    if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                    }
+
+                } elseif ($fieldName === 'editableTraceabilityUnitPrice') {
+
+                    /**
+                     * PU Mat additionnel * Coeff
+                     */
+                    if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                    }
+
+
+                } elseif ($fieldName === 'treatmentCollectPrice') {
+
+
+                } elseif ($fieldName === 'totalAmount') {
+
+                    /**
+                     * Budget Mensuel par produit  (calcul)
+                     * (PU Loc * Coef Loc + PU Transport * Coeff + PU Traitement * Coeff + PU Mat additionnel * Coeff
+                     */
+                    $rental = $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
+                    $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
+                    $traceability = $this->calculatePriceByFieldName($quoteRequestLine,
+                        'editableTraceabilityUnitPrice');
+                    $treatment = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
+                    $result = $rental + $transport + $traceability + $treatment;
                 }
-
-            } elseif ($fieldName === 'editableTraceabilityUnitPrice') {
-
-                /**
-                 * PU Mat additionnel * Coeff
-                 */
-                if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
-                }
-
-
-            } elseif ($fieldName === 'treatmentCollectPrice') {
-
-
-            } elseif ($fieldName === 'totalAmount') {
-
-                /**
-                 * Budget Mensuel par produit  (calcul)
-                 * (PU Loc * Coef Loc + PU Transport * Coeff + PU Traitement * Coeff + PU Mat additionnel * Coeff
-                 */
-                $rental = $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
-                $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
-                $traceability = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTraceabilityUnitPrice');
-                $treatment = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
-                $result = $rental + $transport + $traceability + $treatment;
-            }
-
-        } elseif ($calculationFormula === 'UNIT_PRICE') {
-            if ($fieldName === 'editableRentalUnitPrice') {
-                /**
-                 * PU Location : PU Location * coeff CP
-                 */
-                if ($quoteRequestLine->getEditableRentalUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableRentalUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getRentalRate());
-                }
-
-            } elseif ($fieldName === 'editableTreatmentUnitPrice') {
-                /**
-                 * PU traitement :  PU Traitement * coeff CP
-                 */
-                if ($quoteRequestLine->getEditableTreatmentUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTreatmentUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
-                }
-
-            } elseif ($fieldName === 'editableTransportUnitPrice') {
-                /**
-                 * PU transport : PU Transport * coeff CP
-                 */
-                if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                }
-
-            } elseif ($fieldName === 'editableTraceabilityUnitPrice') {
-
-                /**
-                 * PU Mat additionnel * Coeff
-                 */
-                if ($quoteRequestLine->getEditableTraceabilityUnitPrice() > 0) {
-                    $result = $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
-                }
-
-
-            } elseif ($fieldName === 'treatmentCollectPrice') {
-
-
-            } elseif ($fieldName === 'totalAmount') {
-
-                /**
-                 * Budget Mensuel par produit  (calcul)
-                 * (PU Loc * Coef Loc + PU Transport * Coeff + PU Traitement * Coeff + PU Mat additionnel * Coeff
-                 */
-                $rental = $this->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice');
-                $transport = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTransportUnitPrice');
-                $traceability = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTraceabilityUnitPrice');
-                $treatment = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
-                $result = $rental + $transport + $traceability + $treatment;
             }
         }
 
