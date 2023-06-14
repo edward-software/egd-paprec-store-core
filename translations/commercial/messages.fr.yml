@@ -279,12 +279,12 @@ Commercial:
         Wastes: Déchets
         Materials: Matériels
         Quantities: Quantités
-        ProductCode: Code opération
+        ProductCode: Code opé.
         ProductRange: Code déchet
-        ProductName: Nom du produit
+        ProductName: Produit
         ProductBillingUnit: Unité de facturation du produit
         UnitPrice: Prix unitaire
-        Quantity: Quantité
+        Quantity: Qté
         Comment: Commentaire
         Movement: Mouvement
         Agency: Agence
