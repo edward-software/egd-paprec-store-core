@@ -670,7 +670,9 @@
                                             <td>{{ quoteRequestLine.quantity }}</td>
                                             <td>
                                                 {% if quoteRequestLine.frequency != 'REGULAR' %}
-                                                    {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
+                                                    {% if quoteRequestLine.frequency %}
+                                                        {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
+                                                    {% endif %}
                                                 {% else %}
                                                     {% if quoteRequestLine.frequencyInterval is not empty %}
                                                         {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}

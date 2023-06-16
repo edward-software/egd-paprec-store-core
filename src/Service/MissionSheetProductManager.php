@@ -26,15 +26,18 @@ class MissionSheetProductManager
     private $em;
     private $container;
     private $numberManager;
+    private $productManager;
 
     public function __construct(
         EntityManagerInterface $em,
         NumberManager $numberManager,
-        ContainerInterface $container
+        ContainerInterface $container,
+        ProductManager $productManager
     ) {
         $this->em = $em;
         $this->numberManager = $numberManager;
         $this->container = $container;
+        $this->productManager = $productManager;
     }
 
     public function get($missionSheetProduct)
@@ -148,14 +151,7 @@ class MissionSheetProductManager
     {
         $numberManager = $this->numberManager;
 
-        $frequencyIntervalValue = 1;
-        if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
-            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
-            $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
-            if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
-                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
-            }
-        }
+        $frequencyIntervalValue = $this->productManager->calculateFrequencyCoeff($quoteRequestLine);
 
         $quantity = $quoteRequestLine->getQuantity();
 

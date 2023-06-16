@@ -517,15 +517,7 @@ class QuoteRequestController extends AbstractController
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
 
-
-                $frequencyIntervalValue = 1;
-                if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
-                    $monthlyCoefficientValues = $this->getParameter('paprec.frequency_interval.monthly_coefficients');
-                    $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
-                    if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
-                        $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
-                    }
-                }
+                $frequencyIntervalValue = $this->productManager->calculateFrequencyCoeff($quoteRequestLine);
 
                 $quantity = $quoteRequestLine->getQuantity();
 

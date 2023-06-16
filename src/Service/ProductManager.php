@@ -153,14 +153,7 @@ class ProductManager
     {
         $numberManager = $this->numberManager;
 
-        $frequencyIntervalValue = 1;
-        if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
-            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
-            $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
-            if (array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
-                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
-            }
-        }
+        $frequencyIntervalValue = $this->calculateFrequencyCoeff($quoteRequestLine);
 
         $quantity = $quoteRequestLine->getQuantity();
 
@@ -354,6 +347,24 @@ class ProductManager
         }
 
         return $result;
+    }
+
+    public function calculateFrequencyCoeff($quoteRequestLine){
+        $numberManager = $this->numberManager;
+
+        $frequencyIntervalValue = 1;
+        if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
+            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
+            $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
+            if (strtoupper($frequencyInterval) !== 'MONTH' && array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
+                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
+            }
+            if(strtoupper($frequencyInterval) === 'MONTH'){
+                $frequencyIntervalValue = (int)$quoteRequestLine->getFrequencyTimes();
+            }
+        }
+
+        return $frequencyIntervalValue;
     }
 
     /**

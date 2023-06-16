@@ -56,16 +56,16 @@
                                         {% endif %}
 
                                     </select>
-                                    <button
-                                            id="applyFilterButton"
-                                            class="btn btn-outline-primary mr-2">
-                                        Appliquer les filtres
-                                    </button>
-                                    <button
-                                            id="resetFilterButton"
-                                            class="btn btn-outline-secondary">
-                                        Réinitialiser
-                                    </button>
+{#                                    <button#}
+{#                                            id="applyFilterButton"#}
+{#                                            class="btn btn-outline-primary mr-2">#}
+{#                                        Appliquer les filtres#}
+{#                                    </button>#}
+{#                                    <button#}
+{#                                            id="resetFilterButton"#}
+{#                                            class="btn btn-outline-secondary">#}
+{#                                        Réinitialiser#}
+{#                                    </button>#}
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">{{ 'Commercial.QuoteRequestLine.Product'|trans }}</label>
@@ -162,7 +162,7 @@
 
             });
 
-            $('#applyFilterButton').on('click', function () {
+            $('#selectedCatalog, #selectedRange').on('change', function () {
 
                 var selectedCatalog = '';
                 if($('#selectedCatalog').val() && $('#selectedCatalog').val() !== '#'){
@@ -182,14 +182,14 @@
                 return false;
             });
 
-            $('#resetFilterButton').on('click', function () {
-                {% autoescape false %}
-                var url = '{{ path('paprec_quoteRequest_addLine', {id: quoteRequest.id}) }}';
-                {% endautoescape %}
+            {#$('#resetFilterButton').on('click', function () {#}
+            {#    {% autoescape false %}#}
+            {#    var url = '{{ path('paprec_quoteRequest_addLine', {id: quoteRequest.id}) }}';#}
+            {#    {% endautoescape %}#}
 
-                location.href = url;
-                return false;
-            });
+            {#    location.href = url;#}
+            {#    return false;#}
+            {#});#}
 
         });
     </script>
