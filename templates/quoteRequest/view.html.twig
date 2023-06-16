@@ -569,7 +569,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.OverallDiscount'|trans }}</label>
                                         <label class="col-form-label"{% if quoteRequest.totalAmount and ((quoteRequest.totalAmount - total)/total * 100) < -15 %} style="color: red"{% endif %}>
-                                            {% if quoteRequest.totalAmount and total %}
+                                            {% if quoteRequest.totalAmount > 0 and total > 0  %}
                                                 {{ (((quoteRequest.totalAmount - total)/total) * 10000)|formatAmount('PERCENTAGE', app.request.locale) }}{% if quoteRequest.totalAmount and ((quoteRequest.totalAmount - total)/total * 100) < -15 %} !{% endif %}
                                             {% endif %}
                                         </label>

@@ -108,7 +108,7 @@ General:
         VL_PL_CFS_PONCT: VL/PL CFS ponctuel
         VL_PL: VL/PL
         BOM: BOM
-        PL_PONCT: Ponctuel PL
+        PL_PONCT: Ponctuel PL (Ampliroll/semi)
         MATERIAL: Vente de Matériel
 
     CalculationFormula:

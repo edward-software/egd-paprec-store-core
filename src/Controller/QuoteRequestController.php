@@ -513,7 +513,7 @@ class QuoteRequestController extends AbstractController
         /**
          * On calcule le prix sans les réductions
          */
-        $total = 0;
+        $total = 1;
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
 
