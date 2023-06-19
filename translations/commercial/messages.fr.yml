@@ -286,6 +286,7 @@ Commercial:
         UnitPrice: Prix unitaire
         Quantity: Quantité
         Comment: Commentaire
+        SellingPrice: Prix de vente
         Movement: Mouvement
         Agency: Agence
         RentalUnitPrice: PU location

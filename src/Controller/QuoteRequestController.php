@@ -1890,6 +1890,11 @@ class QuoteRequestController extends AbstractController
             'id' => 'qRL.comment',
             'method' => ['getComment']
         );
+        $cols['sellingPrice'] = array(
+            'label' => 'sellingPrice',
+            'id' => 'p.materialUnitPrice',
+            'method' => ['getProduct', 'getMaterialUnitPrice']
+        );
         $cols['id'] = array('label' => 'id', 'id' => 'mSP.id', 'method' => array('getId'));
         $cols['frequencyInterval'] = array(
             'label' => 'frequencyInterval',
@@ -1983,6 +1988,9 @@ class QuoteRequestController extends AbstractController
                     'editableRentalUnitPrice', true), 'EUR', $request->getLocale());
             }
 
+            if ($line['sellingPrice']) {
+                $line['sellingPrice'] = $this->numberManager->formatAmount($line['sellingPrice'], 'EUR', $request->getLocale());
+            }
 
             if ($product->getCalculationFormula() === 'PACKAGE') {
                 $line['treatment'] = null;
