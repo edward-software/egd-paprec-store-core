@@ -569,15 +569,15 @@ class QuoteRequest
          */
         $this->managementFeeCode1 = 'FGEST';
         $this->managementFeeCode2 = 'PASBAC';
-        $this->managementFeeCode3 = 'FORFAIT';
+        $this->managementFeeCode3 = null;
         $this->managementFeeCode4 = null;
         $this->managementFeeDescription1 = 'Frais de gestion';
         $this->managementFeeDescription2 = 'Passage à vide';
-        $this->managementFeeDescription3 = 'Facturation forfaitaire mensuelle';
+        $this->managementFeeDescription3 = null;
         $this->managementFeeDescription4 = null;
         $this->managementFeeFrequency1 = 'MONTH';
         $this->managementFeeFrequency2 = null;
-        $this->managementFeeFrequency3 = 'MONTH';
+        $this->managementFeeFrequency3 = null;
         $this->managementFeeFrequency4 = null;
         $this->managementFeeAmount1 = 35* 100;
         $this->managementFeeAmount2 = 30* 100;

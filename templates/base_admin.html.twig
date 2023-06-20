@@ -170,6 +170,20 @@
                                href="{{ path('paprec_follow_up_index') }}">{{ 'Commercial.FollowUp.List'|trans }}</a>
                             <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_setting'|length) == 'paprec_setting' %} active{% endif %}"
                                href="{{ path('paprec_setting_index') }}">{{ 'Commercial.Setting.List'|trans }}</a>
+                            <div class="dropdown-submenu">
+                                <div tabindex="-1" class="dropdown-item">{{ 'Catalog.Dashboards'|trans }}</div>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_dashboard_activity'|length) == 'paprec_dashboard_activity' %} active{% endif %}"
+                                       href="{{ path('paprec_dashboard_activity_index') }}">{{ 'Catalog.Dashboard.Activities'|trans }}</a>
+                                    <a class="dropdown-item{% if app.request.get('_route')|slice(0, 'paprec_dashboard_followUp'|length) == 'paprec_dashboard_followUp' %} active{% endif %}"
+                                       href="{{ path('paprec_dashboard_follow_up_index') }}">{{ 'Catalog.Dashboard.FollowUps'|trans }}</a>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a class="dropdown-item"
+                                           target="_blank"
+                                           href="{{ path('paprec_dashboard_marketing_report_export') }}">{{ 'Catalog.Dashboard.Export-marketing-report'|trans }}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </li>
                 {% endif %}
@@ -186,6 +200,11 @@
                         </div>
                     </li>
                 {% endif %}
+
+                <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_home_home'|length) == 'paprec_home_home' %} active{% endif %}">
+                    <a href="{{ path('paprec_home_home') }}" class="nav-link">{{ 'Commercial.Q&A'|trans }}
+                    </a>
+                </li>
 
                 <li class="nav-item dropdown ml-auto">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" data-toggle="dropdown"
