@@ -8,6 +8,7 @@ use App\Repository\ProductRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,7 +27,11 @@ class QuoteRequestLineAddType extends AbstractType
         $this->options = $options;
 
         $builder
-            ->add('quantity')
+            ->add('quantity', IntegerType::class, [
+                'attr' => [
+                    'min' => 0
+                ]
+            ])
             ->add('product', EntityType::class, array(
                 'class' => Product::class,
                 'query_builder' => function (ProductRepository $er) {

@@ -84,7 +84,7 @@
                                 <div class="form-group">
                                     <label class="form-label">{{ 'Commercial.QuoteRequestLine.Frequency'|trans }}</label>
                                     <div class="form-content">
-                                        {{ form_widget(form.frequency, {'attr': {'class': 'form-control'}}) }}
+                                        {{ form_widget(form.frequency, {'attr': {'class': 'form-control frequency-field'}}) }}
                                         {{ form_errors(form.frequency) }}
                                     </div>
                                 </div>
@@ -161,6 +161,25 @@
                 });
 
             });
+            
+            $('.frequency-field').on('click', function () {
+
+                $('input[name*="quote_request_line_add[frequency]"]').change(function () {
+                    if (this.value === 'PONCTUAL') {
+                        $('select[name*="quote_request_line_add[frequencyTimes]"]').prop("disabled", true);
+                        $('select[name*="quote_request_line_add[frequencyInterval]').prop("disabled", true);
+
+                    } else if (this.value === 'MATERIAL') {
+                        $('select[name*="quote_request_line_add[frequencyTimes]"]').prop("disabled", true);
+                        $('select[name*="quote_request_line_add[frequencyInterval]').prop("disabled", true);
+                    }else if (this.value === 'REGULAR') {
+                        $('select[name*="quote_request_line_add[frequencyTimes]"]').prop("disabled", false);
+                        $('select[name*="quote_request_line_add[frequencyInterval]').prop("disabled", false)
+                    }
+                });
+                
+            });
+            
 
             $('#selectedCatalog, #selectedRange').on('change', function () {
 

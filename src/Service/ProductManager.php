@@ -285,7 +285,7 @@ class ProductManager
                     $traceability = $this->calculatePriceByFieldName($quoteRequestLine,
                         'editableTraceabilityUnitPrice');
                     $treatment = $this->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice');
-                    $result = $rental + $transport + $traceability + $treatment;
+                    $result = $quantity * ($rental + $transport + $traceability + $treatment);
                 }
 
             } elseif ($calculationFormula === 'UNIT_PRICE') {
@@ -354,14 +354,29 @@ class ProductManager
 
         $frequencyIntervalValue = 1;
         if (strtoupper($quoteRequestLine->getFrequency()) === 'REGULAR') {
-            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
+//            $monthlyCoefficientValues = $this->container->getParameter('paprec.frequency_interval.monthly_coefficients');
             $frequencyInterval = strtolower($quoteRequestLine->getFrequencyInterval());
-            if (strtoupper($frequencyInterval) !== 'MONTH' && array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
-                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
+            $periodValue = 1;
+            if(strtoupper($frequencyInterval) === 'WEEK'){
+                $periodValue = 52;
+            }elseif(strtoupper($frequencyInterval) === 'MONTH'){
+                $periodValue = 12;
+
+            }elseif(strtoupper($frequencyInterval) === 'BIMESTRE'){
+                $periodValue = 6;
+
+            }elseif(strtoupper($frequencyInterval) === 'QUARTER'){
+                $periodValue = 4;
+
             }
-            if(strtoupper($frequencyInterval) === 'MONTH'){
-                $frequencyIntervalValue = (int)$quoteRequestLine->getFrequencyTimes();
-            }
+            $frequencyIntervalValue = ((int)$quoteRequestLine->getFrequencyTimes() * $periodValue) / 12;
+
+//            if (strtoupper($frequencyInterval) !== 'MONTH' && array_key_exists($frequencyInterval, $monthlyCoefficientValues)) {
+//                $frequencyIntervalValue = $monthlyCoefficientValues[$frequencyInterval] * $quoteRequestLine->getFrequencyTimes();
+//            }
+//            if(strtoupper($frequencyInterval) === 'MONTH'){
+//                $frequencyIntervalValue = (int)$quoteRequestLine->getFrequencyTimes();
+//            }
         }
 
         return $frequencyIntervalValue;

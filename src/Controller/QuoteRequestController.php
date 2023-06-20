@@ -513,7 +513,7 @@ class QuoteRequestController extends AbstractController
         /**
          * On calcule le prix sans les réductions
          */
-        $total = 1;
+        $total = 0;
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
 
@@ -1004,7 +1004,7 @@ class QuoteRequestController extends AbstractController
         /**
          * TODO $form->isValid() ne fonctionne pas
          */
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequestLine = $form->getData();
 
             if ($quoteRequestLine->getFrequency() !== 'REGULAR') {

@@ -182,7 +182,7 @@ class QuoteRequestLine
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer")
+     * @ORM\Column(name="quantity", type="integer", nullable=false)
      * @Assert\NotBlank()
      * @Assert\Type(
      *     type="integer",
@@ -211,6 +211,7 @@ class QuoteRequestLine
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Product")
+     * @Assert\NotBlank()
      * @ORM\JoinColumn(name="productId", referencedColumnName="id", nullable=false)
      */
     private $product;

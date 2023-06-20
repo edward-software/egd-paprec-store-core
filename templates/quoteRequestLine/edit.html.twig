@@ -194,7 +194,10 @@
                     $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", true);
                     $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", true);
 
-                } else if (this.value === 'REGULAR') {
+                } else if (this.value === 'MATERIAL') {
+                    $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", true);
+                    $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", true);
+                }else if (this.value === 'REGULAR') {
                     $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", false);
                     $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", false)
                 }

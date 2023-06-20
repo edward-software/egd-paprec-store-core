@@ -24,7 +24,10 @@ class QuoteRequestLineEditType extends AbstractType
         $this->options = $options;
         $builder
             ->add('quantity', IntegerType::class, array(
-                "required" => true
+                "required" => true,
+                'attr' => [
+                    'min' => 0
+                ]
             ));
 
         if ($this->options['productCatalog'] !== 'MATERIAL') {
