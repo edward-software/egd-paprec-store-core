@@ -92,8 +92,8 @@ Commercial:
         Add: Ajout d'un devis
         Export: Export des devis
         BusinessName: Nom société
-        TotalAmount: Montant total des produits (€)
-        TotalAmountWithoutDiscount: Prix Total Standard (€)
+        TotalAmount: Montant total ajusté (hors matériel) (€)
+        TotalAmountWithoutDiscount: Prix Total Standard (hors matériel) (€)
         QuoteStatus: Status devis
         ServiceEndDate: Date de fin de la prestation
         Date-crea: Date créa.

@@ -585,7 +585,12 @@ class QuoteRequestManager
         if ($quoteRequest->getQuoteRequestLines() && count($quoteRequest->getQuoteRequestLines())) {
 
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
-                $totalAmount += $quoteRequestLine->getTotalAmount();
+                /**
+                 * Matériel pas pris en compte
+                 */
+                if ($quoteRequestLine->getProduct()->getCatalog() !== 'MATERIAL') {
+                    $totalAmount += $quoteRequestLine->getTotalAmount();
+                }
             }
         }
 
