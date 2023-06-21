@@ -66,6 +66,12 @@ class FollowUpController extends AbstractController
      */
     public function loadListAction(Request $request, DataTable $dataTable, PaginatorInterface $paginator)
     {
+
+        $systemUser = $this->getUser();
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $systemUser->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $systemUser->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $systemUser->getRoles(), true);
+
         $return = [];
 
         $filters = $request->get('filters');
@@ -101,6 +107,39 @@ class FollowUpController extends AbstractController
             ->where('fU.deleted is NULL')
             ->leftJoin('fU.quoteRequest', 'qR')
             ->andWhere('qR.deleted is NULL');
+
+        /**
+         * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
+         */
+        if ($isCommercialMultiSite) {
+            $queryBuilder
+                ->andWhere('qR.isMultisite = true');
+        }
+
+        /**
+         * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+         */
+        if ($isManager) {
+            $commercials = $this->userManager->getCommercialsFromManager($systemUser->getId());
+            $commercialIds = array();
+            if ($commercials && count($commercials)) {
+                foreach ($commercials as $commercial) {
+                    $commercialIds[] = $commercial->getId();
+                }
+            }
+            $queryBuilder
+                ->andWhere('qR.userInCharge IN (:commercialIds)')
+                ->setParameter('commercialIds', $commercialIds);
+        }
+        /**
+         * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+         */
+        if ($isCommercial) {
+            $queryBuilder
+                ->andWhere('qR.userInCharge = :userInChargeId')
+                ->setParameter('userInChargeId', $systemUser->getId());
+        }
+
 
         if (is_array($search) && isset($search['value']) && $search['value'] != '') {
             if (substr($search['value'], 0, 1) === '#') {
@@ -154,6 +193,44 @@ class FollowUpController extends AbstractController
      */
     public function viewAction(Request $request, FollowUp $followUp): Response
     {
+
+        $systemUser = $this->getUser();
+        $isAdmin = in_array('ROLE_ADMIN', $systemUser->getRoles(), true);
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $systemUser->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $systemUser->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $systemUser->getRoles(), true);
+
+        if (!$isAdmin) {
+            $returnError = true;
+
+            $quoteRequest = $followUp->getQuoteRequest();
+
+            /**
+             * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
+             */
+            if ($isCommercialMultiSite && $quoteRequest->getIsMultisite() === true) {
+                $returnError = false;
+            }
+
+            /**
+             * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+             */
+            if ($isManager && $quoteRequest->getUserInCharge() && ($quoteRequest->getUserInCharge()->getId() === $systemUser->getId() || $quoteRequest->getUserInCharge()->getManager()->getId() === $systemUser->getId())) {
+                $returnError = false;
+            }
+            /**
+             * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+             */
+            if ($isCommercial && $quoteRequest->getUserInCharge() && $quoteRequest->getUserInCharge()->getId() === $systemUser->getId()) {
+                $returnError = false;
+            }
+
+            if ($returnError) {
+                throw $this->createNotFoundException('Not found');
+            }
+        }
+
+
         $this->followUpManager->isDeleted($followUp, true);
 
         $followUpFile = new FollowUpFile();

@@ -259,7 +259,6 @@ class QuoteRequestController extends AbstractController
                 ->setParameter('userInChargeId', $systemUser->getId());
         }
 
-
         /**
          * TODO : Si manager, récupéré toutes les quotesRequests auxquelles ses commerciaux sont rattachés
          */
@@ -492,6 +491,41 @@ class QuoteRequestController extends AbstractController
      */
     public function viewAction(Request $request, QuoteRequest $quoteRequest)
     {
+
+        $systemUser = $this->getUser();
+        $isAdmin = in_array('ROLE_ADMIN', $systemUser->getRoles(), true);
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $systemUser->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $systemUser->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $systemUser->getRoles(), true);
+
+        if (!$isAdmin) {
+            $returnError = true;
+
+            /**
+             * Si l'utilisateur est commercial multisite, on récupère uniquement les quoteRequests multisites
+             */
+            if ($isCommercialMultiSite && $quoteRequest->getIsMultisite() === true) {
+                $returnError = false;
+            }
+
+            /**
+             * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+             */
+            if ($isManager && $quoteRequest->getUserInCharge() && ($quoteRequest->getUserInCharge()->getId() === $systemUser->getId() || $quoteRequest->getUserInCharge()->getManager()->getId() === $systemUser->getId())) {
+                $returnError = false;
+            }
+            /**
+             * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+             */
+            if ($isCommercial && $quoteRequest->getUserInCharge() && $quoteRequest->getUserInCharge()->getId() === $systemUser->getId()) {
+                $returnError = false;
+            }
+
+            if ($returnError) {
+                throw $this->createNotFoundException('Not found');
+            }
+        }
+
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
         $isAbleToSendContractEmail = $this->quoteRequestManager->isAbleToSendContractEmail($quoteRequest);
@@ -1015,7 +1049,7 @@ class QuoteRequestController extends AbstractController
 
             if ($quoteRequestLine->getProduct()) {
 
-                if($quoteRequestLine->getProduct()->getHideFrequency() === true){
+                if ($quoteRequestLine->getProduct()->getHideFrequency() === true) {
                     $quoteRequestLine->setFrequency(null);
                     $quoteRequestLine->setFrequencyTimes(null);
                     $quoteRequestLine->setFrequencyInterval(null);
