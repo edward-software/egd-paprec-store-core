@@ -214,8 +214,8 @@ class CartManager
         /**
          * Si la ligne existe on réutilise sa fréquence sinon on utilise sa fréquence par défaut
          */
-        $frequencyTimes = 5;
-        $frequencyInterval = 'WEEK';
+        $frequencyTimes = $product->getFrequencyTimes();
+        $frequencyInterval = $product->getFrequencyInterval();
         if ($content && count($content)) {
             foreach ($content as $key => $prod) {
                 if ($prod['pId'] == $product->getId()) {
