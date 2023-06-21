@@ -201,8 +201,8 @@
                     </li>
                 {% endif %}
 
-                <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_home_home'|length) == 'paprec_home_home' %} active{% endif %}">
-                    <a href="{{ path('paprec_home_home') }}" class="nav-link">{{ 'Commercial.Q&A'|trans }}
+                <li class="nav-item dropdown{% if app.request.get('_route')|slice(0, 'paprec_home_home_q&a'|length) == 'paprec_home_home_q&a' %} active{% endif %}">
+                    <a href="{{ path('paprec_home_home_q&a') }}" class="nav-link">{{ 'Commercial.Q&A'|trans }}
                     </a>
                 </li>
 

@@ -33,15 +33,7 @@ class HomeController extends AbstractController
      */
     public function indexAction(): Response
     {
-        $files = $this->em->getRepository('App:File')->findAll();
-
-        $file = new File();
-        $formAddFile = $this->createForm(FileFormType::class, $file, array());
-
-        return $this->render('home/index.html.twig', [
-            'files' => $files,
-            'formAddFile' => $formAddFile->createView()
-        ]);
+        return $this->render('home/index.html.twig');
     }
 
     /**
@@ -133,5 +125,24 @@ class HomeController extends AbstractController
 
         return $this->redirectToRoute('paprec_home_home');
 
+    }
+
+    /**
+     * @Route("/faq", name="paprec_home_home_q&a")
+     * @Security("has_role('ROLE_USER')")
+     *
+     * @return Response
+     */
+    public function qAAction(): Response
+    {
+        $files = $this->em->getRepository('App:File')->findAll();
+
+        $file = new File();
+        $formAddFile = $this->createForm(FileFormType::class, $file, array());
+
+        return $this->render('home/q&a.html.twig', [
+            'files' => $files,
+            'formAddFile' => $formAddFile->createView()
+        ]);
     }
 }
