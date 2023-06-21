@@ -123,7 +123,7 @@ class HomeController extends AbstractController
             return $response;
         }
 
-        return $this->redirectToRoute('paprec_home_home');
+        return $this->redirectToRoute('paprec_home_home_q&a');
 
     }
 
