@@ -59,23 +59,7 @@ class QuoteRequestLineAddType extends AbstractType
                     return $qb;
                 },
                 'choice_label' => function ($product) {
-
                     $name = $product->getProductLabels()[0]->getName();
-//                    if ($product->getRange() && is_iterable($product->getRange()->getRangeLabels())) {
-//                        $name .= ' - ' . $product->getRange()->getRangeLabels()[0]->getName();
-//                    }
-//                    if ($product->getCatalog()) {
-//
-//                        $catalog = 'Régulier';
-//                        if(strtoupper($product->getCatalog()) === 'PONCTUAL'){
-//                            $catalog = 'Ponctuel';
-//                        }elseif(strtoupper($product->getCatalog()) === 'MATERIAL'){
-//                            $catalog = 'Matériel';
-//                        }
-//
-//                        $name .= ' - ' . $catalog;
-//                    }
-
                     return $name;
                 },
                 'placeholder' => '',

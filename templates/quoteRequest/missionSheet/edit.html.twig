@@ -315,7 +315,7 @@
                                             <td>{{ quoteRequest.managementFeeCode1 }}</td>
                                             <td>{{ quoteRequest.managementFeeDescription1 }}</td>
                                             <td>{% if quoteRequest.managementFeeFrequency1 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency1)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
-                                            <td>{{ quoteRequest.managementFeeAmount1|formatAmount('EUR', app.request.locale) }}</td>
+                                            <td class="line-number">{{ quoteRequest.managementFeeAmount1|formatAmount('EUR', app.request.locale) }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if quoteRequest.managementFeeCode2 is not empty or quoteRequest.managementFeeDescription2 is not empty or quoteRequest.managementFeeFrequency2 is not empty or (quoteRequest.managementFeeAmount2 is not null and quoteRequest.managementFeeAmount2 >= 0) %}
@@ -323,7 +323,7 @@
                                             <td>{{ quoteRequest.managementFeeCode2 }}</td>
                                             <td>{{ quoteRequest.managementFeeDescription2 }}</td>
                                             <td>{% if quoteRequest.managementFeeFrequency2 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency2)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
-                                            <td>{{ quoteRequest.managementFeeAmount2|formatAmount('EUR', app.request.locale) }}</td>
+                                            <td class="line-number">{{ quoteRequest.managementFeeAmount2|formatAmount('EUR', app.request.locale) }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if quoteRequest.managementFeeCode3 is not empty or quoteRequest.managementFeeDescription3 is not empty or quoteRequest.managementFeeFrequency3 is not empty or (quoteRequest.managementFeeAmount3 is not null and quoteRequest.managementFeeAmount3 >= 0) %}
@@ -331,7 +331,7 @@
                                             <td>{{ quoteRequest.managementFeeCode3 }}</td>
                                             <td>{{ quoteRequest.managementFeeDescription3 }}</td>
                                             <td>{% if quoteRequest.managementFeeFrequency3 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency3)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
-                                            <td>{{ quoteRequest.managementFeeAmount3|formatAmount('EUR', app.request.locale) }}</td>
+                                            <td class="line-number">{{ quoteRequest.managementFeeAmount3|formatAmount('EUR', app.request.locale) }}</td>
                                         </tr>
                                     {% endif %}
                                     {% if quoteRequest.managementFeeCode4 is not empty or quoteRequest.managementFeeDescription4 is not empty or quoteRequest.managementFeeFrequency4 is not empty or (quoteRequest.managementFeeAmount4 is not null and quoteRequest.managementFeeAmount4 >= 0) %}
@@ -339,7 +339,7 @@
                                             <td>{{ quoteRequest.managementFeeCode4 }}</td>
                                             <td>{{ quoteRequest.managementFeeDescription4 }}</td>
                                             <td>{% if quoteRequest.managementFeeFrequency4 %}{{ ('General.Frequency.' ~ quoteRequest.managementFeeFrequency4)|trans({}, "messages", app.request.locale) }}{% endif %}</td>
-                                            <td>{{ quoteRequest.managementFeeAmount4|formatAmount('EUR', app.request.locale) }}</td>
+                                            <td class="line-number">{{ quoteRequest.managementFeeAmount4|formatAmount('EUR', app.request.locale) }}</td>
                                         </tr>
                                     {% endif %}
                                     </tbody>
@@ -425,7 +425,7 @@
             $('#missionSheetProductListDatatable').EgdDatatable({
                 url: "{{ path('paprec_quote_request_mission_sheet_loadLineList', {id: quoteRequest.id, missionSheetId: missionSheet.id}) }}",
                 columns: [
-                    {"data": "quantity"},
+                    {"data": "quantity", "className": "line-number"},
                     {"data": "code"},
                     {"data": "name"},
                     {"data": "agencyName"},
@@ -503,15 +503,15 @@
                     {"data": "productRange"},
                     {"data": "productName"},
                     {"data": "productBillingUnit"},
-                    {"data": "quantity"},
+                    {"data": "quantity", "className": "line-number"},
                     {"data": "passingFrequency"},
-                    {"data": "rentalPrice"},
-                    {"data": "treatmentCollect"},
-                    {"data": "treatment"},
+                    {"data": "rentalPrice", "className": "line-number"},
+                    {"data": "treatmentCollect", "className": "line-number"},
+                    {"data": "treatment", "className": "line-number"},
                     {"data": "movement"},
                     {"data": "agencyName"},
                     {"data": "comment"},
-                    {"data": "sellingPrice"},
+                    {"data": "sellingPrice", "className": "line-number"},
                     {"data": "id", "width": "3%", "bSortable": false, "className": "cell-action-button"}
                 ],
                 rowDblclick: {

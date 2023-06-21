@@ -7,6 +7,7 @@ use App\Entity\FollowUp;
 use App\Entity\MissionSheet;
 use App\Entity\MissionSheetLine;
 use App\Entity\MissionSheetProduct;
+use App\Entity\Product;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestFile;
 use App\Entity\QuoteRequestLine;
@@ -1013,6 +1014,13 @@ class QuoteRequestController extends AbstractController
             }
 
             if ($quoteRequestLine->getProduct()) {
+
+                if($quoteRequestLine->getProduct()->getHideFrequency() === true){
+                    $quoteRequestLine->setFrequency(null);
+                    $quoteRequestLine->setFrequencyTimes(null);
+                    $quoteRequestLine->setFrequencyInterval(null);
+                }
+
                 $this->quoteRequestManager->addLine($quoteRequest, $quoteRequestLine, $user);
             }
 
@@ -1032,12 +1040,28 @@ class QuoteRequestController extends AbstractController
 
         $ranges = $queryBuilder->getQuery()->getResult();
 
+
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Product::class)->createQueryBuilder('p');
+
+        $queryBuilder->select('p')
+            ->where('p.deleted IS NULL');
+
+        $products = $queryBuilder->getQuery()->getResult();
+
+        $hideFrequencyById = [];
+        if (is_array($products) && count($products)) {
+            foreach ($products as $product) {
+                $hideFrequencyById[$product->getId()] = $product->getHideFrequency();
+            }
+        }
+
         return $this->render('quoteRequestLine/add.html.twig', array(
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
             'selectedCatalog' => $selectedCatalog,
             'selectedRangeId' => $selectedRangeId,
-            'ranges' => $ranges
+            'ranges' => $ranges,
+            'hideFrequencyById' => $hideFrequencyById
         ));
     }
 
@@ -1989,7 +2013,8 @@ class QuoteRequestController extends AbstractController
             }
 
             if ($line['sellingPrice']) {
-                $line['sellingPrice'] = $this->numberManager->formatAmount($line['sellingPrice'], 'EUR', $request->getLocale());
+                $line['sellingPrice'] = $this->numberManager->formatAmount($line['sellingPrice'], 'EUR',
+                    $request->getLocale());
             }
 
             if ($product->getCalculationFormula() === 'PACKAGE') {

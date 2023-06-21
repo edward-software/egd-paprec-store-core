@@ -173,9 +173,9 @@ Catalog:
         Position: Position
         CalculationFormula:
             CalculationFormula: Formule de calcul
-            REGULAR-message: "La structure de prix peut comprendre de la location, du transport du Traitement et/ou des Matériels additionnels. Cette formule est généralement utilisée pour les calculs de prix pour les bacs, rolls, caisses palettes, …. Si la QUANTITE ou la FREQUENCE ne seront pas définies dans l’offre, cette formule n’est pas adaptée. Demande de validation « Confirmer » ou « Vérifier avant de Confirmer » avant enregistrement."
-            PACKAGE-message: "La structure de prix peut comprendre de la location, du transport mais PAS de Traitement ni de Matériel additionnel. Cette formule est à réserver strictement pour des produits dont la quantité est définie (saisie dans l’offre, exemple 2 jours de vide locaux) mais dont la FREQUENCE n’est pas définie». Demande de validation « Confirmer » ou « Vérifier avant de Confirmer » avant enregistrement."
-            UNIT_PRICE-message: "La structure de prix peut comprendre de la location, du transport et du traitement mais PAS de Matériel additionnel. Cette formule est à réserver strictement pour des produits dont la quantité n’est pas définie (nombre de tours, tonnes ou M3, …) ». Demande de validation « Confirmer » ou « Vérifier avant de Confirmer » avant enregistrement."
+            REGULAR-message: "La structure de prix peut comprendre de la location, du transport du Traitement et/ou des Matériels additionnels. Cette formule est généralement utilisée pour les calculs de prix pour les bacs, rolls, caisses palettes, …. Si la QUANTITE ou la FREQUENCE ne seront pas définies dans l’offre, cette formule n’est pas adaptée."
+            PACKAGE-message: "La structure de prix peut comprendre de la location, du transport mais PAS de Traitement ni de Matériel additionnel. Cette formule est à réserver strictement pour des produits dont la quantité est définie (saisie dans l’offre, exemple 2 jours de vide locaux) mais dont la FREQUENCE n’est pas définie»."
+            UNIT_PRICE-message: "La structure de prix peut comprendre de la location, du transport et du traitement mais PAS de Matériel additionnel. Cette formule est à réserver strictement pour des produits dont la quantité n’est pas définie (nombre de tours, tonnes ou M3, …) »."
         FolderNumber: Nombre de dossiers
         RentalUnitPrice: PU location
         TransportUnitPrice: PU Transport

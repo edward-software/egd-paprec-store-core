@@ -314,6 +314,7 @@ Commercial:
         Package: Forfait
         PDF:
             Quantity: Qté
+            PassingFrequency: Fréq.
             ProductCode: Code opé.
     GeneralEmail:
         Address1: BALE, Schlachthofstrasse 18, CH-4056 Bâle, +41 61 386 96 70

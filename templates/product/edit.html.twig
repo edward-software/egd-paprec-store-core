@@ -311,8 +311,8 @@
                     title: "{{ 'General.Confirm'| trans({}, "messages", app.request.locale) }}",
                     text: message,
                     showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'| trans({}, "messages", app.request.locale) }}",
-                    cancelButtonText: "{{ 'General.No'| trans({}, "messages", app.request.locale) }}"
+                    confirmButtonText: "Confirmer",
+                    cancelButtonText: "Vérifier avant de confirmer"
                 }).then(function (result) {
                     if (result.value) {
                         $('#catalogProductForm').submit();
