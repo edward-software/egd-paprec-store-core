@@ -331,15 +331,17 @@ class SubscriptionController extends AbstractController
                 $quoteRequest->setReference($reference);
 
 
+                $user = null;
                 if ($quoteRequest->getIsMultisite()) {
                     $quoteRequest->setUserInCharge(null);
                 } else {
-                    $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+                    $user = $this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode());
+
+                    $quoteRequest->setUserInCharge($user);
                     $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
                 }
 
                 $this->em->persist($quoteRequest);
-
 
                 /**
                  * On récupère tous les produits ajoutés au Cart
@@ -355,7 +357,7 @@ class SubscriptionController extends AbstractController
                 /**
                  * On envoie le mail de confirmation à l'utilisateur
                  */
-                $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest);
+                $sendConfirmEmail = $this->quoteRequestManager->sendConfirmRequestEmail($quoteRequest, $user);
 
                 /**
                  * On envoie le mail de confirmation au commercial en charge (qui est donc lié au code postal)
@@ -523,8 +525,10 @@ class SubscriptionController extends AbstractController
             $this->em->persist($quoteRequest);
             $this->em->flush();
 
-            $this->quoteRequestManager->sendConfirmContactRequestEmail($quoteRequest, $locale);
-            $this->quoteRequestManager->sendNewContactRequestEmail($quoteRequest, $locale, $recallDate);
+            $user = $this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode());
+
+            $this->quoteRequestManager->sendConfirmContactRequestEmail($quoteRequest, $locale, $user);
+            $this->quoteRequestManager->sendNewContactRequestEmail($quoteRequest, $locale, $recallDate, $user);
 
             return $this->redirectToRoute('paprec_public_confirm_contact_request_index', array(
                 'locale' => $locale,

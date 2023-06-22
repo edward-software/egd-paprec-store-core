@@ -1192,7 +1192,7 @@ class QuoteRequestController extends AbstractController
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
         if ($quoteRequest->getPostalCode()) {
-            $sendQuote = $this->quoteRequestManager->sendGeneratedQuoteEmail($quoteRequest);
+            $sendQuote = $this->quoteRequestManager->sendGeneratedQuoteEmail($quoteRequest, $this->getUser());
             if ($sendQuote) {
                 $this->get('session')->getFlashBag()->add('success', 'generatedQuoteSent');
             } else {
@@ -2043,11 +2043,11 @@ class QuoteRequestController extends AbstractController
 
             } else {
                 $line['rentalPrice'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qRL,
-                    'editableRentalUnitPrice', true), 'EUR', $request->getLocale());
+                    'editableRentalUnitPrice', true), null, $request->getLocale());
             }
 
             if ($line['sellingPrice']) {
-                $line['sellingPrice'] = $this->numberManager->formatAmount($line['sellingPrice'], 'EUR',
+                $line['sellingPrice'] = $this->numberManager->formatAmount($line['sellingPrice'], null,
                     $request->getLocale());
             }
 
@@ -2059,7 +2059,7 @@ class QuoteRequestController extends AbstractController
 
             } else {
                 $line['treatment'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qRL,
-                    'editableTreatmentUnitPrice', true), 'EUR', $request->getLocale());
+                    'editableTreatmentUnitPrice', true), null, $request->getLocale());
             }
             if ($product->getCalculationFormula() === 'PACKAGE') {
                 $line['treatmentCollect'] = null;
@@ -2069,7 +2069,7 @@ class QuoteRequestController extends AbstractController
 
             } else {
                 $line['treatmentCollect'] = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($qRL,
-                    'treatmentCollectPrice', true), 'EUR', $request->getLocale());
+                    'treatmentCollectPrice', true), null, $request->getLocale());
             }
 
             $tmp[] = $line;

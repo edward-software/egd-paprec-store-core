@@ -255,14 +255,14 @@
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label">{{ 'General.Date-creation'| trans({}, "messages", app.request.locale) }}</label>
                             <label class="col-form-label col-md-8">
-                                {{ range.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                {{ range.dateCreation|localizeddate('short', 'medium', app.request.locale, app.user.timezone) }}
                             </label>
                         </div>
 
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label">{{ 'General.Date-update'| trans({}, "messages", app.request.locale) }}</label>
                             <label class="col-form-label col-md-8">
-                                {{ range.dateUpdate is empty ? "" : range.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                {{ range.dateUpdate is empty ? "" : range.dateUpdate|localizeddate('short', 'medium', app.request.locale, app.user.timezone) }}
                             </label>
                         </div>
                     </div>

@@ -80,6 +80,13 @@ class User implements UserInterface
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="timezone", type="string")
+     */
+    private $timezone;
+
+    /**
+     * @var string
      *getDateUpdate
      * @ORM\Column(name="lastLogin", type="string", nullable=true)
      */
@@ -235,6 +242,7 @@ class User implements UserInterface
         $this->dateCreation = new DateTime();
         $this->subordinates = new ArrayCollection();
         $this->postalCodes = new ArrayCollection();
+        $this->setTimezone('Europe/Paris');
     }
 
     /**
@@ -698,6 +706,30 @@ class User implements UserInterface
     public function getCivility()
     {
         return $this->civility;
+    }
+
+    /**
+     * Set timezone.
+     *
+     * @param string|null $timezone
+     *
+     * @return User
+     */
+    public function setTimezone($timezone = null)
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    /**
+     * Get timezone.
+     *
+     * @return string|null
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
     }
 
 }

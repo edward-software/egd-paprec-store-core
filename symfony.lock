@@ -604,10 +604,10 @@
         "version": "v4.4.22"
     },
     "twig/extensions": {
-        "version": "1.0",
+        "version": "1.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "1.0",
             "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
         },

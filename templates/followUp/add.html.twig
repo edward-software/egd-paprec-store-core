@@ -80,7 +80,7 @@
                                         <div class="form-group">
                                             <div class="form-label">{{ 'Commercial.QuoteRequest.Date-crea'|trans }}</div>
                                             <div class="form-content">
-                                                {{ quoteRequest.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                                {{ quoteRequest.dateCreation|localizeddate('short', 'medium', app.request.locale, app.user.timezone) }}
                                             </div>
                                         </div>
                                         <div class="form-group">

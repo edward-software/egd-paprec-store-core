@@ -380,7 +380,7 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PonctualDate'|trans }}</label>
                                         {% if quoteRequest.ponctualDate is not null and quoteRequest.catalog == 'PONCTUAL' %}
                                             <label class="col-form-label">
-                                                {{ quoteRequest.ponctualDate|localizeddate('short', 'none', app.request.locale) }}
+                                                {{ quoteRequest.ponctualDate|localizeddate('short', 'none', app.request.locale, app.user.timezone) }}
                                             </label>
                                         {% endif %}
                                     </div>
@@ -507,7 +507,7 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.StartDate'|trans }}</label>
                                         <label class="col-form-label">
                                             {% if quoteRequest.startDate is not null %}
-                                                {{ quoteRequest.startDate|localizeddate('short', 'none', app.request.locale) }}
+                                                {{ quoteRequest.startDate|localizeddate('short', 'none', app.request.locale, app.user.timezone) }}
                                             {% endif %}
                                         </label>
                                     </div>
@@ -515,7 +515,7 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.DepositDate'|trans }}</label>
                                         <label class="col-form-label">
                                             {% if quoteRequest.depositDate is not null %}
-                                                {{ quoteRequest.depositDate|localizeddate('short', 'none', app.request.locale) }}
+                                                {{ quoteRequest.depositDate|localizeddate('short', 'none', app.request.locale, app.user.timezone) }}
                                             {% endif %}
                                         </label>
                                     </div>
@@ -523,7 +523,7 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.ResumptionDate'|trans }}</label>
                                         <label class="col-form-label">
                                             {% if quoteRequest.resumptionDate is not null %}
-                                                {{ quoteRequest.resumptionDate|localizeddate('short', 'none', app.request.locale) }}
+                                                {{ quoteRequest.resumptionDate|localizeddate('short', 'none', app.request.locale, app.user.timezone) }}
                                             {% endif %}
                                         </label>
                                     </div>
@@ -604,7 +604,7 @@
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.ServiceEndDate'|trans }}</label>
                                         <label class="col-form-label">
                                             {% if quoteRequest.serviceEndDate is not null %}
-                                                {{ quoteRequest.serviceEndDate|localizeddate('short', 'none', app.request.locale) }}
+                                                {{ quoteRequest.serviceEndDate|localizeddate('short', 'none', app.request.locale, app.user.timezone) }}
                                             {% endif %}
                                         </label>
                                     </div>
@@ -1049,14 +1049,14 @@
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'General.Date-creation'|trans }}</label>
                                     <label class="col-form-label">
-                                        {{ quoteRequest.dateCreation|localizeddate('short', 'medium', app.request.locale) }}
+                                        {{ quoteRequest.dateCreation|localizeddate('short', 'medium', app.request.locale, app.user.timezone) }}
                                     </label>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-md-4 col-form-label">{{ 'General.Date-update'|trans }}</label>
                                     <label class="col-form-label">
-                                        {{ quoteRequest.dateUpdate is empty ? "" : quoteRequest.dateUpdate|localizeddate('short', 'medium', app.request.locale) }}
+                                        {{ quoteRequest.dateUpdate is empty ? "" : quoteRequest.dateUpdate|localizeddate('short', 'medium', app.request.locale, app.user.timezone) }}
                                     </label>
                                 </div>
                             </div>

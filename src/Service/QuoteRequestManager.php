@@ -7,6 +7,7 @@ use App\Entity\MissionSheet;
 use App\Entity\Product;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestLine;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\ORMException;
@@ -615,7 +616,7 @@ class QuoteRequestManager
      * Envoie un mail à la personne ayant fait une demande de devis
      * @throws Exception
      */
-    public function sendConfirmRequestEmail(QuoteRequest $quoteRequest)
+    public function sendConfirmRequestEmail(QuoteRequest $quoteRequest, User $systemUser = null)
     {
 
         try {
@@ -634,6 +635,12 @@ class QuoteRequestManager
 
             $locale = 'FR';
 
+            if ($systemUser) {
+                $timezone = $systemUser->getTimezone();
+            } else {
+                $timezone = $this->container->getParameter('paprec.timezone.default');
+            }
+
             $message = new Swift_Message();
             $message
                 ->setSubject($this->translator->trans('Commercial.ConfirmEmail.Object',
@@ -647,6 +654,7 @@ class QuoteRequestManager
                             'quoteRequest' => $quoteRequest,
                             'quoteRequestLines' => $quoteRequest->getQuoteRequestLines(),
                             'locale' => strtolower($locale),
+                            'timezone' => $timezone
 //                            'salesman' => $quoteRequest->getPostalCode()->getUserInCharge()
                         )
                     ),
@@ -668,7 +676,7 @@ class QuoteRequestManager
      * Envoie un mail à la personne ayant fait une demande d'aide pour la création d'un devis
      * @throws Exception
      */
-    public function sendConfirmContactRequestEmail(QuoteRequest $quoteRequest, $locale)
+    public function sendConfirmContactRequestEmail(QuoteRequest $quoteRequest, $locale, User $systemUser = null)
     {
 
         try {
@@ -678,6 +686,12 @@ class QuoteRequestManager
 
             if ($rcptTo == null || $rcptTo == '') {
                 return false;
+            }
+
+            if ($systemUser) {
+                $timezone = $systemUser->getTimezone();
+            } else {
+                $timezone = $this->container->getParameter('paprec.timezone.default');
             }
 
             $message = new Swift_Message();
@@ -691,7 +705,8 @@ class QuoteRequestManager
                         'public/emails/confirmContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
-                            'quoteRequest' => $quoteRequest
+                            'quoteRequest' => $quoteRequest,
+                            'timezone' => $timezone
                         )
                     ),
                     'text/html'
@@ -712,8 +727,12 @@ class QuoteRequestManager
      * Envoie un mail au service commercial suite à une demande d'aide d'un client pour la création d'un devis
      * @throws Exception
      */
-    public function sendNewContactRequestEmail(QuoteRequest $quoteRequest, $locale, $recallDate = null)
-    {
+    public function sendNewContactRequestEmail(
+        QuoteRequest $quoteRequest,
+        $locale,
+        $recallDate = null,
+        User $systemUser = null
+    ) {
 
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
@@ -731,6 +750,12 @@ class QuoteRequestManager
                 return false;
             }
 
+            if ($systemUser) {
+                $timezone = $systemUser->getTimezone();
+            } else {
+                $timezone = $this->container->getParameter('paprec.timezone.default');
+            }
+
             $message = new Swift_Message();
             $message
                 ->setSubject($this->translator->trans('Commercial.NewContactRequestEmail.Object',
@@ -743,7 +768,8 @@ class QuoteRequestManager
                         array(
                             'locale' => strtolower($locale),
                             'quoteRequest' => $quoteRequest,
-                            'recallDate' => $recallDate
+                            'recallDate' => $recallDate,
+                            'timezone' => $timezone
                         )
                     ),
                     'text/html'
@@ -861,7 +887,7 @@ class QuoteRequestManager
      * @return bool
      * @throws Exception
      */
-    public function sendGeneratedQuoteEmail(QuoteRequest $quoteRequest)
+    public function sendGeneratedQuoteEmail(QuoteRequest $quoteRequest, User $systemUser)
     {
         try {
             $from = $_ENV['PAPREC_EMAIL_SENDER'];
@@ -907,7 +933,8 @@ class QuoteRequestManager
                         'public/emails/generatedQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
-                            'locale' => strtolower($localeFilename)
+                            'locale' => strtolower($localeFilename),
+                            'timezone' => $systemUser->getTimezone()
                         )
                     ),
                     'text/html'
