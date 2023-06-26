@@ -1579,7 +1579,6 @@ class QuoteRequestManager
             return $return;
 
         } catch (ORMException $e) {
-            dd($e->getMessage());
             throw new Exception('unableToGenerateProductQuote', 500);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
