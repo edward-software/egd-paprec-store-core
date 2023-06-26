@@ -6,7 +6,6 @@ twig:
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
     globals:
-        paprec_store_url: "%env(PAPREC_STORE_URL)%"
         paprec_back_office_url: "%env(PAPREC_BACK_OFFICE_URL)%"
         paprec_public_technical_service: "%env(PAPREC_PUBLIC_TECHNICAL_SERVICE)%"
         google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
