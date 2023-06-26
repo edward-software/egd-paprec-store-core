@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tomsgu\PdfMerger\PdfCollection;
 use Tomsgu\PdfMerger\PdfMerger;
-use Twig\Environment;
-use Twig\Template;
 use function PHPUnit\Framework\isEmpty;
 
 class QuoteRequestManager
@@ -35,22 +33,19 @@ class QuoteRequestManager
     private $numberManager;
     private $productManager;
     private $translator;
-    private $twig;
 
     public function __construct(
         EntityManagerInterface $em,
         ContainerInterface $container,
         TranslatorInterface $translator,
         NumberManager $numberManager,
-        ProductManager $productManager,
-        Environment $twig
+        ProductManager $productManager
     ) {
         $this->em = $em;
         $this->container = $container;
         $this->translator = $translator;
         $this->numberManager = $numberManager;
         $this->productManager = $productManager;
-        $this->twig = $twig;
     }
 
     public function get($quoteRequest, $throwException = true)
@@ -653,7 +648,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/confirmQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -706,7 +701,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/confirmContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
@@ -768,7 +763,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/newContactRequestEmail.html.twig',
                         array(
                             'locale' => strtolower($locale),
@@ -837,7 +832,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/newQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -934,7 +929,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/generatedQuoteEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -1007,7 +1002,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/generatedContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -1106,7 +1101,7 @@ class QuoteRequestManager
                 ->setFrom($from)
                 ->setTo($rcptTo)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/newContractEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -1185,12 +1180,12 @@ class QuoteRequestManager
             $templateDir = 'public/PDF';
 
             $snappy->setOption('header-html',
-                $this->twig->render($templateDir . '/header.html.twig', [
+                $this->container->get('templating')->render($templateDir . '/header.html.twig', [
                     'agency' => $agency
                 ]));
 
             $snappy->setOption('footer-html',
-                $this->twig->render($templateDir . '/footer.html.twig', [
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig', [
                     'agency' => $agency
                 ]));
 
@@ -1207,7 +1202,7 @@ class QuoteRequestManager
              */
             $snappy->generateFromHtml(
                 array(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         $templateDir . '/printQuoteOffer.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -1221,7 +1216,7 @@ class QuoteRequestManager
                 $filenameOffer
             );
 
-//            echo $this->twig->render(
+//            echo $this->container->get('templating')->render(
 //                $templateDir . '/printQuoteOffer.html.twig',
 //                array(
 //                    'quoteRequest' => $quoteRequest,
@@ -1337,7 +1332,7 @@ class QuoteRequestManager
                 ->setTo($agencyMail)
                 ->setCc($commercialMail)
                 ->setBody(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         'public/emails/generatedMissionSheetEmail.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -1368,9 +1363,9 @@ class QuoteRequestManager
             $templateDir = 'public/PDF/missionSheet';
 
             $snappy->setOption('header-html',
-                $this->twig->render($templateDir . '/header.html.twig'));
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
             $snappy->setOption('footer-html',
-                $this->twig->render($templateDir . '/footer.html.twig'));
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
@@ -1386,7 +1381,7 @@ class QuoteRequestManager
              */
             $snappy->generateFromHtml(
                 array(
-                    $this->twig->render(
+                    $this->container->get('templating')->render(
                         $templateDir . '/printMissionSheet.html.twig',
                         array(
                             'quoteRequest' => $quoteRequest,
@@ -1445,7 +1440,7 @@ class QuoteRequestManager
 //                            ->setFrom($from)
 //                            ->setTo($rcptTo)
 //                            ->setBody(
-//                                $this->twig->render(
+//                                $this->container->get('templating')->render(
 //                                    'public/emails/generatedMissionSheetEmail.html.twig',
 //                                    array(
 //                                        'quoteRequest' => $quoteRequest,
@@ -1492,7 +1487,7 @@ class QuoteRequestManager
 
                         $snappy->generateFromHtml(
                             array(
-                                $this->twig->render(
+                                $this->container->get('templating')->render(
                                     $dir . '/printMissionSheet.html.twig',
                                     array(
                                         'quoteRequest' => $quoteRequest,
@@ -1510,7 +1505,7 @@ class QuoteRequestManager
                             $actualFilename
                         );
 
-//                        echo $this->twig->render(
+//                        echo $this->container->get('templating')->render(
 //                            $dir . '/printMissionSheet.html.twig',
 //                            array(
 //                                'quoteRequest' => $quoteRequest,
@@ -1622,9 +1617,9 @@ class QuoteRequestManager
             $templateDir = 'public/PDF/missionSheet';
 
             $snappy->setOption('header-html',
-                $this->twig->render($templateDir . '/header.html.twig'));
+                $this->container->get('templating')->render($templateDir . '/header.html.twig'));
             $snappy->setOption('footer-html',
-                $this->twig->render($templateDir . '/footer.html.twig'));
+                $this->container->get('templating')->render($templateDir . '/footer.html.twig'));
 
             if (!isset($templateDir) || !$templateDir || is_null($templateDir)) {
                 return false;
@@ -1634,7 +1629,7 @@ class QuoteRequestManager
             /**
              * On génère la page CREATION
              */
-            $pdfs[] = $this->twig->render(
+            $pdfs[] = $this->container->get('templating')->render(
                 $templateDir . '/printMissionSheet.html.twig',
                 array(
                     'quoteRequest' => $quoteRequest,
@@ -1697,7 +1692,7 @@ class QuoteRequestManager
                             }
                         }
 
-                        $pdfs[] = $this->twig->render(
+                        $pdfs[] = $this->container->get('templating')->render(
                             $dir . '/printMissionSheet.html.twig',
                             array(
                                 'quoteRequest' => $quoteRequest,
