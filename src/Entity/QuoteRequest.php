@@ -106,7 +106,7 @@ class QuoteRequest
      * @var string
      *
      * @ORM\Column(name="civility", type="string", length=10, nullable=true)
-     * @Assert\NotBlank(groups={"public"})
+     * @Assert\NotBlank()
      */
     private $civility;
 
@@ -114,7 +114,7 @@ class QuoteRequest
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"public"})
+     * @Assert\NotBlank()
      */
     private $lastName;
 
@@ -122,14 +122,14 @@ class QuoteRequest
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"public"})
+     * @Assert\NotBlank()
      */
     private $firstName;
 
     /**
      * @var string
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"public"})
+     * @Assert\NotBlank()
      * @Assert\Email(
      *     groups={"public"},
      *      message = "email_error"
@@ -141,7 +141,7 @@ class QuoteRequest
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=255, nullable=true)
-     * @Assert\NotBlank(groups={"public"})
+     * @Assert\NotBlank()
      */
     private $phone;
 
@@ -688,7 +688,7 @@ class QuoteRequest
      *
      * @return QuoteRequest
      */
-    public function setCivility($civility = null)
+    public function setCivility($civility)
     {
         $this->civility = $civility;
 
@@ -712,7 +712,7 @@ class QuoteRequest
      *
      * @return QuoteRequest
      */
-    public function setLastName($lastName = null)
+    public function setLastName($lastName)
     {
         $this->lastName = $lastName;
 
@@ -736,7 +736,7 @@ class QuoteRequest
      *
      * @return QuoteRequest
      */
-    public function setFirstName($firstName = null)
+    public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
 
@@ -760,7 +760,7 @@ class QuoteRequest
      *
      * @return QuoteRequest
      */
-    public function setEmail($email = null)
+    public function setEmail($email)
     {
         $this->email = $email;
 
@@ -784,7 +784,7 @@ class QuoteRequest
      *
      * @return QuoteRequest
      */
-    public function setPhone($phone = null)
+    public function setPhone($phone)
     {
         $this->phone = $phone;
 

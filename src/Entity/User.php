@@ -44,7 +44,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=180, unique=true)
-     * @Assert\NotBlank(message="Username should not be empty")
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -53,7 +53,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      *
-     * @Assert\NotBlank(message="Email should not be empty")
+     * @Assert\NotBlank()
      */
     private $email;
 
@@ -87,7 +87,6 @@ class User implements UserInterface
 
     /**
      * @var string
-     *getDateUpdate
      * @ORM\Column(name="lastLogin", type="string", nullable=true)
      */
     private $lastLogin;
@@ -173,6 +172,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="phoneNumber", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $phoneNumber;
 
@@ -180,6 +180,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="mobileNumber", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $mobileNumber;
 
@@ -320,7 +321,7 @@ class User implements UserInterface
     /**
      * @param string $password
      */
-    public function setPassword(string $password): void
+    public function setPassword($password): void
     {
         $this->password = $password;
     }
@@ -336,7 +337,7 @@ class User implements UserInterface
     /**
      * @param string $lastLogin
      */
-    public function setLastLogin(string $lastLogin): void
+    public function setLastLogin($lastLogin): void
     {
         $this->lastLogin = $lastLogin;
     }
@@ -352,7 +353,7 @@ class User implements UserInterface
     /**
      * @param string $confirmationToken
      */
-    public function setConfirmationToken(string $confirmationToken): void
+    public function setConfirmationToken($confirmationToken): void
     {
         $this->confirmationToken = $confirmationToken;
     }
@@ -448,7 +449,7 @@ class User implements UserInterface
     /**
      * @param string $companyName
      */
-    public function setCompanyName(string $companyName): void
+    public function setCompanyName($companyName): void
     {
         $this->companyName = $companyName;
     }
@@ -464,7 +465,7 @@ class User implements UserInterface
     /**
      * @param string $lastName
      */
-    public function setLastName(string $lastName): void
+    public function setLastName($lastName): void
     {
         $this->lastName = $lastName;
     }
@@ -480,7 +481,7 @@ class User implements UserInterface
     /**
      * @param string $firstName
      */
-    public function setFirstName(string $firstName): void
+    public function setFirstName($firstName): void
     {
         $this->firstName = $firstName;
     }
@@ -496,7 +497,7 @@ class User implements UserInterface
     /**
      * @param string $lang
      */
-    public function setLang(string $lang): void
+    public function setLang($lang): void
     {
         $this->lang = $lang;
     }
@@ -554,7 +555,7 @@ class User implements UserInterface
      * @param string $mobileNumber
      * @return User
      */
-    public function setMobileNumber(string $mobileNumber): self
+    public function setMobileNumber($mobileNumber): self
     {
         $this->mobileNumber = $mobileNumber;
         return $this;
@@ -572,7 +573,7 @@ class User implements UserInterface
      * @param string $jobTitle
      * @return User
      */
-    public function setJobTitle(string $jobTitle): self
+    public function setJobTitle($jobTitle): self
     {
         $this->jobTitle = $jobTitle;
         return $this;
@@ -661,7 +662,7 @@ class User implements UserInterface
     /**
      * @param string $nickname
      */
-    public function setNickname(string $nickname): void
+    public function setNickname($nickname): void
     {
         $this->nickname = $nickname;
     }

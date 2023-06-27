@@ -680,6 +680,7 @@
                                                     {{ quoteRequestLine.quantity }}
                                                 {% endif %}
                                             </td>
+                                            {% if quoteRequest.catalog != 'MATERIAL' %}
                                             <td>
                                                 {% if quoteRequestLine.frequency != 'REGULAR' %}
                                                     {% if quoteRequestLine.frequency %}
@@ -693,6 +694,7 @@
                                                     {% endif %}
                                                 {% endif %}
                                             </td>
+                                            {% endif %}
                                             <td class="line-number">
                                                 {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
                                                     {# RESTE NULL #}

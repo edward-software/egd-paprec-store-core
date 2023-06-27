@@ -49,7 +49,7 @@
                                         <option value="#">Sélectionner une gamme</option>
                                         {% if ranges and ranges|length > 0 %}
                                             {% for range in ranges %}
-                                                {% if range.rangeLabels and range.rangeLabels|length %}
+                                                {% if range.rangeLabels and range.rangeLabels|length  and range.catalog == selectedCatalog %}
                                                     <option value="{{ range.id }}"{% if selectedRangeId and selectedRangeId == range.id %} selected{% endif %}>{{ range.rangeLabels[0].name }}</option>
                                                 {% endif %}
                                             {% endfor %}

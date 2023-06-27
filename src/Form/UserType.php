@@ -49,9 +49,7 @@ class UserType extends AbstractType
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
             ->add('nickname', TextType::class)
-            ->add('email', EmailType::class, array(
-                "required" => true
-            ))
+            ->add('email', EmailType::class)
             ->add('lang', ChoiceType::class, array(
                 'choices' => $options['languages']
             ))

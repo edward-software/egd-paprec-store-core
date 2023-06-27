@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -53,9 +54,7 @@ class QuoteRequestType extends AbstractType
                     return 'General.' . $choiceValue;
                 },
                 'data' => $options['civility'],
-                'expanded' => true,
-                'invalid_message' => 'Public.Contact.CivilityCodeError',
-                'required' => true
+                'expanded' => true
             ))
             ->add('access', ChoiceType::class, array(
                 "choices" => $options['access'],
@@ -80,22 +79,10 @@ class QuoteRequestType extends AbstractType
 //            ->add('ponctualDate', DateType::class, array(
 //                'widget' => 'choice'
 //            ))
-            ->add('lastName', TextType::class, [
-                'invalid_message' => 'Public.Contact.LastNameCodeError',
-                'required' => true
-            ])
-            ->add('firstName', TextType::class, [
-                'invalid_message' => 'Public.Contact.FirstNameCodeError',
-                'required' => true
-            ])
-            ->add('email', TextType::class, [
-                'invalid_message' => 'Public.Contact.EmailCodeError',
-                'required' => true
-            ])
-            ->add('phone', TextType::class, [
-                'invalid_message' => 'Public.Contact.PhoneCodeError',
-                'required' => true
-            ])
+            ->add('lastName', TextType::class)
+            ->add('firstName', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('phone', TextType::class)
             ->add('isMultisite', ChoiceType::class, array(
                 "choices" => array(0, 1),
                 "choice_label" => function ($choiceValue, $key, $value) {

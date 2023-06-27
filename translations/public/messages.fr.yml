@@ -101,6 +101,8 @@ Public:
 
     Contact:
         BreadcrumbTitle: Coordonnées du client
+        ContactInfoTitle: Coordonnées du contact
+        AddressTitle: Localisation de la prestation
         Title: VOUS Y ÊTES PRESQUE !
         SubTitle: Afin de vous adresser votre devis, merci de préciser les éléments suivants.
         ThirdTitle: Les champs marqués d'une astérisque (*) sont obligatoires.
@@ -114,7 +116,7 @@ Public:
         RecallDate: Heure souhaitée pour le rappel
         CoworkerNumber: Effectif
         IsMultisite: Prestation multi-sites
-        isMultisiteInfo: Votre demande de prestation multisite a bien été pris en compte. Vous serez contacté très prochainement par le service commercial.
+        isMultisiteInfo: À la validation du formulaire vous serez contacté très prochainement par le service commercial.
         IsSameSignatory:  Signataire du contrat identique au contact
         IsSameAddress:  Adresse de facturation identique
         Access: Accès
