@@ -557,10 +557,10 @@ class QuoteRequestController extends AbstractController
                 $quantity = $quoteRequestLine->getQuantity();
 
                 /**
-                 * PU Location du Produit * Coefficient Location du CP de l’adresse à collecter
+                 * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
                  */
                 if ($quoteRequestLine->getRentalUnitPrice() > 0) {
-                    $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
                 }
 
                 /**
