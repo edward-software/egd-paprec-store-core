@@ -79,10 +79,18 @@ class QuoteRequestType extends AbstractType
 //            ->add('ponctualDate', DateType::class, array(
 //                'widget' => 'choice'
 //            ))
-            ->add('lastName', TextType::class)
-            ->add('firstName', TextType::class)
-            ->add('email', TextType::class)
-            ->add('phone', TextType::class)
+            ->add('lastName', TextType::class, [
+                'required' => true
+            ])
+            ->add('firstName', TextType::class, [
+                'required' => true
+            ])
+            ->add('email', TextType::class, [
+                'required' => true
+            ])
+            ->add('phone', TextType::class, [
+                'required' => true
+            ])
             ->add('isMultisite', ChoiceType::class, array(
                 "choices" => array(0, 1),
                 "choice_label" => function ($choiceValue, $key, $value) {
@@ -124,7 +132,8 @@ class QuoteRequestType extends AbstractType
                     $choiceValue = strtoupper($choiceValue);
                     return 'Commercial.QuoteRequest.Catalog.' . $choiceValue;
                 },
-                'expanded' => true
+                'expanded' => true,
+                'required' => true
             ))
             ->add('reference')
             ->add('customerId')

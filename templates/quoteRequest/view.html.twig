@@ -639,7 +639,9 @@
                                         <th>{{ 'Commercial.QuoteRequestLine.ProductName'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.ProductBillingUnit'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
+                                        {% if quoteRequest.catalog != 'MATERIAL' %}
                                         <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
+                                        {% endif %}
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
