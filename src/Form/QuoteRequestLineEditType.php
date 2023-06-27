@@ -46,7 +46,7 @@ class QuoteRequestLineEditType extends AbstractType
                         return 'Commercial.QuoteRequest.' . $choiceValue;
                     },
                     'expanded' => true,
-                    'disabled' => 'disabled'
+//                    'disabled' => 'disabled'
                 ))
                 ->add('frequencyTimes', ChoiceType::class, array(
                     'choices' => array(
