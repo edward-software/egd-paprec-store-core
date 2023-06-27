@@ -54,6 +54,7 @@ class QuoteRequestType extends AbstractType
                 },
                 'data' => $options['civility'],
                 'expanded' => true,
+                'invalid_message' => 'Public.Contact.CivilityCodeError',
                 'required' => true
             ))
             ->add('access', ChoiceType::class, array(
@@ -80,15 +81,19 @@ class QuoteRequestType extends AbstractType
 //                'widget' => 'choice'
 //            ))
             ->add('lastName', TextType::class, [
+                'invalid_message' => 'Public.Contact.LastNameCodeError',
                 'required' => true
             ])
             ->add('firstName', TextType::class, [
+                'invalid_message' => 'Public.Contact.FirstNameCodeError',
                 'required' => true
             ])
             ->add('email', TextType::class, [
+                'invalid_message' => 'Public.Contact.EmailCodeError',
                 'required' => true
             ])
             ->add('phone', TextType::class, [
+                'invalid_message' => 'Public.Contact.PhoneCodeError',
                 'required' => true
             ])
             ->add('isMultisite', ChoiceType::class, array(
@@ -132,8 +137,7 @@ class QuoteRequestType extends AbstractType
                     $choiceValue = strtoupper($choiceValue);
                     return 'Commercial.QuoteRequest.Catalog.' . $choiceValue;
                 },
-                'expanded' => true,
-                'required' => true
+                'expanded' => true
             ))
             ->add('reference')
             ->add('customerId')
