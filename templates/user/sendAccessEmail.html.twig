@@ -195,7 +195,7 @@
                                         </tr>
                                         <tr>
                                             <td align="left" style="padding: 0 0 0 0; font-size: 14px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color: #aaaaaa; font-style: italic;" class="padding-copy">
-                                                Mot de passe : {{ password }}
+                                                Mot de passe : {{ password|replace({' ': ''}) }}
                                             </td>
                                         </tr>
                                         <tr>

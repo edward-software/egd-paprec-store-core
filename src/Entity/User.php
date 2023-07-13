@@ -18,12 +18,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
  *     fields={"email"},
- *     message="This email is already used",
+ *     message="Cet email est déjà utilisé",
  *     payload="emailAlreadyUsed"
  * )
  * @UniqueEntity(
  *     fields={"username"},
- *     message="This username is already used",
+ *     message="Ce nom d'utilisateur est déjà utilisé",
  *     payload="usernameAlreadyUsed"
  * )
  *
@@ -52,7 +52,6 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, unique=true)
-     *
      * @Assert\NotBlank()
      */
     private $email;
@@ -74,7 +73,8 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string")
+     * @ORM\Column(name="password", type="string", nullable=false)
+     * @Assert\NotBlank()
      */
     private $password;
 
@@ -172,7 +172,6 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="phoneNumber", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $phoneNumber;
 
@@ -180,7 +179,6 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="mobileNumber", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $mobileNumber;
 
@@ -265,17 +263,20 @@ class User implements UserInterface
     /**
      * @return string|null
      */
-    public function getUsername(): ?string
+    public function getUsername()
     {
         return $this->username;
     }
 
     /**
      * @param string $username
+     * @return User
      */
-    public function setUsername($username): void
+    public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
     }
 
     /**
@@ -289,9 +290,11 @@ class User implements UserInterface
     /**
      * @param string $email
      */
-    public function setEmail($email): void
+    public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
@@ -305,9 +308,11 @@ class User implements UserInterface
     /**
      * @param bool $enabled
      */
-    public function setEnabled(bool $enabled): void
+    public function setEnabled(bool $enabled)
     {
         $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
@@ -321,9 +326,11 @@ class User implements UserInterface
     /**
      * @param string $password
      */
-    public function setPassword($password): void
+    public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -337,9 +344,11 @@ class User implements UserInterface
     /**
      * @param string $lastLogin
      */
-    public function setLastLogin($lastLogin): void
+    public function setLastLogin($lastLogin)
     {
         $this->lastLogin = $lastLogin;
+
+        return $this;
     }
 
     /**
@@ -353,9 +362,11 @@ class User implements UserInterface
     /**
      * @param string $confirmationToken
      */
-    public function setConfirmationToken($confirmationToken): void
+    public function setConfirmationToken($confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
+
+        return $this;
     }
 
     /**
@@ -369,9 +380,11 @@ class User implements UserInterface
     /**
      * @param DateTime $passwordRequestedAt
      */
-    public function setPasswordRequestedAt(DateTime $passwordRequestedAt): void
+    public function setPasswordRequestedAt(DateTime $passwordRequestedAt)
     {
         $this->passwordRequestedAt = $passwordRequestedAt;
+
+        return $this;
     }
 
     /**
@@ -385,9 +398,11 @@ class User implements UserInterface
     /**
      * @param array $roles
      */
-    public function setRoles(array $roles): void
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -401,9 +416,11 @@ class User implements UserInterface
     /**
      * @param DateTime $dateCreation
      */
-    public function setDateCreation(DateTime $dateCreation): void
+    public function setDateCreation(DateTime $dateCreation)
     {
         $this->dateCreation = $dateCreation;
+
+        return $this;
     }
 
     /**
@@ -417,9 +434,11 @@ class User implements UserInterface
     /**
      * @param DateTime $dateUpdate
      */
-    public function setDateUpdate(DateTime $dateUpdate): void
+    public function setDateUpdate(DateTime $dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
+
+        return $this;
     }
 
     /**
@@ -433,9 +452,11 @@ class User implements UserInterface
     /**
      * @param DateTime $deleted
      */
-    public function setDeleted(DateTime $deleted): void
+    public function setDeleted(DateTime $deleted)
     {
         $this->deleted = $deleted;
+
+        return $this;
     }
 
     /**
@@ -449,9 +470,11 @@ class User implements UserInterface
     /**
      * @param string $companyName
      */
-    public function setCompanyName($companyName): void
+    public function setCompanyName($companyName)
     {
         $this->companyName = $companyName;
+
+        return $this;
     }
 
     /**
@@ -465,9 +488,11 @@ class User implements UserInterface
     /**
      * @param string $lastName
      */
-    public function setLastName($lastName): void
+    public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     /**
@@ -481,9 +506,11 @@ class User implements UserInterface
     /**
      * @param string $firstName
      */
-    public function setFirstName($firstName): void
+    public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
     /**
@@ -497,9 +524,11 @@ class User implements UserInterface
     /**
      * @param string $lang
      */
-    public function setLang($lang): void
+    public function setLang($lang)
     {
         $this->lang = $lang;
+
+        return $this;
     }
 
     /**
@@ -662,9 +691,11 @@ class User implements UserInterface
     /**
      * @param string $nickname
      */
-    public function setNickname($nickname): void
+    public function setNickname($nickname)
     {
         $this->nickname = $nickname;
+
+        return $this;
     }
 
     /**

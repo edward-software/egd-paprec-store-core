@@ -83,6 +83,7 @@ class QuoteRequestController extends AbstractController
         $periodStartDate = $request->get('periodStartDate');
         $periodEndDate = $request->get('periodEndDate');
         $selectedStatus = $request->get('selectedStatus');
+        $selectedCatalog = $request->get('selectedCatalog');
         $userIds = $request->get('userIds');
 
         $status = array();
@@ -95,6 +96,7 @@ class QuoteRequestController extends AbstractController
             'periodStartDate' => $periodStartDate,
             'periodEndDate' => $periodEndDate,
             'selectedStatus' => $selectedStatus,
+            'selectedCatalog' => $selectedCatalog,
             'userIds' => $userIds
         ));
     }
@@ -509,13 +511,13 @@ class QuoteRequestController extends AbstractController
             }
 
             /**
-             * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
+             * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses commerciaux
              */
             if ($isManager && $quoteRequest->getUserInCharge() && ($quoteRequest->getUserInCharge()->getId() === $systemUser->getId() || $quoteRequest->getUserInCharge()->getManager()->getId() === $systemUser->getId())) {
                 $returnError = false;
             }
             /**
-             * Si l'utilisateur est commercial, o,n récupère uniquement les quoteRequests qui lui sont associés
+             * Si l'utilisateur est commercial, on récupère uniquement les quoteRequests qui lui sont associés
              */
             if ($isCommercial && $quoteRequest->getUserInCharge() && $quoteRequest->getUserInCharge()->getId() === $systemUser->getId()) {
                 $returnError = false;
@@ -1218,7 +1220,7 @@ class QuoteRequestController extends AbstractController
     {
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
-        if ($quoteRequest->getPostalCode()) {
+//        if ($quoteRequest->getPostalCode()) {
             $sendContract = $this->quoteRequestManager->sendGeneratedContractEmail($quoteRequest);
             if ($sendContract) {
 
@@ -1229,7 +1231,7 @@ class QuoteRequestController extends AbstractController
             } else {
                 $this->get('session')->getFlashBag()->add('error', 'generatedContractNotSent');
             }
-        }
+//        }
 
         return $this->redirectToRoute('paprec_quote_request_view', array(
             'id' => $quoteRequest->getId()

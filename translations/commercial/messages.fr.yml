@@ -95,7 +95,7 @@ Commercial:
         BusinessName: Nom société
         TotalAmount: Montant total ajusté (hors matériel) (€)
         TotalAmountWithoutDiscount: Prix Total Standard (hors matériel) (€)
-        QuoteStatus: Status devis
+        QuoteStatus: Statut devis
         ServiceEndDate: Date de fin de la prestation
         Date-crea: Date créa.
         Civility: Civilité
@@ -223,7 +223,7 @@ Commercial:
         QUOTE_SENT: Offre envoyée
         CONTRACT_SENT: Contrat envoyé
         CONTRACT_SIGNED: Contrat signé
-        CONTRACT_LOST: Contact non gagné
+        CONTRACT_LOST: Contrat non gagné
 
     File:
         AddTitle: Ajout d'un fichier joint
@@ -283,7 +283,7 @@ Commercial:
         ProductCode: Code opération
         ProductRange: Code déchet
         ProductName: Produit
-        ProductBillingUnit: Unité de facturation du produit
+        ProductBillingUnit: Unité de factu.
         UnitPrice: Prix unitaire
         Quantity: Quantité
         Comment: Commentaire
@@ -410,6 +410,9 @@ Commercial:
         Message1: Voici les feuilles de missions du devis n° %number%.
         Regards: Bien cordialement
         Partner: Votre partenaire Easy Recyclage
+        Hello: Bonjour !
+        New-sheet: Voici une nouvelle feuille de mission pour le client %businessName%.
+        Regards-2: Bonne journée
 
     NewContractEmail:
         FileName: Contrat Easy Recyclage
@@ -425,6 +428,8 @@ Commercial:
             TotalAmount: CA
             Last-follow-up: Date suivi
             Last-update: Dernier suivi
+            Commercial: Commercial
+            Customer: Client
         Agency:
             BusinessName: Raison sociale
         FollowUp:

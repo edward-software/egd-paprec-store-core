@@ -58,9 +58,8 @@ class UserType extends AbstractType
             ->add('jobTitle')
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'options' => ['attr' => ['class' => 'password-field']],
-                'required' => false,
                 'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
             ])
@@ -69,7 +68,8 @@ class UserType extends AbstractType
                     'No' => 0,
                     'Yes' => 1
                 ),
-                "expanded" => true
+                "expanded" => true,
+                'empty_data' => '0'
             ))
             ->add('roles', ChoiceType::class, array(
                 "choices" => $options['roles'],
@@ -121,9 +121,9 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => User::class,
-            'validation_groups' => function (FormInterface $form) {
-                return ['default', 'password'];
-            },
+//            'validation_groups' => function (FormInterface $form) {
+//                return ['default', 'password'];
+//            },
             'roles' => null,
             'civility' => null,
             'languages' => null

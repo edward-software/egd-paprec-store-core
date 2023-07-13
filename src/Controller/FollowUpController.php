@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\AgencyFile;
 use App\Entity\FollowUp;
 use App\Entity\FollowUpFile;
 use App\Entity\QuoteRequestFile;
@@ -19,11 +20,13 @@ use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -470,5 +473,31 @@ class FollowUpController extends AbstractController
         return $this->redirectToRoute('paprec_follow_up_view', array(
             'id' => $followUp->getId()
         ));
+    }
+
+
+
+    /**
+     * @Route("/downloadFollowUpFile/{followUpFileId}", name="paprec_follow_up_download_follow_up_file")
+     * @ParamConverter("followUpFile", options={"id" = "followUpFileId"})
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
+    public function downloadFollowUpFileFileAction(Request $request, FollowUpFile $followUpFile)
+    {
+        $followUpFileFolder = $this->getParameter('paprec.follow_up_file.directory');
+        $followUpFilePath = $followUpFileFolder . '/' . $followUpFile->getSystemName();
+        if (file_exists($followUpFilePath)) {
+            $response = new BinaryFileResponse($followUpFilePath);
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $followUpFile->getOriginalFileName());
+
+            return $response;
+        }
+
+        return $this->redirectToRoute('paprec_follow_up_view', array(
+            'id' => $followUpFile->getFollowUp()->getId()
+        ));
+
     }
 }

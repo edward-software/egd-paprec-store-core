@@ -62,6 +62,8 @@
                         <thead>
                         <tr>
                             <th>{{ 'Commercial.Dashboard.QuoteRequest.Number'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.Commercial'|trans }}</th>
+                            <th>{{ 'Commercial.Dashboard.QuoteRequest.Customer'|trans }}</th>
                             <th>{{ 'Commercial.Dashboard.Agency.BusinessName'|trans }}</th>
                             <th>{{ 'Commercial.Dashboard.QuoteRequest.Date-creation'|trans }}</th>
                             <th>{{ 'Commercial.Dashboard.QuoteRequest.TotalAmount'|trans }}</th>
@@ -89,6 +91,8 @@
                 order: [[3, "desc"]],
                 columns: [
                     {"data": "number", "className": "column-number"},
+                    {"data": "userInCharge"},
+                    {"data": "customer"},
                     {"data": "businessName"},
                     {"data": "dateCreation"},
                     {"data": "totalAmount", "className": "text-right"},

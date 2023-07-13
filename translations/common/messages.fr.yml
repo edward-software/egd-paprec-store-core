@@ -99,7 +99,7 @@ General:
         REGULAR: Régulier
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
-        UNKNOWN: Je ne sais pas
+        UNKNOWN: Sur appel
 
     TransportType:
         CBR_REG: CBR régulier

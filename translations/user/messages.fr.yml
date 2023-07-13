@@ -44,6 +44,7 @@ User:
             accessHasBeenSent: Les accès ont été correctement envoyés
         Error:
             accessCannotBeSent: Les accès n'ont pu être envoyés
+            userIsNotEnabled: L'utilisateur doit être activé avant de pouvoir lui envoyer ses accès
 
 'Password': Mot de passe
 'Repeat Password': Confirmation du mot de passe

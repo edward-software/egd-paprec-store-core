@@ -69,15 +69,13 @@
                                 Contrat
                             </button>
                             <div class="dropdown-menu">
-                                {% if quoteRequest.postalCode %}
-                                    <a id="downloadGeneratedQuoteButton"
-                                       href="{{ path("paprec_quote_request_download", {id: quoteRequest.id}) }}"
-                                       class="dropdown-item"
-                                       data-toggle="tooltip" data-placement="top"
-                                       title="{{ 'Commercial.QuoteRequest.Download-quote-tooltip'|trans }}"
-                                    ><i class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
-                                    </a>
-                                {% endif %}
+                                <a id="downloadGeneratedQuoteButton"
+                                   href="{{ path("paprec_quote_request_download", {id: quoteRequest.id}) }}"
+                                   class="dropdown-item"
+                                   data-toggle="tooltip" data-placement="top"
+                                   title="{{ 'Commercial.QuoteRequest.Download-quote-tooltip'|trans }}"
+                                ><i class="fa fa-xs fa-download"></i> {{ 'Commercial.QuoteRequest.Download-quote'|trans }}
+                                </a>
                                 <a href="javascript:void(0);"
                                    class="dropdown-item send-generated-contract-button {% if not isAbleToSendContractEmail %}btn-disabled{% endif %}"
                                    data-toggle="tooltip" data-placement="top"
@@ -111,13 +109,13 @@
                                                class="dropdown-item">
                                                 <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Edit'| trans({}, "messages", app.request.locale) }}
                                             </a>
-                                        {% endif %}
-                                        {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
-                                            <a id="commmecialQuoteRequestMissionSheetValidateButton"
-                                               href="javascript:void(0);"
-                                               class="dropdown-item">
-                                                <i class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
-                                            </a>
+                                            {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
+                                                <a id="commmecialQuoteRequestMissionSheetValidateButton"
+                                                   href="javascript:void(0);"
+                                                   class="dropdown-item">
+                                                    <i class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
+                                                </a>
+                                            {% endif %}
                                         {% endif %}
                                         {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
                                             <a href="{{ path("paprec_quote_request_mission_sheet_send", {id: quoteRequest.id}) }}"
@@ -640,7 +638,7 @@
                                         <th>{{ 'Commercial.QuoteRequestLine.ProductBillingUnit'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</th>
                                         {% if quoteRequest.catalog != 'MATERIAL' %}
-                                        <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
+                                            <th>{{ 'Commercial.QuoteRequestLine.PassingFrequency'|trans }}</th>
                                         {% endif %}
                                         <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
                                         <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
@@ -681,19 +679,19 @@
                                                 {% endif %}
                                             </td>
                                             {% if quoteRequest.catalog != 'MATERIAL' %}
-                                            <td>
-                                                {% if quoteRequestLine.frequency != 'REGULAR' %}
-                                                    {% if quoteRequestLine.frequency %}
-                                                        {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
+                                                <td>
+                                                    {% if quoteRequestLine.frequency != 'REGULAR' %}
+                                                        {% if quoteRequestLine.frequency %}
+                                                            {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if quoteRequestLine.frequencyInterval is not empty %}
+                                                            {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
+                                                            {{ quoteRequestLine.frequencyTimes }}
+                                                            x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
+                                                        {% endif %}
                                                     {% endif %}
-                                                {% else %}
-                                                    {% if quoteRequestLine.frequencyInterval is not empty %}
-                                                        {% set frequencyIntervalName = 'General.Frequency.' ~ quoteRequestLine.frequencyInterval %}
-                                                        {{ quoteRequestLine.frequencyTimes }}
-                                                        x/ {{ frequencyIntervalName|trans({}, "messages", app.request.locale) }}
-                                                    {% endif %}
-                                                {% endif %}
-                                            </td>
+                                                </td>
                                             {% endif %}
                                             <td class="line-number">
                                                 {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}

@@ -127,6 +127,11 @@ class DashboardController extends AbstractController
 
                     } elseif (in_array('ROLE_MANAGER_COMMERCIAL', $roles)) {
 
+                        if (!array_key_exists($user->getId(), $usersByManager)) {
+                            $usersByManager[$user->getId()] = [];
+                        }
+                        $usersByManager[$user->getId()][] = $user;
+
                     } elseif (in_array('ROLE_COMMERCIAL', $roles) || in_array('ROLE_COMMERCIAL_MULTISITES', $roles)) {
                         if ($user->getManager()) {
                             if (!array_key_exists($user->getManager()->getId(), $usersByManager)) {
@@ -180,20 +185,6 @@ class DashboardController extends AbstractController
 
                     }
                 }
-
-
-//                foreach ($users as $u) {
-//                    $userIds[] = $u->getId();
-//                    $datas[$count]['user_id'] = $u->getId();
-//                    $datas[$count]['name'] = $u->getFirstName() . ' ' . $u->getLastName();
-//                    foreach ($lines as $line) {
-//                        $datas[$count][$line] = [];
-//                        foreach ($columns as $column) {
-//                            $datas[$count][$line][$column] = 0;
-//                        }
-//                    }
-//                    $count++;
-//                }
             }
 
         } elseif ($this->isGranted('ROLE_MANAGER_COMMERCIAL')) {
@@ -212,7 +203,10 @@ class DashboardController extends AbstractController
 
             $queryBuilder->select(['u'])
                 ->where('u.deleted IS NULL')
-                ->andWhere('u.manager = :userId')
+                ->andWhere($queryBuilder->expr()->orx(
+                    ('u.manager = :userId'),
+                    ('u.id = :userId')
+                ))
                 ->setParameter('userId', $user->getId());
 
             $users = $queryBuilder->getQuery()->getResult();
@@ -235,6 +229,7 @@ class DashboardController extends AbstractController
 
 
                     $datas[$count]['user_id'] = $u->getId();
+                    $datas[$count]['team_user_ids'] = $u->getId();
                     $datas[$count]['name'] = $u->getFirstName() . ' ' . $u->getLastName();
                     foreach ($lines as $line) {
                         $datas[$count][$line] = [];
@@ -310,7 +305,7 @@ class DashboardController extends AbstractController
          * Entre 4 et 12 mois
          */
         $startDateM12 = new \DateTime();
-        $startDateM12 = $startDateM12->sub(new \DateInterval('P12M'));
+        $startDateM12 = $startDateM12->sub(new \DateInterval('P11M'));
         $startDateM12 = $startDateM12->modify('first day of this month');
         $startDateM12 = $startDateM12->format('Y-m-d');
         $endDateM4 = new \DateTime();
@@ -340,16 +335,19 @@ class DashboardController extends AbstractController
 
                 $userInChargeId = $quoteRequest->getUserInCharge();
 
-
                 if ($userInChargeId) {
                     $userInChargeId = $userInChargeId->getId();
                     $key = array_search($userInChargeId, array_column($datas, 'user_id'));
                     $keysTeam = null;
-                    if (array_key_exists('teams', $datas[$key])) {
-                        $keysTeam = $datas[$key]['teams'];
-                    }
 
-                    if ($key != false && $key >= 0) {
+                    if (
+                        (($this->isGranted('ROLE_COMMERCIAL') || $this->isGranted('ROLE_COMMERCIAL_MULTISITES')) && $key === 0) ||
+                        ($key != false && $key >= 0)
+                    ) {
+
+                        if (array_key_exists('teams', $datas[$key])) {
+                            $keysTeam = $datas[$key]['teams'];
+                        }
 
                         $totalAmount = $this->numberManager->denormalize($quoteRequest->getTotalAmount());
 
@@ -536,9 +534,7 @@ class DashboardController extends AbstractController
                         }
 
                     }
-
                 }
-
             }
         }
 
@@ -572,6 +568,7 @@ class DashboardController extends AbstractController
      */
     public function exportAction(Request $request)
     {
+        $catalog = $request->get('selectedCatalog');
         $status = $request->get('selectedStatus');
         $periodStartDate = $request->get('periodStartDate');
         $periodEndDate = $request->get('periodEndDate');
@@ -590,6 +587,12 @@ class DashboardController extends AbstractController
             $queryBuilder
                 ->andWhere('q.quoteStatus IN (:status)')
                 ->setParameter('status', $status);
+        }
+
+        if ($catalog) {
+            $queryBuilder
+                ->andWhere('q.catalog = :catalog')
+                ->setParameter('catalog', $catalog);
         }
 
         if ($periodStartDate && $periodEndDate) {
@@ -884,6 +887,16 @@ class DashboardController extends AbstractController
             'id' => 'q.number',
             'method' => array('getNumber')
         );
+        $cols['userInCharge'] = array(
+            'label' => 'userInCharge',
+            'id' => 'q.userInCharge',
+            'method' => array('getUserInCharge')
+        );
+        $cols['customer'] = array(
+            'label' => 'customer',
+            'id' => 'q.firstName',
+            'method' => array('getFirstName')
+        );
         $cols['businessName'] = array(
             'label' => 'businessName',
             'id' => 'q.businessName',
@@ -919,6 +932,11 @@ class DashboardController extends AbstractController
             'label' => 'followUps',
             'id' => 'q.followUps',
             'method' => [['getFollowUps', 0]]
+        );
+        $cols['customerLastName'] = array(
+            'label' => 'customerLastName',
+            'id' => 'q.lastName',
+            'method' => array('getLastName')
         );
         $cols['id'] = array('label' => 'id', 'id' => 'q.id', 'method' => array('getId'));
 
@@ -989,6 +1007,12 @@ class DashboardController extends AbstractController
 
             $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
                 $request->getLocale());
+
+            if($line['userInCharge']){
+                $line['userInCharge'] = $line['userInCharge']->getFirstName() . ' ' . $line['userInCharge']->getLastName();
+            }
+
+            $line['customer'] .= ' ' . $line['customerLastName'];
 
             if ($line['followUps']) {
                 $line['followUpDate'] = null;

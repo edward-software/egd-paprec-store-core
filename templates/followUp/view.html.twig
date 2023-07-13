@@ -152,6 +152,10 @@
                       </td>
 
                       <td class="text-center">
+                        <a href="{{ path('paprec_follow_up_download_follow_up_file', {followUpFileId: followUpFile.id}) }}"
+                           class="btn btn-sm btn-info">
+                          <i class="fa fa-xs fa-download"></i>
+                        </a>
                         <a href="#"
                            class="btn btn-sm btn-danger btn-sm commercialFollowUpFileRemoveButton"
                            data-id="{{ followUpFile.id }}">

@@ -104,7 +104,7 @@
 
             $('#quoteRequestsListDatatable').EgdDatatable({
                 {% autoescape false %}
-                url: "{{ path('paprec_quoteRequest_loadList', {userIds: userIds, periodStartDate: periodStartDate, periodEndDate: periodEndDate, selectedStatus: selectedStatus}) }}",
+                url: "{{ path('paprec_quoteRequest_loadList', {userIds: userIds, periodStartDate: periodStartDate, periodEndDate: periodEndDate, selectedStatus: selectedStatus, selectedCatalog: selectedCatalog}) }}",
                 {% endautoescape %}
                 order: [[7, "desc"]],
                 columns: [
