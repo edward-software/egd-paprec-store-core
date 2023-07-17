@@ -433,25 +433,25 @@ class ProductController extends AbstractController
             $capacity = $form1->get('capacity')->getData();
             $dimensions = $form1->get('dimensions')->getData();
 
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
+//            $errors = [];
+//            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+//                $errors['capacity'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+//                $errors['dimensions'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//
+//            if ($errors && count($errors)) {
+//                foreach ($errors as $key => $error) {
+//                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+//                }
+//            }
 
             if ($form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
 
@@ -540,25 +540,25 @@ class ProductController extends AbstractController
             $capacity = $form1->get('capacity')->getData();
             $dimensions = $form1->get('dimensions')->getData();
 
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
+//            $errors = [];
+//            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+//                $errors['capacity'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+//                $errors['dimensions'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//
+//            if ($errors && count($errors)) {
+//                foreach ($errors as $key => $error) {
+//                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+//                }
+//            }
             if ($form1->isValid() && $form2->isSubmitted() && $form2->isValid()) {
 
                 $product = $form1->getData();
@@ -689,25 +689,25 @@ class ProductController extends AbstractController
             $capacity = $form1->get('capacity')->getData();
             $dimensions = $form1->get('dimensions')->getData();
 
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
+//            $errors = [];
+//            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+//                $errors['capacity'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+//                $errors['dimensions'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//
+//            if ($errors && count($errors)) {
+//                foreach ($errors as $key => $error) {
+//                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+//                }
+//            }
             if ($form1->isValid() && $form2->isSubmitted()) {
 
                 $product = $form1->getData();
@@ -806,25 +806,25 @@ class ProductController extends AbstractController
             $capacity = $form1->get('capacity')->getData();
             $dimensions = $form1->get('dimensions')->getData();
 
-            $errors = [];
-            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
-                $errors['capacity'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
-                $errors['dimensions'] = array(
-                    'code' => 400,
-                    'message' => 'Cette valeur ne doit pas être vide.'
-                );
-            }
-
-            if ($errors && count($errors)) {
-                foreach ($errors as $key => $error) {
-                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
-                }
-            }
+//            $errors = [];
+//            if (!$capacity && ($hideCapacity === null || $hideCapacity === 0)) {
+//                $errors['capacity'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//            if (!$dimensions && ($hideDimension === null || $hideDimension === 0)) {
+//                $errors['dimensions'] = array(
+//                    'code' => 400,
+//                    'message' => 'Cette valeur ne doit pas être vide.'
+//                );
+//            }
+//
+//            if ($errors && count($errors)) {
+//                foreach ($errors as $key => $error) {
+//                    $form1->get($key)->addError(new FormError('Cette valeur ne doit pas être vide.'));
+//                }
+//            }
             if ($form1->isValid() && $form2->isSubmitted()) {
 
                 $product = $form1->getData();

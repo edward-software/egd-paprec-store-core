@@ -1191,7 +1191,8 @@ class DashboardController extends AbstractController
                     $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'editableRentalUnitPrice'),
                     $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'treatmentCollectPrice'),
                     $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'editableTreatmentUnitPrice'),
-                    $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'totalAmount'),
+//                    $this->productManager->calculatePriceByFieldName($quoteRequestLine, 'totalAmount'),
+                    $this->numberManager->denormalize($quoteRequestLine->getTotalAmount()),
                     '',
                     $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : ''
                 ];

@@ -55,8 +55,7 @@ class Product
     /**
      * @var string
      * L'unité du volume du produit (litre, m²,..)
-     * @ORM\Column(name="capacityUnit", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="capacityUnit", type="string", length=255, nullable=true)
      */
     private $capacityUnit;
 

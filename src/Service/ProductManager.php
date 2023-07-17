@@ -270,10 +270,10 @@ class ProductManager
                         $result = $numberManager->denormalize($quoteRequestLine->getEditableTraceabilityUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
                     }
 
-
                 } elseif ($fieldName === 'treatmentCollectPrice') {
-
-
+                    if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                    }
                 } elseif ($fieldName === 'totalAmount') {
 
                     /**

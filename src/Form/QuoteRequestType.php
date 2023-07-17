@@ -138,10 +138,16 @@ class QuoteRequestType extends AbstractType
                     return $user->getFirstName() . ' ' . $user->getLastName();
                 },
                 'query_builder' => function (UserRepository $er) {
-                    return $er->createQueryBuilder('u')
+
+                    $qb = $er->createQueryBuilder('u');
+
+                    return $qb
                         ->where('u.deleted IS NULL')
                         ->andWhere('u.enabled = 1')
-                        ->andWhere('u.roles LIKE \'%ROLE_COMMERCIAL%\'')
+                        ->andWhere($qb->expr()->orx(
+                            ('u.roles LIKE \'%ROLE_COMMERCIAL%\''),
+                            ('u.roles LIKE \'%ROLE_MANAGER_COMMERCIAL%\'')
+                        ))
                         ->orderBy('u.firstName');
                 }
             ))
