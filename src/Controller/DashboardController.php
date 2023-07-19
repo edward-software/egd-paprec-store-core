@@ -164,7 +164,7 @@ class DashboardController extends AbstractController
                     $datas[$count]['user_id'] = null;
                     $datas[$count]['team_user_ids'] = '';
                     if ($u->getId() === $adminUser->getId()) {
-                        $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName() . ' (les utilisateurs ci-dessous n\'ont pas de manager)';
+                        $datas[$count]['name'] = 'Les utilisateurs ci-dessous n\'ont pas de manager';
                     } else {
                         $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName();
                     }
