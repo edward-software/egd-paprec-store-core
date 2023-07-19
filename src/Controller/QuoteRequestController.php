@@ -553,36 +553,38 @@ class QuoteRequestController extends AbstractController
         $total = 0;
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
+                if ($quoteRequestLine->getCatalog() !== 'MATERIAL') {
 
-                $frequencyIntervalValue = $this->productManager->calculateFrequencyCoeff($quoteRequestLine);
+                    $frequencyIntervalValue = $this->productManager->calculateFrequencyCoeff($quoteRequestLine);
 
-                $quantity = $quoteRequestLine->getQuantity();
+                    $quantity = $quoteRequestLine->getQuantity();
 
-                /**
-                 * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
-                 */
-                if ($quoteRequestLine->getRentalUnitPrice() > 0) {
-                    $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
-                }
+                    /**
+                     * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
+                     */
+                    if ($quoteRequestLine->getRentalUnitPrice() > 0) {
+                        $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    }
 
-                /**
-                 * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
-                 */
-                if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
-                    $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
-                }
-                /**
-                 * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
-                 */
-                if ($quoteRequestLine->getTransportUnitPrice() > 0) {
-                    $total += $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                }
+                    /**
+                     * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                     */
+                    if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
+                        $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                    }
+                    /**
+                     * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
+                     */
+                    if ($quoteRequestLine->getTransportUnitPrice() > 0) {
+                        $total += $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                    }
 
-                /**
-                 * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
-                 */
-                if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
-                    $total += $frequencyIntervalValue * ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                    /**
+                     * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
+                     */
+                    if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
+                        $total += $frequencyIntervalValue * ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                    }
                 }
             }
             $total = $this->numberManager->normalize($total);
@@ -683,7 +685,7 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->setReference($reference);
 
 
-                if(($isManager || $isCommercial || $isCommercialMultiSite) && !$quoteRequest->getUserInCharge()){
+                if (($isManager || $isCommercial || $isCommercialMultiSite) && !$quoteRequest->getUserInCharge()) {
                     $quoteRequest->setUserInCharge($user);
                 }
 
@@ -797,7 +799,7 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
 //                $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
 
-                if(($isManager || $isCommercial || $isCommercialMultiSite) && !$quoteRequest->getUserInCharge()){
+                if (($isManager || $isCommercial || $isCommercialMultiSite) && !$quoteRequest->getUserInCharge()) {
                     $quoteRequest->setUserInCharge($user);
                 }
 
@@ -1233,16 +1235,16 @@ class QuoteRequestController extends AbstractController
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
 //        if ($quoteRequest->getPostalCode()) {
-            $sendContract = $this->quoteRequestManager->sendGeneratedContractEmail($quoteRequest);
-            if ($sendContract) {
+        $sendContract = $this->quoteRequestManager->sendGeneratedContractEmail($quoteRequest);
+        if ($sendContract) {
 
-                $quoteRequest->setQuoteStatus('CONTRACT_SENT');
-                $this->em->flush();
+            $quoteRequest->setQuoteStatus('CONTRACT_SENT');
+            $this->em->flush();
 
-                $this->get('session')->getFlashBag()->add('success', 'generatedContractSent');
-            } else {
-                $this->get('session')->getFlashBag()->add('error', 'generatedContractNotSent');
-            }
+            $this->get('session')->getFlashBag()->add('success', 'generatedContractSent');
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'generatedContractNotSent');
+        }
 //        }
 
         return $this->redirectToRoute('paprec_quote_request_view', array(
