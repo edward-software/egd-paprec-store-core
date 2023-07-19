@@ -557,7 +557,7 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.TotalAmountWithoutDiscount'|trans }}</label>
                                         <label class="col-form-label">
-                                            {% if total > 0 %}
+                                            {% if total >= 0 %}
                                                 {{ total|formatAmount('EUR', app.request.locale) }}
                                             {% endif %}
                                         </label>
