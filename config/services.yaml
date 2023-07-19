@@ -138,6 +138,13 @@ parameters:
     paprec.agency_file.directory: "%kernel.project_dir%/data/agency/file"
     paprec.agency_file.max_file_size: 100000000
 
+    paprec.interest_default_email:
+        GRANDS_ENSEMBLES: '%env(PAPREC_INTEREST_DEFAULT_EMAIL_GRANDS_ENSEMBLES)%'
+        RESEAUX_AGENCES: '%env(PAPREC_INTEREST_DEFAULT_EMAIL_RESEAUX_AGENCES)%'
+        DESTRUCTION_SECURISEE: '%env(PAPREC_INTEREST_DEFAULT_EMAIL_DESTRUCTION_SECURISEE)%'
+        AUDIT_CARACTERISATION: '%env(PAPREC_INTEREST_DEFAULT_EMAIL_AUDIT_CARACTERISATION)%'
+        COLLECTE_IMMEUBLE: '%env(PAPREC_INTEREST_DEFAULT_EMAIL_COLLECTE_IMMEUBLE)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:

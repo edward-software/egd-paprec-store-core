@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\QuoteRequest;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -34,6 +35,19 @@ class ContactRequestPublicType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('interest', ChoiceType::class, [
+                'choices' => array(
+                    'Collecte dans vos bureaux' => 'COLLECTE_BUREAU',
+                    'Collecte en bas d\'immeuble' => 'COLLECTE_IMMEUBLE',
+                    'Réseaux d\'agences' => 'RESEAUX_AGENCES',
+                    'Grands ensembles tertiaires' => 'GRANDS_ENSEMBLES',
+                    'Destruction sécurisée' => 'DESTRUCTION_SECURISEE',
+                    'Animation & sensibilisation' => 'ANIMATION_SENSIBILISATION',
+                    'Audit & caractérisation' => 'AUDIT_CARACTERISATION'
+                ),
+                'data' => $options['interest'],
+                'mapped' => false
+            ])
             ->add('businessName')
             ->add('lastName', TextType::class)
             ->add('firstName', TextType::class)
@@ -64,7 +78,8 @@ class ContactRequestPublicType extends AbstractType
             'validation_groups' => function (FormInterface $form) {
                 return;
             },
-            'locale' => null
+            'locale' => null,
+            'interest' => null
         ));
     }
 

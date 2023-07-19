@@ -106,6 +106,7 @@ Public:
         Title: VOUS Y ÊTES PRESQUE !
         SubTitle: Afin de vous adresser votre devis, merci de préciser les éléments suivants.
         ThirdTitle: Les champs marqués d'une astérisque (*) sont obligatoires.
+        Interest: Centre d'intérêt
         BusinessName: Nom société
         Civility: Civilité
         LastName: Nom

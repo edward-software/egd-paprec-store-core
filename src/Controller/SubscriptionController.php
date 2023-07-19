@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use App\Form\ContactRequestPublicType;
 use App\Form\QuoteRequestPublicType;
 use App\Service\CartManager;
@@ -489,6 +490,7 @@ class SubscriptionController extends AbstractController
      */
     public function contactRequestAction(Request $request, $locale)
     {
+        $interest = strtoupper($request->get('interest'));
         $cartUuid = $request->get('cartUuid');
         $cart = null;
         if ($cartUuid) {
@@ -497,8 +499,11 @@ class SubscriptionController extends AbstractController
 
         $quoteRequest = $this->quoteRequestManager->add(false);
 
+        $defaultEmailByInterest = $this->getParameter('paprec.interest_default_email');
+
         $form = $this->createForm(ContactRequestPublicType::class, $quoteRequest, array(
-            'locale' => $locale
+            'locale' => $locale,
+            'interest' => $interest
         ));
 
         $form->handleRequest($request);
@@ -506,6 +511,7 @@ class SubscriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequest = $form->getData();
             $recallDate = $form->get('recallDate')->getData();
+            $selectedInterest = $form->get('interest')->getData();
 
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('SHOP');
@@ -527,7 +533,21 @@ class SubscriptionController extends AbstractController
             $reference = $this->quoteRequestManager->generateReference($quoteRequest);
             $quoteRequest->setReference($reference);
 
-            $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+
+            if (array_key_exists($selectedInterest, $defaultEmailByInterest)) {
+                $userByEmail = $this->em->getRepository(User::class)->findOneBy([
+                    'email' => $defaultEmailByInterest[$selectedInterest]
+                ]);
+                if ($userByEmail) {
+                    $quoteRequest->setUserInCharge($userByEmail);
+                } else {
+                    $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+                }
+            } else {
+                $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+            }
+
+
             $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
 
             $this->em->persist($quoteRequest);
