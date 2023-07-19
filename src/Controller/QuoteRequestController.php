@@ -553,7 +553,7 @@ class QuoteRequestController extends AbstractController
         $total = 0;
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $quoteRequestLine) {
-                if ($quoteRequestLine->getCatalog() !== 'MATERIAL') {
+                if ($quoteRequestLine->getProduct()->getCatalog() !== 'MATERIAL') {
 
                     $frequencyIntervalValue = $this->productManager->calculateFrequencyCoeff($quoteRequestLine);
 
