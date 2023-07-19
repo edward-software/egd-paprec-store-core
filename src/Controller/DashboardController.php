@@ -149,8 +149,10 @@ class DashboardController extends AbstractController
                                 $usersByManager[$user->getManager()->getId()] = [];
                             }
                             $usersByManager[$user->getManager()->getId()][] = $user;
-                        }else{
-                            $usersByManager[$adminUser->getId()][] = $user;
+                        } else {
+                            if (!in_array('ROLE_MANAGER_COMMERCIAL', $roles)) {
+                                $usersByManager[$adminUser->getId()][] = $user;
+                            }
                         }
                     }
                 }
@@ -161,9 +163,9 @@ class DashboardController extends AbstractController
                     $u = $usersById[$managerId];
                     $datas[$count]['user_id'] = null;
                     $datas[$count]['team_user_ids'] = '';
-                    if($u->getId() === $adminUser->getId()){
+                    if ($u->getId() === $adminUser->getId()) {
                         $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName() . ' (les utilisateurs ci-dessous n\'ont pas de manager)';
-                    }else{
+                    } else {
                         $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName();
                     }
 
