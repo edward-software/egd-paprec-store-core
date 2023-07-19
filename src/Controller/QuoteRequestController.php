@@ -1486,6 +1486,11 @@ class QuoteRequestController extends AbstractController
         $missionSheet->setContractType('CREATION');
         $missionSheet->setMnemonicNumber('');
         $missionSheet->setBillingType('GLOBAL');
+//        /**
+//         * Génération d'un token
+//         */
+//        $token = $this->quoteRequestManager->generateToken();
+//        $missionSheet->setToken($token);
 
         $this->em->persist($missionSheet);
         $this->em->flush();

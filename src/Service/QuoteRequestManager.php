@@ -1321,6 +1321,15 @@ class QuoteRequestManager
                 return false;
             }
 
+//            if (!$quoteRequest->getToken()) {
+//                /**
+//                 * Génération d'un token
+//                 */
+//                $token = $this->generateToken();
+//                $missionSheet->setToken($token);
+//                $this->em->flush();
+//            }
+
             /**
              * Contenu du mail
              */

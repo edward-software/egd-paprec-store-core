@@ -127,6 +127,11 @@ class MissionSheet
      */
     private $status;
 
+//    /**
+//     * @ORM\Column(type="string", length=500)
+//     */
+//    private $token;
+
     /**
      * #################################
      *              SYSTEM USER ASSOCIATION
@@ -547,4 +552,28 @@ class MissionSheet
     {
         return $this->missionSheetLines;
     }
+
+//    /**
+//     * Set token.
+//     *
+//     * @param string $token
+//     *
+//     * @return MissionSheet
+//     */
+//    public function setToken($token)
+//    {
+//        $this->token = $token;
+//
+//        return $this;
+//    }
+//
+//    /**
+//     * Get token.
+//     *
+//     * @return string
+//     */
+//    public function getToken()
+//    {
+//        return $this->token;
+//    }
 }
