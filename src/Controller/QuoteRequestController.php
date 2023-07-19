@@ -615,6 +615,9 @@ class QuoteRequestController extends AbstractController
     public function addAction(Request $request)
     {
         $user = $this->getUser();
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $user->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $user->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $user->getRoles(), true);
 
         $quoteRequest = $this->quoteRequestManager->add(false);
 
@@ -656,18 +659,16 @@ class QuoteRequestController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-
             $quoteRequest = $form->getData();
 
             $postalCodeString = $form->get('postalCodeString')->getData();
             $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
-
-            if ($quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+            if (!$quoteRequest->getIsMultisite() && $quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
                 $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
             }
 
-            if ($quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
+            if (!$quoteRequest->getIsMultisite() && $quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
                 $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
             }
 
@@ -681,6 +682,11 @@ class QuoteRequestController extends AbstractController
                 $reference = $this->quoteRequestManager->generateReference($quoteRequest);
                 $quoteRequest->setReference($reference);
 
+
+                if(($isManager || $isCommercial || $isCommercialMultiSite) && !$quoteRequest->getUserInCharge()){
+                    $quoteRequest->setUserInCharge($user);
+                }
+
                 $this->em->persist($quoteRequest);
                 $this->em->flush();
 
@@ -689,6 +695,8 @@ class QuoteRequestController extends AbstractController
                 ));
 
             }
+
+            dd($form->getErrors());
         }
 
         return $this->render('quoteRequest/add.html.twig', array(
@@ -705,6 +713,9 @@ class QuoteRequestController extends AbstractController
     public function editAction(Request $request, QuoteRequest $quoteRequest)
     {
         $user = $this->getUser();
+        $isManager = in_array('ROLE_MANAGER_COMMERCIAL', $user->getRoles(), true);
+        $isCommercialMultiSite = in_array('ROLE_COMMERCIAL_MULTISITES', $user->getRoles(), true);
+        $isCommercial = in_array('ROLE_COMMERCIAL', $user->getRoles(), true);
 
         $this->quoteRequestManager->isDeleted($quoteRequest, true);
 
@@ -788,6 +799,10 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->setTotalAmount($this->quoteRequestManager->calculateTotal($quoteRequest));
 //                $quoteRequest->setOverallDiscount($this->numberManager->normalize($overallDiscount));
 
+                if(($isManager || $isCommercial || $isCommercialMultiSite) && !$quoteRequest->getUserInCharge()){
+                    $quoteRequest->setUserInCharge($user);
+                }
+
                 $quoteRequest->setDateUpdate(new \DateTime());
                 $quoteRequest->setUserUpdate($user);
 
@@ -799,7 +814,6 @@ class QuoteRequestController extends AbstractController
                     $this->quoteRequestManager->sendNewRequestEmail($quoteRequest);
                     $this->get('session')->getFlashBag()->add('success', 'newUserInChargeWarned');
                 }
-
 
                 $this->em->flush();
 
@@ -1611,7 +1625,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/editMissionSheet/{missionSheetId}", name="paprec_quote_request_mission_sheet_edit")
-     * @Security("has_role('ROLE_MANAGER_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function editMissionSheetAction(Request $request, QuoteRequest $quoteRequest, $missionSheetId)
     {
@@ -1738,7 +1752,7 @@ class QuoteRequestController extends AbstractController
 
     /**
      * @Route("/{id}/validateMissionSheet/{missionSheetId}", name="paprec_quote_request_mission_sheet_validate")
-     * @Security("has_role('ROLE_MANAGER_COMMERCIAL')")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      */
     public function validateMissionSheetAction(Request $request, QuoteRequest $quoteRequest, $missionSheetId)
     {

@@ -96,7 +96,6 @@ Commercial:
         TotalAmount: Montant total ajusté (hors matériel) (€)
         TotalAmountWithoutDiscount: Prix Total Standard (hors matériel) (€)
         QuoteStatus: Statut devis
-        ServiceEndDate: Date de fin de la prestation
         Date-crea: Date créa.
         Civility: Civilité
         LastName: Nom
@@ -131,7 +130,7 @@ Commercial:
         Customer: Client
         CustomerId: Numéro client
         SalesmanComment: Commentaire commercial
-        AnnualBudget: Budget annuel
+        AnnualBudget: Budget annuel (nombre entier)
         View: Vue du devis
         Download-quote: Télécharger
         Download-quote-tooltip: "Téléchargez le contrat pour le visualiser et le valider avant envoi au client. Attention, l'envoi du contrat est bien sous votre responsabilité, à vous de procéder à un contrôle attentif. Prix… Adresses… Produits...  !"
@@ -151,11 +150,14 @@ Commercial:
         REGULAR: Régulier
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
-        UNKNOWN: Ne sais pas
+        UNKNOWN: Sur appel
         ALL: Toutes les affaires
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
+        StartDate-form: Date de démarrage (nécessaire pour générer la feuille de mission)
         StartDate: Date de démarrage
+        ServiceEndDate-form: Date de fin de la prestation (nécessaire pour générer la feuille de mission)
+        ServiceEndDate: Date de fin de la prestation
         DepositDate: Date de dépose
         ResumptionDate: Date de reprise
         ManagementFee: Autres informations du contrat
@@ -283,7 +285,7 @@ Commercial:
         ProductCode: Code opération
         ProductRange: Code déchet
         ProductName: Produit
-        ProductBillingUnit: Unité de factu.
+        ProductBillingUnit: Unité
         UnitPrice: Prix unitaire
         Quantity: Quantité
         Comment: Commentaire

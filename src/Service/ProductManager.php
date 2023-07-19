@@ -271,9 +271,6 @@ class ProductManager
                     }
 
                 } elseif ($fieldName === 'treatmentCollectPrice') {
-                    if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
-                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                    }
                 } elseif ($fieldName === 'totalAmount') {
 
                     /**
@@ -324,7 +321,12 @@ class ProductManager
 
 
                 } elseif ($fieldName === 'treatmentCollectPrice') {
-
+                    /**
+                     * PU Collecte
+                     */
+                    if ($quoteRequestLine->getEditableTransportUnitPrice() > 0) {
+                        $result = $numberManager->denormalize($quoteRequestLine->getEditableTransportUnitPrice()) * $numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                    }
 
                 } elseif ($fieldName === 'totalAmount') {
 

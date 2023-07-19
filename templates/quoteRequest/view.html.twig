@@ -85,7 +85,7 @@
                             </div>
                         </div>
 
-                        {% if hasContract and quoteRequest.quoteStatus == 'CONTRACT_SIGNED' %}
+                        {% if hasContract and quoteRequest.quoteStatus == 'CONTRACT_SIGNED' and quoteRequest.startDate and quoteRequest.serviceEndDate %}
                             <div class="btn-group">
                                 <button class="btn btn-success btn-sm dropdown-toggle" type="button"
                                         data-toggle="dropdown"
@@ -94,28 +94,24 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     {% if not quoteRequest.missionSheet %}
-                                        {% if is_granted('ROLE_COMMERCIAL') or is_granted('ROLE_COMMERCIAL_MULTISITES') %}
-                                            <a href="javascript:void(0)"
-                                               data-url="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
-                                               class="dropdown-item quote-request-add-mission-sheet-button"
-                                               data-toggle="tooltip" data-placement="top"
-                                               title="{{ 'Commercial.QuoteRequest.MissionSheet.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
-                                            ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
-                                            </a>
-                                        {% endif %}
+                                        <a href="javascript:void(0)"
+                                           data-url="{{ path("paprec_quote_request_mission_sheet_add", {id: quoteRequest.id}) }}"
+                                           class="dropdown-item quote-request-add-mission-sheet-button"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="{{ 'Commercial.QuoteRequest.MissionSheet.Add-tooltip'| trans({}, "messages", app.request.locale) }}"
+                                        ><i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Add'| trans({}, "messages", app.request.locale) }}
+                                        </a>
                                     {% else %}
-                                        {% if is_granted('ROLE_MANAGER_COMMERCIAL') %}
-                                            <a href="{{ path("paprec_quote_request_mission_sheet_edit", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}"
+                                        <a href="{{ path("paprec_quote_request_mission_sheet_edit", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}"
+                                           class="dropdown-item">
+                                            <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Edit'| trans({}, "messages", app.request.locale) }}
+                                        </a>
+                                        {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
+                                            <a id="commmecialQuoteRequestMissionSheetValidateButton"
+                                               href="javascript:void(0);"
                                                class="dropdown-item">
-                                                <i class="fa fa-xs fa-plus"></i> {{ 'Commercial.QuoteRequest.MissionSheet.Edit'| trans({}, "messages", app.request.locale) }}
+                                                <i class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
                                             </a>
-                                            {% if quoteRequest.missionSheet.status == 'NOT_VALIDATED' or quoteRequest.missionSheet.status == '' %}
-                                                <a id="commmecialQuoteRequestMissionSheetValidateButton"
-                                                   href="javascript:void(0);"
-                                                   class="dropdown-item">
-                                                    <i class="fa fa-xs fa-check"></i> {{ 'Commercial.MissionSheet.Validate'|trans }}
-                                                </a>
-                                            {% endif %}
                                         {% endif %}
                                         {% if quoteRequest.missionSheet.status == 'VALIDATED' %}
                                             <a href="{{ path("paprec_quote_request_mission_sheet_send", {id: quoteRequest.id}) }}"

@@ -207,7 +207,7 @@ class QuoteRequestType extends AbstractType
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 if ($data->getIsMultisite() === 1) {
-                    return ['default', 'public'];
+                    return ['default'];
                 }
                 return ['default', 'public_multisite'];
             },

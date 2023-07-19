@@ -154,10 +154,10 @@ class QuoteRequest
     private $isMultisite;
 
     /**
+     * TODO revoir l'annotation @Assert\NotBlank(groups={"public"}) pour isSameSignatory
      * @var boolean
      *
      * @ORM\Column(name="isSameSignatory", type="boolean")
-     * @Assert\NotBlank(groups={"public"})
      */
     private $isSameSignatory;
 
