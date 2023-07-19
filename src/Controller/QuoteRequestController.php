@@ -559,32 +559,104 @@ class QuoteRequestController extends AbstractController
 
                     $quantity = $quoteRequestLine->getQuantity();
 
-                    /**
-                     * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
-                     */
-                    if ($quoteRequestLine->getRentalUnitPrice() > 0) {
-                        $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                    $calculationFormula = $quoteRequestLine->getProduct()->getCalculationFormula();
+
+                    if (!$calculationFormula || $calculationFormula === 'REGULAR') {
+
+                        /**
+                         * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
+                         */
+                        if ($quoteRequestLine->getRentalUnitPrice() > 0) {
+//                            $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                            $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                        }
+
+                        /**
+                         * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                         */
+                        if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
+                            $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                        }
+                        /**
+                         * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
+                         */
+                        if ($quoteRequestLine->getTransportUnitPrice() > 0) {
+                            $total += $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                        }
+
+                        /**
+                         * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
+                         */
+                        if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
+                            $total += $frequencyIntervalValue * ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                        }
+
+
+
+                    } elseif ($calculationFormula === 'PACKAGE') {
+
+                        $packageTotal = 0;
+                        /**
+                         * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
+                         */
+                        if ($quoteRequestLine->getRentalUnitPrice() > 0) {
+                            $packageTotal += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                        }
+
+                        /**
+                         * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                         */
+                        if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
+                            $packageTotal += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                        }
+
+                        /**
+                         * PU transport : PU Transport * coeff CP
+                         */
+                        if ($quoteRequestLine->getTransportUnitPrice() > 0) {
+                            $packageTotal += $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                        }
+
+                        /**
+                         * PU Mat additionnel * Coeff
+                         */
+                        if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
+                            $packageTotal += $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                        }
+                        $total += $packageTotal*$quantity;
+
+                    } elseif ($calculationFormula === 'UNIT_PRICE') {
+                        /**
+                         * PU Location du Produit * Quantité * Coefficient Location du CP de l’adresse à collecter
+                         */
+                        if ($quoteRequestLine->getRentalUnitPrice() > 0) {
+//                            $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                            $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                        }
+
+                        /**
+                         * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
+                         */
+                        if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
+                            $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                        }
+
+                        /**
+                         * PU transport : PU Transport * coeff CP
+                         */
+                        if ($quoteRequestLine->getTransportUnitPrice() > 0) {
+                            $total += $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
+                        }
+
+                        /**
+                         * PU Mat additionnel * Coeff
+                         */
+                        if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
+                            $total += $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
+                        }
                     }
 
-                    /**
-                     * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
-                     */
-                    if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
-                        $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
-                    }
-                    /**
-                     * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP
-                     */
-                    if ($quoteRequestLine->getTransportUnitPrice() > 0) {
-                        $total += $frequencyIntervalValue * $this->numberManager->denormalize($quoteRequestLine->getTransportUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTransportRate());
-                    }
 
-                    /**
-                     * Budget mensuel Matériel Additionnel = Nombre de passage par mois * (Quantité de Produit saisie – 1) * PU Matériel Additionnel * Coefficient CP
-                     */
-                    if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
-                        $total += $frequencyIntervalValue * ($quantity - 1) * $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
-                    }
                 }
             }
             $total = $this->numberManager->normalize($total);

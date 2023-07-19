@@ -170,9 +170,9 @@
 {#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label>#}
                                         <div class="form-content">
                                             {% if quoteRequest.isMultisite %}
-                                                {{ form_widget(form.city, {'attr': {'class': 'form-control address-field ', 'disabled': 'disabled'}}) }}
+                                                {{ form_widget(form.city, {'id': 'cityField', 'attr': {'class': 'form-control address-field ', 'disabled': 'disabled'}}) }}
                                             {% else %}
-                                                {{ form_widget(form.city, {'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
+                                                {{ form_widget(form.city, {'id': 'cityField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {% endif %}
                                             {{ form_errors(form.city) }}
                                         </div>
@@ -201,7 +201,7 @@
                                     <div class="form-group">
 {#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>#}
                                         <div class="form-content">
-                                            {{ form_widget(form.billingCity, {'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
+                                            {{ form_widget(form.billingCity, {'id': 'billingCityField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.billingCity) }}
                                         </div>
                                     </div>
