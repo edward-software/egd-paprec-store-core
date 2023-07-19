@@ -103,7 +103,19 @@ class DashboardController extends AbstractController
 
             $users = $queryBuilder->getQuery()->getResult();
 
+
             if ($users && count($users)) {
+
+                /**
+                 * On récupère l'ADMIN
+                 */
+                $adminUser = null;
+                foreach ($users as $user) {
+                    if (in_array('ROLE_ADMIN', $user->getRoles())) {
+                        $adminUser = $user;
+                    }
+                }
+
 
                 /**
                  * On met les utilisateurs par manager
@@ -124,7 +136,6 @@ class DashboardController extends AbstractController
                     $datas[0]['team_user_ids'] .= $user->getId();
 
                     if (in_array('ROLE_ADMIN', $roles)) {
-
                     } elseif (in_array('ROLE_MANAGER_COMMERCIAL', $roles)) {
 
                         if (!array_key_exists($user->getId(), $usersByManager)) {
@@ -138,6 +149,8 @@ class DashboardController extends AbstractController
                                 $usersByManager[$user->getManager()->getId()] = [];
                             }
                             $usersByManager[$user->getManager()->getId()][] = $user;
+                        }else{
+                            $usersByManager[$adminUser->getId()][] = $user;
                         }
                     }
                 }
@@ -148,7 +161,12 @@ class DashboardController extends AbstractController
                     $u = $usersById[$managerId];
                     $datas[$count]['user_id'] = null;
                     $datas[$count]['team_user_ids'] = '';
-                    $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName();
+                    if($u->getId() === $adminUser->getId()){
+                        $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName() . ' (les utilisateurs ci-dessous n\'ont pas de manager)';
+                    }else{
+                        $datas[$count]['name'] = 'Équipe : ' . $u->getFirstName() . ' ' . $u->getLastName();
+                    }
+
                     foreach ($lines as $line) {
                         $datas[$count][$line] = [];
                         foreach ($columns as $column) {
@@ -1008,7 +1026,7 @@ class DashboardController extends AbstractController
             $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
                 $request->getLocale());
 
-            if($line['userInCharge']){
+            if ($line['userInCharge']) {
                 $line['userInCharge'] = $line['userInCharge']->getFirstName() . ' ' . $line['userInCharge']->getLastName();
             }
 
