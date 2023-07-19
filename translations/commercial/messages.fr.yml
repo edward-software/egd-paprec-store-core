@@ -438,7 +438,7 @@ Commercial:
             Content: Contenu
 
     PDF:
-        Title: Devis de Prestation valable 3 mois
+        Title: Devis de Prestation
         Company: Nom de la société
         Address: Adresse
         PostalCode: CP / Ville
@@ -446,12 +446,15 @@ Commercial:
         ContactTitle: Contacts
         SignatoryLastName: Nom signataire
         SignatoryFirstName: Prénom signataire
+        SignatoryQuality: Qualité
         ContactLastName: Nom contact
         ContactFirstName: Prénom contact
         PhoneNumber: Téléphone
         Email: Email
         ServiceTitle: Résumé de la prestation
         CommentTitle: Remarques
+        Summary: Résumé de la prestation
+        Billing: Facturation
         Acceptance: Acceptation du devis et contrat
         Acceptance-text: Acceptation du devis et contrat
         NoComment: Pas de remarques
@@ -475,6 +478,7 @@ Commercial:
         MentionTitle: CGV
         ContractDuration: Durée du contrat
         OurIntervention: Notre intervention
+        OurPrices: Nos tarifs (HT)
         PonctualDate: Date de prestation
         StartDateContract: Démarrage du contrat
         ContractProduct: Matériel
