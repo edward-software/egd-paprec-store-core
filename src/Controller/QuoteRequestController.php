@@ -568,14 +568,14 @@ class QuoteRequestController extends AbstractController
                          */
                         if ($quoteRequestLine->getRentalUnitPrice() > 0) {
 //                            $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $quoteRequestLine->getQuantity() * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
-                            $total += $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate());
+                            $total += ($quantity * $this->numberManager->denormalize($quoteRequestLine->getRentalUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getRentalRate()));
                         }
 
                         /**
                          * Traitement : (PU Traitement du Produit * Coefficient Traitement du CP de l’adresse à collecter)
                          */
                         if ($quoteRequestLine->getTreatmentUnitPrice() !== null) {
-                            $total += $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate());
+                            $total += ($quantity * $this->numberManager->denormalize($quoteRequestLine->getTreatmentUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTreatmentRate()));
                         }
                         /**
                          * Budget mensuel Transport et Traitement = Nombre de passage par mois * PU transport * Coefficient CP

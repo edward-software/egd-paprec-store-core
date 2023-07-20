@@ -1440,7 +1440,7 @@ class QuoteRequestManager
 
                 foreach ($quoteRequestLinesByAgency as $agencyId => $quoteRequestLines) {
                     $agency = $agenciesById[$agencyId];
-                    if (file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
+                    if ($agency && file_exists($this->container->get('kernel')->getProjectDir() . '/templates/' . $templateDir . '/exploitation')) {
 
 //                        $rcptTo = $agency->getDestinationEmailMission();
 //                        $message = new Swift_Message();

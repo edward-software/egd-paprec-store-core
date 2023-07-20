@@ -452,7 +452,7 @@ Commercial:
         PhoneNumber: Téléphone
         Email: Email
         ServiceTitle: Résumé de la prestation
-        CommentTitle: Remarques
+        CommentTitle: Remarques complémentaires
         Summary: Résumé de la prestation
         Billing: Facturation
         Acceptance: Acceptation du devis et contrat
@@ -464,7 +464,7 @@ Commercial:
         CorporateName: Raison sociale
         City: Ville
         TVAIntracomNumber: N° TVA intracom
-        CommandNumber: N° de commande
+        CommandNumber: Référence offre
         SiretNumber: N° de SIRET
         CompanyType: Type de Société
         SignatureTitle: Signatures
@@ -478,7 +478,7 @@ Commercial:
         MentionTitle: CGV
         ContractDuration: Durée du contrat
         OurIntervention: Notre intervention
-        OurPrices: Nos tarifs (HT)
+        OurPrices: Nos tarifs (€HT)
         PonctualDate: Date de prestation
         StartDateContract: Démarrage du contrat
         ContractProduct: Matériel

@@ -233,6 +233,7 @@ class ProductManager
                         'editableTraceabilityUnitPrice');
                     $treatment = $quantity * $this->calculatePriceByFieldName($quoteRequestLine,
                             'editableTreatmentUnitPrice');
+
                     $result = $rental + $transport + $traceability + $treatment;
                 }
 
