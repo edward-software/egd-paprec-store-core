@@ -55,7 +55,9 @@ class ContactRequestPublicType extends AbstractType
             ->add('phone', TelType::class, array(
                 'invalid_message' => 'Public.Contact.PhoneError',
             ))
-            ->add('comment', TextareaType::class)
+            ->add('comment', TextareaType::class, [
+                'required' => false
+            ])
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))

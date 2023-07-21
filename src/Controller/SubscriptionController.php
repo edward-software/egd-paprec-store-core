@@ -547,7 +547,6 @@ class SubscriptionController extends AbstractController
                 $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
             }
 
-
             $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
 
             $this->em->persist($quoteRequest);
@@ -564,10 +563,18 @@ class SubscriptionController extends AbstractController
             ));
         }
 
+        $entities = $this->postalCodeManager->getList(true);
+
+        $codes = [];
+        foreach ($entities as $entity) {
+            $codes[] = $entity->getCode() . ' - ' . $entity->getCity();
+        }
+
         return $this->render('public/contact-request.html.twig', array(
             'locale' => $locale,
             'cart' => $cart,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'codes' => $codes
         ));
 
     }
