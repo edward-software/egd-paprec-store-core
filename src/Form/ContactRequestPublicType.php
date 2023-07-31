@@ -37,10 +37,10 @@ class ContactRequestPublicType extends AbstractType
         $builder
             ->add('interest', ChoiceType::class, [
                 'choices' => array(
-                    'Collecte dans vos bureaux' => 'COLLECTE_BUREAU',
-                    'Collecte en bas d\'immeuble' => 'COLLECTE_IMMEUBLE',
+                    'Offre packagée' => 'COLLECTE_BUREAU',
+                    'Offre sur mesure' => 'COLLECTE_IMMEUBLE',
                     'Réseaux d\'agences' => 'RESEAUX_AGENCES',
-                    'Grands ensembles tertiaires' => 'GRANDS_ENSEMBLES',
+                    'Personnel sur site' => 'GRANDS_ENSEMBLES',
                     'Destruction sécurisée' => 'DESTRUCTION_SECURISEE',
                     'Animation & sensibilisation' => 'ANIMATION_SENSIBILISATION',
                     'Audit & caractérisation' => 'AUDIT_CARACTERISATION'
