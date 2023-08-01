@@ -550,6 +550,17 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
 
             $this->em->persist($quoteRequest);
+
+
+            /**
+             * On récupère tous les produits ajoutés au Cart
+             */
+            if ($cart->getContent() !== null) {
+                foreach ($cart->getContent() as $item) {
+                    $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'],
+                        $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
+                }
+            }
             $this->em->flush();
 
             $user = $this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode());

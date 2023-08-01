@@ -169,7 +169,12 @@ class QuoteRequestController extends AbstractController
             'label' => 'dateCreation',
             'id' => 'q.dateCreation',
             'method' => array('getDateCreation'),
-            'filter' => array(array('name' => 'format', 'args' => array('Y-m-d H:i:s')))
+            'filter' => array(
+                array(
+                    'name' => 'format',
+                    'args' => array('Y-m-d H:i:s')
+                )
+            )
         );
         $cols['userInCharge'] = array(
             'label' => 'userInCharge',
@@ -284,7 +289,6 @@ class QuoteRequestController extends AbstractController
             }
         }
 
-
         $dt = $dataTable->generateTable($cols, $queryBuilder, $pageSize, $start, $orders, $columns, $filters,
             $paginator, $rowPrefix);
 
@@ -298,6 +302,13 @@ class QuoteRequestController extends AbstractController
             $line['totalAmount'] = $this->numberManager->formatAmount($data['totalAmount'], null,
                 $request->getLocale());
             $line['quoteStatus'] = $this->translator->trans("Commercial.QuoteStatusList." . $data['quoteStatus']);
+
+            if (!empty($line['dateCreation']) && !empty($systemUser->getTimezone())) {
+                $datetime = new \DateTime($line['dateCreation']);
+                $datetime->setTimezone(new \DateTimeZone($systemUser->getTimezone()));
+                $line['dateCreation'] = $datetime->format('Y-m-d H:i:s');
+            }
+
             $tmp[] = $line;
         }
         $dt['data'] = $tmp;
@@ -592,7 +603,6 @@ class QuoteRequestController extends AbstractController
                         }
 
 
-
                     } elseif ($calculationFormula === 'PACKAGE') {
 
                         $packageTotal = 0;
@@ -623,7 +633,7 @@ class QuoteRequestController extends AbstractController
                         if ($quoteRequestLine->getTraceabilityUnitPrice() > 0) {
                             $packageTotal += $this->numberManager->denormalize($quoteRequestLine->getTraceabilityUnitPrice()) * $this->numberManager->denormalize15($quoteRequestLine->getTraceabilityRate());
                         }
-                        $total += $packageTotal*$quantity;
+                        $total += $packageTotal * $quantity;
 
                     } elseif ($calculationFormula === 'UNIT_PRICE') {
                         /**
