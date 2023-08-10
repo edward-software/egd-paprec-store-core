@@ -107,6 +107,14 @@ Public:
         SubTitle: Afin de vous adresser votre devis, merci de préciser les éléments suivants.
         ThirdTitle: Les champs marqués d'une astérisque (*) sont obligatoires.
         Interest: Centre d'intérêt
+        Interest-list:
+            COLLECTE_BUREAU: Offre packagée
+            COLLECTE_IMMEUBLE: Offre sur mesure
+            RESEAUX_AGENCES: Réseaux d\'agences
+            GRANDS_ENSEMBLES: Personnel sur site
+            DESTRUCTION_SECURISEE: Destruction sécurisée
+            ANIMATION_SENSIBILISATION: Animation & sensibilisation
+            AUDIT_CARACTERISATION: Audit & caractérisation
         BusinessName: Nom société
         Civility: Civilité
         LastName: Nom

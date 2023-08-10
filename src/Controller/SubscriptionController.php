@@ -585,6 +585,7 @@ class SubscriptionController extends AbstractController
             'locale' => $locale,
             'cart' => $cart,
             'form' => $form->createView(),
+            'interest' => $interest,
             'codes' => $codes
         ));
 
