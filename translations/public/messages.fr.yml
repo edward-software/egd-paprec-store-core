@@ -148,7 +148,8 @@ Public:
         DeliveryAddress: Adresse de prestation
 
     Request:
-        Title: Entrez vos coordonnées pour être contacté et accompagné dans la création de votre demande
+#        Title: Entrez vos coordonnées pour être contacté et accompagné dans la création de votre demande
+        Title: Demande de rappel
 
     Signatory:
         BreadcrumbTitle:            Définition des signataires
