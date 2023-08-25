@@ -148,7 +148,7 @@
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.Address'|trans }}</label>
                                         <div class="form-content">
                                             {% if quoteRequest.isMultisite %}
-                                                {{ form_widget(form.address, {'attr': {'class': 'form-control address-field ', 'disabled': 'disabled'}}) }}
+                                                {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field ', 'disabled': 'disabled'}}) }}
                                             {% else %}
                                                 {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field '}}) }}
                                             {% endif %}
@@ -382,7 +382,9 @@
     <script>
         $(function () {
             google.maps.event.addDomListener(window, 'load', function () {
+                console.log('a');
                 var element = document.getElementById('addressAutocomplete');
+                console.log(element);
 
                 if (element) {
                     var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
