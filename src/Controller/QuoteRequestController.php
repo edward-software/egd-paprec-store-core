@@ -940,6 +940,38 @@ class QuoteRequestController extends AbstractController
         $newQuoteRequest->setMissionSheet(null);
         $newQuoteRequest->setQuoteStatus('QUOTE_CREATED');
 
+        $ref = 'FR';
+        $today = new \DateTime();
+        $today = $today->format('dmy');
+        $ref .= $today;
+        $ref .= '-';
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(QuoteRequest::class)->createQueryBuilder('q');
+
+        $queryBuilder->select(['q'])
+            ->where('q.deleted is NULL')
+            ->andWhere('q.reference LIKE :reference')
+            ->setParameter('reference', $ref . '%');
+        $qs = $queryBuilder->getQuery()->getResult();
+        $number = '01';
+        if (is_array($qs) && count($qs)) {
+            foreach ($qs as $q) {
+                $r = $q->getReference();
+                $pos = strpos($r, '-');
+                $newNumber = substr($r, $pos + 1, strlen($r));
+                if ((int)$number <= (int)$newNumber) {
+
+                    $newNumber = (int)$newNumber + 1;
+                    if($newNumber < 10){
+                        $newNumber = '0' . $newNumber;
+                    }
+
+                    $number = (string)$newNumber;
+                }
+            }
+        }
+        $ref .= $number;
+        $newQuoteRequest->setReference($ref);
+
         if (is_iterable($quoteRequest->getQuoteRequestLines()) && count($quoteRequest->getQuoteRequestLines())) {
             foreach ($quoteRequest->getQuoteRequestLines() as $qL) {
                 $newQuoteRequestLine = clone $qL;
@@ -1172,7 +1204,6 @@ class QuoteRequestController extends AbstractController
 
         $ranges = $queryBuilder->getQuery()->getResult();
 
-
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Product::class)->createQueryBuilder('p');
 
         $queryBuilder->select('p')
@@ -1181,9 +1212,11 @@ class QuoteRequestController extends AbstractController
         $products = $queryBuilder->getQuery()->getResult();
 
         $hideFrequencyById = [];
+        $productCatalogById = [];
         if (is_array($products) && count($products)) {
             foreach ($products as $product) {
                 $hideFrequencyById[$product->getId()] = $product->getHideFrequency();
+                $productCatalogById[$product->getId()] = $product->getCatalog();
             }
         }
 
@@ -1193,7 +1226,8 @@ class QuoteRequestController extends AbstractController
             'selectedCatalog' => $selectedCatalog,
             'selectedRangeId' => $selectedRangeId,
             'ranges' => $ranges,
-            'hideFrequencyById' => $hideFrequencyById
+            'hideFrequencyById' => $hideFrequencyById,
+            'productCatalogById' => $productCatalogById
         ));
     }
 
@@ -1242,9 +1276,24 @@ class QuoteRequestController extends AbstractController
             ));
         }
 
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(Product::class)->createQueryBuilder('p');
+
+        $queryBuilder->select('p')
+            ->where('p.deleted IS NULL');
+
+        $products = $queryBuilder->getQuery()->getResult();
+
+        $productCatalogById = [];
+        if (is_array($products) && count($products)) {
+            foreach ($products as $product) {
+                $productCatalogById[$product->getId()] = $product->getCatalog();
+            }
+        }
+
         return $this->render('quoteRequestLine/edit.html.twig', array(
             'form' => $form->createView(),
             'quoteRequest' => $quoteRequest,
+            'productCatalogById' => $productCatalogById,
             'quoteRequestLine' => $quoteRequestLine
         ));
     }

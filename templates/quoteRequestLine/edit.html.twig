@@ -163,6 +163,33 @@
     <script>
         $(function () {
 
+
+            var productCatalogById = {{ productCatalogById|json_encode|raw }};
+
+            if(productCatalogById[{{ quoteRequestLine.product.id }}] == 'REGULAR'){
+                $('input[id*="quote_request_line_edit_frequency_2"]').prop("disabled", true);
+
+                $('input[id*="quote_request_line_edit_frequency_0"]').prop("disabled", false);
+                $('input[id*="quote_request_line_edit_frequency_1"]').prop("disabled", false);
+
+            }
+            if(productCatalogById[{{ quoteRequestLine.product.id }}] == 'PONCTUAL'){
+                $('input[id*="quote_request_line_edit_frequency_0"]').prop("disabled", true);
+                $('input[id*="quote_request_line_edit_frequency_2"]').prop("disabled", true);
+
+                $('input[id*="quote_request_line_edit_frequency_1"]').prop("disabled", false);
+                $('input[id*="quote_request_line_edit_frequency_1"]').prop("checked", true);
+
+            }
+            if(productCatalogById[{{ quoteRequestLine.product.id }}] == 'MATERIAL'){
+                $('input[id*="quote_request_line_edit_frequency_0"]').prop("disabled", true);
+                $('input[id*="quote_request_line_edit_frequency_1"]').prop("disabled", true);
+
+                $('input[id*="quote_request_line_edit_frequency_2"]').prop("disabled", false);
+                $('input[id*="quote_request_line_edit_frequency_2"]').prop("checked", true);
+
+            }
+
             $('.catalog-quoteRequestLine-save-button').on('click', function () {
                 $('#catalogQuoteRequestForm').submit();
             });

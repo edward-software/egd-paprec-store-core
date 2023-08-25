@@ -72,7 +72,7 @@ class QuoteRequestLineAddType extends AbstractType
                     'MATERIAL' => 'MATERIAL'
                 ),
                 "choice_label" => function ($choiceValue, $key, $value) {
-                    return 'General.Frequency.' . $choiceValue;
+                    return 'Commercial.QuoteRequestLine.Frequency-values.' . $choiceValue;
                 },
                 'required' => true,
                 'expanded' => true

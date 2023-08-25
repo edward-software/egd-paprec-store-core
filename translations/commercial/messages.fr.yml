@@ -26,7 +26,7 @@ Commercial:
             PER_SITE: Par site
             GLOBAL: Globale
         OrderNumber: N° de site
-        ContractNumber: N° de contrat
+        ContractNumber: N° du contrat commercial antérieur
         SecondUserInCharge: Assistant
         Comment: Commentaire et imperatifs de facturation
         ExploitationComment: Commentaire et impératifs d’Exploitation
@@ -314,6 +314,11 @@ Commercial:
         Edit: Modification d'un produit
         Product: Produit
         Package: Forfait
+        Frequency-values:
+            REGULAR: Planifié
+            PONCTUAL: Sur Appel
+            MATERIAL: Sans Objet
+            UNKNOWN: Sur appel
         PDF:
             Quantity: Qté
             PassingFrequency: Fréq.

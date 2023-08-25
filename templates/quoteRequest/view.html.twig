@@ -415,15 +415,16 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
                                         <label class="col-form-label">
-                                            {% if quoteRequest.billingPostalCode %}
-                                                {% if quoteRequest.isSameAddress == 1 %}
-                                                    <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
-                                                        {{ quoteRequest.billingPostalCode }}
-                                                    </a>
-                                                {% else %}
-                                                    {{ quoteRequest.billingPostalCode }}
-                                                {% endif %}
-                                            {% endif %}
+                                            {{ quoteRequest.billingPostalCode }}
+{#                                            {% if quoteRequest.billingPostalCode %}#}
+{#                                                {% if quoteRequest.isSameAddress == 1 %}#}
+{#                                                    <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.billingPostalCode.id}) }}">#}
+{#                                                        {{ quoteRequest.billingPostalCode }}#}
+{#                                                    </a>#}
+{#                                                {% else %}#}
+{#                                                    {{ quoteRequest.billingPostalCode }}#}
+{#                                                {% endif %}#}
+{#                                            {% endif %}#}
                                         </label>
                                     </div>
                                     <div class="form-group row">
@@ -678,7 +679,7 @@
                                                 <td>
                                                     {% if quoteRequestLine.frequency != 'REGULAR' %}
                                                         {% if quoteRequestLine.frequency %}
-                                                            {{ ('General.Frequency.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
+                                                            {{ ('Commercial.QuoteRequestLine.Frequency-values.'~quoteRequestLine.frequency)|trans({}, "messages", app.request.locale) }}
                                                         {% endif %}
                                                     {% else %}
                                                         {% if quoteRequestLine.frequencyInterval is not empty %}

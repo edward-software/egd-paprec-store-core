@@ -134,12 +134,39 @@
         $(function () {
 
             var hideFrequencyById = {{ hideFrequencyById|json_encode|raw }};
+            var productCatalogById = {{ productCatalogById|json_encode|raw }};
 
             $('.product-field').select2({
                 language: "fr",
                 placeholder: "Ajouter un produit",
                 width: '100%'
             }).on('change', function (e) {
+
+                if(productCatalogById[$(this).val()] == 'REGULAR'){
+                    $('input[id*="quote_request_line_add_frequency_2"]').prop("disabled", true);
+
+                    $('input[id*="quote_request_line_add_frequency_0"]').prop("disabled", false);
+                    $('input[id*="quote_request_line_add_frequency_1"]').prop("disabled", false);
+
+                }
+                if(productCatalogById[$(this).val()] == 'PONCTUAL'){
+                    $('input[id*="quote_request_line_add_frequency_0"]').prop("disabled", true);
+                    $('input[id*="quote_request_line_add_frequency_2"]').prop("disabled", true);
+
+                    $('input[id*="quote_request_line_add_frequency_1"]').prop("disabled", false);
+                    $('input[id*="quote_request_line_add_frequency_1"]').prop("checked", true);
+
+                }
+                if(productCatalogById[$(this).val()] == 'MATERIAL'){
+                    $('input[id*="quote_request_line_add_frequency_0"]').prop("disabled", true);
+                    $('input[id*="quote_request_line_add_frequency_1"]').prop("disabled", true);
+
+                    $('input[id*="quote_request_line_add_frequency_2"]').prop("disabled", false);
+                    $('input[id*="quote_request_line_add_frequency_2"]').prop("checked", true);
+
+                }
+
+
                 if (hideFrequencyById[$(this).val()] === true) {
                     $('input[name*="quote_request_line_add[frequency]"]').each(function () {
                         $(this).prop("disabled", true);
@@ -147,7 +174,7 @@
                     $('select[name*="quote_request_line_add[frequencyTimes]"]').prop("disabled", true);
                     $('select[name*="quote_request_line_add[frequencyInterval]').prop("disabled", true);
                 } else {
-                    $('input[name*="quote_request_line_add[frequency]"]').prop("disabled", false);
+                    // $('input[name*="quote_request_line_add[frequency]"]').prop("disabled", false);
                     $('select[name*="quote_request_line_add[frequencyTimes]"]').prop("disabled", false);
                     $('select[name*="quote_request_line_add[frequencyInterval]').prop("disabled", false);
                 }
