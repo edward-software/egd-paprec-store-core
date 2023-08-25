@@ -345,7 +345,9 @@ Commercial:
         Object: Nous vous remercions pour votre demande
         Dear:
             M: Mr
+            M-long: Monsieur
             Mrs: Mme
+            Mrs-long: Madame
         Message1: Nous avons bien pris en charge votre demande de devis sur la base des besoins rappelés si dessous
         TechnicalService: service technique
         Message2: sera votre interlocuteur pour la suite.
