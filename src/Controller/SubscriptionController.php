@@ -514,7 +514,7 @@ class SubscriptionController extends AbstractController
             $selectedInterest = $form->get('interest')->getData();
 
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
-            $quoteRequest->setOrigin('SHOP');
+            $quoteRequest->setOrigin('RECALL');
             $quoteRequest->setLocale($locale);
             if ($cart) {
                 $quoteRequest->setCatalog($cart->getType());
