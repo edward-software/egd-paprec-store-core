@@ -555,7 +555,7 @@ class SubscriptionController extends AbstractController
             /**
              * On récupère tous les produits ajoutés au Cart
              */
-            if ($cart->getContent() !== null) {
+            if ($cart && $cart->getContent() !== null) {
                 foreach ($cart->getContent() as $item) {
                     $this->quoteRequestManager->addLineFromCart($quoteRequest, $item['pId'], $item['qtty'],
                         $item['frequency'], $item['frequencyTimes'], $item['frequencyInterval'], false);
