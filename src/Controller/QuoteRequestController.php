@@ -1445,8 +1445,8 @@ class QuoteRequestController extends AbstractController
         // Set content disposition inline of the file
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $quoteRequest->getReference() . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
-                array(), 'messages', $locale) . '-' . $quoteRequest->getBusinessName() . '.pdf'
+            str_replace($quoteRequest->getReference(), '/', '_') . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
+                array(), 'messages', $locale) . '-' . str_replace($quoteRequest->getBusinessName(), '/', '_') . '.pdf'
         );
 
         return $response;
