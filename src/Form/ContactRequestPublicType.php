@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -61,9 +62,14 @@ class ContactRequestPublicType extends AbstractType
             ->add('postalCode', TextType::class, array(
                 'invalid_message' => 'Public.Contact.PostalCodeError'
             ))
-            ->add('recallDate', DateTimeType::class, array(
+            ->add('recallDate', DateType::class, array(
                 'widget' => 'single_text',
                 'mapped' => false
+            ))
+            ->add('recallHour', TimeType::class, array(
+                'widget' => 'single_text',
+                'mapped' => false,
+                'input' => 'string'
             ));
 
         $builder->get('postalCode')

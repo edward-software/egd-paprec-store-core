@@ -122,7 +122,8 @@ Public:
         Email: E-mail
         Phone: Téléphone
         PhoneNumberInfo: "Suivre la mise en forme  : 00 00 00 00 00"
-        RecallDate: Heure souhaitée pour le rappel
+        RecallDate: Date souhaitée pour le rappel
+        RecallHour: Heure souhaitée pour le rappel
         CoworkerNumber: Effectif
         IsMultisite: Prestation multi-sites
         isMultisiteInfo: À la validation du formulaire vous serez contacté très prochainement par le service commercial.

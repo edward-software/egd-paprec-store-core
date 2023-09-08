@@ -511,8 +511,11 @@ class SubscriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $quoteRequest = $form->getData();
             $recallDate = $form->get('recallDate')->getData();
+            $recallHour = $form->get('recallHour')->getData();
             $selectedInterest = $form->get('interest')->getData();
-
+            if ($recallHour) {
+                $recallDate = new \DateTime($recallDate->format('Y-m-d') . ' ' . $recallHour);
+            }
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('RECALL');
             $quoteRequest->setLocale($locale);
