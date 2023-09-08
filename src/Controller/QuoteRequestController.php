@@ -942,7 +942,7 @@ class QuoteRequestController extends AbstractController
 
         $ref = 'FR';
         $today = new \DateTime();
-        $today = $today->format('dmy');
+        $today = $today->format('ymd');
         $ref .= $today;
         $ref .= '-';
         $queryBuilder = $this->getDoctrine()->getManager()->getRepository(QuoteRequest::class)->createQueryBuilder('q');

@@ -106,7 +106,6 @@ class QuoteRequest
      * @var string
      *
      * @ORM\Column(name="civility", type="string", length=10, nullable=true)
-     * @Assert\NotBlank()
      */
     private $civility;
 

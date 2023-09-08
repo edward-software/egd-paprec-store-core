@@ -751,7 +751,7 @@
                         </div>
                     </div>
                     <div class="col-md-12 mt-3">
-                        <form id="formQuoteRequestViewManagementFee" name="formAddQuoteRequestFile"
+                        <form id="formQuoteRequestViewManagementFee" name="formQuoteRequestViewManagementFee"
                               action="{{ path("paprec_quote_request_edit_quote_request_management_fee", {quoteRequestId: quoteRequest.id}) }}"
                               method="post">
                             <div class="card">
@@ -922,6 +922,7 @@
                                 <div class="card-footer">
                                     <div class="float-right">
                                         <a href="javascript:void(0);"
+                                           id="formQuoteRequestViewManagementFeeSubmitButton"
                                            class="btn btn-sm btn-success quote-request-view-management-fee-save-button"><i
                                                     class="fa fa-xs fa-check"></i> {{ 'General.Save'|trans }}</a>
 
@@ -1228,6 +1229,10 @@
                         }
                     });
                 }
+            });
+
+            $('#formQuoteRequestViewManagementFeeSubmitButton').on('click', function () {
+                $('#formQuoteRequestViewManagementFee').submit();
             });
 
             $('#formAddQuoteRequestFileSubmitButton').on('click', function () {
