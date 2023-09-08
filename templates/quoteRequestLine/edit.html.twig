@@ -12,7 +12,6 @@
 {% endblock %}
 
 {% block main_content %}
-
     <form id="catalogQuoteRequestForm" action="" method="post">
 
         <div class="col-md-12">
@@ -32,107 +31,169 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="col-md-7">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">{{ 'General.Information'|trans }}</h5>
                             </div>
                             <div class="card-body">
-                                <div class="form-group no-gutters">
-                                    <label class="form-label">{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</label>
-                                    <div class="form-content col-md-6">
-                                        {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
-                                        {{ form_errors(form.quantity) }}
-                                    </div>
-                                </div>
-                                {% if quoteRequestLine.product.catalog != 'MATERIAL' %}
-                                    <div class="form-group no-gutters">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequestLine.TransportUnitPrice'|trans }}</label>
-                                        <div class="paprec-flex no-gutters">
-                                            <div class="form-content col-md-6">
-                                                {{ form_widget(form.editableTransportUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                                {{ form_errors(form.editableTransportUnitPrice) }}
-                                            </div>
-                                            <div class="ml-2"
-                                                 style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
-                                                : {{ quoteRequestLine.transportUnitPrice / 100 }}</div>
-                                        </div>
+                                <div class="row">
 
-                                    </div>
-                                    <div class="form-group no-gutters">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequestLine.RentalUnitPrice'|trans }}</label>
-                                        <div class="paprec-flex no-gutters">
+                                    <div class="col-md-6">
+                                        <div class="form-group no-gutters">
+                                            <label class="form-label">{{ 'Commercial.QuoteRequestLine.Quantity'|trans }}</label>
                                             <div class="form-content col-md-6">
-                                                {{ form_widget(form.editableRentalUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                                {{ form_errors(form.editableRentalUnitPrice) }}
+                                                {{ form_widget(form.quantity, {'attr': {'class': 'form-control'}}) }}
+                                                {{ form_errors(form.quantity) }}
                                             </div>
-                                            <div class="ml-2"
-                                                 style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
-                                                : {{ quoteRequestLine.rentalUnitPrice / 100 }}</div>
                                         </div>
-
-                                    </div>
-                                    <div class="form-group no-gutters">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequestLine.TreatmentUnitPrice'|trans }}</label>
-                                        <div class="paprec-flex no-gutters">
-                                            <div class="form-content col-md-6">
-                                                {{ form_widget(form.editableTreatmentUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                                {{ form_errors(form.editableTreatmentUnitPrice) }}
-                                            </div>
-                                            <div class="ml-2"
-                                                 style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
-                                                : {{ quoteRequestLine.treatmentUnitPrice / 100 }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group no-gutters">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequestLine.TraceabilityUnitPrice'|trans }}</label>
-                                        <div class="paprec-flex no-gutters">
-                                            <div class="form-content col-md-6">
-                                                {{ form_widget(form.editableTraceabilityUnitPrice, {'attr': {'class': 'form-control'}}) }}
-                                                {{ form_errors(form.editableTraceabilityUnitPrice) }}
-                                            </div>
-                                            <div class="ml-2"
-                                                 style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
-                                                : {{ quoteRequestLine.traceabilityUnitPrice / 100 }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.Frequency'|trans }}
-                                            *</label>
-                                        <div class="form-content">
-                                            {% for radio in form.frequency.children %}
-                                                <div class="form__check ml-4">
-                                                    {{ form_widget(radio) }}
-                                                    {{ form_label(radio) }}
+                                        {% if quoteRequestLine.product.catalog != 'MATERIAL' %}
+                                            <div class="form-group no-gutters">
+                                                <label class="form-label">{{ 'Commercial.QuoteRequestLine.TransportUnitPrice'|trans }}</label>
+                                                <div class="paprec-flex no-gutters">
+                                                    <div class="form-content col-md-6">
+                                                        {{ form_widget(form.editableTransportUnitPrice, {'attr': {'class': 'form-control editable-transport-unit-price-input'}}) }}
+                                                        {{ form_errors(form.editableTransportUnitPrice) }}
+                                                    </div>
+                                                    <div class="ml-2"
+                                                         style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
+                                                        : {{ quoteRequestLine.transportUnitPrice / 100 }}</div>
                                                 </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-6">
-                                            <label class="form-label">{{ 'Commercial.QuoteRequest.PassingFrequency'|trans }}</label>
-                                            <div class="form-content">
-                                                {% if quoteRequestLine.frequency != 'REGULAR' %}
-                                                    {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
-                                                {% else %}
-                                                    {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
-                                                {% endif %}
-                                                {{ form_errors(form.frequencyTimes) }}
+
                                             </div>
-                                        </div>
-                                        <div class="form-group col-6">
-                                            <label class="form-label">&nbsp;</label>
-                                            <div class="form-content">
-                                                {% if quoteRequestLine.frequency != 'REGULAR' %}
-                                                    {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
-                                                {% else %}
-                                                    {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
-                                                {% endif %}
-                                                {{ form_errors(form.frequencyInterval) }}
+                                            <div class="form-group no-gutters">
+                                                <label class="form-label">{{ 'Commercial.QuoteRequestLine.RentalUnitPrice'|trans }}</label>
+                                                <div class="paprec-flex no-gutters">
+                                                    <div class="form-content col-md-6">
+                                                        {{ form_widget(form.editableRentalUnitPrice, {'attr': {'class': 'form-control editable-rental-unit-price-input'}}) }}
+                                                        {{ form_errors(form.editableRentalUnitPrice) }}
+                                                    </div>
+                                                    <div class="ml-2"
+                                                         style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
+                                                        : {{ quoteRequestLine.rentalUnitPrice / 100 }}</div>
+                                                </div>
+
                                             </div>
-                                        </div>
+                                            <div class="form-group no-gutters">
+                                                <label class="form-label">{{ 'Commercial.QuoteRequestLine.TreatmentUnitPrice'|trans }}</label>
+                                                <div class="paprec-flex no-gutters">
+                                                    <div class="form-content col-md-6">
+                                                        {{ form_widget(form.editableTreatmentUnitPrice, {'attr': {'class': 'form-control editable-treatment-unit-price-input'}}) }}
+                                                        {{ form_errors(form.editableTreatmentUnitPrice) }}
+                                                    </div>
+                                                    <div class="ml-2"
+                                                         style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
+                                                        : {{ quoteRequestLine.treatmentUnitPrice / 100 }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group no-gutters">
+                                                <label class="form-label">{{ 'Commercial.QuoteRequestLine.TraceabilityUnitPrice'|trans }}</label>
+                                                <div class="paprec-flex no-gutters">
+                                                    <div class="form-content col-md-6">
+                                                        {{ form_widget(form.editableTraceabilityUnitPrice, {'attr': {'class': 'form-control editable-traceability-unit-price-input'}}) }}
+                                                        {{ form_errors(form.editableTraceabilityUnitPrice) }}
+                                                    </div>
+                                                    <div class="ml-2"
+                                                         style="line-height: 38px;">{{ 'Commercial.QuoteRequestLine.BasePrice'|trans }}
+                                                        : {{ quoteRequestLine.traceabilityUnitPrice / 100 }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">{{ 'Commercial.QuoteRequest.Frequency'|trans }}
+                                                    *</label>
+                                                <div class="form-content">
+                                                    {% for radio in form.frequency.children %}
+                                                        <div class="form__check ml-4">
+                                                            {{ form_widget(radio) }}
+                                                            {{ form_label(radio) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-6">
+                                                    <label class="form-label">{{ 'Commercial.QuoteRequest.PassingFrequency'|trans }}</label>
+                                                    <div class="form-content">
+                                                        {% if quoteRequestLine.frequency != 'REGULAR' %}
+                                                            {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
+                                                        {% else %}
+                                                            {{ form_widget(form.frequencyTimes, {'attr': {'class': 'form-control'}}) }}
+                                                        {% endif %}
+                                                        {{ form_errors(form.frequencyTimes) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-6">
+                                                    <label class="form-label">&nbsp;</label>
+                                                    <div class="form-content">
+                                                        {% if quoteRequestLine.frequency != 'REGULAR' %}
+                                                            {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control', 'disabled': 'disabled'}}) }}
+                                                        {% else %}
+                                                            {{ form_widget(form.frequencyInterval, {'attr': {'class': 'form-control'}}) }}
+                                                        {% endif %}
+                                                        {{ form_errors(form.frequencyInterval) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
+
+                                    <div class="col-md-6">
+                                        <table id="quoteRequestLinesDatatable"
+                                               class="table table-striped table-bordered table-hover"
+                                               cellpadding="0" cellspacing="0" border="0">
+                                            <thead>
+                                            <tr>
+                                                <th>{{ 'Commercial.QuoteRequestLine.RentalPrice'|trans }}</th>
+                                                <th>{{ 'Commercial.QuoteRequestLine.TreatmentCollect'|trans }}</th>
+                                                <th>{{ 'Commercial.QuoteRequestLine.Treatment'|trans }} </th>
+                                                <th>{{ 'Commercial.QuoteRequestLine.TotalAmountOrPackage'|trans }}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td class="line-number editable-rental-unit-price-field">
+                                                    {#                                                    {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %} #}
+                                                    {#                                                        #}{# RESTE NULL #}
+                                                    {#                                                    {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %} #}
+                                                    {#                                                        {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableRentalUnitPrice'))|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% else %} #}
+                                                    {#                                                        {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableRentalUnitPrice'))|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% endif %} #}
+                                                </td>
+                                                <td class="line-number editable-collect-unit-price-field">
+                                                    {#                                                    {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %} #}
+                                                    {#                                                        #}{# RESTE NULL #}
+                                                    {#                                                    {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %} #}
+                                                    {#                                                        {{ (quoteRequestLine|quoteRequestLineCalculatePrices('treatmentCollectPrice'))|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% else %} #}
+                                                    {#                                                        {{ (quoteRequestLine|quoteRequestLineCalculatePrices('treatmentCollectPrice'))|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% endif %} #}
+                                                </td>
+                                                <td class="line-number editable-treatment-unit-price-field">
+                                                    {#                                                   #}
+                                                    {#                                                    {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %} #}
+                                                    {#                                                        #}{# RESTE NULL #}
+                                                    {#                                                    {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %} #}
+                                                    {#                                                                                                            {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableTreatmentUnitPrice'))|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% else %} #}
+                                                    {#                                                        {{ (quoteRequestLine|quoteRequestLineCalculatePrices('editableTreatmentUnitPrice'))|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% endif %} #}
+                                                </td>
+                                                <td class="line-number editable-total-unit-price-field">
+                                                    {#                                                    {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %} #}
+                                                    {#                                                        {{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %} #}
+                                                    {#                                                        #}{# RESTE NULL #}
+                                                    {#                                                    {% else %} #}
+                                                    {#                                                        {{ quoteRequestLine.totalAmount|formatAmount('EUR', app.request.locale) }} #}
+                                                    {#                                                    {% endif %} #}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -152,28 +213,25 @@
         </div>
         {{ form_rest(form) }}
     </form>
-    </div>
-
-
-
 {% endblock %}
 
-{% block javascripts %}
 
+{% block javascripts %}
+    <script src="{{ asset('/build/loadingOverlay.js') }}"></script>
     <script>
         $(function () {
 
 
             var productCatalogById = {{ productCatalogById|json_encode|raw }};
 
-            if(productCatalogById[{{ quoteRequestLine.product.id }}] == 'REGULAR'){
+            if (productCatalogById[{{ quoteRequestLine.product.id }}] == 'REGULAR') {
                 $('input[id*="quote_request_line_edit_frequency_2"]').prop("disabled", true);
 
                 $('input[id*="quote_request_line_edit_frequency_0"]').prop("disabled", false);
                 $('input[id*="quote_request_line_edit_frequency_1"]').prop("disabled", false);
 
             }
-            if(productCatalogById[{{ quoteRequestLine.product.id }}] == 'PONCTUAL'){
+            if (productCatalogById[{{ quoteRequestLine.product.id }}] == 'PONCTUAL') {
                 $('input[id*="quote_request_line_edit_frequency_0"]').prop("disabled", true);
                 $('input[id*="quote_request_line_edit_frequency_2"]').prop("disabled", true);
 
@@ -181,7 +239,7 @@
                 $('input[id*="quote_request_line_edit_frequency_1"]').prop("checked", true);
 
             }
-            if(productCatalogById[{{ quoteRequestLine.product.id }}] == 'MATERIAL'){
+            if (productCatalogById[{{ quoteRequestLine.product.id }}] == 'MATERIAL') {
                 $('input[id*="quote_request_line_edit_frequency_0"]').prop("disabled", true);
                 $('input[id*="quote_request_line_edit_frequency_1"]').prop("disabled", true);
 
@@ -224,11 +282,109 @@
                 } else if (this.value === 'MATERIAL') {
                     $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", true);
                     $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", true);
-                }else if (this.value === 'REGULAR') {
+                } else if (this.value === 'REGULAR') {
                     $('select[name*="quote_request_line_edit[frequencyTimes]"]').prop("disabled", false);
                     $('select[name*="quote_request_line_edit[frequencyInterval]').prop("disabled", false)
                 }
             });
+
+
+            var editableTransportUnitPrice = {{ quoteRequestLine.editableTransportUnitPrice|default(0) }};
+            var editableRentalUnitPrice = {{ quoteRequestLine.editableRentalUnitPrice|default(0) }};
+            var editableTreatmentUnitPrice = {{ quoteRequestLine.editableTreatmentUnitPrice|default(0) }};
+            var editableTraceabilityUnitPrice = {{ quoteRequestLine.editableTraceabilityUnitPrice|default(0) }};
+
+            var rentalPrice = null;
+            var treatmentCollectPrice = null;
+            var treatmentUnitPrice = null;
+            var totalPrice = null;
+
+            tabCalculation();
+
+
+            $('.editable-transport-unit-price-input').on('keyup', function () {
+                editableTransportUnitPrice = $(this).val();
+                tabCalculation();
+            });
+
+            $('.editable-rental-unit-price-input').on('keyup', function () {
+                editableRentalUnitPrice = $(this).val();
+                tabCalculation();
+            });
+
+            $('.editable-treatment-unit-price-input').on('keyup', function () {
+                editableTreatmentUnitPrice = $(this).val();
+                tabCalculation();
+            });
+
+            $('.editable-traceability-unit-price-input').on('keyup', function () {
+                editableTraceabilityUnitPrice = $(this).val();
+                tabCalculation();
+            });
+
+            function tabCalculation() {
+                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                {# RESTE NULL #}
+                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
+                rentalPrice = calculateField('editableRentalUnitPrice');
+                {% else %}
+                rentalPrice = calculateField('editableRentalUnitPrice');
+                {% endif %}
+
+
+                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                {# RESTE NULL #}
+                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
+                treatmentCollectPrice = calculateField('treatmentCollectPrice');
+                {% else %}
+                treatmentCollectPrice = calculateField('treatmentCollectPrice');
+                {% endif %}
+
+
+                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                {# RESTE NULL #}
+                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
+                treatmentUnitPrice = calculateField('editableTreatmentUnitPrice');
+                {% else %}
+                treatmentUnitPrice = calculateField('editableTreatmentUnitPrice');
+                {% endif %}
+
+                {% if quoteRequestLine.product.calculationFormula == 'PACKAGE' %}
+                totalPrice = calculateField('totalAmount');
+                {% elseif quoteRequestLine.product.calculationFormula == 'UNIT_PRICE' %}
+                {# RESTE NULL #}
+                {% else %}
+                totalPrice = calculateField('totalAmount');
+                {% endif %}
+            }
+
+            function calculateField(fieldName) {
+                {% autoescape false %}
+                var url = '{{ path('paprec_quoteRequest_calculatePriceByFieldName', {quoteLineId: quoteRequestLine.id, fieldName: '0000', editableRentalUnitPrice: '1111', editableTreatmentUnitPrice: '2222', editableTransportUnitPrice: '3333', editableTraceabilityUnitPrice: '4444'}) }}'
+                    .replace('0000', fieldName)
+                    .replace('1111', editableRentalUnitPrice)
+                    .replace('2222', editableTreatmentUnitPrice)
+                    .replace('3333', editableTransportUnitPrice)
+                    .replace('4444', editableTraceabilityUnitPrice);
+                {% endautoescape %}
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    success: function (response) {
+                        if (fieldName === 'editableRentalUnitPrice') {
+                            $('.editable-rental-unit-price-field').html(response['value']);
+                        } else if (fieldName === 'treatmentCollectPrice') {
+                            $('.editable-collect-unit-price-field').html(response['value']);
+                        } else if (fieldName === 'editableTreatmentUnitPrice') {
+                            $('.editable-treatment-unit-price-field').html(response['value']);
+                        } else if (fieldName === 'totalAmount') {
+                            $('.editable-total-unit-price-field').html(response['value']);
+                        }
+                    }
+                })
+
+            }
         });
     </script>
 {% endblock %}

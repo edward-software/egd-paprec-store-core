@@ -7,6 +7,7 @@ use App\Entity\FollowUp;
 use App\Entity\MissionSheet;
 use App\Entity\MissionSheetLine;
 use App\Entity\MissionSheetProduct;
+use App\Entity\PostalCode;
 use App\Entity\Product;
 use App\Entity\QuoteRequest;
 use App\Entity\QuoteRequestFile;
@@ -745,16 +746,16 @@ class QuoteRequestController extends AbstractController
         if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
 
-            $postalCodeString = $form->get('postalCodeString')->getData();
-            $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
+//            $postalCodeString = $form->get('postalCodeString')->getData();
+//            $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
-            if (!$quoteRequest->getIsMultisite() && $quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
-                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
-            }
-
-            if (!$quoteRequest->getIsMultisite() && $quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
-                $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
-            }
+//            if (!$quoteRequest->getIsMultisite() && $quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+//                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+//            }
+//
+//            if (!$quoteRequest->getIsMultisite() && $quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
+//                $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+//            }
 
             if ($form->isValid()) {
 //                $quoteRequest->setOverallDiscount($this->numberManager->normalize($quoteRequest->getOverallDiscount()));
@@ -781,8 +782,23 @@ class QuoteRequestController extends AbstractController
             }
         }
 
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(PostalCode::class)->createQueryBuilder('pC');
+
+        $queryBuilder->select(['pC'])
+            ->where('pC.deleted is NULL');
+        $postalCodes = $queryBuilder->getQuery()->getResult();
+
+        if(is_array($postalCodes) && count($postalCodes)){
+            $tmp = [];
+            foreach ($postalCodes as $postalCode){
+                $tmp[$postalCode->getCode()] = $postalCode->getCode() . ' - ' . $postalCode->getCity();
+            }
+            $postalCodes = $tmp;
+        }
+
         return $this->render('quoteRequest/add.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'postalCodes' => $postalCodes
         ));
     }
 
@@ -854,16 +870,16 @@ class QuoteRequestController extends AbstractController
 
             $quoteRequest = $form->getData();
 
-            $postalCodeString = $form->get('postalCodeString')->getData();
+//            $postalCodeString = $form->get('postalCodeString')->getData();
             $billingPostalCodeString = $form->get('billingPostalCodeString')->getData();
 
-            if ($quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
-                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
-            }
-
-            if ($quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
-                $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
-            }
+//            if ($quoteRequest->getPostalCode() && $quoteRequest->getPostalCode()->getCode() !== $postalCodeString) {
+//                $form->get('postalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+//            }
+//
+//            if ($quoteRequest->getBillingPostalCode() !== $billingPostalCodeString) {
+//                $form->get('billingPostalCode')->addError(new FormError('Le code postal ne correspond pas à celui de l\'adresse.'));
+//            }
 
             if ($form->isValid()) {
                 $quoteRequest = $form->getData();
@@ -906,9 +922,24 @@ class QuoteRequestController extends AbstractController
             }
         }
 
+        $queryBuilder = $this->getDoctrine()->getManager()->getRepository(PostalCode::class)->createQueryBuilder('pC');
+
+        $queryBuilder->select(['pC'])
+            ->where('pC.deleted is NULL');
+        $postalCodes = $queryBuilder->getQuery()->getResult();
+
+        if(is_array($postalCodes) && count($postalCodes)){
+            $tmp = [];
+            foreach ($postalCodes as $postalCode){
+                $tmp[$postalCode->getCode()] = $postalCode->getCode() . ' - ' . $postalCode->getCity();
+            }
+            $postalCodes = $tmp;
+        }
+
         return $this->render('quoteRequest/edit.html.twig', array(
             'form' => $form->createView(),
-            'quoteRequest' => $quoteRequest
+            'quoteRequest' => $quoteRequest,
+            'postalCodes' => $postalCodes
         ));
     }
 
@@ -961,7 +992,7 @@ class QuoteRequestController extends AbstractController
                 if ((int)$number <= (int)$newNumber) {
 
                     $newNumber = (int)$newNumber + 1;
-                    if($newNumber < 10){
+                    if ($newNumber < 10) {
                         $newNumber = '0' . $newNumber;
                     }
 
@@ -1298,6 +1329,48 @@ class QuoteRequestController extends AbstractController
         ));
     }
 
+    /**
+     * Est utilisé pour calculer les lignes du tableau présent dans la modification d'une ligne du devis
+     * @Route("/calculatePriceByFieldName/{quoteLineId}", name="paprec_quoteRequest_calculatePriceByFieldName")
+     * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
+     * @ParamConverter("quoteRequestLine", options={"id" = "quoteLineId"})
+     */
+    public function calculatePriceByFieldNameAction(Request $request, QuoteRequestLine $quoteRequestLine){
+
+        $fieldName = $request->get('fieldName');
+        $editableRentalUnitPrice = $request->get('editableRentalUnitPrice');
+        $editableTreatmentUnitPrice = $request->get('editableTreatmentUnitPrice');
+        $editableTransportUnitPrice = $request->get('editableTransportUnitPrice');
+        $editableTraceabilityUnitPrice = $request->get('editableTraceabilityUnitPrice');
+
+        if ($editableRentalUnitPrice !== null) {
+            $normalizedEditableValue = $this->numberManager->normalize($editableRentalUnitPrice);
+            $quoteRequestLine->setEditableRentalUnitPrice($normalizedEditableValue);
+        }
+
+        if ($editableTreatmentUnitPrice !== null) {
+            $normalizedEditableValue = $this->numberManager->normalize($editableTreatmentUnitPrice);
+            $quoteRequestLine->setEditableTreatmentUnitPrice($normalizedEditableValue);
+        }
+
+        if ($editableTransportUnitPrice !== null) {
+            $normalizedEditableValue = $this->numberManager->normalize($editableTransportUnitPrice);
+            $quoteRequestLine->setEditableTransportUnitPrice($normalizedEditableValue);
+        }
+
+        if ($editableTraceabilityUnitPrice !== null) {
+            $normalizedEditableValue = $this->numberManager->normalize($editableTraceabilityUnitPrice);
+            $quoteRequestLine->setEditableTraceabilityUnitPrice($normalizedEditableValue);
+        }
+
+        $value = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($quoteRequestLine, $fieldName, true), 'EUR', 'FR');
+        return new JsonResponse([
+            'value' => $value
+        ]);
+    }
+
+
+
 
     /**
      * @Route("/{id}/removeLine/{quoteLineId}", name="paprec_quoteRequest_removeLine")
@@ -1445,7 +1518,8 @@ class QuoteRequestController extends AbstractController
         // Set content disposition inline of the file
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            str_replace( '/', '_', $quoteRequest->getReference()) . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
+            str_replace('/', '_',
+                $quoteRequest->getReference()) . '-' . $this->translator->trans('Commercial.QuoteRequest.DownloadedQuoteName',
                 array(), 'messages', $locale) . '-' . str_replace('/', '_', $quoteRequest->getBusinessName()) . '.pdf'
         );
 
@@ -2505,4 +2579,5 @@ class QuoteRequestController extends AbstractController
             'resultCode' => 1
         ]);
     }
+
 }

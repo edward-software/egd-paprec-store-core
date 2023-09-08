@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.BusinessName'|trans }}
-                                            </label>
+                                        </label>
                                         <div class="form-content">
                                             {{ form_widget(form.businessName, {'attr': {'class': 'form-control'}}) }}
                                             {{ form_errors(form.businessName) }}
@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.Civility'|trans }}
-                                            </label>
+                                        </label>
                                         <div class="form-content">
                                             {% for radio in form.civility.children %}
                                                 <div class="form__check ml-4">
@@ -81,7 +81,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.LastName'|trans }}
-                                            </label>
+                                        </label>
                                         <div class="form-content">
                                             {{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
                                             {{ form_errors(form.lastName) }}
@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.FirstName'|trans }}
-                                            </label>
+                                        </label>
                                         <div class="form-content">
                                             {{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
                                             {{ form_errors(form.firstName) }}
@@ -157,9 +157,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.PostalCode'|trans }}</label>
+{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.PostalCode'|trans }}</label>#}
                                         <div class="form-content">
-                                            {{ form_widget(form.postalCode, {'id': 'postalCodeField', 'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete') }}) }}
+                                            {{ form_widget(form.postalCode, {'id': 'postalCodeField', 'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete'), 'hidden': true }}) }}
                                             {{ form_errors(form.postalCode) }}
                                         </div>
                                     </div>
@@ -187,9 +187,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
+{#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>#}
                                         <div class="form-content">
-                                            {{ form_widget(form.billingPostalCode, {'id': 'billingPostalCodeField', 'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete')}}) }}
+                                            {{ form_widget(form.billingPostalCode, {'id': 'billingPostalCodeField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.billingPostalCode) }}
                                         </div>
                                     </div>
@@ -337,13 +337,13 @@
                                             {{ form_errors(form.salesmanComment) }}
                                         </div>
                                     </div>
-{#                                    <div class="form-group row">#}
-{#                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.ServiceEndDate-form'|trans }}</label>#}
-{#                                        <div class="form-content">#}
-{#                                            {{ form_widget(form.serviceEndDate, {'attr': {'class': 'form-control'}}) }}#}
-{#                                            {{ form_errors(form.serviceEndDate) }}#}
-{#                                        </div>#}
-{#                                    </div>#}
+                                    {#                                    <div class="form-group row"> #}
+                                    {#                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.ServiceEndDate-form'|trans }}</label> #}
+                                    {#                                        <div class="form-content"> #}
+                                    {#                                            {{ form_widget(form.serviceEndDate, {'attr': {'class': 'form-control'}}) }} #}
+                                    {#                                            {{ form_errors(form.serviceEndDate) }} #}
+                                    {#                                        </div> #}
+                                    {#                                    </div> #}
 
                                 </div>
                             </div>
@@ -376,6 +376,7 @@
             src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{ google_places_secret_key }}"></script>
     <script>
         $(function () {
+            var postalCodes = {{ postalCodes|json_encode|raw }};
             google.maps.event.addDomListener(window, 'load', function () {
                 var element = document.getElementById('addressAutocomplete');
 
@@ -395,6 +396,10 @@
                             switch (componentType) {
                                 case 'postal_code': {
                                     $('#postalCodeStringField').val(component.long_name);
+
+                                    if (component.long_name in postalCodes) {
+                                        $('#postalCodeField').val(postalCodes[component.long_name]);
+                                    }
                                     break;
                                 }
 
@@ -443,6 +448,10 @@
                             switch (componentType) {
                                 case 'postal_code': {
                                     $('#billingPostalCodeStringField').val(component.long_name);
+
+                                    if (component.long_name in postalCodes) {
+                                        $('#billingPostalCodeField').val(postalCodes[component.long_name]);
+                                    }
                                     break;
                                 }
 
