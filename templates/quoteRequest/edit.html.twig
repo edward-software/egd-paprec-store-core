@@ -195,7 +195,7 @@
                                     <div class="form-group">
 {#                                        <label class="form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>#}
                                         <div class="form-content">
-                                            {{ form_widget(form.billingPostalCode, {'id': 'billingPostalCodeField', 'attr': {'class': 'form-control address-field', 'data-url': path('paprec_postalCode_autocomplete'), 'hidden': true}}) }}
+                                            {{ form_widget(form.billingPostalCode, {'id': 'billingPostalCodeField', 'attr': {'class': 'form-control address-field', 'hidden': true}}) }}
                                             {{ form_errors(form.billingPostalCode) }}
                                         </div>
                                     </div>
@@ -504,9 +504,8 @@
                             switch (componentType) {
                                 case 'postal_code': {
                                     $('#billingPostalCodeStringField').val(component.long_name);
-
                                     if (component.long_name in postalCodes) {
-                                        $('#billingPostalCodeField').val(postalCodes[component.long_name]);
+                                        $('#billingPostalCodeField').val(component.long_name);
                                     }
                                     break;
                                 }
