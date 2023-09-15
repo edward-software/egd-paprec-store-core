@@ -25,7 +25,6 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('public', './templates/public/js/public.js')
-    .addEntry('loadingOverlay', './node_modules/gasparesganga-jquery-loading-overlay/dist/loadingoverlay.js')
     // //.addEntry('page1', './assets/js/page1.js')
     // //.addEntry('page2', './assets/js/page2.js')
     //

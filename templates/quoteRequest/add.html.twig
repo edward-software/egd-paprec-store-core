@@ -151,8 +151,9 @@
                                     <div class="form-group address-content">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.Address'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field'}}) }}
+                                            {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field', 'hidden': 'hidden'}}) }}
                                             {{ form_errors(form.address) }}
+                                            <input type="text" id="addressAutocompleteShowedField" class="form-control address-field">
                                         </div>
                                     </div>
 
@@ -182,8 +183,9 @@
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.BillingAddress'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.billingAddress, {'id': 'billingAddressAutocomplete', 'attr': {'class': 'form-control address-field'}}) }}
+                                            {{ form_widget(form.billingAddress, {'id': 'billingAddressAutocomplete', 'attr': {'class': 'form-control address-field', 'hidden': 'hidden'}}) }}
                                             {{ form_errors(form.billingAddress) }}
+                                            <input type="text" id="billingAddressAutocompleteShowedField" class="form-control address-field">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -414,7 +416,7 @@
         {
             var postalCodes = {{ postalCodes|json_encode|raw }};
             google.maps.event.addDomListener(window, 'load', function () {
-                var element = document.getElementById('addressAutocomplete');
+                var element = document.getElementById('addressAutocompleteShowedField');
 
                 if (element) {
                     var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
@@ -465,7 +467,7 @@
             });
 
             google.maps.event.addDomListener(window, 'load', function () {
-                var element = document.getElementById('billingAddressAutocomplete');
+                var element = document.getElementById('billingAddressAutocompleteShowedField');
 
                 if (element) {
                     var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
@@ -486,7 +488,7 @@
                                     $('#billingPostalCodeStringField').val(component.long_name);
 
                                     if (component.long_name in postalCodes) {
-                                        $('#billingPostalCodeField').val(postalCodes[component.long_name]);
+                                        $('#billingPostalCodeField').val(component.long_name);
                                     }
                                     break;
                                 }

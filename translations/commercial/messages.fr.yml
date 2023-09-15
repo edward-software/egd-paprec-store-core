@@ -102,6 +102,8 @@ Commercial:
         FirstName: Prénom
         Email: Email
         Phone: Téléphone
+        Intervention-address: Adresse d'intervention
+        Billing-address: Adresse de facturation si différente
         Address: Adresse
         PostalCode: Code postal
         City: Ville
