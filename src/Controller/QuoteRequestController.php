@@ -415,6 +415,7 @@ class QuoteRequestController extends AbstractController
             'Staff',
             'Accès',
             'Adresse',
+            'Code postal',
             'Ville',
             'Remarques',
             'Statut',
@@ -425,7 +426,6 @@ class QuoteRequestController extends AbstractController
             'Numéro client',
             'Référence de l\'offre',
             'Commercial en charge',
-            'Code postal',
             'Date de fin de la prestation'
         ];
 
@@ -454,6 +454,7 @@ class QuoteRequestController extends AbstractController
                 $this->translator->trans('Commercial.StaffList.' . $quoteRequest->getStaff()),
                 $quoteRequest->getAccess(),
                 $quoteRequest->getAddress(),
+                $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
                 $quoteRequest->getCity(),
                 $quoteRequest->getComment(),
                 $quoteRequest->getQuoteStatus(),
@@ -464,7 +465,6 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->getCustomerId(),
                 $quoteRequest->getReference(),
                 $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
-                $quoteRequest->getPostalCode() ? $quoteRequest->getPostalCode()->getCode() : '',
                 $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : '',
             ];
 
@@ -1368,9 +1368,6 @@ class QuoteRequestController extends AbstractController
             'value' => $value
         ]);
     }
-
-
-
 
     /**
      * @Route("/{id}/removeLine/{quoteLineId}", name="paprec_quoteRequest_removeLine")
