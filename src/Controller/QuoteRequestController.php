@@ -231,11 +231,13 @@ class QuoteRequestController extends AbstractController
                 ->andWhere('q.catalog = :catalog')
                 ->setParameter('catalog', $catalog);
         }
+
         if ($origin !== null && $origin !== '#') {
             $queryBuilder
                 ->andWhere('q.origin = :origin')
                 ->setParameter('origin', $origin);
         }
+
         if ($status !== null && $status !== '#') {
 
             $status = explode(',', $status);
@@ -244,6 +246,13 @@ class QuoteRequestController extends AbstractController
                 ->andWhere('q.quoteStatus IN (:status)')
                 ->setParameter('status', $status);
         }
+
+        if ($commercial !== null && $commercial !== '#') {
+            $queryBuilder
+                ->andWhere('q.userInCharge = :commercialId')
+                ->setParameter('commercialId', $commercial);
+        }
+
         if ($lastUpdateDate !== null && $lastUpdateDate !== '') {
             $day = new \DateTime($lastUpdateDate);
             $dayAfter = new \DateTime($lastUpdateDate);
@@ -265,13 +274,6 @@ class QuoteRequestController extends AbstractController
                 ->andWhere('q.dateCreation < :end')
                 ->setParameter('start', $periodStartDate->format('Y-m-d') . ' 00:00:00')
                 ->setParameter('end', $periodEndDate->format('Y-m-d') . ' 23:59:59');
-        }
-
-        if (!empty($commercial)) {
-            dd($commercial);
-            $queryBuilder
-                ->andWhere('q.userInCharge = :commercialId')
-                ->setParameter('commercialId', $commercial);
         }
 
         if (!empty($userIds)) {
