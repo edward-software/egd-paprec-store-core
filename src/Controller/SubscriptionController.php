@@ -342,6 +342,24 @@ class SubscriptionController extends AbstractController
                     $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
                 }
 
+                if(empty($quoteRequest->getUserInCharge()) && empty($quoteRequest->getPostalCode())){
+                    $defaultEmail = $this->getParameter('paprec.commercial_default_email');
+
+                    $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+                    $queryBuilder->select(array('u'))
+                        ->from('App:User', 'u')
+                        ->where('u.deleted IS NULL')
+                        ->andWhere('u.email = :email')
+                        ->setParameter('email', $defaultEmail)
+                        ->andWhere('u.enabled = 1');
+
+                    $defaultCommercial = $queryBuilder->getQuery()->getOneOrNullResult();
+
+                    $quoteRequest->setUserInCharge($defaultCommercial);
+                }
+
+
                 $this->em->persist($quoteRequest);
 
                 /**
