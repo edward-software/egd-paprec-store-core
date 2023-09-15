@@ -73,6 +73,11 @@ parameters:
         - PONCTUAL
         - MATERIAL
 
+    paprec_quote_origin:
+        - SHOP
+        - BO
+        - RECALL
+
     paprec_agency_template:
         - LCB
         - CFS

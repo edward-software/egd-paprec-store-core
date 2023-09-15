@@ -85,11 +85,39 @@ class QuoteRequestController extends AbstractController
         $periodEndDate = $request->get('periodEndDate');
         $selectedStatus = $request->get('selectedStatus');
         $selectedCatalog = $request->get('selectedCatalog');
+        $selectedOrigin = $request->get('selectedOrigin');
+        $selectedCommercial = $request->get('selectedCommercial');
         $userIds = $request->get('userIds');
 
-        $status = array();
+        $status = [];
         foreach ($this->getParameter('paprec_quote_status') as $s) {
             $status[$s] = $s;
+        }
+
+        $origins = [];
+        foreach ($this->getParameter('paprec_quote_origin') as $o) {
+            $origins[$o] = $o;
+        }
+
+        $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+        $queryBuilder->select(['u'])
+            ->from('App:User', 'u')
+            ->where('u.deleted IS NULL')
+            ->andWhere($queryBuilder->expr()->orx(
+                'u.roles LIKE \'%ROLE_COMMERCIAL%\'',
+                'u.roles LIKE \'%ROLE_MANAGER_COMMERCIAL%\''
+            ))
+            ->andWhere('u.enabled = 1');
+
+        $commercials = $queryBuilder->getQuery()->getResult();
+
+        if (is_array($commercials) && count($commercials)) {
+            $tmp = [];
+            foreach ($commercials as $commercial) {
+                $tmp[$commercial->getId()] = $commercial->getFirstName() . ' ' . $commercial->getLastName();
+            }
+            $commercials = $tmp;
         }
 
         return $this->render('quoteRequest/index.html.twig', array(
@@ -98,6 +126,10 @@ class QuoteRequestController extends AbstractController
             'periodEndDate' => $periodEndDate,
             'selectedStatus' => $selectedStatus,
             'selectedCatalog' => $selectedCatalog,
+            'origins' => $origins,
+            'selectedOrigin' => $selectedOrigin,
+            'commercials' => $commercials,
+            'selectedCommercial' => $selectedCommercial,
             'userIds' => $userIds
         ));
     }
@@ -120,7 +152,9 @@ class QuoteRequestController extends AbstractController
          * Récupération des filtres
          */
         $catalog = $request->get('selectedCatalog');
+        $origin = $request->get('selectedOrigin');
         $status = $request->get('selectedStatus');
+        $commercial = $request->get('selectedCommercial');
         $lastUpdateDate = $request->get('lastUpdateDate');
 
         $periodStartDate = $request->get('periodStartDate');
@@ -197,6 +231,11 @@ class QuoteRequestController extends AbstractController
                 ->andWhere('q.catalog = :catalog')
                 ->setParameter('catalog', $catalog);
         }
+        if ($origin !== null && $origin !== '#') {
+            $queryBuilder
+                ->andWhere('q.origin = :origin')
+                ->setParameter('origin', $origin);
+        }
         if ($status !== null && $status !== '#') {
 
             $status = explode(',', $status);
@@ -226,6 +265,13 @@ class QuoteRequestController extends AbstractController
                 ->andWhere('q.dateCreation < :end')
                 ->setParameter('start', $periodStartDate->format('Y-m-d') . ' 00:00:00')
                 ->setParameter('end', $periodEndDate->format('Y-m-d') . ' 23:59:59');
+        }
+
+        if (!empty($commercial)) {
+            dd($commercial);
+            $queryBuilder
+                ->andWhere('q.userInCharge = :commercialId')
+                ->setParameter('commercialId', $commercial);
         }
 
         if (!empty($userIds)) {
@@ -800,9 +846,9 @@ class QuoteRequestController extends AbstractController
             ->where('pC.deleted is NULL');
         $postalCodes = $queryBuilder->getQuery()->getResult();
 
-        if(is_array($postalCodes) && count($postalCodes)){
+        if (is_array($postalCodes) && count($postalCodes)) {
             $tmp = [];
-            foreach ($postalCodes as $postalCode){
+            foreach ($postalCodes as $postalCode) {
                 $tmp[$postalCode->getCode()] = $postalCode->getCode() . ' - ' . $postalCode->getCity();
             }
             $postalCodes = $tmp;
@@ -940,9 +986,9 @@ class QuoteRequestController extends AbstractController
             ->where('pC.deleted is NULL');
         $postalCodes = $queryBuilder->getQuery()->getResult();
 
-        if(is_array($postalCodes) && count($postalCodes)){
+        if (is_array($postalCodes) && count($postalCodes)) {
             $tmp = [];
-            foreach ($postalCodes as $postalCode){
+            foreach ($postalCodes as $postalCode) {
                 $tmp[$postalCode->getCode()] = $postalCode->getCode() . ' - ' . $postalCode->getCity();
             }
             $postalCodes = $tmp;
@@ -1347,7 +1393,8 @@ class QuoteRequestController extends AbstractController
      * @Security("has_role('ROLE_COMMERCIAL') or has_role('ROLE_COMMERCIAL_MULTISITES')")
      * @ParamConverter("quoteRequestLine", options={"id" = "quoteLineId"})
      */
-    public function calculatePriceByFieldNameAction(Request $request, QuoteRequestLine $quoteRequestLine){
+    public function calculatePriceByFieldNameAction(Request $request, QuoteRequestLine $quoteRequestLine)
+    {
 
         $fieldName = $request->get('fieldName');
         $editableRentalUnitPrice = $request->get('editableRentalUnitPrice');
@@ -1375,7 +1422,8 @@ class QuoteRequestController extends AbstractController
             $quoteRequestLine->setEditableTraceabilityUnitPrice($normalizedEditableValue);
         }
 
-        $value = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($quoteRequestLine, $fieldName, true), 'EUR', 'FR');
+        $value = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($quoteRequestLine,
+            $fieldName, true), 'EUR', 'FR');
         return new JsonResponse([
             'value' => $value
         ]);
