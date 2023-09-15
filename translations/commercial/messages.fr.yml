@@ -151,6 +151,7 @@ Commercial:
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
         UNKNOWN: Sur appel
+        NOT_DEFINED: Non défini
         ALL: Toutes les affaires
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation

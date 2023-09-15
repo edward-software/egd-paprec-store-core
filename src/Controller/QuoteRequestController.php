@@ -401,8 +401,12 @@ class QuoteRequestController extends AbstractController
         // Labels
         $sheetLabels = [
             'ID',
-            'Date créa.',
-            'Dernière modification',
+            'Année création',
+            'Mois création',
+            'Jour création',
+            'Année dernière modification',
+            'Mois dernière modification',
+            'Jour dernière modification',
             'Langue',
             'Numéro offre du devis',
             'Nom société',
@@ -426,7 +430,9 @@ class QuoteRequestController extends AbstractController
             'Numéro client',
             'Référence de l\'offre',
             'Commercial en charge',
-            'Date de fin de la prestation'
+            'Date de fin de la prestation',
+            'Origine de l\'offre',
+            'Catalogue'
         ];
 
         $xAxe = 'A';
@@ -440,8 +446,12 @@ class QuoteRequestController extends AbstractController
 
             $getters = [
                 $quoteRequest->getId(),
-                $quoteRequest->getDateCreation()->format('Y-m-d'),
-                $quoteRequest->getDateUpdate() ? $quoteRequest->getDateUpdate()->format('Y-m-d') : '',
+                0 + $quoteRequest->getDateCreation()->format('Y'),
+                0 + $quoteRequest->getDateCreation()->format('m'),
+                0 + $quoteRequest->getDateCreation()->format('d'),
+                ($quoteRequest->getDateUpdate() ? 0 + $quoteRequest->getDateUpdate()->format('Y') : ''),
+                ($quoteRequest->getDateUpdate() ? 0 + $quoteRequest->getDateUpdate()->format('m') : ''),
+                ($quoteRequest->getDateUpdate() ? 0 + $quoteRequest->getDateUpdate()->format('d') : ''),
                 $quoteRequest->getLocale(),
                 $quoteRequest->getNumber(),
                 $quoteRequest->getBusinessName(),
@@ -466,6 +476,8 @@ class QuoteRequestController extends AbstractController
                 $quoteRequest->getReference(),
                 $quoteRequest->getUserInCharge() ? $quoteRequest->getUserInCharge()->getFirstName() . " " . $quoteRequest->getUserInCharge()->getLastName() : '',
                 $quoteRequest->getServiceEndDate() ? $quoteRequest->getServiceEndDate()->format('Y-m-d') : '',
+                ($quoteRequest->getOrigin() ? $this->translator->trans('Commercial.QuoteRequest.Origin.' . $quoteRequest->getOrigin()) : ''),
+                ($quoteRequest->getCatalog() ? $this->translator->trans('Commercial.QuoteRequest.' . $quoteRequest->getCatalog()) : '')
             ];
 
             $xAxe = 'A';
