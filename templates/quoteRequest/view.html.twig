@@ -385,54 +385,69 @@
                                         </label>
                                     </div>
                                     <div class="form-group row">
+                                        <label class="col-md-12 col-form-label">{{ 'Commercial.QuoteRequest.Intervention-address'|trans }}
+                                            : </label>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Address'|trans }}</label>
                                         <label class="col-form-label">
                                             {{ quoteRequest.address }}
                                         </label>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.PostalCode'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {% if quoteRequest.postalCode %}
-                                                <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
-                                                    {{ quoteRequest.postalCode.code }}
-                                                </a>
-                                            {% endif %}
-                                        </label>
+                                    <div class="row col-md-12">
+                                        <div class="form-group col-md-6">
+                                            <div class="row">
+                                                <label class="col-form-label mr-3">{{ 'Commercial.QuoteRequest.PostalCode'|trans }}</label>
+                                                <label class="col-form-label">
+                                                    {% if quoteRequest.postalCode %}
+                                                        <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.postalCode.id}) }}">
+                                                            {{ quoteRequest.postalCode.code }}
+                                                        </a>
+                                                    {% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <div class="row">
+                                                <label class="col-form-label mr-3">{{ 'Commercial.QuoteRequest.City'|trans }}</label>
+                                                <label class="col-form-label">
+                                                    {{ quoteRequest.city }}
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.City'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.city }}
-                                        </label>
+                                        <label class="col-md-12 col-form-label">{{ 'Commercial.QuoteRequest.Billing-address'|trans }}
+                                            : </label>
                                     </div>
+
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.BillingAddress'|trans }}</label>
                                         <label class="col-form-label">
                                             {{ quoteRequest.billingAddress }}
                                         </label>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.billingPostalCode }}
-{#                                            {% if quoteRequest.billingPostalCode %}#}
-{#                                                {% if quoteRequest.isSameAddress == 1 %}#}
-{#                                                    <a href="{{ path('paprec_postalCode_view', {id: quoteRequest.billingPostalCode.id}) }}">#}
-{#                                                        {{ quoteRequest.billingPostalCode }}#}
-{#                                                    </a>#}
-{#                                                {% else %}#}
-{#                                                    {{ quoteRequest.billingPostalCode }}#}
-{#                                                {% endif %}#}
-{#                                            {% endif %}#}
-                                        </label>
+
+
+                                    <div class="row col-md-12">
+                                        <div class="form-group col-md-6">
+                                            <div class="row">
+                                                <label class="col-form-label mr-3">{{ 'Commercial.QuoteRequest.BillingPostalCode'|trans }}</label>
+                                                <label class="col-form-label">
+                                                    {{ quoteRequest.billingPostalCode }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <div class="row">
+                                                <label class="col-form-label mr-3">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>
+                                                <label class="col-form-label">
+                                                    {{ quoteRequest.billingCity }}
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.BillingCity'|trans }}</label>
-                                        <label class="col-form-label">
-                                            {{ quoteRequest.billingCity }}
-                                        </label>
-                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Comment'|trans }}</label>
                                         <label class="col-form-label">
@@ -1068,158 +1083,74 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    <script>
-        $(function () {
+    {% block javascripts %}
+        <script>
+            $(function () {
 
-            $('[data-toggle="tooltip"],[data-tooltip="tooltip"]').tooltip();
+                $('[data-toggle="tooltip"],[data-tooltip="tooltip"]').tooltip();
 
-            $('.quote-request-view-management-fee-save-button').on('click', function () {
-                $('#formQuoteRequestViewManagementFee').submit();
-            });
+                $('.quote-request-view-management-fee-save-button').on('click', function () {
+                    $('#formQuoteRequestViewManagementFee').submit();
+                });
 
-            $('.quote-request-view-management-fee-cancel-button').on('click', function () {
-                location.reload();
-            });
+                $('.quote-request-view-management-fee-cancel-button').on('click', function () {
+                    location.reload();
+                });
 
-            $('#followUpsListDatatable').EgdDatatable({
-                url: "{{ path('paprec_quote_request_follow_up_loadList', {'id': quoteRequest.id}) }}",
-                columns: [
-                    {"data": "id"},
-                    {"data": "status"},
-                    {"data": "content"},
-                    {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
-                ],
-                rowDblclick: {
-                    type: 'open',
-                    url: "{{ path('paprec_follow_up_view', {id: '__rowId__'}) }}"
-                },
-                buttons: [
-                    {
-                        label: '{{ "General.Remove"|trans }}',
-                        type: 'ajaxMany',
-                        url: "{{ path("paprec_follow_up_removeMany", {ids: '__rowIds__', json: 1}) }}",
-                        confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
-                        className: 'btn-sm'
-                    }
-                ],
-                rowButtons: [
-                    {
-                        label: "{{ 'General.View'|trans }}",
-                        className: "btn btn-primary btn-sm",
-                        icon: "fa fa-eye",
+                $('#followUpsListDatatable').EgdDatatable({
+                    url: "{{ path('paprec_quote_request_follow_up_loadList', {'id': quoteRequest.id}) }}",
+                    columns: [
+                        {"data": "id"},
+                        {"data": "status"},
+                        {"data": "content"},
+                        {"data": "id", "width": "10%", "bSortable": false, "className": "cell-action-button"}
+                    ],
+                    rowDblclick: {
+                        type: 'open',
                         url: "{{ path('paprec_follow_up_view', {id: '__rowId__'}) }}"
                     },
-                    {
-                        label: "{{ 'General.Edit'|trans }}",
-                        className: "btn btn-warning btn-sm",
-                        icon: "fa fa-edit",
-                        url: "{{ path('paprec_follow_up_edit', {id: '__rowId__'}) }}"
-                    },
-                    {
-                        label: '{{ "General.Remove"|trans }}',
-                        type: 'ajax',
-                        url: "{{ path("paprec_follow_up_removeMany", {ids: '__rowId__', json: 1}) }}",
-                        confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
-                        className: 'btn btn-danger btn-sm',
-                        icon: "fa fa-times"
-                    }
+                    buttons: [
+                        {
+                            label: '{{ "General.Remove"|trans }}',
+                            type: 'ajaxMany',
+                            url: "{{ path("paprec_follow_up_removeMany", {ids: '__rowIds__', json: 1}) }}",
+                            confirmMessage: "{{ 'General.Confirm-remove'|trans|e('js') }}",
+                            className: 'btn-sm'
+                        }
+                    ],
+                    rowButtons: [
+                        {
+                            label: "{{ 'General.View'|trans }}",
+                            className: "btn btn-primary btn-sm",
+                            icon: "fa fa-eye",
+                            url: "{{ path('paprec_follow_up_view', {id: '__rowId__'}) }}"
+                        },
+                        {
+                            label: "{{ 'General.Edit'|trans }}",
+                            className: "btn btn-warning btn-sm",
+                            icon: "fa fa-edit",
+                            url: "{{ path('paprec_follow_up_edit', {id: '__rowId__'}) }}"
+                        },
+                        {
+                            label: '{{ "General.Remove"|trans }}',
+                            type: 'ajax',
+                            url: "{{ path("paprec_follow_up_removeMany", {ids: '__rowId__', json: 1}) }}",
+                            confirmMessage: "<span class='confirm-remove-style'>{{ 'General.Confirm'|trans|e('js') }}</span><br>{{ 'General.Confirm-remove'|trans|e('js') }}",
+                            className: 'btn btn-danger btn-sm',
+                            icon: "fa fa-times"
+                        }
 
-                ]
-            });
-
-            $('#commercialQuoteRequestDuplicateButton').on('click', function () {
-
-
-                var url = "{{ path("paprec_quoteRequest_duplicate", {id: quoteRequest.id}) }}";
-
-                Swal.fire({
-                    title: "{{ 'General.Confirm'|trans }}",
-                    text: "{{ 'Commercial.QuoteRequest.Confirm-duplicate'|trans }}",
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                    cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $(location).attr('href', url);
-                    }
-                });
-            });
-
-
-            $('#commercialQuoteRequestRemoveButton').on('click', function () {
-
-                {% if is_granted('ROLE_ADMIN') %}
-
-                var url = "{{ path("paprec_quoteRequest_remove", {id: quoteRequest.id}) }}";
-
-                Swal.fire({
-                    title: "{{ 'General.Confirm'|trans }}",
-                    text: "{{ 'General.Confirm-remove'|trans }}",
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                    cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $(location).attr('href', url);
-                    }
-                });
-                {% else %}
-                Swal.fire({
-                    title: "{{ 'General.CantRemove'|trans }}",
-                    text: "",
-                    showCancelButton: false,
-                    confirmButtonText: "{{ 'General.Cancel'|trans }}"
-                });
-                {% endif %}
-
-
-            });
-            $('#commmecialQuoteRequestMissionSheetValidateButton').on('click', function () {
-
-                {% if quoteRequest and quoteRequest.missionSheet %}
-                var url = "{{ path("paprec_quote_request_mission_sheet_validate", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}";
-
-                Swal.fire({
-                    title: "{{ 'General.Confirm'|trans }}",
-                    text: "Confirmez-vous la validation ?",
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                    cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $(location).attr('href', url);
-                    }
-                });
-                {% endif %}
-
-            });
-            $('.commercialQuoteRequestLineRemoveButton').on('click', function () {
-                quoteLineId = $(this).data('id');
-                var url = "{{ path("paprec_quoteRequest_removeLine", {id: quoteRequest.id, quoteLineId: 'quoteLineIdTmp'}) }}".replace('quoteLineIdTmp', quoteLineId);
-
-
-                Swal.fire({
-                    title: "{{ 'General.Confirm'|trans }}",
-                    text: "{{ 'General.Confirm-remove'|trans }}",
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                    cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $(location).attr('href', url);
-                    }
+                    ]
                 });
 
-            });
+                $('#commercialQuoteRequestDuplicateButton').on('click', function () {
 
-            $('.send-generated-contract-button').on('click', function () {
-                if (!$(this).hasClass('btn-disabled')) {
-                    var url = "{{ path("paprec_quoteRequest_sendGeneratedContract", {id: quoteRequest.id}) }}";
+
+                    var url = "{{ path("paprec_quoteRequest_duplicate", {id: quoteRequest.id}) }}";
 
                     Swal.fire({
                         title: "{{ 'General.Confirm'|trans }}",
-                        text: "{{ 'Commercial.QuoteRequest.Confirm-send-contract'|trans }}",
+                        text: "{{ 'Commercial.QuoteRequest.Confirm-duplicate'|trans }}",
                         showCancelButton: true,
                         confirmButtonText: "{{ 'General.Yes'|trans }}",
                         cancelButtonText: "{{ 'General.No'|trans }}"
@@ -1228,52 +1159,136 @@
                             $(location).attr('href', url);
                         }
                     });
-                }
-            });
+                });
 
-            $('#formQuoteRequestViewManagementFeeSubmitButton').on('click', function () {
-                $('#formQuoteRequestViewManagementFee').submit();
-            });
 
-            $('#formAddQuoteRequestFileSubmitButton').on('click', function () {
-                $('#formAddQuoteRequestFile').submit();
-            });
+                $('#commercialQuoteRequestRemoveButton').on('click', function () {
 
-            $('.commercialQuoteRequestFileRemoveButton').on('click', function () {
-                var quoteRequestFileId = $(this).data('id');
-                var url = "{{ path("paprec_quote_request_remove_quote_request_file", {quoteRequestId: quoteRequest.id, quoteRequestFileId: '0000'}) }}".replace('0000', quoteRequestFileId);
+                    {% if is_granted('ROLE_ADMIN') %}
 
-                Swal.fire({
-                    title: "{{ 'General.Confirm'|trans }}",
-                    text: "{{ 'General.Confirm-remove'|trans }}",
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                    cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $(location).attr('href', url);
+                    var url = "{{ path("paprec_quoteRequest_remove", {id: quoteRequest.id}) }}";
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'|trans }}",
+                        text: "{{ 'General.Confirm-remove'|trans }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'|trans }}",
+                        cancelButtonText: "{{ 'General.No'|trans }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+                    {% else %}
+                    Swal.fire({
+                        title: "{{ 'General.CantRemove'|trans }}",
+                        text: "",
+                        showCancelButton: false,
+                        confirmButtonText: "{{ 'General.Cancel'|trans }}"
+                    });
+                    {% endif %}
+
+
+                });
+                $('#commmecialQuoteRequestMissionSheetValidateButton').on('click', function () {
+
+                    {% if quoteRequest and quoteRequest.missionSheet %}
+                    var url = "{{ path("paprec_quote_request_mission_sheet_validate", {id: quoteRequest.id, missionSheetId: quoteRequest.missionSheet.id}) }}";
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'|trans }}",
+                        text: "Confirmez-vous la validation ?",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'|trans }}",
+                        cancelButtonText: "{{ 'General.No'|trans }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+                    {% endif %}
+
+                });
+                $('.commercialQuoteRequestLineRemoveButton').on('click', function () {
+                    quoteLineId = $(this).data('id');
+                    var url = "{{ path("paprec_quoteRequest_removeLine", {id: quoteRequest.id, quoteLineId: 'quoteLineIdTmp'}) }}".replace('quoteLineIdTmp', quoteLineId);
+
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'|trans }}",
+                        text: "{{ 'General.Confirm-remove'|trans }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'|trans }}",
+                        cancelButtonText: "{{ 'General.No'|trans }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+
+                });
+
+                $('.send-generated-contract-button').on('click', function () {
+                    if (!$(this).hasClass('btn-disabled')) {
+                        var url = "{{ path("paprec_quoteRequest_sendGeneratedContract", {id: quoteRequest.id}) }}";
+
+                        Swal.fire({
+                            title: "{{ 'General.Confirm'|trans }}",
+                            text: "{{ 'Commercial.QuoteRequest.Confirm-send-contract'|trans }}",
+                            showCancelButton: true,
+                            confirmButtonText: "{{ 'General.Yes'|trans }}",
+                            cancelButtonText: "{{ 'General.No'|trans }}"
+                        }).then(function (result) {
+                            if (result.value) {
+                                $(location).attr('href', url);
+                            }
+                        });
                     }
                 });
 
-            });
+                $('#formQuoteRequestViewManagementFeeSubmitButton').on('click', function () {
+                    $('#formQuoteRequestViewManagementFee').submit();
+                });
 
-            $('.quote-request-add-mission-sheet-button').on('click', function () {
-                var url = $(this).data('url');
+                $('#formAddQuoteRequestFileSubmitButton').on('click', function () {
+                    $('#formAddQuoteRequestFile').submit();
+                });
 
-                Swal.fire({
-                    title: "{{ 'General.Confirm'|trans }}",
-                    text: "{{ 'Commercial.QuoteRequest.MissionSheet.Confirm-add'|trans }}",
-                    showCancelButton: true,
-                    confirmButtonText: "{{ 'General.Yes'|trans }}",
-                    cancelButtonText: "{{ 'General.No'|trans }}"
-                }).then(function (result) {
-                    if (result.value) {
-                        $(location).attr('href', url);
-                    }
+                $('.commercialQuoteRequestFileRemoveButton').on('click', function () {
+                    var quoteRequestFileId = $(this).data('id');
+                    var url = "{{ path("paprec_quote_request_remove_quote_request_file", {quoteRequestId: quoteRequest.id, quoteRequestFileId: '0000'}) }}".replace('0000', quoteRequestFileId);
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'|trans }}",
+                        text: "{{ 'General.Confirm-remove'|trans }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'|trans }}",
+                        cancelButtonText: "{{ 'General.No'|trans }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+
+                });
+
+                $('.quote-request-add-mission-sheet-button').on('click', function () {
+                    var url = $(this).data('url');
+
+                    Swal.fire({
+                        title: "{{ 'General.Confirm'|trans }}",
+                        text: "{{ 'Commercial.QuoteRequest.MissionSheet.Confirm-add'|trans }}",
+                        showCancelButton: true,
+                        confirmButtonText: "{{ 'General.Yes'|trans }}",
+                        cancelButtonText: "{{ 'General.No'|trans }}"
+                    }).then(function (result) {
+                        if (result.value) {
+                            $(location).attr('href', url);
+                        }
+                    });
+
                 });
 
             });
-
-        });
-    </script>
-{% endblock %}
+        </script>
+    {% endblock %}
