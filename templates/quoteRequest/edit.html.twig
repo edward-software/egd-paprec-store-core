@@ -149,7 +149,8 @@
                                             {% if quoteRequest.isMultisite %}
                                                 {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field ', 'disabled': 'disabled'}}) }}
                                             {% else %}
-                                                {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field '}}) }}
+                                                {{ form_widget(form.address, {'id': 'addressAutocomplete', 'attr': {'class': 'form-control address-field ', 'hidden': 'hidden'}}) }}
+                                                <input type="text" id="addressAutocompleteShowedField" class="form-control address-field">
                                             {% endif %}
                                             {{ form_errors(form.address) }}
                                         </div>
@@ -186,8 +187,9 @@
                                     <div class="form-group">
                                         <label class="form-label">{{ 'Commercial.QuoteRequest.BillingAddress'|trans }}</label>
                                         <div class="form-content">
-                                            {{ form_widget(form.billingAddress, {'id': 'billingAddressAutocomplete', 'attr': {'class': 'form-control address-field '}}) }}
+                                            {{ form_widget(form.billingAddress, {'id': 'billingAddressAutocomplete', 'attr': {'class': 'form-control address-field ', 'hidden': 'hidden'}}) }}
                                             {{ form_errors(form.billingAddress) }}
+                                            <input type="text" id="billingAddressAutocompleteShowedField" class="form-control address-field">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -375,6 +377,10 @@
 
     <script>
         $(function () {
+
+            $('#billingAddressAutocompleteShowedField').val($('#billingAddressAutocomplete').val() + ', ' + $('#billingCityField').val());
+            $('#addressAutocompleteShowedField').val($('#addressAutocomplete').val() + ', ' + $('#cityField').val());
+
             // you may need to change this code if you are not using Bootstrap Datepicker
             $('.ponctual-date-datepicker').datepicker({
                 format: 'yyyy-mm-dd',
@@ -428,7 +434,7 @@
             var postalCodes = {{ postalCodes|json_encode|raw }};
 
             google.maps.event.addDomListener(window, 'load', function () {
-                var element = document.getElementById('addressAutocomplete');
+                var element = document.getElementById('addressAutocompleteShowedField');
 
                 if (element) {
                     var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
@@ -479,7 +485,7 @@
             });
 
             google.maps.event.addDomListener(window, 'load', function () {
-                var element = document.getElementById('billingAddressAutocomplete');
+                var element = document.getElementById('billingAddressAutocompleteShowedField');
 
                 if (element) {
                     var autocomplete = new google.maps.places.Autocomplete(element, {types: ['geocode']});
