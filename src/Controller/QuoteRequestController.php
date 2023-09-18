@@ -1363,7 +1363,7 @@ class QuoteRequestController extends AbstractController
             $quoteRequestLine->setEditableTraceabilityUnitPrice($normalizedEditableValue);
         }
 
-        $value = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($quoteRequestLine, $fieldName, true), 'EUR', 'FR');
+        $value = $this->numberManager->formatAmount($this->productManager->calculatePriceByFieldName($quoteRequestLine, $fieldName, true), null, $request->getLocale());
         return new JsonResponse([
             'value' => $value
         ]);
