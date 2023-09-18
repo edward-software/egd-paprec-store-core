@@ -600,12 +600,12 @@ var egdDatatableRowButtons = new Array();
                      */
                     var animation = $(target).data('animation-in');
 
-                    startLoading();
+                    // startLoading();
                     $.ajax({
                         'url': url,
                         'method': 'get'
                     }).done(function (data) {
-                        stopLoading();
+                        // stopLoading();
                         $(target).html(data);
                         if (animation) {
                             eval('$("' + target + '").' + animation);
