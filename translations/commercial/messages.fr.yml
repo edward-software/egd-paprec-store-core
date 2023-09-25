@@ -153,6 +153,7 @@ Commercial:
         PONCTUAL: Ponctuel
         MATERIAL: Matériel
         UNKNOWN: Sur appel
+        NOT_DEFINED: Non défini
         ALL: Toutes les affaires
         RegularDuration: Durée contrat
         PonctualDuration: Durée prestation
@@ -468,6 +469,7 @@ Commercial:
         Acceptance: Acceptation du devis et contrat
         Acceptance-text: Acceptation du devis et contrat
         NoComment: Pas de remarques
+        SelectedInterestIs: Le centre d'intérêt choisi est
         OtherContractualTitle: Autres infos contractuelles
         BillingSubTitle: Facturation
         SiteSubTitle: Site de prestation

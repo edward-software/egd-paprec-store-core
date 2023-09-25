@@ -13,6 +13,16 @@
         #lastUpdateDatepicker {
             width: auto;
         }
+
+        .select2-selection__rendered {
+            line-height: 34px !important;
+        }
+        .select2-container .select2-selection--single {
+            height: 38px !important;
+        }
+        .select2-selection__arrow {
+            height: 37px !important;
+        }
     </style>
 {% endblock %}
 
@@ -54,7 +64,21 @@
                                 <option value="{{ stat }}">{{ ('Commercial.QuoteStatusList.' ~ stat)|trans }}</option>
                             {% endfor %}
                         </select>
-                        <input class="form-control mr-2 input-sm"
+                        <select id="selectedOrigin" class="form-control mr-2 input-sm">
+                            <option value="#">Sélectionner une origine</option>
+                            {% for origin in origins %}
+                                <option value="{{ origin }}">{{ ('Commercial.QuoteRequest.Origin.' ~ origin)|trans }}</option>
+                            {% endfor %}
+                        </select>
+                        <select id="selectedCommercial" class="form-control commercial-field">
+                            <option value="#">Sélectionner un commercial</option>
+                            {% if commercials and commercials|length > 0 %}
+                                {% for id,commercial in commercials %}
+                                    <option value="{{ id }}">{{ commercial }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                        <input class="form-control ml-2 mr-2 input-sm"
                                placeholder="Date de dernière maj"
                                type="text"
                                id="lastUpdateDatepicker">
@@ -100,8 +124,6 @@
 {% block javascripts %}
     <script>
         $(function () {
-
-
             $('#quoteRequestsListDatatable').EgdDatatable({
                 {% autoescape false %}
                 url: "{{ path('paprec_quoteRequest_loadList', {userIds: userIds, periodStartDate: periodStartDate, periodEndDate: periodEndDate, selectedStatus: selectedStatus, selectedCatalog: selectedCatalog}) }}",
@@ -165,6 +187,12 @@
 
                 ]
             });
+
+            $('.commercial-field').select2({
+                language: "fr",
+                placeholder: "Séléctionner un commercial"
+            });
+
         });
 
         $('#lastUpdateDatepicker').datepicker({
@@ -180,6 +208,8 @@
             const params = new URLSearchParams(filterUrl.search);
             params.set('selectedCatalog', $('#selectedCatalog').val());
             params.set('selectedStatus', $('#selectedStatus').val());
+            params.set('selectedOrigin', $('#selectedOrigin').val());
+            params.set('selectedCommercial', $('#selectedCommercial').val());
             params.set('lastUpdateDate', $('#lastUpdateDatepicker').val().split('/').reverse().join('-'));
 
             filterUrl.search = params;
@@ -187,16 +217,18 @@
             $('#quoteRequestsListDatatable').DataTable().ajax.url(filterUrl.toString()).load();
         });
 
-        $('#resetFilterButton').on('click', function() {
+        $('#resetFilterButton').on('click', function () {
             {% autoescape false %}
             const listUrl = "{{ url('paprec_quoteRequest_loadList') }}";
             {% endautoescape %}
 
             const filterUrl = new URL(listUrl);
             const params = new URLSearchParams(filterUrl.search);
-            
+
             $('#selectedCatalog').val('#');
             $('#selectedStatus').val('#');
+            $('#selectedOrigin').val('#');
+            $('#selectedCommercial').val('#');
             $('#lastUpdateDatepicker').val(null);
 
             params.set('sessionReset', true);

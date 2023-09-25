@@ -298,6 +298,13 @@ class QuoteRequest
     /**
      * @var string
      *
+     * @ORM\Column(name="interest", type="string", length=255, nullable=true)
+     */
+    private $interest;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="customerId", type="string", length=255, nullable=true)
      */
     private $customerId;
@@ -1270,6 +1277,24 @@ class QuoteRequest
     public function setCatalog($catalog)
     {
         $this->catalog = $catalog;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterest()
+    {
+        return $this->interest;
+    }
+
+    /**
+     * @param string $interest
+     * @return QuoteRequest
+     */
+    public function setInterest($interest)
+    {
+        $this->interest = $interest;
         return $this;
     }
 

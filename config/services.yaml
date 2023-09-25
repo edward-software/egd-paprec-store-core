@@ -73,6 +73,11 @@ parameters:
         - PONCTUAL
         - MATERIAL
 
+    paprec_quote_origin:
+        - SHOP
+        - BO
+        - RECALL
+
     paprec_agency_template:
         - LCB
         - CFS
@@ -137,6 +142,8 @@ parameters:
     paprec.follow_up_file.max_file_size: 100000000
     paprec.agency_file.directory: "%kernel.project_dir%/data/agency/file"
     paprec.agency_file.max_file_size: 100000000
+
+    paprec.commercial_default_email: '%env(PAPREC_DEFAULT_COMMERCIAL_EMAIL)%'
 
     paprec.interest_default_email:
         GRANDS_ENSEMBLES: '%env(PAPREC_INTEREST_DEFAULT_EMAIL_GRANDS_ENSEMBLES)%'
