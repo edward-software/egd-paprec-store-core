@@ -1598,6 +1598,7 @@ class QuoteRequestController extends AbstractController
         if ($form->isSubmitted()) {
             $quoteRequest = $form->getData();
 
+
             $quoteRequest->setManagementFeeAmount1($this->numberManager->normalize($quoteRequest->getManagementFeeAmount1()));
             $quoteRequest->setManagementFeeAmount2($this->numberManager->normalize($quoteRequest->getManagementFeeAmount2()));
             $quoteRequest->setManagementFeeAmount3($this->numberManager->normalize($quoteRequest->getManagementFeeAmount3()));

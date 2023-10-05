@@ -109,26 +109,29 @@ class QuoteRequest
      */
     private $civility;
 
+//     * @Assert\NotBlank()
+
     /**
      * @var string
      *
      * @ORM\Column(name="lastName", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $lastName;
+
+//* @Assert\NotBlank()
 
     /**
      * @var string
      *
      * @ORM\Column(name="firstName", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $firstName;
+
+//* @Assert\NotBlank()
 
     /**
      * @var string
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      * @Assert\Email(
      *     groups={"public"},
      *      message = "email_error"
@@ -136,11 +139,12 @@ class QuoteRequest
      */
     private $email;
 
+//* @Assert\NotBlank()
+
     /**
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=255, nullable=true)
-     * @Assert\NotBlank()
      */
     private $phone;
 

@@ -128,6 +128,7 @@ class FollowUpManager
 
             $date = new \DateTime();
             $date->sub(new \DateInterval($interval));
+
             $query = $this->em
                 ->getRepository(FollowUp::class)
                 ->createQueryBuilder('fU')
@@ -136,10 +137,17 @@ class FollowUpManager
                 ->leftJoin('qR.userInCharge', 'u')
                 ->where('fU.deleted IS NULL')
                 ->andWhere('qR.deleted IS NULL')
-                ->andWhere('fU.dateUpdate < :date')
-                ->setParameter('date', $date)
                 ->andWhere('fU.status = :status')
-                ->setParameter('status', 'PENDING');
+                ->setParameter('status', 'PENDING')
+                ->andWhere($query->expr()->orx(
+                    $query->expr()->andX(
+                        'fU.dateUpdate IS NULL',
+                        'fU.dateCreation < :date'
+                    ),
+                    'fU.dateUpdate < :date'
+                ))
+                ->setParameter('date', $date)
+            ;
 
             $followUps = $query->getQuery()->getResult();
 
@@ -183,7 +191,6 @@ class FollowUpManager
                                 'text/html'
                             );
                         $this->container->get('mailer')->send($message);
-
                     }
                 }
             }

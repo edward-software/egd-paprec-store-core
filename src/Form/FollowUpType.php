@@ -68,13 +68,7 @@ class FollowUpType extends AbstractType
                          * Si l'utilisateur est manager, on récupère uniquement les quoteRequest liés à ses subordonnés
                          */
                         if ($this->options['isManager']) {
-                            $commercials = $this->userManager->getCommercialsFromManager($this->options['userId']);
-                            $commercialIds = array();
-                            if ($commercials && count($commercials)) {
-                                foreach ($commercials as $commercial) {
-                                    $commercialIds[] = $commercial->getId();
-                                }
-                            }
+                            $commercialIds = $this->options['commercialIds'];
                             $qb
                                 ->andWhere('q.userInCharge IN (:commercialIds)')
                                 ->setParameter('commercialIds', $commercialIds);

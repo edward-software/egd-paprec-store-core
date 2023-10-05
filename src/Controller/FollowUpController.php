@@ -267,6 +267,7 @@ class FollowUpController extends AbstractController
         $commercialIds = [];
 
         if ($isManager) {
+            $commercialIds[] = $user->getId();
             $commercials = $this->userManager->getCommercialsFromManager($user->getId());
             if ($commercials && count($commercials)) {
                 foreach ($commercials as $commercial) {
