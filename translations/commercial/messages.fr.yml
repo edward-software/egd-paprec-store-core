@@ -126,7 +126,7 @@ Commercial:
         Reference: Référence de l'offre
         PonctualDate: Date de collecte souhaitée
         IsMultisite: Prestation multi-sites
-        Comment: Commentaire (contrat "4.Remarques")
+        Comment: Commentaire (contrat "3.Remarques")
         OverallDiscount: Ajustement prix (+/- en %)
         TollFees: Frais de péages
         Customer: Client
@@ -454,7 +454,10 @@ Commercial:
         Address: Adresse
         PostalCode: CP / Ville
         CustomerTitle: Client
+        CommercialTitle: Commercial
         ContactTitle: Contacts
+        LastName: Nom
+        FirstName: Prénom
         SignatoryLastName: Nom signataire
         SignatoryFirstName: Prénom signataire
         SignatoryQuality: Qualité

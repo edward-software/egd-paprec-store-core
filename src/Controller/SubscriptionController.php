@@ -538,7 +538,7 @@ class SubscriptionController extends AbstractController
             $quoteRequest->setQuoteStatus('QUOTE_CREATED');
             $quoteRequest->setOrigin('RECALL');
             $quoteRequest->setLocale($locale);
-            if ($cart) {
+            if ($cart && !empty($cart->getType())) {
                 $quoteRequest->setCatalog($cart->getType());
             } else {
                 $quoteRequest->setCatalog('NOT_DEFINED');
@@ -555,7 +555,6 @@ class SubscriptionController extends AbstractController
             $reference = $this->quoteRequestManager->generateReference($quoteRequest);
             $quoteRequest->setReference($reference);
 
-
             if (array_key_exists($selectedInterest, $defaultEmailByInterest)) {
                 $userByEmail = $this->em->getRepository(User::class)->findOneBy([
                     'email' => $defaultEmailByInterest[$selectedInterest]
@@ -567,6 +566,22 @@ class SubscriptionController extends AbstractController
                 }
             } else {
                 $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
+            }
+            if(empty($quoteRequest->getUserInCharge())){
+                $defaultEmail = $this->getParameter('paprec.commercial_default_email');
+
+                $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
+
+                $queryBuilder->select(array('u'))
+                    ->from('App:User', 'u')
+                    ->where('u.deleted IS NULL')
+                    ->andWhere('u.email = :email')
+                    ->setParameter('email', $defaultEmail)
+                    ->andWhere('u.enabled = 1');
+
+                $defaultCommercial = $queryBuilder->getQuery()->getOneOrNullResult();
+
+                $quoteRequest->setUserInCharge($defaultCommercial);
             }
 
             $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());

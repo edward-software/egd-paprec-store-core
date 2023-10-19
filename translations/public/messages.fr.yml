@@ -115,6 +115,8 @@ Public:
             DESTRUCTION_SECURISEE: Destruction sécurisée
             ANIMATION_SENSIBILISATION: Animation & sensibilisation
             AUDIT_CARACTERISATION: Audit & caractérisation
+            DECHETS_ELECTRIQUE_ELECTRONIQUE: Déchets d’équipement électriques et électroniques
+            DECHETS_DANGEREUX: Déchets Dangereux
         BusinessName: Nom société
         Civility: Civilité
         LastName: Nom

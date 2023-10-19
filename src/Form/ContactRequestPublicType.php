@@ -44,7 +44,8 @@ class ContactRequestPublicType extends AbstractType
                     'Personnel sur site' => 'GRANDS_ENSEMBLES',
                     'Destruction sécurisée' => 'DESTRUCTION_SECURISEE',
                     'Animation & sensibilisation' => 'ANIMATION_SENSIBILISATION',
-                    'Audit & caractérisation' => 'AUDIT_CARACTERISATION'
+                    'Déchets d’équipement électriques et électroniques' => 'DECHETS_ELECTRIQUE_ELECTRONIQUE',
+                    'Déchets Dangereux' => 'DECHETS_DANGEREUX'
                 ),
                 'data' => $options['interest'],
                 'mapped' => false

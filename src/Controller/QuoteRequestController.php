@@ -296,7 +296,8 @@ class QuoteRequestController extends AbstractController
          */
         if ($isManager) {
             $commercials = $this->userManager->getCommercialsFromManager($systemUser->getId());
-            $commercialIds = array();
+            $commercialIds = [];
+            $commercialIds[] = $systemUser->getId();
             if ($commercials && count($commercials)) {
                 foreach ($commercials as $commercial) {
                     $commercialIds[] = $commercial->getId();
