@@ -451,7 +451,13 @@
                                     <div class="form-group row">
                                         <label class="col-md-4 col-form-label">{{ 'Commercial.QuoteRequest.Comment'|trans }}</label>
                                         <label class="col-form-label">
+                                            {% if quoteRequest.interest %}
+                                                {{ 'Commercial.PDF.SelectedInterestIs'|trans({}, "messages", app.request.locale) }} {{ ('Public.Contact.Interest-list.'~quoteRequest.interest)| trans({}, "messages", app.request.locale) }}.
+                                                <br>
+                                            {% endif %}
+                                            {% if quoteRequest.comment %}
                                             {{ quoteRequest.comment }}
+                                            {% endif %}
                                         </label>
                                     </div>
                                     <div class="form-group row">

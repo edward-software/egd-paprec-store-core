@@ -342,7 +342,7 @@ class SubscriptionController extends AbstractController
                     $quoteRequest->setCity($quoteRequest->getPostalCode()->getCity());
                 }
 
-                if(empty($quoteRequest->getUserInCharge()) && empty($quoteRequest->getPostalCode())){
+                if (empty($quoteRequest->getUserInCharge()) && empty($quoteRequest->getPostalCode())) {
                     $defaultEmail = $this->getParameter('paprec.commercial_default_email');
 
                     $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();
@@ -561,15 +561,13 @@ class SubscriptionController extends AbstractController
                 ]);
                 if ($userByEmail) {
                     $quoteRequest->setUserInCharge($userByEmail);
+                } else {
+                    $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
                 }
-//                else {
-//                    $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
-//                }
+            } else {
+                $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
             }
-//            else {
-//                $quoteRequest->setUserInCharge($this->userManager->getUserInChargeByPostalCode($quoteRequest->getPostalCode()));
-//            }
-            if(empty($quoteRequest->getUserInCharge())){
+            if (empty($quoteRequest->getUserInCharge())) {
                 $defaultEmail = $this->getParameter('paprec.commercial_default_email');
 
                 $queryBuilder = $this->getDoctrine()->getManager()->createQueryBuilder();

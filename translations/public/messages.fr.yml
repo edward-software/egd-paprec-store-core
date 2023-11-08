@@ -180,6 +180,10 @@ Public:
         TechnicalService: service technique
         BreadcrumbContent: Confirmation de la demande
 
+    Recall-confirm:
+        Message-1: Votre demande a bien été transmise.
+        Message-2: Un e-mail vient de vous être adressé, ainsi qu’au commercial qui va vous rappeler.
+        Message-3: A très bientôt !
 
     Home: Accueil
     Quote: Devis
