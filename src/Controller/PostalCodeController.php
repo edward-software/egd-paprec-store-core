@@ -205,8 +205,6 @@ class PostalCodeController extends AbstractController
             $file = $request->files->get('file');
             $filePath = $file->getPathName();
 
-            $phpPath = '/usr/local/bin/php';
-            $projectPath = '/var/www/';
 //            dd(shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath . ' 2>&1'));
             shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath);
 
