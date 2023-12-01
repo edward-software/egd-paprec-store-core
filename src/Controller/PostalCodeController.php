@@ -207,7 +207,8 @@ class PostalCodeController extends AbstractController
 
             $phpPath = '/usr/local/bin/php';
             $projectPath = '/var/www/';
-            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath . ' 2>&1');
+//            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath . ' 2>&1');
+            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath);
 
 //            return new JsonResponse([
 //                'resultCode' => 1,
