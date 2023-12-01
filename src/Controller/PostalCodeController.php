@@ -170,7 +170,7 @@ class PostalCodeController extends AbstractController
                 ->setCellValue('K' . $i, $this->numberManager->denormalize15($postalCode->getBomTransportRate()))
                 ->setCellValue('L' . $i, $this->numberManager->denormalize15($postalCode->getPlPonctTransportRate()))
                 ->setCellValue('M' . $i, $this->numberManager->denormalize15($postalCode->getTreatmentRate()))
-                ->setCellValue('N' . $i, $postalCode->getTraceabilityRate());
+                ->setCellValue('N' . $i, $this->numberManager->denormalize15($postalCode->getTraceabilityRate()));
             $i++;
         }
 
@@ -205,7 +205,9 @@ class PostalCodeController extends AbstractController
             $file = $request->files->get('file');
             $filePath = $file->getPathName();
 
-            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath);
+            $phpPath = '/usr/local/bin/php';
+            $projectPath = '/var/www/';
+            shell_exec($phpPath . ' ' . $projectPath . 'bin/console' . ' ' . $commandName . ' ' . $filePath . ' 2>&1');
 
 //            return new JsonResponse([
 //                'resultCode' => 1,

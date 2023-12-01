@@ -172,6 +172,31 @@ class UserManager
 
     }
 
+    public function getByEmail(
+        $email,
+        $returnException = true
+    ) {
+        try {
+
+            $user = $this->em->getRepository(User::class)->findOneBy([
+                'email' => $email
+            ]);
+
+            if ($user === null || $this->isDeleted($user)) {
+                if ($returnException) {
+                    throw new EntityNotFoundException('userNotFound');
+                }
+                return null;
+            }
+
+            return $user;
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
+
+    }
+
 
     /**
      * Retourne les Commercials dont le manager est l'user passé en param

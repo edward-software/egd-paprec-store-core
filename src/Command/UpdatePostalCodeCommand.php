@@ -42,8 +42,8 @@ class UpdatePostalCodeCommand extends Command
         /**
          * A décommenter pour les tests en local
          */
-//        ini_set("memory_limit", "-1");
-//        ini_set("max_execution_time", "300");
+        ini_set("memory_limit", "-1");
+        ini_set("max_execution_time", "600");
 
         $filePath = $input->getArgument('filePath');
 
@@ -81,7 +81,7 @@ class UpdatePostalCodeCommand extends Command
             $agencyName = $cellIterator->current()->getValue();
             $cellIterator->next();
 
-            $commercialName = $cellIterator->current()->getValue();
+            $commercialEmail = $cellIterator->current()->getValue();
             $cellIterator->next();
 
             $rentalRate = $cellIterator->current()->getValue();
@@ -120,7 +120,7 @@ class UpdatePostalCodeCommand extends Command
                     $code,
                     $city,
                     $agencyName,
-                    $commercialName,
+                    $commercialEmail,
                     $rentalRate,
                     $cbrRegTransportRate,
                     $cbrPonctTransportRate,
@@ -138,7 +138,7 @@ class UpdatePostalCodeCommand extends Command
                     $code,
                     $city,
                     $agencyName,
-                    $commercialName,
+                    $commercialEmail,
                     $rentalRate,
                     $cbrRegTransportRate,
                     $cbrPonctTransportRate,

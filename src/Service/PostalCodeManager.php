@@ -164,7 +164,7 @@ class PostalCodeManager
      * @param $code
      * @param $city
      * @param $agencyName
-     * @param $commercialName
+     * @param $commercialEmail
      * @param $rentalRate
      * @param $cbrRegTransportRate
      * @param $cbrPonctTransportRate
@@ -183,7 +183,7 @@ class PostalCodeManager
         $code,
         $city,
         $agencyName,
-        $commercialName,
+        $commercialEmail,
         $rentalRate,
         $cbrRegTransportRate,
         $cbrPonctTransportRate,
@@ -223,11 +223,11 @@ class PostalCodeManager
                     ->setAgency($agency);
             }
 
-            $commercialNames = explode(" ", $commercialName);
-            $firstName = $commercialNames[0];
-            $lastName = $commercialNames[1];
+//            $commercialNames = explode(" ", $commercialName);
+//            $firstName = $commercialNames[0];
+//            $lastName = $commercialNames[1];
 
-            $commercial = $this->userManager->getByFirstNameAndLastName($firstName, $lastName, false);
+            $commercial = $this->userManager->getByEmail($commercialEmail, false);
 
             if ($commercial !== null) {
                 $postalCode
@@ -252,7 +252,7 @@ class PostalCodeManager
      * @param $code
      * @param $city
      * @param $agencyName
-     * @param $commercialName
+     * @param $commercialEmail
      * @param $rentalRate
      * @param $cbrRegTransportRate
      * @param $cbrPonctTransportRate
@@ -272,7 +272,7 @@ class PostalCodeManager
         $code,
         $city,
         $agencyName,
-        $commercialName,
+        $commercialEmail,
         $rentalRate,
         $cbrRegTransportRate,
         $cbrPonctTransportRate,
@@ -310,11 +310,11 @@ class PostalCodeManager
                         ->setAgency($agency);
                 }
 
-                $commercialNames = explode(" ", $commercialName);
-                $firstName = $commercialNames[0];
-                $lastName = $commercialNames[1];
+//                $commercialNames = explode(" ", $commercialName);
+//                $firstName = $commercialNames[0];
+//                $lastName = $commercialNames[1];
 
-                $commercial = $this->userManager->getByFirstNameAndLastName($firstName, $lastName, false);
+                $commercial = $this->userManager->getByEmail($commercialEmail, false);
 
                 if ($commercial !== null) {
                     $postalCode
