@@ -42,8 +42,8 @@ class UpdatePostalCodeCommand extends Command
         /**
          * A décommenter pour les tests en local
          */
-        ini_set("memory_limit", "-1");
-        ini_set("max_execution_time", "600");
+//        ini_set("memory_limit", "-1");
+//        ini_set("max_execution_time", "600");
 
         $filePath = $input->getArgument('filePath');
 
