@@ -122,6 +122,7 @@
 
             $('#formAddPostalCodeFileSubmitButton').on('click', function () {
                 $('#formAddPostalCodeFile').submit();
+                $(this).html('Importation en cours...');
             });
 
             $('#postalCodesListDatatable').EgdDatatable({

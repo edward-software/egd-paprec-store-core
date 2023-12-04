@@ -460,9 +460,10 @@ Commercial:
         FirstName: Prénom
         SignatoryLastName: Nom signataire
         SignatoryFirstName: Prénom signataire
-        SignatoryQuality: Qualité
+        SignatoryTitle: Titre signataire
         ContactLastName: Nom contact
         ContactFirstName: Prénom contact
+        ContactQuality: Qualité contact
         PhoneNumber: Téléphone
         Email: Email
         ServiceTitle: Résumé de la prestation
